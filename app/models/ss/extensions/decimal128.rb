@@ -113,7 +113,11 @@ class SS::Extensions::Decimal128
   def power(*args)
     n, prec = *args
     n = n.value if n.is_a?(SS::Extensions::Decimal128)
-    self.class.new(self.value.power(n, prec))
+    if prec
+      self.class.new(self.value.power(n, prec))
+    else
+      self.class.new(self.value.power(n))
+    end
   end
 
   def **(other)

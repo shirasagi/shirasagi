@@ -26,7 +26,7 @@ class Cms::Form::FormsController < ApplicationController
   end
 
   def set_items
-    @items = super.order_by(order: 1, name: 1)
+    @items ||= super.order_by(order: 1, name: 1)
   end
 
   def destroy_items

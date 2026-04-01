@@ -36,6 +36,13 @@ class Cms::Line::TemplatesController < ApplicationController
     @model = @type ? "#{Cms::Line::Template}::#{@type.classify}".constantize : Cms::Line::Template::Base
   end
 
+  def set_items
+    @items ||= begin
+      set_message
+      Cms::Line::Template::Base.all.site(@cur_site).where(message_id: @message.id)
+    end
+  end
+
   def set_item
     super
     @type = @item.type

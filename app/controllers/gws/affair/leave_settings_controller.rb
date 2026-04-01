@@ -27,7 +27,8 @@ class Gws::Affair::LeaveSettingsController < ApplicationController
   end
 
   def set_items
-    @items = @cur_year.yearly_leave_settings
+    set_year
+    @items ||= @cur_year.yearly_leave_settings
   end
 
   public

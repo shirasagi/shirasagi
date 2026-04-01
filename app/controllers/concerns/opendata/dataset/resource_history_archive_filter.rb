@@ -21,7 +21,7 @@ module Opendata::Dataset::ResourceHistoryArchiveFilter
   end
 
   def set_items
-    @items ||= @model.site(@cur_site).allow(:read, @cur_user, site: @cur_site).search(@s)
+    @items ||= @model.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
   end
 
   public
@@ -29,7 +29,7 @@ module Opendata::Dataset::ResourceHistoryArchiveFilter
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
-    @items = @items.reorder(filename: -1).page(params[:page]).per(50)
+    @items = @items.search(@s).reorder(filename: -1).page(params[:page]).per(50)
     render
   end
 end

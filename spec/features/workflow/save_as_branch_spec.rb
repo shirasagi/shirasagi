@@ -44,7 +44,6 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
       end
 
       context "with form" do
-        let!(:file) { create :ss_file, user_id: cms_user.id }
         let!(:form) { create :cms_form, cur_site: site, state: 'public', sub_type: 'entry' }
 
         let(:column1) do
@@ -90,6 +89,10 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
           create(:cms_column_select_page, cur_site: site, cur_form: form, required: "optional", order: 14, node_ids: [node.id])
         end
         let(:column_values1) do
+          file1 = tmp_ss_file(
+            site: site, user: cms_user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", basename: "logo1.png")
+          file2 = tmp_ss_file(
+            site: site, user: cms_user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", basename: "logo2.png")
           [
             column1.value_type.new(column: column1, value: unique_id),
             column2.value_type.new(column: column2, date: Time.zone.now),
@@ -98,8 +101,8 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
             column5.value_type.new(column: column5, value: column5.select_options.sample),
             column6.value_type.new(column: column6, value: column6.select_options.sample),
             column7.value_type.new(column: column7, values: [column7.select_options.sample]),
-            column8.value_type.new(column: column8, file: file),
-            column9.value_type.new(column: column9, value: unique_id, file_ids: [file.id]),
+            column8.value_type.new(column: column8, file: file1),
+            column9.value_type.new(column: column9, value: unique_id, file_ids: [file2.id]),
             column10.value_type.new(column: column10, text: unique_id),
             column11.value_type.new(column: column11, lists: [unique_id]),
             column12.value_type.new(column: column12, value: unique_id),
@@ -108,6 +111,10 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
           ]
         end
         let(:column_values2) do
+          file1 = tmp_ss_file(
+            site: site, user: cms_user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", basename: "logo1.png")
+          file2 = tmp_ss_file(
+            site: site, user: cms_user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", basename: "logo2.png")
           [
             column1.value_type.new(column: column1, value: unique_id),
             column2.value_type.new(column: column2, date: Time.zone.now),
@@ -116,8 +123,8 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
             column5.value_type.new(column: column5, value: column5.select_options.sample),
             column6.value_type.new(column: column6, value: column6.select_options.sample),
             column7.value_type.new(column: column7, values: [column7.select_options.sample]),
-            column8.value_type.new(column: column8, file: file),
-            column9.value_type.new(column: column9, value: unique_id, file_ids: [file.id]),
+            column8.value_type.new(column: column8, file: file1),
+            column9.value_type.new(column: column9, value: unique_id, file_ids: [file2.id]),
             column10.value_type.new(column: column10, text: unique_id),
             column11.value_type.new(column: column11, lists: [unique_id]),
             column12.value_type.new(column: column12, value: unique_id),
@@ -136,6 +143,39 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
           item2.column_values = column_values2
           item2.save!
           item2.reload
+
+          item1.column_values.where(column_id: column8.id).first.tap do |column_value|
+            file = column_value.file
+            expect(file).to be_present
+            expect(file.owner_item_id).to eq item1.id
+            expect(file.owner_item_type).to eq item1.class.name
+            expect(File.size("#{file.public_dir}/#{file.filename}")).to be > 0
+          end
+          item1.column_values.where(column_id: column9.id).first.tap do |column_value|
+            expect(column_value.files.count).to eq 1
+            column_value.files.first.tap do |file|
+              expect(file.owner_item_id).to eq item1.id
+              expect(file.owner_item_type).to eq item1.class.name
+              expect(File.size("#{file.public_dir}/#{file.filename}")).to be > 0
+            end
+          end
+          item2.column_values.where(column_id: column8.id).first.tap do |column_value|
+            file = column_value.file
+            expect(file).to be_present
+            expect(file.owner_item_id).to eq item2.id
+            expect(file.owner_item_type).to eq item2.class.name
+            # item2 is closed
+            expect(File.exist?("#{file.public_dir}/#{file.filename}")).to be_falsey
+          end
+          item2.column_values.where(column_id: column9.id).first.tap do |column_value|
+            expect(column_value.files.count).to eq 1
+            column_value.files.first.tap do |file|
+              expect(file.owner_item_id).to eq item2.id
+              expect(file.owner_item_type).to eq item2.class.name
+              # item2 is closed
+              expect(File.exist?("#{file.public_dir}/#{file.filename}")).to be_falsey
+            end
+          end
         end
 
         it do
@@ -173,6 +213,21 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
             expect(branch).to be_present
             expect(branch.branch?).to be_truthy
             expect(branch.master_id).to eq item1.id
+          end
+          item1.column_values.where(column_id: column8.id).first.tap do |column_value|
+            file = column_value.file
+            expect(file).to be_present
+            expect(file.owner_item_id).to eq item1.id
+            expect(file.owner_item_type).to eq item1.class.name
+            expect(File.size("#{file.public_dir}/#{file.filename}")).to be > 0
+          end
+          item1.column_values.where(column_id: column9.id).first.tap do |column_value|
+            expect(column_value.files.count).to eq 1
+            column_value.files.first.tap do |file|
+              expect(file.owner_item_id).to eq item1.id
+              expect(file.owner_item_type).to eq item1.class.name
+              expect(File.size("#{file.public_dir}/#{file.filename}")).to be > 0
+            end
           end
 
           within "#addon-workflow-agents-addons-branch" do

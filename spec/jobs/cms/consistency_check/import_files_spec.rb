@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
+describe Cms::ConsistencyCheckJob, dbscope: :example do
   let!(:site) { cms_site }
   let!(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
 
@@ -19,9 +19,10 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
   after { Fs.rm_rf site.path }
 
   def generate_htmls
-    Cms::ImportFilesJob.bind(site_id: site).perform_now
-    Cms::Node::GenerateJob.bind(site_id: site).perform_now
-    Cms::Page::GenerateJob.bind(site_id: site).perform_now
+    expect { Cms::ImportFilesJob.bind(site_id: site).perform_now }.to output.to_stdout
+    expect { Cms::Node::GenerateJob.bind(site_id: site).perform_now }.to output.to_stdout
+    expect { Cms::Page::GenerateJob.bind(site_id: site).perform_now }.to output.to_stdout
+    Job::Log.all.destroy_all
 
     expect(File.exist?(import_file1)).to be true
     expect(File.exist?(import_file2)).to be true
@@ -38,8 +39,8 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
     it "#perform" do
       generate_htmls
 
-      expectation = expect { described_class.bind(site_id: site).perform_now }
-      expectation.not_to output(include("remove")).to_stdout
+      expectation = expect { described_class.bind(site_id: site).perform_now(repair: true) }
+      expectation.not_to output(include("removed")).to_stdout
 
       log = Job::Log.first
       expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -57,11 +58,11 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
       generate_htmls
       set_improper_htmls
 
-      expectation = expect { described_class.bind(site_id: site).perform_now }
+      expectation = expect { described_class.bind(site_id: site).perform_now(repair: true) }
       expectation.to output(
         include(
           site.name,
-          "remove #{improper_html}"
+          "#{improper_html}: removed"
         )).to_stdout
 
       log = Job::Log.first

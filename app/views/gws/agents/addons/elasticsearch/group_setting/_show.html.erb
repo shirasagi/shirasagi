@@ -6,4 +6,13 @@
 <dl class="see addon-gws-elasticsearch-group-setting">
   <dt><%= @model.t :elasticsearch_hosts %></dt>
   <dd><%= @item.elasticsearch_hosts %></dd>
+
+  <dt class="depth-2"><%= @model.t(:elasticsearch_user).split("/", 2).last %></dt>
+  <dd class="depth-2"><%= @item.elasticsearch_user %></dd>
+
+  <dt class="depth-2"><%= @model.t(:elasticsearch_password).split("/", 2).last %></dt>
+  <dd class="depth-2"><%= @item.elasticsearch_password.present? ? "*" * 8 : nil %></dd>
+
+  <dt class="depth-2"><%= @model.t(:elasticsearch_ssl_verify_mode).split("/", 2).last %></dt>
+  <dd class="depth-2"><%= @item.label(:elasticsearch_ssl_verify_mode) %></dd>
 </dl>

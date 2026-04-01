@@ -50,7 +50,7 @@ class SS::FilePublisher
       src = file.path
       return unless ::File.exist?(src)
 
-      ::FileUtils.mkdir_p(dirname) unless ::Dir.exist?(dirname)
+      ::FileUtils.mkdir_p(dirname)
 
       # on some conditions, filename doesn't normalize. so it needs to be checked.
       if file.filename.ascii_only?
@@ -86,16 +86,22 @@ class SS::FilePublisher
   class << self
     delegate :publish, :depublish, to: :singleton
 
-    private
-
     def singleton
       @singleton ||= begin
-        if SS.config.ss.publish_file_with == "ln_s" && SS.config.env.storage == "file"
+        if SS.config.ss.publish_file_with == "ln_s"
           BySymLink.new
         else
           ByCopy.new
         end
       end
     end
+
+    # rubocop:disable Style/TrivialAccessors
+    if Rails.env.test?
+      def singleton=(value)
+        @singleton = value
+      end
+    end
+    # rubocop:enable Style/TrivialAccessors
   end
 end

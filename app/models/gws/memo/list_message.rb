@@ -19,7 +19,7 @@ class Gws::Memo::ListMessage
 
   before_validation :set_list
 
-  validates :list_id, presence: true
+  validates :list_id, presence: true, if: -> { !imported_at }
 
   before_save :append_signature, if: ->{ @in_append_signature }
   after_save :set_publish_user, if: ->{ @publish_user }

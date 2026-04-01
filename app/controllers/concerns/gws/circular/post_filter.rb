@@ -72,6 +72,9 @@ module Gws::Circular::PostFilter
 
   def index
     set_items
+    @items = @items.search(@s).
+      page(params[:page]).per(50).
+      custom_order(@s.sort || 'due_date')
   end
 
   def create

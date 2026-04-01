@@ -150,7 +150,8 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
 
     it "not permitted and contains_urls" do
       role = user.cms_roles[0]
-      role.update(permissions: %w(edit_private_event_pages edit_other_event_pages
+      role.update(permissions: %w(read_private_event_pages read_other_event_pages
+                                  edit_private_event_pages edit_other_event_pages
                                   release_private_event_pages release_other_event_pages
                                   close_private_event_pages close_other_event_pages))
       visit edit_path2
@@ -164,7 +165,8 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
 
     it "not permitted and not contains_urls" do
       role = user.cms_roles[0]
-      role.update(permissions: %w(edit_private_event_pages edit_other_event_pages
+      role.update(permissions: %w(read_private_event_pages read_other_event_pages
+                                  edit_private_event_pages edit_other_event_pages
                                   release_private_event_pages release_other_event_pages
                                   close_private_event_pages close_other_event_pages))
       visit edit_path

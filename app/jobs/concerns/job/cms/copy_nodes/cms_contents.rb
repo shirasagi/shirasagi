@@ -16,7 +16,10 @@ module Job::Cms::CopyNodes::CmsContents
         # at first, copy non-reference values and references which have no possibility of circular reference
         dest_content = klass.new(cur_site: @cur_site)
         dest_content.attributes = copy_basic_attributes(src_content, klass)
-        dest_content.name = @target_node_name if @target_node_name.present? && @cur_node.filename == src_content.filename
+        if @cur_node.filename == src_content.filename
+          dest_content.name = @target_node_name if @target_node_name.present?
+          dest_content.index_name = @target_node_index_name if @target_node_index_name.present?
+        end
         dest_content.filename = dest_content_filename
 
         options[:before].call(src_content, dest_content) if options[:before]

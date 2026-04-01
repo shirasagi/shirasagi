@@ -19,7 +19,7 @@ class Cms::Line::Service::HooksController < ApplicationController
   end
 
   def set_service_group
-    @service_group = Cms::Line::Service::Group.site(@cur_site).find(params[:group_id])
+    @service_group ||= Cms::Line::Service::Group.site(@cur_site).find(params[:group_id])
   end
 
   def set_model
@@ -40,7 +40,8 @@ class Cms::Line::Service::HooksController < ApplicationController
   end
 
   def set_items
-    @items = @service_group.hooks
+    set_service_group
+    @items ||= @service_group.hooks
   end
 
   public

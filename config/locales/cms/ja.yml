@@ -265,6 +265,71 @@ ja:
           <li style="list-style-type: disc;">つまり本CSVを利用することで効率よく網羅的にサイト構築結果を確認することができます。</li>
         </ul>
       keep_updated: 更新日時を変更しない
+      moves_tab: "一括移動"
+    all_contents_moves:
+      settings_head: "一括移動設定"
+      check_result_head: "チェック結果"
+      history_head: "一括移動履歴"
+      download_template: "ひな形ダウンロード"
+      read_csv: "読み込み"
+      execute_move: "移動実行"
+      confirm_move: "選択したページを移動してもよろしいですか？"
+      reset: "リセット"
+      checking_message: "CSVを読み込み中です。"
+      moving_message: "ページの移動処理を実行中"
+      show_detail: "詳細を見る"
+      download_result: "実行結果ダウンロード"
+      history_notice: "※ 過去二週間分の履歴を表示しています。二週間以上古い履歴はシステムにより自動的に削除されます。"
+      errors:
+        page_not_found: "指定されたページが見つかりません。"
+        no_selection: "移動するページを選択してください。"
+        same_filename: "移動元と移動先のファイル名が同じです。"
+        not_found_parent_node: "移動先のフォルダーが存在しません。"
+        not_have_move_permission: "ページを移動する権限がありません。"
+        invalid_filename_chars: "ファイル名に使用できない文字が含まれています。"
+        destination_folder_not_public: "公開中のページの移動先フォルダーが非公開です。"
+        branch_page_can_not_move: "差し替えページのため移動できません。"
+        locked: "ページが編集ロック中です。"
+      csv_headers:
+        page_id: "ページID"
+        name: "タイトル"
+        index_name: "一覧用タイトル"
+        filename: "ファイル名"
+        layout: "レイアウト"
+        order: "並び順"
+        keywords: "キーワード"
+        description: "概要"
+        summary_html: "サマリー"
+        category: "カテゴリー"
+        parent_crumb_urls: "親フォルダー"
+        contact_state: "表示設定"
+        contact_group: "所属"
+        contact_group_contact: "連絡先"
+        contact_group_relation: "連絡先連動設定"
+        contact_group_name: "表示用グループ名"
+        contact_charge: "担当部署・係"
+        contact_tel: "電話番号"
+        contact_fax: "ファックス番号"
+        contact_email: "メールアドレス"
+        contact_postal_code: "郵便番号"
+        contact_address: "住所"
+        contact_link_url: "リンクURL"
+        contact_link_name: "リンク名"
+        contact_sub_groups: "所属（組織一覧用）"
+        group_ids: "管理グループ"
+      history_executed_at: "実行日時"
+      history_user_name: "実行ユーザー名"
+      finish: "終了する"
+      confirm_reset: "移動結果画面を終了します。結果の詳細は履歴からダウンロードできます。よろしいですか？"
+      description: "CSVファイルを使用して、複数のページを一括でフォルダー間移動できます。移動と同時にタイトル、連絡先、カテゴリーなどの属性を変更することも可能です。組織改編時のページ移動にご利用ください。"
+      steps_html: |
+        <ol>
+          <li>「ひな形ダウンロード」からCSVをダウンロードし、移動先のファイル名や変更したい属性を編集します。</li>
+          <li>編集したCSVを選択し「読み込み」をクリックすると、CSVの内容がチェックされます。</li>
+          <li>チェック結果を確認し、移動するページを選択して「移動実行」をクリックします。</li>
+        </ol>
+      branch_page_notice: "※ 差し替えページはCSVに含まれませんが、マスターページを移動すると差し替えページも自動的に移動されます。"
+      link_break_notice: "※ 他のページからリンクされているページを移動すると、リンク切れが発生します。チェック結果で参照元が表示された場合は、移動後にリンク元ページの修正が必要です。"
     roles:
       admin: 管理者
       user: 編集者
@@ -447,6 +512,7 @@ ja:
       job_history: 実行ログ
       link_to_job_history: ジョブ実行履歴
       target_node_name: タイトル
+      target_node_index_name: 一覧用タイトル
       target_node_filename: フォルダー名
       started_job: 処理を開始します。ジョブ実行履歴で結果をご確認下さい
     download_nodes:
@@ -1392,6 +1458,7 @@ ja:
         background_color: 背景色
       cms/copy_nodes_task:
         target_node_name: 複製先タイトル
+        target_node_index_name: 複製先一覧用タイトル
         target_node_filename: 複製先フォルダー名
       cms/addon/source_cleaner:
         target_type: 対象の種別
@@ -3643,3 +3710,4 @@ ja:
       cms/elasticsearch/indexer/page_release_job: CMS全文検索/ページの追加
       cms/form_db/import_urls_job: CMS/定型DBインポート（サイト全体）
       cms/syntax_check_job: CMS/アクセシビリティチェック
+      cms/consistency_check_job: CMS/一貫性チェック

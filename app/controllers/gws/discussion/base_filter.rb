@@ -11,20 +11,23 @@ module Gws::Discussion::BaseFilter
   private
 
   def set_forum
-    raise "403" unless Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site)
-    @forum = Gws::Discussion::Forum.find(params[:forum_id])
+    @forum ||= begin
+      raise "403" unless Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site)
 
-    if @forum.state == "closed"
-      permitted = @forum.allowed?(:read, @cur_user, site: @cur_site)
-    else
-      permitted = @forum.allowed?(:read, @cur_user, site: @cur_site) || @forum.member_include?(@cur_user)
+      forum = Gws::Discussion::Forum.site(@cur_site).find(params[:forum_id])
+      if forum.state == "closed"
+        permitted = forum.allowed?(:read, @cur_user, site: @cur_site)
+      else
+        permitted = forum.allowed?(:read, @cur_user, site: @cur_site) || forum.member_include?(@cur_user)
+      end
+      raise "403" unless permitted
+
+      forum
     end
-
-    raise "403" unless permitted
   end
 
   def set_bookmarker
-    @bookmarker = Gws::Discussion::Bookmarker.new(@cur_site, @cur_user, @forum)
+    @bookmarker ||= Gws::Discussion::Bookmarker.new(@cur_site, @cur_user, @forum)
   end
 
   def portal_path

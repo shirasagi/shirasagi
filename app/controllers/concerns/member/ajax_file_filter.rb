@@ -19,8 +19,11 @@ module Member::AjaxFileFilter
   end
 
   def set_member
-    @cur_member = Cms::Member.find params[:member]
-    @cur_site = SS.current_site = @cur_member.site
+    @cur_member ||= begin
+      member = Cms::Member.find(params[:member])
+      @cur_site = SS.current_site = member.site
+      member
+    end
   end
 
   def set_last_modified
@@ -37,7 +40,10 @@ module Member::AjaxFileFilter
   end
 
   def set_items
-    @items = @model.allow(:read, @cur_member)
+    @items ||= begin
+      set_member
+      @model.allow(:read, @cur_member)
+    end
   end
 
   def set_item

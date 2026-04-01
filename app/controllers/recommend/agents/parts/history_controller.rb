@@ -9,6 +9,6 @@ class Recommend::Agents::Parts::HistoryController < ApplicationController
       where(token: token.to_s.presence).
       where(@cur_part.condition_hash).
       limit(100)
-    set_items
+    set_content_items
   end
 end

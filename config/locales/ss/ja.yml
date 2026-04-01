@@ -22,6 +22,7 @@ ja:
     operation: 操作
     organization: 組織
     qr_code: QRコード
+    qr_code_trademark_notice: QRコードは株式会社デンソーウェーブの登録商標です。
     regexp: 正規表現
     resize_image: 画像リサイズ
     no_resize_image: 画像リサイズしない
@@ -352,6 +353,7 @@ ja:
       approved: 承認しました。
       answered: 回答しました。
       started_import: インポートを開始しました。
+      started_move: 移動処理を開始しました。
       started_export: エクスポートを開始しました。
       started_upload: アップロードを開始しました。
       started_deliver: 配信を開始しました。
@@ -369,6 +371,7 @@ ja:
       restored: 元に戻しました。
       run: 実行しました。
       already_job_started: 実行準備中であるか、実行中です。
+      failed_to_check_status: ステータスの確認に失敗しました。ページを再読み込みしてください。
       clipboard_copied: コピーしました。
       clipboard_copy_failed: コピーできませんでした。クリップボードがサポートされていません。
       published: 公開しました。
@@ -1080,6 +1083,9 @@ ja:
         elasticsearch_site_ids: サイト
         elasticsearch_indexes: インデックス
         elasticsearch_outside: 外部サイト検索(Fess)
+        elasticsearch_user: 全文検索サーバー/ユーザー
+        elasticsearch_password: 全文検索サーバー/パスワード
+        elasticsearch_ssl_verify_mode: 全文検索サーバー/SSL証明書チェック方法
       ss/addon/translate/site_setting:
         translate_state: ステータス
         translate_source_id: 元言語コード
@@ -1617,6 +1623,13 @@ ja:
         - 外部サイト検索を設定します。
         - 検索フォームにプルダウンが表示され、外部サイト検索ができるようになります。
         - Fess のインストールが必要です。
+      elasticsearch_user:
+        - 全文検索サーバーがユーザーIDとパスワードで保護されている場合、全文検索サーバーのユーザーIDを入力します。
+      elasticsearch_password:
+        - 全文検索サーバーがユーザーIDとパスワードで保護されている場合、全文検索サーバーのパスワードを入力します。
+      elasticsearch_ssl_verify_mode:
+        - 全文検索サーバーの証明書の検証モードを選択します。
+        - 全文検索サーバーが自己証明書を用いており証明書を検証できない場合、none を選択してください。
 
     ss/addon/source_cleaner/site_setting:
       source_cleaner_unwrap_tag_state:

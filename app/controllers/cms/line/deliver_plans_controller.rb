@@ -26,7 +26,8 @@ class Cms::Line::DeliverPlansController < ApplicationController
   end
 
   def set_items
-    @items = @message.deliver_plans
+    set_message
+    @items ||= @message.deliver_plans
   end
 
   def crud_redirect_url

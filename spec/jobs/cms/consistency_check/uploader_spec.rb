@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
+describe Cms::ConsistencyCheckJob, dbscope: :example do
   let!(:site) { cms_site }
   let!(:node) { create :uploader_node_file }
 
@@ -17,8 +17,9 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
     ::FileUtils.touch(upload_html1)
     ::FileUtils.touch(upload_html2)
 
-    Cms::Node::GenerateJob.bind(site_id: site).perform_now
-    Cms::Page::GenerateJob.bind(site_id: site).perform_now
+    expect { Cms::Node::GenerateJob.bind(site_id: site).perform_now }.to output.to_stdout
+    expect { Cms::Page::GenerateJob.bind(site_id: site).perform_now }.to output.to_stdout
+    Job::Log.all.destroy_all
 
     expect(File.exist?(node.path)).to be true
     expect(File.exist?(upload_dir)).to be true
@@ -30,7 +31,7 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
     it "#perform" do
       generate_htmls
       expectation = expect { described_class.bind(site_id: site).perform_now }
-      expectation.not_to output(include("remove")).to_stdout
+      expectation.not_to output(include("removed")).to_stdout
 
       log = Job::Log.first
       expect(log.logs).to include(/INFO -- : .* Started Job/)

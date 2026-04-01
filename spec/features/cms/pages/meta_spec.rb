@@ -223,12 +223,14 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.links.copy')
         within "form#item-form" do
           fill_in "item[name]", with: "duplicate"
+          fill_in "item[index_name]", with: "duplicate_index_name"
           click_button I18n.t('ss.buttons.save')
         end
         wait_for_notice I18n.t("ss.notice.saved")
 
         duplicated_item = Cms::Page.last
         expect(duplicated_item.name).to eq "duplicate"
+        expect(duplicated_item.index_name).to eq "duplicate_index_name"
         expect(duplicated_item.description_setting).to eq 'auto'
         expect(duplicated_item.description).to eq original_description
 
@@ -556,12 +558,14 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.links.copy')
         within "form#item-form" do
           fill_in "item[name]", with: "duplicate"
+          fill_in "item[index_name]", with: "duplicate_index_name"
           click_button I18n.t('ss.buttons.save')
         end
         wait_for_notice I18n.t("ss.notice.saved")
 
         duplicated_item = Cms::Page.last
         expect(duplicated_item.name).to eq "duplicate"
+        expect(duplicated_item.index_name).to eq "duplicate_index_name"
         expect(duplicated_item.description_setting).to eq 'auto'
         expect(duplicated_item.description).to be_blank
 

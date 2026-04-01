@@ -45,17 +45,25 @@ class Gws::Workload::OvertimesController < ApplicationController
   end
 
   def set_items
-    @items = @model.create_settings(@year, @users, site_id: @cur_site.id, group_id: @group.id).
-      search(params[:s]).to_a
-    return if allowed_all?
+    @items ||= begin
+      set_year
+      set_aggregation_groups
+      set_selected_group
 
-    if allowed_manage?
-      user_ids = @users.map(&:id)
-      @items = @items.select { |item| user_ids.include?(item.user_id) }
-    elsif allowed_use?
-      @items = @items.select { |item| item.user_id == @cur_user.id }
-    else
-      @items = []
+      items = @model.all
+      items = items.create_settings(@year, @users, site_id: @cur_site.id, group_id: @group.id)
+      items = items.search(params[:s])
+      if allowed_all?
+        # nothing to do
+      elsif allowed_manage?
+        user_ids = @users.map(&:id)
+        items = items.in(user_id: user_ids)
+      elsif allowed_use?
+        items = items.where(user_id: @cur_user.id)
+      else
+        items = @model.none
+      end
+      items
     end
   end
 
@@ -71,12 +79,6 @@ class Gws::Workload::OvertimesController < ApplicationController
     @model.allowed?(:all, @cur_user, site: @cur_site)
   end
 
-  def find_item
-    set_items
-    @item = @items.find { |item| item.id == @item.id }
-    raise "404" unless @item
-  end
-
   public
 
   def index
@@ -84,17 +86,14 @@ class Gws::Workload::OvertimesController < ApplicationController
   end
 
   def show
-    find_item
     render
   end
 
   def edit
-    find_item
     render
   end
 
   def update
-    find_item
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     render_update @item.update

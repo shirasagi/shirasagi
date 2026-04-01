@@ -21,8 +21,6 @@ class Gws::Circular::TrashesController < ApplicationController
     @items ||= @model.site(@cur_site).
       topic.
       only_deleted.
-      allow(:trash, @cur_user, site: @cur_site).
-      search(@s).
-      page(params[:page]).per(50)
+      allow(:trash, @cur_user, site: @cur_site)
   end
 end

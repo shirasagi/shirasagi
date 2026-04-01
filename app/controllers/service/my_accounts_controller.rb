@@ -12,6 +12,6 @@ class Service::MyAccountsController < ApplicationController
   end
 
   def set_item
-    @item = @cur_user
+    @item ||= @cur_user
   end
 end

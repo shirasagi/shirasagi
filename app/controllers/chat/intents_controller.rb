@@ -20,13 +20,18 @@ class Chat::IntentsController < ApplicationController
     { name: params[:name], phrase: params[:name] }
   end
 
+  def set_items
+    @items ||= @model.site(@cur_site).
+      where(node_id: @cur_node.id).
+      allow(:read, @cur_user, site: @cur_site)
+  end
+
   public
 
   def index
     set_items
     @items = @items.in(category_ids: params.dig(:s, :category_id).try(:to_i)) if params.dig(:s, :category_id).present?
-    @items = @items.allow(:read, @cur_user, site: @cur_site).
-      where(node_id: @cur_node.id).
+    @items = @items.
       search(params[:s]).
       order_by(order: 1, name: 1, updated: -1).
       page(params[:page]).

@@ -29,17 +29,17 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
 
       success_return = { body: "", status: 200, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
       Addressable::URI.join(site.full_url, success_url1).to_s.tap do |u|
-        stub_request(:get, /^#{::Regexp.escape(u)}/).to_return(success_return)
+        stub_request(:any, /^#{::Regexp.escape(u)}/).to_return(success_return)
       end
-      stub_request(:get, /^#{::Regexp.escape(success_url2)}/).to_return(success_return)
-      stub_request(:get, /^#{::Regexp.escape(success_url3)}/).to_return(success_return)
-      # stub_request(:get, /^#{::Regexp.escape(success_url4)}/).to_return(success_return)
+      stub_request(:any, /^#{::Regexp.escape(success_url2)}/).to_return(success_return)
+      stub_request(:any, /^#{::Regexp.escape(success_url3)}/).to_return(success_return)
+      # stub_request(:any, /^#{::Regexp.escape(success_url4)}/).to_return(success_return)
       failed_return = { body: "", status: 404, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
       Addressable::URI.join(site.full_url, failed_url1).to_s.tap do |u|
-        stub_request(:get, /^#{::Regexp.escape(u)}/).to_return(failed_return)
+        stub_request(:any, /^#{::Regexp.escape(u)}/).to_return(failed_return)
       end
-      stub_request(:get, /^#{::Regexp.escape(failed_url2)}/).to_return(failed_return)
-      stub_request(:get, /^#{::Regexp.escape(failed_url3)}/).to_return(failed_return)
+      stub_request(:any, /^#{::Regexp.escape(failed_url2)}/).to_return(failed_return)
+      stub_request(:any, /^#{::Regexp.escape(failed_url3)}/).to_return(failed_return)
     end
 
     after do
@@ -95,12 +95,12 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
       checker.results[checker.extracted_urls[success_url3]].tap do |result|
         expect(result.result).to eq :success
         expect(result.message).to be_blank
-        expect(result.normalized_url).to eq success_url3
+        expect(result.normalized_url).to eq Addressable::URI.parse(success_url3).normalize.to_s
       end
       checker.results[checker.extracted_urls[success_url4]].tap do |result|
         expect(result.result).to eq :success
         expect(result.message).to be_blank
-        expect(result.normalized_url).to eq success_url4
+        expect(result.normalized_url).to eq Addressable::URI.parse(success_url4).normalize.to_s
       end
       checker.results[checker.extracted_urls[failed_url1]].tap do |result|
         expect(result.result).to eq :error
@@ -115,7 +115,7 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
       checker.results[checker.extracted_urls[failed_url3]].tap do |result|
         expect(result.result).to eq :error
         expect(result.message).to eq I18n.t("errors.messages.link_check_failed_not_found")
-        expect(result.normalized_url).to eq failed_url3
+        expect(result.normalized_url).to eq Addressable::URI.parse(failed_url3).normalize.to_s
       end
       checker.results[checker.extracted_urls[invalid_url1]].tap do |result|
         expect(result.result).to eq :error
@@ -124,18 +124,18 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
       end
 
       # success_url1 と success_url2 は自サイトの /fs/ なので自己解決する。よって WebMock の回数は 0 回となるはず
-      expect(a_request(:get, success_url1)).to have_been_made.times(0)
-      expect(a_request(:get, success_url2)).to have_been_made.times(0)
+      expect(a_request(:any, success_url1)).to have_been_made.times(0)
+      expect(a_request(:any, success_url2)).to have_been_made.times(0)
       # success_url3 と success_url4 は外部サイト。よって WebMock の回数は 1 回となるはず
-      expect(a_request(:get, success_url3)).to have_been_made.times(1)
-      expect(a_request(:get, success_url4)).to have_been_made.times(1)
+      expect(a_request(:head, success_url3)).to have_been_made.times(1)
+      expect(a_request(:head, success_url4)).to have_been_made.times(1)
       # failed_url1 と failed_url2 は自サイトの /fs/ なので自己解決する。よって WebMock の回数は 0 回となるはず
-      expect(a_request(:get, failed_url1)).to have_been_made.times(0)
-      expect(a_request(:get, failed_url2)).to have_been_made.times(0)
+      expect(a_request(:any, failed_url1)).to have_been_made.times(0)
+      expect(a_request(:any, failed_url2)).to have_been_made.times(0)
       # failed_url3 は外部サイト。よって WebMock の回数は 1 回となるはず
-      expect(a_request(:get, failed_url3)).to have_been_made.times(1)
+      expect(a_request(:head, failed_url3)).to have_been_made.times(1)
       # invalid_url1 は URL が無効なのでアクセス自体発生しない
-      expect(a_request(:get, invalid_url1)).to have_been_made.times(0)
+      expect(a_request(:any, invalid_url1)).to have_been_made.times(0)
     end
   end
 
@@ -162,25 +162,25 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
     before do
       WebMock.disable_net_connect!
 
-      stub_request(:get, /^#{::Regexp.escape(redirection_url0)}/)
+      stub_request(:any, /^#{::Regexp.escape(redirection_url0)}/)
         .to_return(body: "", status: 200, headers: { 'Content-Type' => 'text/html; charset=utf-8' })
-      stub_request(:get, /^#{::Regexp.escape(redirection_url1)}/)
+      stub_request(:any, /^#{::Regexp.escape(redirection_url1)}/)
         .to_return(status: 302, headers: { 'Location' => redirection_url0, 'Content-Type' => 'text/html; charset=utf-8' })
-      stub_request(:get, /^#{::Regexp.escape(redirection_url2)}/)
+      stub_request(:any, /^#{::Regexp.escape(redirection_url2)}/)
         .to_return(status: 302, headers: { 'Location' => redirection_url1, 'Content-Type' => 'text/html; charset=utf-8' })
-      stub_request(:get, /^#{::Regexp.escape(redirection_url3)}/)
+      stub_request(:any, /^#{::Regexp.escape(redirection_url3)}/)
         .to_return(status: 302, headers: { 'Location' => redirection_url2, 'Content-Type' => 'text/html; charset=utf-8' })
-      stub_request(:get, /^#{::Regexp.escape(redirection_url4)}/)
+      stub_request(:any, /^#{::Regexp.escape(redirection_url4)}/)
         .to_return(status: 302, headers: { 'Location' => redirection_url3, 'Content-Type' => 'text/html; charset=utf-8' })
-      stub_request(:get, /^#{::Regexp.escape(redirection_url5)}/)
+      stub_request(:any, /^#{::Regexp.escape(redirection_url5)}/)
         .to_return(status: 302, headers: { 'Location' => redirection_url4, 'Content-Type' => 'text/html; charset=utf-8' })
-      stub_request(:get, /^#{::Regexp.escape(redirection_url6)}/)
+      stub_request(:any, /^#{::Regexp.escape(redirection_url6)}/)
         .to_return(status: 302, headers: { 'Location' => redirection_url5, 'Content-Type' => 'text/html; charset=utf-8' })
 
-      stub_request(:get, /^#{::Regexp.escape(redirection_self_url)}/)
+      stub_request(:any, /^#{::Regexp.escape(redirection_self_url)}/)
         .to_return(status: 302, headers: { 'Location' => redirection_self_url, 'Content-Type' => 'text/html; charset=utf-8' })
 
-      stub_request(:get, /^#{::Regexp.escape(redirection_page)}/)
+      stub_request(:any, /^#{::Regexp.escape(redirection_page)}/)
         .to_return(status: 302, headers: { 'Location' => article.full_url, 'Content-Type' => 'text/html; charset=utf-8' })
 
       @save_check_links = SS.config.cms.check_links.dup
@@ -223,20 +223,20 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
         expect(result.normalized_url).to eq redirection_page
       end
 
-      expect(a_request(:get, redirection_url0)).to have_been_made.times(1)
-      expect(a_request(:get, redirection_url1)).to have_been_made.times(2)
-      expect(a_request(:get, redirection_url2)).to have_been_made.times(2)
-      expect(a_request(:get, redirection_url3)).to have_been_made.times(2)
-      expect(a_request(:get, redirection_url4)).to have_been_made.times(2)
-      expect(a_request(:get, redirection_url5)).to have_been_made.times(2)
-      expect(a_request(:get, redirection_url6)).to have_been_made.times(1)
+      expect(a_request(:head, redirection_url0)).to have_been_made.times(1)
+      expect(a_request(:head, redirection_url1)).to have_been_made.times(2)
+      expect(a_request(:head, redirection_url2)).to have_been_made.times(2)
+      expect(a_request(:head, redirection_url3)).to have_been_made.times(2)
+      expect(a_request(:head, redirection_url4)).to have_been_made.times(2)
+      expect(a_request(:head, redirection_url5)).to have_been_made.times(2)
+      expect(a_request(:head, redirection_url6)).to have_been_made.times(1)
 
       # 循環参照防御機構の働きにより 1 回しかアクセスしない
-      expect(a_request(:get, redirection_self_url)).to have_been_made.times(1)
+      expect(a_request(:head, redirection_self_url)).to have_been_made.times(1)
 
-      expect(a_request(:get, redirection_page)).to have_been_made.times(1)
+      expect(a_request(:head, redirection_page)).to have_been_made.times(1)
       # article.full_url は自サイトなので自己解決する；HTTPアクセスは発生しない。
-      expect(a_request(:get, article.full_url)).to have_been_made.times(0)
+      expect(a_request(:any, article.full_url)).to have_been_made.times(0)
     end
   end
 
@@ -289,7 +289,7 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
       WebMock.disable_net_connect!
 
       success_return = { body: "", status: 200, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
-      stub_request(:get, url4).to_return(success_return)
+      stub_request(:any, url4).to_return(success_return)
     end
 
     after do
@@ -335,8 +335,8 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
       WebMock.disable_net_connect!
 
       failed_return = { body: "", status: 404, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
-      stub_request(:get, url1).to_return(failed_return)
-      stub_request(:get, url2).to_return(failed_return)
+      stub_request(:any, url1).to_return(failed_return)
+      stub_request(:any, url2).to_return(failed_return)
     end
 
     after do
@@ -423,7 +423,7 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
       WebMock.disable_net_connect!
 
       success_return = { body: "", status: 200, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
-      stub_request(:get, url1).to_return(success_return)
+      stub_request(:any, url1).to_return(success_return)
     end
 
     after do

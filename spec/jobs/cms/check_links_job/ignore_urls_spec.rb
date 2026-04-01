@@ -32,23 +32,23 @@ describe Cms::CheckLinksJob, dbscope: :example do
     WebMock.disable_net_connect!(allow_localhost: true)
     WebMock.reset!
 
-    stub_request(:get, index.full_url).to_return(body: Fs.read(index.path),
+    stub_request(:any, index.full_url).to_return(body: Fs.read(index.path),
       status: 200, headers: { 'Content-Type' => 'text/html' })
-    stub_request(:get, page1.full_url).to_return(body: Fs.read(page1.path),
+    stub_request(:any, page1.full_url).to_return(body: Fs.read(page1.path),
       status: 200, headers: { 'Content-Type' => 'text/html' })
-    stub_request(:get, page2.full_url).to_return(body: Fs.read(page2.path),
+    stub_request(:any, page2.full_url).to_return(body: Fs.read(page2.path),
       status: 200, headers: { 'Content-Type' => 'text/html' })
-    stub_request(:get, page3.full_url).to_return(body: Fs.read(page3.path),
+    stub_request(:any, page3.full_url).to_return(body: Fs.read(page3.path),
       status: 200, headers: { 'Content-Type' => 'text/html' })
-    stub_request(:get, page4.full_url).to_return(body: Fs.read(page4.path),
+    stub_request(:any, page4.full_url).to_return(body: Fs.read(page4.path),
       status: 200, headers: { 'Content-Type' => 'text/html' })
 
-    stub_request(:get, url1).to_return(body: "", status: 404, headers: { 'Content-Type' => 'text/html' })
-    stub_request(:get, ::File.join(site.full_url, url2)).to_return(body: "",
+    stub_request(:any, url1).to_return(body: "", status: 404, headers: { 'Content-Type' => 'text/html' })
+    stub_request(:any, ::File.join(site.full_url, url2)).to_return(body: "",
       status: 404, headers: { 'Content-Type' => 'text/html' })
-    stub_request(:get, ::File.join(site.full_url, url3)).to_return(body: "",
+    stub_request(:any, ::File.join(site.full_url, url3)).to_return(body: "",
       status: 404, headers: { 'Content-Type' => 'text/html' })
-    stub_request(:get, ::File.join(site.full_url, url4)).to_return(body: "",
+    stub_request(:any, ::File.join(site.full_url, url4)).to_return(body: "",
       status: 404, headers: { 'Content-Type' => 'text/html' })
   end
 
@@ -77,7 +77,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
 
   context "ignore_urls all" do
     let!(:item1) { create :check_links_ignore_url, name: url1, kind: "all" }
-    let!(:item2) { create :check_links_ignore_url, name: "/inquiry/", kind: "all" }
+    let!(:item2) { create :check_links_ignore_url, name: "/inquiry/?", kind: "all" }
 
     it do
       ss_perform_now described_class.bind(site_id: site.id)
@@ -136,6 +136,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
   context "ignore_urls include" do
     let!(:item1) { create :check_links_ignore_url, name: "inquiry", kind: "include" }
     let!(:item2) { create :check_links_ignore_url, name: "sample", kind: "include" }
+    let!(:item3) { create :check_links_ignore_url, name: "//sample", kind: "include" }
 
     it do
       ss_perform_now described_class.bind(site_id: site.id)

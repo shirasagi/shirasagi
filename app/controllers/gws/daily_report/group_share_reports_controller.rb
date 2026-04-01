@@ -29,8 +29,10 @@ class Gws::DailyReport::GroupShareReportsController < ApplicationController
   end
 
   def set_items
-    set_search_params
     @items ||= begin
+      set_search_params
+      set_cur_month
+
       items = @model.site(@cur_site).without_deleted.and_month(@cur_month).and_groups([@group]).search(@s)
       items = items.and_user(@cur_user) if @cur_site.fiscal_year(@cur_month) != @cur_site.fiscal_year
       items

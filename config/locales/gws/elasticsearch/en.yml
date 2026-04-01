@@ -22,6 +22,9 @@ en:
       gws/addon/elasticsearch/group_setting:
         elasticsearch_state: Full-text search
         elasticsearch_hosts: Full-text search server
+        elasticsearch_user: Full-text search server/User
+        elasticsearch_password: Full-text search server/Password
+        elasticsearch_ssl_verify_mode: Full-text search server/SSL certificate check method
 
   tooltip:
     gws/addon/elasticsearch/group_setting:
@@ -29,6 +32,13 @@ en:
         - Select whether to enable or disable full-text search.
       elasticsearch_hosts:
         - Enter the full-text search server.
+      elasticsearch_user:
+        - If the full-text search server is protected by a user ID and password, enter the user ID for the full-text search server.
+      elasticsearch_password:
+        - If the full-text search server is protected by a user ID and password, enter the password for the full-text search server.
+      elasticsearch_ssl_verify_mode:
+        - Select the certificate verification mode for the full-text search server.
+        - If the full-text search server uses a self-signed certificate and you are unable to verify the certificate, please select “none”.
     gws/elasticsearch:
       tabs:
         all:

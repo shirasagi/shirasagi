@@ -1,286 +1,689 @@
 require 'spec_helper'
 
 describe Cms::CheckLinks::IgnoreUrlMatcher, type: :model, dbscope: :example do
-  let!(:site) { cms_site }
+  let!(:site0) { cms_site }
+  let!(:site) { create :cms_site_unique, domains: %w(ss1.example.jp ss2.example.jp) }
 
   context "when 'all' is set to kind" do
     # このケースでは自サイトのパスにのみマッチする
-    context "when just path is given" do
-      let(:name) { "/#{unique_id}" }
-      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: name }
+    context "when just path is given #1" do
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: "/path1" }
       subject! { described_class.new(cur_site: site) }
 
       it do
-        expect(subject.match?(Addressable::URI.join(site.full_url, name))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1"))).to be_truthy
+        # /path1 と /path1/ は同じ
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/"))).to be_truthy
+        # クエリが付いていてもパスが同じならok
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/?group=1&page=1"))).to be_truthy
 
         # sub path
-        expect(subject.match?(Addressable::URI.join(site.full_url, "#{name}/#{unique_id}"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1/#{unique_id}"))).to be_falsey
         # other path
-        expect(subject.match?(Addressable::URI.join(site.full_url, "/#{unique_id}"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path2"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path2/"))).to be_falsey
         # just site url
-        expect(subject.match?(Addressable::URI.parse(site.full_url))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/"))).to be_falsey
         # same path but other site
-        expect(subject.match?(Addressable::URI.join("https://#{unique_domain}/", name))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://#{unique_domain}/path1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://#{unique_domain}/path1/"))).to be_falsey
+      end
+    end
+
+    context "when just path is given #2" do
+      # path1 は /path1 と見なされる
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: "path1" }
+      subject! { described_class.new(cur_site: site) }
+
+      it do
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1"))).to be_truthy
+        # /path1 と /path1/ は同じ
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/"))).to be_truthy
+        # クエリが付いていてもパスが同じならok
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/?group=1&page=1"))).to be_truthy
+
+        # sub path
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1/#{unique_id}"))).to be_falsey
+        # other path
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path2"))).to be_falsey
+        # just site url
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/"))).to be_falsey
+        # same path but other site
+        expect(subject.match?(Addressable::URI.parse("https://#{unique_domain}/path1"))).to be_falsey
+      end
+    end
+
+    context "when just path is given #3" do
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: "/path1/" }
+      subject! { described_class.new(cur_site: site) }
+
+      it do
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1"))).to be_truthy
+        # /path1 と /path1/ は同じ
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/"))).to be_truthy
+        # クエリが付いていてもパスが同じならok
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/?group=1&page=1"))).to be_truthy
+
+        # sub path
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1/#{unique_id}"))).to be_falsey
+        # other path
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path2"))).to be_falsey
+        # just site url
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/"))).to be_falsey
+        # same path but other site
+        expect(subject.match?(Addressable::URI.parse("https://#{unique_domain}/path1"))).to be_falsey
+      end
+    end
+
+    context "when path and queries are given #1" do
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: "/path1?group=1&page=1" }
+      subject! { described_class.new(cur_site: site) }
+
+      it do
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1?group=1&page=1"))).to be_truthy
+        # /path1 と /path1/ は同じ
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1/?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1/?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/?group=1&page=1"))).to be_truthy
+
+        # クエリが付いていない
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1?"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1?"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/?"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/?"))).to be_falsey
+        # クエリが異なる
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1?group=1&page=2"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1?group=1&page=2"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/?group=2&page=1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/?group=2&page=1"))).to be_falsey
+        # クエリの順番が異なる
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1?page=1&group=1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1?page=1&group=1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/?page=1&group=1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/?page=1&group=1"))).to be_falsey
+        # クエリに余計なものが付く
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1?group=1&page=1&key=value"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1?group=1&page=1&key=value"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/?group=1&page=1&key=value"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/?group=1&page=1&key=value"))).to be_falsey
+      end
+    end
+
+    context "when path and queries are given #2" do
+      # "/path1?group=1&page=1" と "/path1/?group=1&page=1" は同じ
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: "/path1/?group=1&page=1" }
+      subject! { described_class.new(cur_site: site) }
+
+      it do
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1?group=1&page=1"))).to be_truthy
+        # /path1 と /path1/ は同じ
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1/?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1/?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/?group=1&page=1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/?group=1&page=1"))).to be_truthy
+
+        # クエリが付いていない
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1?"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1?"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/?"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/?"))).to be_falsey
+        # クエリが異なる
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1?group=1&page=2"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1?group=1&page=2"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/?group=2&page=1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/?group=2&page=1"))).to be_falsey
+        # クエリの順番が異なる
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1?page=1&group=1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1?page=1&group=1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/?page=1&group=1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/?page=1&group=1"))).to be_falsey
+        # クエリに余計なものが付く
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1?group=1&page=1&key=value"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1?group=1&page=1&key=value"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/?group=1&page=1&key=value"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/?group=1&page=1&key=value"))).to be_falsey
+      end
+    end
+
+    context "when path and queries are given #3" do
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: "/path1?" }
+      subject! { described_class.new(cur_site: site) }
+
+      it do
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1"))).to be_truthy
+        # /path1 と /path1/ は同じ
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/"))).to be_truthy
+        # このケースではクエリが空の場合にのみマッチする
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1?"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1?"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/?"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/?"))).to be_truthy
+
+        # このケースではクエリが空の場合にのみマッチする
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1?group=1&page=1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1?group=1&page=1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/?group=1&page=1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/?group=1&page=1"))).to be_falsey
+        # sub path
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1/#{unique_id}"))).to be_falsey
+        # other path
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path2"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path2/"))).to be_falsey
+        # just site url
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/"))).to be_falsey
+        # same path but other site
+        expect(subject.match?(Addressable::URI.parse("https://#{unique_domain}/path1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://#{unique_domain}/path1/"))).to be_falsey
       end
     end
 
     # このケースでは指定サイトのパスにのみマッチする
-    context "when a other origin and path is given" do
-      let(:host) { unique_domain }
-      let(:origin) { "https://#{host}" }
-      let(:path) { "/#{unique_id}" }
-      let(:name) { Addressable::URI.join(origin, path).to_s }
-      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: name }
+    context "when a other origin and path is given #1" do
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: "https://sample1.example.jp/path1" }
       subject! { described_class.new(cur_site: site) }
 
       it do
-        expect(subject.match?(Addressable::URI.parse(name))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1/"))).to be_truthy
 
         # sub path
-        expect(subject.match?(Addressable::URI.join(origin, "#{path}/#{unique_id}"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1/#{unique_id}"))).to be_falsey
         # other path
-        expect(subject.match?(Addressable::URI.join(origin, "/#{unique_id}"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path2"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path2/"))).to be_falsey
         # same path but other site
-        expect(subject.match?(Addressable::URI.join("https://#{unique_domain}/", path))).to be_falsey
-        expect(subject.match?(Addressable::URI.join(site.full_url, path))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample2.example.jp/path1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample2.example.jp/path1/"))).to be_falsey
         # different scheme
-        expect(subject.match?(Addressable::URI.join("http://#{host}/", path))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp/path1"))).to be_falsey
+      end
+    end
+
+    context "when a other origin and path is given #2" do
+      # /path1 と /path1/ は同じ
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: "https://sample1.example.jp/path1/" }
+      subject! { described_class.new(cur_site: site) }
+
+      it do
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1/"))).to be_truthy
+
+        # sub path
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1/#{unique_id}"))).to be_falsey
+        # other path
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path2"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path2/"))).to be_falsey
+        # same path but other site
+        expect(subject.match?(Addressable::URI.parse("https://sample2.example.jp/path1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample2.example.jp/path1/"))).to be_falsey
+        # different scheme
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp/path1"))).to be_falsey
       end
     end
 
     # このケースでは指定サイトにマッチする。パスは何でも良い。
-    context "when just other origin is given" do
-      let(:host) { unique_domain }
-      let(:origin) { "https://#{host}" }
-      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: origin }
+    context "when just other origin is given #1" do
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: "https://sample1.example.jp" }
       subject! { described_class.new(cur_site: site) }
 
       it do
-        expect(subject.match?(Addressable::URI.parse(origin))).to be_truthy
-        expect(subject.match?(Addressable::URI.join(origin, "/#{unique_id}"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1/#{unique_id}.html"))).to be_truthy
 
         # same path but other site
-        expect(subject.match?(Addressable::URI.parse("https://#{unique_domain}/"))).to be_falsey
-        expect(subject.match?(Addressable::URI.parse(site.full_url))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample2.example.jp"))).to be_falsey
         # different scheme
-        expect(subject.match?(Addressable::URI.parse("http://#{host}"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp"))).to be_falsey
+      end
+    end
+
+    context "when just other origin is given #2" do
+      # https://sample1.example.jp と https://sample1.example.jp/ は同じ
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: "https://sample1.example.jp/" }
+      subject! { described_class.new(cur_site: site) }
+
+      it do
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1/#{unique_id}.html"))).to be_truthy
+
+        # same path but other site
+        expect(subject.match?(Addressable::URI.parse("https://sample2.example.jp"))).to be_falsey
+        # different scheme
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp"))).to be_falsey
       end
     end
 
     # このケースでは指定サイトにマッチする。パスは何でも良い。スキームも何でもよい。
-    context "when just other origin but scheme is missing is given" do
-      let(:host) { unique_domain }
-      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: "//#{host}" }
+    context "when just other origin but scheme is missing is given #1" do
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: "//sample1.example.jp" }
       subject! { described_class.new(cur_site: site) }
 
       it do
-        expect(subject.match?(Addressable::URI.parse("http://#{host}"))).to be_truthy
-        expect(subject.match?(Addressable::URI.parse("https://#{host}"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1/"))).to be_truthy
 
         # same path but other site
-        expect(subject.match?(Addressable::URI.parse("https://#{unique_domain}/"))).to be_falsey
-        expect(subject.match?(Addressable::URI.parse(site.full_url))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample2.example.jp"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample2.example.jp/"))).to be_falsey
+      end
+    end
+
+    # このケースでは指定サイトにマッチする。パスは何でも良い。スキームも何でもよい。
+    context "when just other origin but scheme is missing is given #2" do
+      # "//sample1.example.jp" と "//sample1.example.jp/" は同じ
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: "//sample1.example.jp/" }
+      subject! { described_class.new(cur_site: site) }
+
+      it do
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1/"))).to be_truthy
+
+        # same path but other site
+        expect(subject.match?(Addressable::URI.parse("https://sample2.example.jp"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample2.example.jp/"))).to be_falsey
       end
     end
   end
 
   context "when 'start_with' is set to kind" do
     # このケースでは自サイトのパスにのみマッチする
-    context "when just path is given" do
-      let(:name) { "/#{unique_id}" }
-      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'start_with', name: name }
+    context "when just path is given #1" do
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'start_with', name: "/path1" }
       subject! { described_class.new(cur_site: site) }
 
       it do
-        expect(subject.match?(Addressable::URI.join(site.full_url, name))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/"))).to be_truthy
         # sub path
-        expect(subject.match?(Addressable::URI.join(site.full_url, "#{name}/#{unique_id}"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1/#{unique_id}"))).to be_truthy
 
         # other path
-        expect(subject.match?(Addressable::URI.join(site.full_url, "/#{unique_id}"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path2"))).to be_falsey
         # just site url
-        expect(subject.match?(Addressable::URI.parse(site.full_url))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/"))).to be_falsey
         # same path but other site
-        expect(subject.match?(Addressable::URI.join("https://#{unique_domain}/", name))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://#{unique_domain}/path1"))).to be_falsey
+      end
+    end
+
+    context "when just path is given #2" do
+      # /path1 と path1 は同じ
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'start_with', name: "path1" }
+      subject! { described_class.new(cur_site: site) }
+
+      it do
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/"))).to be_truthy
+        # sub path
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1/#{unique_id}"))).to be_truthy
+
+        # other path
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path2"))).to be_falsey
+        # just site url
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/"))).to be_falsey
+        # same path but other site
+        expect(subject.match?(Addressable::URI.parse("https://#{unique_domain}/path1"))).to be_falsey
       end
     end
 
     # このケースでは指定サイトのパスにのみマッチする
     context "when a other origin and path is given" do
-      let(:host) { unique_domain }
-      let(:origin) { "https://#{host}" }
-      let(:path) { "/#{unique_id}" }
-      let(:name) { Addressable::URI.join(origin, path).to_s }
-      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'start_with', name: name }
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'start_with', name: "https://sample1.example.jp/path1" }
       subject! { described_class.new(cur_site: site) }
 
       it do
-        expect(subject.match?(Addressable::URI.parse(name))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1/"))).to be_truthy
         # sub path
-        expect(subject.match?(Addressable::URI.join(origin, "#{path}/#{unique_id}"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1/#{unique_id}"))).to be_truthy
 
         # other path
-        expect(subject.match?(Addressable::URI.join(origin, "/#{unique_id}"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path2"))).to be_falsey
         # same path but other site
-        expect(subject.match?(Addressable::URI.join("https://#{unique_domain}/", path))).to be_falsey
-        expect(subject.match?(Addressable::URI.join(site.full_url, path))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample2.example.jp/path1"))).to be_falsey
         # different scheme
-        expect(subject.match?(Addressable::URI.join("http://#{host}/", path))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp/path1"))).to be_falsey
       end
     end
 
     # このケースでは指定サイトにマッチする。パスは何でも良い。
     context "when just other origin is given" do
-      let(:host_start) { unique_id }
-      let(:origin) { "https://#{host_start}." }
-      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'start_with', name: origin }
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'start_with', name: "https://sample1.example." }
       subject! { described_class.new(cur_site: site) }
 
       it do
-        expect(subject.match?(Addressable::URI.parse("https://#{host_start}.example.jp"))).to be_truthy
-        expect(subject.match?(Addressable::URI.join("https://#{host_start}.example.jp", "/#{unique_id}"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.com"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.com/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.com/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.com/path1/"))).to be_truthy
 
         # same path but other site
-        expect(subject.match?(Addressable::URI.parse("https://#{unique_domain}/"))).to be_falsey
-        expect(subject.match?(Addressable::URI.parse(site.full_url))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample2.example.jp"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample2.example.jp/"))).to be_falsey
         # different scheme
-        expect(subject.match?(Addressable::URI.parse("http://#{host_start}.example.jp"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp/"))).to be_falsey
       end
     end
 
     # このケースでは指定サイトにマッチする。パスは何でも良い。スキームも何でもよい。
     context "when just other origin but scheme is missing is given" do
-      let(:host_start) { unique_id }
-      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'start_with', name: "//#{host_start}." }
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'start_with', name: "//sample1.example." }
       subject! { described_class.new(cur_site: site) }
 
       it do
-        expect(subject.match?(Addressable::URI.join("http://#{host_start}.example.jp", "/#{unique_id}"))).to be_truthy
-        expect(subject.match?(Addressable::URI.join("https://#{host_start}.example.jp", "/#{unique_id}"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.com"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.com/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.com/path1"))).to be_truthy
 
         # same path but other site
-        expect(subject.match?(Addressable::URI.parse("https://#{unique_domain}/"))).to be_falsey
-        expect(subject.match?(Addressable::URI.parse(site.full_url))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample2.example.jp"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample2.example.jp/"))).to be_falsey
       end
     end
   end
 
   context "when 'end_with' is set to kind" do
     # このケースでは自サイトのパスにのみマッチする
-    context "when just path is given" do
-      let(:name) { "/#{unique_id}" }
-      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'end_with', name: name }
+    context "when just path is given #1" do
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'end_with', name: "/path1" }
       subject! { described_class.new(cur_site: site) }
 
       it do
-        expect(subject.match?(Addressable::URI.join(site.full_url, name))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1"))).to be_truthy
         # sub path
-        expect(subject.match?(Addressable::URI.join(site.full_url, "/#{unique_id}#{name}"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/#{unique_id}/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/#{unique_id}/path1"))).to be_truthy
 
         # other path
-        expect(subject.match?(Addressable::URI.join(site.full_url, "/#{unique_id}"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path2"))).to be_falsey
         # just site url
-        expect(subject.match?(Addressable::URI.parse(site.full_url))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/"))).to be_falsey
         # same path but other site
-        expect(subject.match?(Addressable::URI.join("https://#{unique_domain}/", name))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://#{unique_domain}/path1"))).to be_falsey
       end
     end
 
-    # このケースでは指定サイトのパスにのみマッチする
-    context "when a other origin and path is given" do
-      let(:host) { unique_domain }
-      let(:origin) { "https://#{host}" }
-      let(:path) { "/#{unique_id}" }
-      let(:name) { Addressable::URI.join(origin, path).to_s }
-      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'end_with', name: name }
+    context "when just path is given #2" do
+      # /path と path はほぼ同じ。
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'end_with', name: "path1" }
       subject! { described_class.new(cur_site: site) }
 
       it do
-        expect(subject.match?(Addressable::URI.parse(name))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1"))).to be_truthy
         # sub path
-        expect(subject.match?(Addressable::URI.join(origin, "/#{unique_id}#{path}"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/#{unique_id}/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/#{unique_id}/path1"))).to be_truthy
 
         # other path
-        expect(subject.match?(Addressable::URI.join(origin, "/#{unique_id}"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path2"))).to be_falsey
+        # just site url
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/"))).to be_falsey
         # same path but other site
-        expect(subject.match?(Addressable::URI.join("https://#{unique_domain}/", path))).to be_falsey
-        expect(subject.match?(Addressable::URI.join(site.full_url, path))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://#{unique_domain}/path1"))).to be_falsey
+      end
+    end
+
+    # このケースの動作として何が良いのか不明。よって動作は未定義としたい。
+    xcontext "when a other origin and path is given" do
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'end_with', name: "https://sample1.example.jp/path1" }
+      subject! { described_class.new(cur_site: site) }
+
+      it do
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/path1"))).to be_truthy
+        # sub path
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/#{unique_id}/path1"))).to be_truthy
+
+        # other path
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp/#{unique_id}"))).to be_falsey
+        # same path but other site
+        expect(subject.match?(Addressable::URI.parse("https://sample2.example.jp/path2"))).to be_falsey
         # different scheme
-        expect(subject.match?(Addressable::URI.join("http://#{host}/", path))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp/path1"))).to be_falsey
       end
     end
 
     # このケースでは指定サイトにマッチする。パスは何でも良い。
-    context "when just other origin is given" do
-      let(:host_end) { unique_id }
-      let(:origin) { "https://.#{host_end}" }
-      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'end_with', name: origin }
+    context "when just other origin is given #1" do
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'end_with', name: "https://.example.jp" }
       subject! { described_class.new(cur_site: site) }
 
       it do
-        expect(subject.match?(Addressable::URI.parse("https://static.#{host_end}"))).to be_truthy
-        expect(subject.match?(Addressable::URI.join("https://site.#{host_end}", "/#{unique_id}"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://static.example.jp"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://static.example.jp/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://site.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://site.example.jp/path1/"))).to be_truthy
 
         # same path but other site
-        expect(subject.match?(Addressable::URI.parse("https://#{unique_domain}/"))).to be_falsey
-        expect(subject.match?(Addressable::URI.parse(site.full_url))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.com"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.com/"))).to be_falsey
         # different scheme
-        expect(subject.match?(Addressable::URI.parse("http://www.#{host_end}"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://static.example.jp"))).to be_falsey
+      end
+    end
+
+    context "when just other origin is given #2" do
+      # "https://.example.jp" と "https://.example.jp/" は同じ
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'end_with', name: "https://.example.jp/" }
+      subject! { described_class.new(cur_site: site) }
+
+      it do
+        expect(subject.match?(Addressable::URI.parse("https://static.example.jp"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://static.example.jp/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://site.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://site.example.jp/path1/"))).to be_truthy
+
+        # same path but other site
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.com"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.com/"))).to be_falsey
+        # different scheme
+        expect(subject.match?(Addressable::URI.parse("http://static.example.jp"))).to be_falsey
       end
     end
 
     # このケースでは指定サイトにマッチする。パスは何でも良い。スキームも何でもよい。
-    context "when just other origin but scheme is missing is given" do
-      let(:host_end) { unique_id }
-      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'end_with', name: "//.#{host_end}" }
+    context "when just other origin but scheme is missing is given #1" do
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'end_with', name: "//.example.jp" }
       subject! { described_class.new(cur_site: site) }
 
       it do
-        expect(subject.match?(Addressable::URI.join("http://static.#{host_end}", "/#{unique_id}"))).to be_truthy
-        expect(subject.match?(Addressable::URI.join("https://site.#{host_end}", "/#{unique_id}"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://static.example.jp"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://static.example.jp/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://static.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://static.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://site.example.jp/#{unique_id}"))).to be_truthy
 
         # same path but other site
-        expect(subject.match?(Addressable::URI.parse("https://#{unique_domain}/"))).to be_falsey
-        expect(subject.match?(Addressable::URI.parse(site.full_url))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://static.example.com"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://static.example.com/"))).to be_falsey
+      end
+    end
+
+    context "when just other origin but scheme is missing is given #2" do
+      # "//.example.jp" と "//.example.jp/" は同じ
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'end_with', name: "//.example.jp/" }
+      subject! { described_class.new(cur_site: site) }
+
+      it do
+        expect(subject.match?(Addressable::URI.parse("http://static.example.jp"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://static.example.jp/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://static.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://static.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://site.example.jp/#{unique_id}"))).to be_truthy
+
+        # same path but other site
+        expect(subject.match?(Addressable::URI.parse("http://static.example.com"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://static.example.com/"))).to be_falsey
       end
     end
   end
 
   context "when 'include' is set to kind" do
     # このケースでは自サイトのパスにのみマッチする
-    context "when just path is given" do
+    context "when just path is given #1" do
       let(:name) { unique_id }
-      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'include', name: name }
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'include', name: "path1" }
       subject! { described_class.new(cur_site: site) }
 
       it do
-        expect(subject.match?(Addressable::URI.join(site.full_url, "/#{name}"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/"))).to be_truthy
         # sub path
-        expect(subject.match?(Addressable::URI.join(site.full_url, "/#{unique_id}/#{name}"))).to be_truthy
-        expect(subject.match?(Addressable::URI.join(site.full_url, "/#{name}/#{unique_id}"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/#{unique_id}/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/#{unique_id}"))).to be_truthy
 
         # other path
-        expect(subject.match?(Addressable::URI.join(site.full_url, "/#{unique_id}"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path2"))).to be_falsey
         # just site url
-        expect(subject.match?(Addressable::URI.parse(site.full_url))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/"))).to be_falsey
         # same path but other site
-        expect(subject.match?(Addressable::URI.join("https://#{unique_domain}/", name))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp/path1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://path1.example.jp/"))).to be_falsey
+      end
+    end
+
+    context "when just path is given #2" do
+      let(:name) { unique_id }
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'include', name: "/path1" }
+      subject! { described_class.new(cur_site: site) }
+
+      it do
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://ss2.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/path1/"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/"))).to be_truthy
+        # sub path
+        expect(subject.match?(Addressable::URI.parse("https://ss1.example.jp/#{unique_id}/path1"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://ss2.example.jp/path1/#{unique_id}"))).to be_truthy
+
+        # other path
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/path2"))).to be_falsey
+        # just site url
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://ss1.example.jp/"))).to be_falsey
+        # same path but other site
+        expect(subject.match?(Addressable::URI.parse("http://sample1.example.jp/path1"))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("http://path1.example.jp/"))).to be_falsey
       end
     end
 
     # このケースでは指定サイトにマッチする。パスは何でも良い。スキームも何でもよい。
     context "when just other origin but scheme is missing is given" do
-      let(:host_include) { unique_id }
-      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'include', name: "//#{host_include}" }
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'include', name: "//sample1" }
       subject! { described_class.new(cur_site: site) }
 
       it do
-        expect(subject.match?(Addressable::URI.join("http://static.#{host_include}.com", "/#{unique_id}"))).to be_truthy
-        expect(subject.match?(Addressable::URI.join("https://site.#{host_include}.jp", "/#{unique_id}"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("https://sample1.example.jp"))).to be_truthy
+        expect(subject.match?(Addressable::URI.parse("http://static.sample1.com/"))).to be_truthy
 
         # same path but other site
-        expect(subject.match?(Addressable::URI.parse("https://#{unique_domain}/"))).to be_falsey
-        expect(subject.match?(Addressable::URI.parse(site.full_url))).to be_falsey
+        expect(subject.match?(Addressable::URI.parse("https://www.example.jp/sample1"))).to be_falsey
       end
     end
   end
@@ -320,15 +723,16 @@ describe Cms::CheckLinks::IgnoreUrlMatcher, type: :model, dbscope: :example do
   #   end
   # end
 
-  context "when sns share path is given" do
-    subject! { described_class.new(cur_site: site) }
-
-    it do
-      expect(subject.match?(Addressable::URI.parse("https://twitter.com/share"))).to be_truthy
-      url = "https://b.hatena.ne.jp/entry/https://demo.ss-proj.org/docs/page30.html"
-      expect(subject.match?(Addressable::URI.parse(url))).to be_truthy
-      url = "https://b.hatena.ne.jp/entry/#{CGI.escape("https://demo.ss-proj.org/docs/page30.html")}"
-      expect(subject.match?(Addressable::URI.parse(url))).to be_truthy
-    end
-  end
+  # sns share パーツは data-ss-rel へ移行した
+  # context "when sns share path is given" do
+  #   subject! { described_class.new(cur_site: site) }
+  #
+  #   it do
+  #     expect(subject.match?(Addressable::URI.parse("https://twitter.com/share"))).to be_truthy
+  #     url = "https://b.hatena.ne.jp/entry/https://demo.ss-proj.org/docs/page30.html"
+  #     expect(subject.match?(Addressable::URI.parse(url))).to be_truthy
+  #     url = "https://b.hatena.ne.jp/entry/#{CGI.escape("https://demo.ss-proj.org/docs/page30.html")}"
+  #     expect(subject.match?(Addressable::URI.parse(url))).to be_truthy
+  #   end
+  # end
 end

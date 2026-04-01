@@ -56,7 +56,7 @@ class Gws::Report::FilesController < ApplicationController
 
   def set_items
     set_search_params
-    @items ||= @model.site(@cur_site).search(@s).without_deleted
+    @items ||= @model.site(@cur_site).without_deleted
   end
 
   def set_item
@@ -116,6 +116,7 @@ class Gws::Report::FilesController < ApplicationController
   def index
     set_items
     @items = @items.
+      search(@s).
       order_by(updated: -1, id: -1).
       page(params[:page]).per(50)
   end

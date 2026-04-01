@@ -56,8 +56,7 @@ class Gws::Survey::ReadablesController < ApplicationController
   def set_items
     @items = @model.site(@cur_site).and_public.
       readable(@cur_user, site: @cur_site).
-      without_deleted.
-      search(@s)
+      without_deleted
   end
 
   def set_item
@@ -75,7 +74,9 @@ class Gws::Survey::ReadablesController < ApplicationController
 
   def index
     @categories = @categories.tree_sort
-    @items = @items.custom_order(@s.sort).
+    @items = @items.
+      search(@s).
+      custom_order(@s.sort).
       page(params[:page]).per(50)
   end
 

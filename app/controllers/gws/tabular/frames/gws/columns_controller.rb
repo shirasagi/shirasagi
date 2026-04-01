@@ -25,6 +25,10 @@ class Gws::Tabular::Frames::Gws::ColumnsController < Gws::Frames::ColumnsControl
     @cur_form ||= forms.find(params[:form])
   end
 
+  def set_items
+    @items ||= Gws::Column::Base.site(@cur_site).where(form_id: cur_form.id)
+  end
+
   def column_type_options
     @column_type_options ||= Gws::Tabular::Column.column_type_options(cur_form: cur_form)
   end

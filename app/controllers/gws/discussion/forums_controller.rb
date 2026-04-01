@@ -34,11 +34,13 @@ class Gws::Discussion::ForumsController < ApplicationController
     super.merge member_ids: [@cur_user.id]
   end
 
-  def items
-    if @mode == 'editable'
-      @model.site(@cur_site).forum.without_deleted.allow(:read, @cur_user, site: @cur_site)
-    else
-      @model.site(@cur_site).forum.without_deleted.and_public.member(@cur_user)
+  def set_items
+    @items ||= begin
+      if @mode == 'editable'
+        @model.site(@cur_site).forum.without_deleted.allow(:read, @cur_user, site: @cur_site)
+      else
+        @model.site(@cur_site).forum.without_deleted.and_public.member(@cur_user)
+      end
     end
   end
 
@@ -47,7 +49,8 @@ class Gws::Discussion::ForumsController < ApplicationController
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 
-    @items = items.search(params[:s]).
+    set_items
+    @items = @items.search(params[:s]).
       reorder(order: 1, created: 1).
       page(params[:page]).per(50)
   end

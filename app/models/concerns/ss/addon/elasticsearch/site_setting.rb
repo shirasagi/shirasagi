@@ -9,9 +9,17 @@ module SS::Addon::Elasticsearch::SiteSetting
     field :elasticsearch_outside, type: String, default: 'disabled'
     embeds_ids :elasticsearch_sites, class_name: "Cms::Site"
 
+    field :elasticsearch_user, type: String
+    field :elasticsearch_password, type: String
+    field :elasticsearch_ssl_verify_mode, type: String
+    attr_accessor :in_elasticsearch_password, :rm_elasticsearch_password
+
     permit_params :elasticsearch_hosts, :elasticsearch_deny, :elasticsearch_indexes, :elasticsearch_outside
     permit_params elasticsearch_site_ids: []
+    permit_params :elasticsearch_user, :in_elasticsearch_password, :rm_elasticsearch_password, :elasticsearch_ssl_verify_mode
 
+    before_validation :update_elasticsearch_password
+    validates :elasticsearch_ssl_verify_mode, inclusion: { in: %w(none peer client_once fail_if_no_peer_cert), allow_blank: true }
     after_save :deny_elasticsearch_paths, if: ->{ elasticsearch_deny_changed? || elasticsearch_deny_previously_changed? }
   end
 
@@ -51,7 +59,23 @@ module SS::Addon::Elasticsearch::SiteSetting
 
   def elasticsearch_client
     return unless elasticsearch_enabled?
-    @elasticsearch_client ||= Elasticsearch::Client.new(hosts: elasticsearch_hosts, logger: ESTransportLogger)
+
+    @elasticsearch_client ||= begin
+      params = {
+        hosts: elasticsearch_hosts, logger: ESTransportLogger
+      }
+      if elasticsearch_user.present? && elasticsearch_password.present?
+        params[:user] = elasticsearch_user
+        params[:password] = SS::Crypto.decrypt(elasticsearch_password)
+      end
+      if elasticsearch_ssl_verify_mode == "none"
+        params[:transport_options] = { ssl: { verify: false } }
+      end
+      Elasticsearch::Client.new(params)
+    rescue => e
+      Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+      nil
+    end
   end
 
   def elasticsearch_outside_options
@@ -62,7 +86,23 @@ module SS::Addon::Elasticsearch::SiteSetting
     elasticsearch_outside == 'enabled'
   end
 
+  def elasticsearch_ssl_verify_mode_options
+    %w(none peer).map do |v|
+      [ v, v ]
+    end
+  end
+
   private
+
+  def update_elasticsearch_password
+    if rm_elasticsearch_password == '1'
+      self.elasticsearch_password = nil
+      return
+    end
+
+    return if in_elasticsearch_password.blank?
+    self.elasticsearch_password = SS::Crypto.encrypt(in_elasticsearch_password)
+  end
 
   def deny_elasticsearch_paths
     es_client = elasticsearch_client
@@ -75,7 +115,7 @@ module SS::Addon::Elasticsearch::SiteSetting
       path.slice!(0) if path.start_with?('/')
       begin
         es_client.delete(index: index_name, type: index_type, id: path)
-      rescue Elasticsearch::Transport::Transport::Errors::NotFound => e
+      rescue Elastic::Transport::Transport::Errors::NotFound => e
         Rails.logger.debug { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
       end
     end

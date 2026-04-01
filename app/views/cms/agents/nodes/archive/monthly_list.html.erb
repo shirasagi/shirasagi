@@ -8,7 +8,7 @@
             ymd = "#{year}#{format('%02d', month)}"
             cls = "#{ymd} #{ymd == params[:ymd] ? "current" : ""}"
           %>
-          <%= link_to "#{year}#{t_date('year')}#{month}#{t_date('month')}", "#{@cur_node.url}#{ymd}/", class: cls %>
+          <%= link_to "#{year}#{t_date('year')}#{month}#{t_date('month')}", "#{@cur_node.url}#{ymd}/", class: cls, data: { ss_rel: "nofollow" } %>
         <% end %>
       </div>
     <% end %>

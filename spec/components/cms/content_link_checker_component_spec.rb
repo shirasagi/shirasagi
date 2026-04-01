@@ -57,17 +57,17 @@ describe Cms::ContentLinkCheckerComponent, type: :component, dbscope: :example d
       before do
         success_return = { body: "", status: 200, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
         Addressable::URI.join(site.full_url, success_url1).to_s.tap do |u|
-          stub_request(:get, /^#{::Regexp.escape(u)}/).to_return(success_return)
+          stub_request(:any, /^#{::Regexp.escape(u)}/).to_return(success_return)
         end
-        stub_request(:get, /^#{::Regexp.escape(success_url2)}/).to_return(success_return)
-        stub_request(:get, /^#{::Regexp.escape(success_url3)}/).to_return(success_return)
-        # stub_request(:get, /^#{::Regexp.escape(success_url4)}/).to_return(success_return)
+        stub_request(:any, /^#{::Regexp.escape(success_url2)}/).to_return(success_return)
+        stub_request(:any, /^#{::Regexp.escape(success_url3)}/).to_return(success_return)
+        # stub_request(:any, /^#{::Regexp.escape(success_url4)}/).to_return(success_return)
         failed_return = { body: "", status: 404, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
         Addressable::URI.join(site.full_url, failed_url1).to_s.tap do |u|
-          stub_request(:get, u).to_return(failed_return)
+          stub_request(:any, u).to_return(failed_return)
         end
-        stub_request(:get, failed_url2).to_return(failed_return)
-        stub_request(:get, failed_url3).to_return(failed_return)
+        stub_request(:any, failed_url2).to_return(failed_return)
+        stub_request(:any, failed_url3).to_return(failed_return)
       end
 
       let(:html) do
@@ -195,8 +195,8 @@ describe Cms::ContentLinkCheckerComponent, type: :component, dbscope: :example d
         WebMock.disable_net_connect!
 
         failed_return = { body: "", status: 404, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
-        stub_request(:get, url1).to_return(failed_return)
-        stub_request(:get, url2).to_return(failed_return)
+        stub_request(:any, url1).to_return(failed_return)
+        stub_request(:any, url2).to_return(failed_return)
       end
 
       after do
@@ -249,7 +249,7 @@ describe Cms::ContentLinkCheckerComponent, type: :component, dbscope: :example d
         WebMock.disable_net_connect!
 
         failed_return = { body: "", status: 404, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
-        stub_request(:get, url1).to_return(failed_return)
+        stub_request(:any, url1).to_return(failed_return)
       end
 
       after do

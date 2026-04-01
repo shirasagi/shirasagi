@@ -22,9 +22,6 @@ class Gws::Circular::AdminsController < ApplicationController
     @items ||= @model.site(@cur_site).
       topic.
       without_deleted.
-      allow(:read, @cur_user, site: @cur_site).
-      search(@s).
-      page(params[:page]).per(50).
-      custom_order(@s.sort || 'due_date')
+      allow(:read, @cur_user, site: @cur_site)
   end
 end

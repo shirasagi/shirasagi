@@ -29,13 +29,17 @@ module Opendata::Dataset::ResourceReportFilter
   end
 
   def set_items
-    case @s.type
-    when "month"
-      @items ||= @model.site(@cur_site).search(@s).aggregate_by_month
-    when "year"
-      @items ||= @model.site(@cur_site).search(@s).aggregate_by_year
-    else
-      @items ||= @model.site(@cur_site).search(@s).order_by(site_id: 1, year_month: 1, dataset_id: 1, resource_id: 1)
+    @items ||= begin
+      set_search_params
+
+      case @s.type
+      when "month"
+        @model.site(@cur_site).search(@s).aggregate_by_month
+      when "year"
+        @model.site(@cur_site).search(@s).aggregate_by_year
+      else
+        @model.site(@cur_site).search(@s).order_by(site_id: 1, year_month: 1, dataset_id: 1, resource_id: 1)
+      end
     end
   end
 

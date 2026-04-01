@@ -6,4 +6,14 @@
 <dl class="see addon-gws-elasticsearch-group-setting">
   <dt><%= @model.t :elasticsearch_hosts %><%= @model.tt :elasticsearch_hosts %></dt>
   <dd><%= f.text_field :elasticsearch_hosts %></dd>
+
+  <dt class="depth-2"><%= @model.t(:elasticsearch_user).split("/", 2).last %><%= @model.tt :elasticsearch_user %></dt>
+  <dd class="depth-2"><%= f.text_field :elasticsearch_user %></dd>
+
+  <dt class="depth-2"><%= @model.t(:elasticsearch_password).split("/", 2).last %><%= @model.tt :elasticsearch_password %></dt>
+  <dd class="depth-2"><%= f.text_field :in_elasticsearch_password %></dd>
+  <dd class="depth-2"><label><%= f.checkbox :rm_elasticsearch_password %> <%= t("ss.links.delete") %></label></dd>
+
+  <dt class="depth-2"><%= @model.t(:elasticsearch_ssl_verify_mode).split("/", 2).last %><%= @model.tt :elasticsearch_ssl_verify_mode %></dt>
+  <dd class="depth-2"><%= f.select :elasticsearch_ssl_verify_mode, @item.elasticsearch_ssl_verify_mode_options, include_blank: true %></dd>
 </dl>

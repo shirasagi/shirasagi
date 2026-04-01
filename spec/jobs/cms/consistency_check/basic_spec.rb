@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
+describe Cms::ConsistencyCheckJob, dbscope: :example do
   let!(:site) { cms_site }
 
   let!(:article_node) { create :article_node_page, cur_site: site }
@@ -32,8 +32,9 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
   end
 
   def generate_htmls
-    Cms::Node::GenerateJob.bind(site_id: site).perform_now
-    Cms::Page::GenerateJob.bind(site_id: site).perform_now
+    expect { Cms::Node::GenerateJob.bind(site_id: site).perform_now }.to output.to_stdout
+    expect { Cms::Page::GenerateJob.bind(site_id: site).perform_now }.to output.to_stdout
+    Job::Log.all.destroy_all
 
     expect(File.exist?(article_node.path)).to be true
     expect(File.exist?(article_page1.path)).to be true
@@ -91,12 +92,23 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
     it "#perform" do
       generate_htmls
 
-      expectation = expect { described_class.bind(site_id: site).perform_now }
-      expectation.not_to output(include("remove")).to_stdout
+      expectation = expect { described_class.bind(site_id: site).perform_now(repair: true, email: email) }
+      expectation.not_to output(include("removed")).to_stdout
 
       log = Job::Log.first
       expect(log.logs).to include(/INFO -- : .* Started Job/)
       expect(log.logs).to include(/INFO -- : .* Completed Job/)
+
+      expect(ActionMailer::Base.deliveries.length).to eq 1
+      ActionMailer::Base.deliveries.first.tap do |mail|
+        expect(mail.from.first).to eq site.sender_address
+        expect(mail.to.first).to eq email
+        expect(mail_subject(mail)).to include("[#{site.name}] Removed 0 files")
+        expect(mail.body.multipart?).to be_falsey
+        mail_body(mail).tap do |mail_body|
+          expect(mail_body).to include("[0 files]")
+        end
+      end
     end
   end
 
@@ -105,67 +117,15 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
       generate_htmls
       set_improper_htmls
 
-      expectation = expect { described_class.bind(site_id: site).perform_now }
+      expectation = expect { described_class.bind(site_id: site).perform_now(repair: true, email: email) }
       expectation.to output(
         include(
           site.name,
-          "remove #{article_page1.path}",
-          "remove #{event_page1.path}",
-          "remove #{cms_page1.path}",
-          "remove #{cms_page2.path}",
-          "remove #{faq_page1.path}"
-        )).to_stdout
-
-      expect(File.exist?(article_page1.path)).to be false
-      expect(File.exist?(event_page1.path)).to be false
-      expect(File.exist?(cms_page1.path)).to be false
-      expect(File.exist?(cms_page2.path)).to be false
-      expect(File.exist?(faq_page1.path)).to be false
-
-      log = Job::Log.first
-      expect(log.logs).to include(/INFO -- : .* Started Job/)
-      expect(log.logs).to include(/INFO -- : .* Completed Job/)
-    end
-
-    it "#perform with dry_run option" do
-      generate_htmls
-      set_improper_htmls
-
-      expectation = expect { described_class.bind(site_id: site).perform_now(dry_run: 1) }
-      expectation.to output(
-        include(
-          site.name,
-          "remove #{article_page1.path}",
-          "remove #{event_page1.path}",
-          "remove #{cms_page1.path}",
-          "remove #{cms_page2.path}",
-          "remove #{faq_page1.path}"
-        )).to_stdout
-
-      expect(File.exist?(article_page1.path)).to be true
-      expect(File.exist?(event_page1.path)).to be true
-      expect(File.exist?(cms_page1.path)).to be true
-      expect(File.exist?(cms_page2.path)).to be true
-      expect(File.exist?(faq_page1.path)).to be true
-
-      log = Job::Log.first
-      expect(log.logs).to include(/INFO -- : .* Started Job/)
-      expect(log.logs).to include(/INFO -- : .* Completed Job/)
-    end
-
-    it "#perform with email option" do
-      generate_htmls
-      set_improper_htmls
-
-      expectation = expect { described_class.bind(site_id: site).perform_now(email: email) }
-      expectation.to output(
-        include(
-          site.name,
-          "remove #{article_page1.path}",
-          "remove #{event_page1.path}",
-          "remove #{cms_page1.path}",
-          "remove #{cms_page2.path}",
-          "remove #{faq_page1.path}"
+          "#{article_page1.path}: removed",
+          "#{event_page1.path}: removed",
+          "#{cms_page1.path}: removed",
+          "#{cms_page2.path}: removed",
+          "#{faq_page1.path}: removed"
         )).to_stdout
 
       expect(File.exist?(article_page1.path)).to be false
@@ -179,16 +139,50 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
       expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
       expect(ActionMailer::Base.deliveries.length).to eq 1
-      mail = ActionMailer::Base.deliveries.last
-      body = mail_body(mail)
-      expect(mail.to).to eq [email]
-      expect(body).to include("[5 errors]")
-      expect(body).to include("remove #{article_page1.path}")
-      expect(body).to include("remove #{event_page1.path}")
-      expect(body).to include("remove #{cms_page1.path}")
-      expect(body).to include("remove #{cms_page2.path}")
-      expect(body).to include("remove #{faq_page1.path}")
-      expect(mail.message_id).to end_with("@#{site.domain}.mail")
+      ActionMailer::Base.deliveries.first.tap do |mail|
+        expect(mail.from.first).to eq site.sender_address
+        expect(mail.to.first).to eq email
+        expect(mail_subject(mail)).to include("[#{site.name}] Removed 5 files")
+        expect(mail.body.multipart?).to be_falsey
+        mail_body(mail).tap do |mail_body|
+          expect(mail_body).to include("[5 files]")
+          expect(mail_body).to include(
+            article_page1.path, event_page1.path, cms_page1.path, cms_page2.path, faq_page1.path)
+        end
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
+      end
+    end
+
+    it "#perform without repair option" do
+      generate_htmls
+      set_improper_htmls
+
+      expectation = expect { described_class.bind(site_id: site).perform_now(email: email) }
+      expectation.not_to output("removed").to_stdout
+
+      expect(File.exist?(article_page1.path)).to be true
+      expect(File.exist?(event_page1.path)).to be true
+      expect(File.exist?(cms_page1.path)).to be true
+      expect(File.exist?(cms_page2.path)).to be true
+      expect(File.exist?(faq_page1.path)).to be true
+
+      log = Job::Log.first
+      expect(log.logs).to include(/INFO -- : .* Started Job/)
+      expect(log.logs).to include(/INFO -- : .* Completed Job/)
+
+      expect(ActionMailer::Base.deliveries.length).to eq 1
+      ActionMailer::Base.deliveries.first.tap do |mail|
+        expect(mail.from.first).to eq site.sender_address
+        expect(mail.to.first).to eq email
+        expect(mail_subject(mail)).to include("[#{site.name}] Removed 5 files")
+        expect(mail.body.multipart?).to be_falsey
+        mail_body(mail).tap do |mail_body|
+          expect(mail_body).to include("[5 files]")
+          expect(mail_body).to include(
+            article_page1.path, event_page1.path, cms_page1.path, cms_page2.path, faq_page1.path)
+        end
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
+      end
     end
   end
 end

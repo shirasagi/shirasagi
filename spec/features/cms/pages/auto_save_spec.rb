@@ -12,8 +12,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
   let(:html) { "<p>#{unique_id}</p>" }
   let(:page_index_path) { cms_pages_path site.id }
   let(:page_new_path) { new_cms_page_path site.id }
-  let(:page_edit_path) { edit_cms_page_path site.id, item }
-  let(:page_show_path) { cms_page_path site.id, item }
+  let(:page_edit_path) { edit_node_page_path(site: site, cid: node, id: item) }
+  let(:page_show_path) { node_page_path(site: site, cid: node, id: item) }
 
   before { login_cms_user }
 

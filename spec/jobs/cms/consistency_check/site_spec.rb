@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
+describe Cms::ConsistencyCheckJob, dbscope: :example do
   let!(:site1) { create :cms_site_unique }
   let!(:site2) { create :cms_site_unique }
 
@@ -20,11 +20,11 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
   end
 
   def generate_htmls
-    Cms::Node::GenerateJob.bind(site_id: site1).perform_now
-    Cms::Page::GenerateJob.bind(site_id: site1).perform_now
-
-    Cms::Node::GenerateJob.bind(site_id: site2).perform_now
-    Cms::Page::GenerateJob.bind(site_id: site2).perform_now
+    expect { Cms::Node::GenerateJob.bind(site_id: site1).perform_now }.to output.to_stdout
+    expect { Cms::Page::GenerateJob.bind(site_id: site1).perform_now }.to output.to_stdout
+    expect { Cms::Node::GenerateJob.bind(site_id: site2).perform_now }.to output.to_stdout
+    expect { Cms::Page::GenerateJob.bind(site_id: site2).perform_now }.to output.to_stdout
+    Job::Log.all.destroy_all
 
     expect(File.exist?(article_node1.path)).to be true
     expect(File.exist?(article_page1.path)).to be true
@@ -51,13 +51,13 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
     it "#perform" do
       generate_htmls
 
-      expectation = expect { described_class.bind(site_id: site1).perform_now }
+      expectation = expect { described_class.bind(site_id: site1).perform_now(repair: true) }
       expectation.to output(include(site1.name)).to_stdout
-      expectation.not_to output(include("remove")).to_stdout
+      expectation.not_to output(include("removed")).to_stdout
 
-      expectation = expect { described_class.bind(site_id: site2).perform_now }
+      expectation = expect { described_class.bind(site_id: site2).perform_now(repair: true) }
       expectation.to output(include(site2.name)).to_stdout
-      expectation.not_to output(include("remove")).to_stdout
+      expectation.not_to output(include("removed")).to_stdout
     end
   end
 
@@ -66,21 +66,21 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
       generate_htmls
       set_improper_htmls
 
-      expectation = expect { described_class.bind(site_id: site1).perform_now }
+      expectation = expect { described_class.bind(site_id: site1).perform_now(repair: true) }
       expectation.to output(
         include(
           site1.name,
-          "remove #{article_page1.path}"
+          "#{article_page1.path}: removed"
         )).to_stdout
 
       expect(File.exist?(article_page1.path)).to be false
       expect(File.exist?(article_page2.path)).to be true
 
-      expectation = expect { described_class.bind(site_id: site2).perform_now }
+      expectation = expect { described_class.bind(site_id: site2).perform_now(repair: true) }
       expectation.to output(
         include(
           site2.name,
-          "remove #{article_page2.path}"
+          "#{article_page2.path}: removed"
         )).to_stdout
 
       expect(File.exist?(article_page1.path)).to be false

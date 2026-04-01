@@ -1,7 +1,11 @@
 class Gws::Memo::ImportMessagesController < ApplicationController
-  include Gws::Memo::ImportAndRestoreFilter
+  include Gws::BaseFilter
+  include Gws::CrudFilter
 
   model Gws::Memo::MessageImporter
+
+  navi_view "gws/memo/messages/navi"
+  menu_view nil
 
   private
 
@@ -10,12 +14,24 @@ class Gws::Memo::ImportMessagesController < ApplicationController
     @crumbs << [t('gws/memo/message.import_messages'), gws_memo_import_messages_path ]
   end
 
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site }
+  end
+
   public
 
   def import
-    return unless set_item
-    @item.import_messages
+    if request.get? || request.head?
+      return
+    end
 
-    render_create true, location: { action: :import }, notice: I18n.t("gws/memo/message.notice.start_import")
+    @item = @model.new get_params
+    return unless @item.save
+
+    Gws::Memo::MessageImportJob.bind(site_id: @cur_site, user_id: @cur_user).perform_later(@item.id)
+    render_create true, location: { action: :start_import }, notice: I18n.t("gws/memo/message.notice.start_import")
+  end
+
+  def start_import
   end
 end

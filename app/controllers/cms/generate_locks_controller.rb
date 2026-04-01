@@ -18,8 +18,11 @@ class Cms::GenerateLocksController < ApplicationController
   end
 
   def set_item
-    @item = Cms::Site.find(@cur_site.id)
-    @item.attributes = fix_params
+    @item ||= begin
+      item = Cms::Site.find(@cur_site.id)
+      item.attributes = fix_params
+      item
+    end
   end
 
   public

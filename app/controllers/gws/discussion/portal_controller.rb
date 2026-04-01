@@ -24,10 +24,14 @@ class Gws::Discussion::PortalController < ApplicationController
   end
 
   def set_items
+    return @items if @items
+
     set_topics
     set_recent_items
     set_todo
     set_bookmarks
+
+    @items
   end
 
   def set_topics

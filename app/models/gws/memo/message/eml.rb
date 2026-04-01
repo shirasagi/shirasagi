@@ -33,7 +33,7 @@ class Gws::Memo::Message
 
       decoded = Base64.strict_decode64(local_part) rescue nil
       if decoded
-        decoded = decoded.encode("UTF-8") rescue nil
+        decoded = decoded.force_encoding("UTF-8") rescue nil
       end
       if decoded
         local_part = decoded
@@ -363,7 +363,7 @@ class Gws::Memo::Message
           end
         end
       else
-        message.user_id = nil
+        message.user_id = nil if message.respond_to?(:user_id)
         message.from_member_name = mail_header[:from].to_s
       end
     end

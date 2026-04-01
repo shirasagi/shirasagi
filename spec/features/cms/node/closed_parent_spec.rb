@@ -33,11 +33,57 @@ describe "cms_node", type: :feature, dbscope: :example, js: true do
         end
         within breadcrumb_items[2] do
           expect(page).to have_css(".breadcrumb-title", text: node1_1.name)
+          # node1_1 は公開なので public_off のアイコンがつかない
+          expect(page).to have_no_content("public_off")
           expect(page).to have_css(".breadcrumb-link", text: node1_1.name)
           expect(page).to have_link(node1_1.name, href: article_pages_path(site: site, cid: node1_1))
         end
       end
       expect(page).to have_css(".list-item-parent-directory", text: I18n.t('ss.links.parent_directory'))
+      expect(page).to have_title(node1_1.name)
+      expect(page).to have_no_title("public_off")
+    end
+  end
+
+  context "when the leaf node is closed" do
+    let!(:node1) { create :cms_node_node, cur_site: site, state: "public" }
+    let!(:node1_1) do
+      create :article_node_page, cur_site: site, cur_node: node1, shortcuts: [ Cms::Node::SHORTCUT_SYSTEM ], state: "closed"
+    end
+
+    it do
+      login_user admin, to: cms_contents_path(site: site)
+      within ".cms-shortcut-nodes" do
+        click_on node1_1.name
+      end
+      within ".breadcrumb" do
+        breadcrumb_items = all(".breadcrumb-item")
+        expect(breadcrumb_items).to have(3).items
+        within breadcrumb_items[0] do
+          expect(page).to have_css(".breadcrumb-title", text: I18n.t("cms.top"))
+          expect(page).to have_no_content("public_off")
+          expect(page).to have_css(".breadcrumb-link")
+          expect(page).to have_link(I18n.t("cms.top"), href: cms_contents_path(site: site))
+        end
+        within breadcrumb_items[1] do
+          expect(page).to have_css(".breadcrumb-title", text: node1.name)
+          # node1 は公開なので public_off のアイコンがつかない
+          expect(page).to have_no_content("public_off")
+          expect(page).to have_css(".breadcrumb-link", text: node1.name)
+          expect(page).to have_link(node1.name, href: node_nodes_path(site: site, cid: node1))
+        end
+        within breadcrumb_items[2] do
+          expect(page).to have_css(".breadcrumb-title", text: node1_1.name)
+          # node1_1 は非公開なので public_off のアイコンが付く
+          expect(page).to have_css(".breadcrumb-title", text: "public_off")
+          expect(page).to have_css(".breadcrumb-link", text: node1_1.name)
+          expect(page).to have_link(node1_1.name, href: article_pages_path(site: site, cid: node1_1))
+        end
+      end
+      expect(page).to have_css(".list-item-parent-directory", text: I18n.t('ss.links.parent_directory'))
+      expect(page).to have_title(node1_1.name)
+      expect(page).to have_no_title("<span>")
+      expect(page).to have_no_title("public_off")
     end
   end
 end

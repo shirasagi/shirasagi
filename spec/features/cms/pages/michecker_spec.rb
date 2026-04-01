@@ -4,7 +4,7 @@ describe "michecker", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create(:cms_node, cur_site: site) }
   let(:item) { create(:cms_page, cur_site: site, cur_node: node) }
-  let(:show_path) { cms_page_path site.id, node, item }
+  let(:show_path) { node_page_path(site: site, cid: node, id: item) }
 
   context "route check" do
     before { login_cms_user }

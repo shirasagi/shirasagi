@@ -65,10 +65,14 @@ class Gws::Affair::DutySetting::HolidaysController < ApplicationController
   end
 
   def set_items
-    set_holiday_calendar
-    set_year
-    @items = @holiday_calendar.holidays
-    @items = @items.gte(start_at: @cur_year_range[0]).lte(start_at: @cur_year_range[1]) if @cur_year_range.present?
+    @items ||= begin
+      set_holiday_calendar
+      set_year
+
+      items = @holiday_calendar.holidays
+      items = items.gte(start_at: @cur_year_range[0]).lte(start_at: @cur_year_range[1]) if @cur_year_range.present?
+      items
+    end
   end
 
   def set_item
