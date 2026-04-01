@@ -564,6 +564,8 @@ Rails.application.routes.draw do
       post :resume_edit, on: :member
       put :publish_all, on: :collection
       put :close_all, on: :collection
+      post :check_content, on: :collection
+      post :correct_content, on: :collection
     end
     resources :import_pages, concerns: [:deletion, :convert, :change_state]
     resources :import_nodes, concerns: [:deletion, :change_state]
