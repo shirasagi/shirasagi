@@ -15,7 +15,7 @@
 <%= jquery do %>
   $('#addon-ss-agents-addons-markdown').hide();
   $('#addon-gws-agents-addons-file').hide();
-  $('#addon-gws-agents-addons-workflow-custom_form .addon-head h2').text(<%== @cur_form.name.to_json %>);
+  $('#addon-gws-agents-addons-workflow2-custom_form .addon-head h2').text(<%== @cur_form.name.to_json %>);
 
   $('a.btn-file-upload').data('on-select', function($item) {
     $.colorbox.close();
