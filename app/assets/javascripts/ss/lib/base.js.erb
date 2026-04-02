@@ -142,6 +142,8 @@ this.SS = (function () {
     if (!box) {
       $(document).on("cbox_complete", function() {
         SS.renderExternalLinks($("#cboxLoadedContent"))
+      }).on("ss:dialog:opened", function(ev) {
+        SS.renderExternalLinks($(ev.target))
       });
     }
     //default

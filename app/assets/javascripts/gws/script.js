@@ -41,6 +41,8 @@ SS.ready(function () {
   renderExternalLinks($(document));
   $(document).on("cbox_complete", function() {
     renderExternalLinks($("#cboxLoadedContent"))
+  }).on("ss:dialog:opened", function(ev) {
+    renderExternalLinks($(ev.target))
   });
 
   // tabs
