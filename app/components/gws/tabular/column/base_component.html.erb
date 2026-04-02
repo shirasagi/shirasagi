@@ -16,7 +16,7 @@
   </dt>
   <dd>
     <% if type == :form && column.prefix_explanation.present? %>
-      <div class="prefix-block"><%= sanitize_easy(br(column.prefix_explanation)) %></div>
+      <div class="prefix-block"><%= sanitize_easy(br(column.prefix_explanation, html_escape: false)) %></div>
     <% end %>
     <div class="gws-tabular-column <%= column.class.name.underscore.gsub('/', '-') %>" data-column-id="<%= column.id %>">
       <div class="input-group">
@@ -32,7 +32,7 @@
       </div>
     </div>
     <% if type == :form && column.postfix_explanation.present? %>
-      <div class="postfix-block"><%= sanitize_easy(br(column.postfix_explanation)) %></div>
+      <div class="postfix-block"><%= sanitize_easy(br(column.postfix_explanation, html_escape: false)) %></div>
     <% end %>
   </dd>
 <% elsif type == :title || type == :meta %>

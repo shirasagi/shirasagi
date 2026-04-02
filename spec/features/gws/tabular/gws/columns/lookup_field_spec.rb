@@ -46,8 +46,8 @@ describe Gws::Tabular::Gws::ColumnsController, type: :feature, dbscope: :example
     let(:tooltips3) { "tooltip-#{unique_id}" }
     let(:prefix_label3) { "pre-#{unique_id}"[0, 10] }
     let(:postfix_label3) { "pos-#{unique_id}"[0, 10] }
-    let(:prefix_explanation3) { "<b>prefix-#{unique_id}</b>" }
-    let(:postfix_explanation3) { "<b>postfix-#{unique_id}</b>" }
+    let(:prefix_explanation3) { Array.new(2) { "<b class=\"bold-#{_1}\">prefix-#{unique_id}</b>" } }
+    let(:postfix_explanation3) { Array.new(2) { "<i class=\"italic-#{_1}\">postfix-#{unique_id}</i>" } }
     let(:index_state3) { %w(none asc desc).sample }
     let(:index_state_label3) { I18n.t("gws/tabular.options.order_direction.#{index_state3}") }
 
@@ -141,8 +141,8 @@ describe Gws::Tabular::Gws::ColumnsController, type: :feature, dbscope: :example
           fill_in "item[tooltips]", with: tooltips3
           fill_in "item[prefix_label]", with: prefix_label3
           fill_in "item[postfix_label]", with: postfix_label3
-          fill_in "item[prefix_explanation]", with: prefix_explanation3
-          fill_in "item[postfix_explanation]", with: postfix_explanation3
+          fill_in "item[prefix_explanation]", with: prefix_explanation3.join("\n")
+          fill_in "item[postfix_explanation]", with: postfix_explanation3.join("\n")
           # lookup_field
           select form_referee_column3.name, from: "item[lookup_column_id]"
           # tabular common
@@ -165,13 +165,20 @@ describe Gws::Tabular::Gws::ColumnsController, type: :feature, dbscope: :example
       expect(column.tooltips.first).to eq tooltips3
       expect(column.prefix_label).to eq prefix_label3
       expect(column.postfix_label).to eq postfix_label3
-      expect(column.prefix_explanation).to eq prefix_explanation3
-      expect(column.postfix_explanation).to eq postfix_explanation3
+      expect(column.prefix_explanation).to eq prefix_explanation3.join("\n")
+      expect(column.postfix_explanation).to eq postfix_explanation3.join("\n")
       # lookup_field
       expect(column.reference_column_id).to eq form_reference_column.id
       expect(column.lookup_column_id).to eq form_referee_column3.id
       # tabular common
       expect(column.index_state).to eq index_state3
+
+      within ".gws-column-item[data-id='#{column.id}']" do
+        expect(page).to have_css(".bold-0")
+        expect(page).to have_css(".bold-1")
+        expect(page).to have_css(".italic-0")
+        expect(page).to have_css(".italic-1")
+      end
     end
   end
 end
