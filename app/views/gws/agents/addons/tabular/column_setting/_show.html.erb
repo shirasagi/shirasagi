@@ -1,4 +1,7 @@
-<dl class="see mod-gws-survey-custom_fields">
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+%>
+<dl class="see">
   <%=
     if !@item.deleted?
       links = []
@@ -40,7 +43,7 @@
 </dl>
 
 <%= jquery do %>
-  var $rootElement = $('#addon-gws-agents-addons-tabular-column_setting');
+  var $rootElement = $('#<%= addon[:id] %>');
   $rootElement.find('.preview').colorbox({
     fixed: true,
     width: "90%",
@@ -48,8 +51,8 @@
     onComplete: function() {
       var $content = $('#cboxLoadedContent');
       $content.find('footer.send').hide();
-      $content.find('form').on('submit', function(e) {
-        e.preventDefault();
+      $content.find('form').on('submit', function(ev) {
+        ev.preventDefault();
         return false;
       });
       $content.find('.toggle-body').each(function() {
@@ -58,12 +61,12 @@
           $this.show();
         }
       });
-      $content.find('.ajax-box').on('click', function(e) {
-        e.preventDefault();
+      $content.find('.ajax-box').on('click', function(ev) {
+        ev.preventDefault();
         return false;
       });
-      $content.find('.gws-tabs a').on('click', function(e) {
-        e.preventDefault();
+      $content.find('.gws-tabs a').on('click', function(ev) {
+        ev.preventDefault();
         return false;
       });
     }
