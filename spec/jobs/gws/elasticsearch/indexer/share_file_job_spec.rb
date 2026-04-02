@@ -25,7 +25,7 @@ describe Gws::Elasticsearch::Indexer::ShareFileJob, dbscope: :example, es: true 
 
       omittable_fields = %i[
         id mode text groups group_names release_date close_date released
-        member_ids member_group_ids member_custom_group_ids text_index data file site_id attachment
+        member_ids member_group_ids member_custom_group_ids text_index data file site_id attachment keywords description
       ]
       unhandled_keys.reject! { |key| omittable_fields.include?(key.to_sym) }
       expect(unhandled_keys).to be_blank
