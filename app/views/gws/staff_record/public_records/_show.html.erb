@@ -7,6 +7,12 @@
       <td><%= @item.send :charge_name %></td>
     </tr>
     <tr>
+      <th><%= @model.t :code %></th>
+      <td><%= @item.send :code %></td>
+      <th><%= @model.t :email %></th>
+      <td><%= @item.send :email %></td>
+    </tr>
+    <tr>
       <th><%= @model.t :charge_address %></th>
       <td><%= @item.send :charge_address %></td>
       <th><%= @model.t :charge_tel %></th>
