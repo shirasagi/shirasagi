@@ -133,6 +133,95 @@ organization_uid: organization_uid8
       expect(sorted_users.map(&:id)).to eq expected_users.map(&:id)
     end
 
+    it "exercises all 6 sort priorities: title > group > uid_type > sort_key > uid > id" do
+      # 全6ソート優先度が正しく効くことを1つのテストで複合的に検証する
+      # 優先度: (1) title_order DESC, (2) main_group_order ASC,
+      #         (3) organization_uid_type DIR, (4) organization_uid_sort_key ASC,
+      #         (5) uid ASC, (6) id ASC
+      site.organization_uid_sort_order = 'alpha_first'
+      site.save!
+
+      title_high = create :gws_user_title, order: 20
+      title_low = create :gws_user_title, order: 10
+      group_a = create :gws_group, name: "#{site.name}/#{unique_id}", order: 10
+      group_b = create :gws_group, name: "#{site.name}/#{unique_id}", order: 20
+
+      # (1) title_order で分かれる: title_high(20) が先（降順）
+      user1 = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
+        group_ids: [group_a.id], organization_uid: "Z999", uid: "u-zzz"
+      user2 = create :gws_user, organization_id: site.id, in_title_id: title_low.id,
+        group_ids: [group_a.id], organization_uid: "A001", uid: "u-aaa"
+
+      # (2) title同じ, group_order で分かれる: group_a(10) が先（昇順）
+      user3 = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
+        group_ids: [group_a.id], organization_uid: "500"
+      user4 = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
+        group_ids: [group_b.id], organization_uid: "100"
+
+      # (3) title・group同じ, uid_type で分かれる: alpha_first設定なので alpha が先
+      user5_alpha = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
+        group_ids: [group_a.id], organization_uid: "A100"
+      user5_numeric = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
+        group_ids: [group_a.id], organization_uid: "200"
+
+      # (4) title・group・uid_type同じ, sort_key で分かれる
+      user6_small = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
+        group_ids: [group_a.id], organization_uid: "B010"
+      user6_large = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
+        group_ids: [group_a.id], organization_uid: "B999"
+
+      # (5) title・group・uid_type・sort_key全て同じ（org_uid=nil）, uid で分かれる
+      user7_alpha_uid = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
+        group_ids: [group_a.id], organization_uid: nil, uid: "fall-alpha"
+      user7_beta_uid = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
+        group_ids: [group_a.id], organization_uid: nil, uid: "fall-beta"
+
+      # (6) 全て同じ（org_uid=nil, uid=nil）, id で分かれる
+      user8_first = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
+        group_ids: [group_a.id], organization_uid: nil, uid: nil, email: "tie1-#{unique_id}@example.jp"
+      user8_second = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
+        group_ids: [group_a.id], organization_uid: nil, uid: nil, email: "tie2-#{unique_id}@example.jp"
+
+      all_users = [
+        user1, user2, user3, user4, user5_alpha, user5_numeric,
+        user6_small, user6_large, user7_alpha_uid, user7_beta_uid,
+        user8_first, user8_second
+      ]
+      target_ids = all_users.map(&:id).shuffle
+
+      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
+      sorted_ids = sorted_users.map(&:id)
+
+      # title_high(20) グループが全て先に来る（降順）
+      # その中で group_a(10) が group_b(20) より先
+      # group_a 内で organization_uid_type 昇順: nil < "alpha" < "numeric"
+      # org_uid=nil(type=nil) のユーザーが最初、uid昇順 → id昇順
+      # alpha型の中で sort_key昇順: A100 < B010 < B999 < Z999
+      # numeric型の中で sort_key昇順: 200 < 500
+      expected_ids = [
+        # title_high, group_a: type=nil, uid=nil（MongoDB: nil < string）, id昇順
+        user8_first.id,
+        user8_second.id,
+        # title_high, group_a: type=nil, uid昇順
+        user7_alpha_uid.id, # uid: fall-alpha
+        user7_beta_uid.id,  # uid: fall-beta
+        # title_high, group_a: alpha型 sort_key昇順
+        user5_alpha.id,  # A100 (alpha, sort_key: A0000000100)
+        user6_small.id,  # B010 (alpha, sort_key: B0000000010)
+        user6_large.id,  # B999 (alpha, sort_key: B0000000999)
+        user1.id,        # Z999 (alpha, sort_key: Z0000000999)
+        # title_high, group_a: numeric型 sort_key昇順
+        user5_numeric.id, # 200 (numeric, sort_key: 0000000200)
+        user3.id,         # 500 (numeric, sort_key: 0000000500)
+        # title_high, group_b
+        user4.id,         # 100 (numeric)
+        # title_low, group_a
+        user2.id          # A001 (alpha)
+      ]
+
+      expect(sorted_ids).to eq expected_ids
+    end
+
     it "handles users without titles correctly" do
       # 役職なしのユーザーを作成
       user_no_title = create :gws_user, organization_id: site.id, group_ids: [group1.id], organization_uid: "200"
@@ -345,6 +434,77 @@ organization_uid: "100"
 
       # type降順: "numeric" > "alpha" → numericが先
       expect(sorted_users.map(&:id)).to eq [user_numeric.id, user_alpha.id]
+    end
+
+    it "sorts mixed alpha and numeric uids with alpha_first setting" do
+      # alpha型とnumeric型が複数ずつ混在した場合に、型ごとにグルーピングされ
+      # 各グループ内でsort_key昇順に並ぶことを確認する
+      site.organization_uid_sort_order = 'alpha_first'
+      site.save!
+
+      title_same = create :gws_user_title, order: 15
+      group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
+
+      user_a200 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "A200"
+      user_a300 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "A300"
+      user_b100 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "B100"
+      user_50 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "50"
+      user_500 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "500"
+      user_1000 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "1000"
+
+      target_ids = [user_a200.id, user_a300.id, user_b100.id, user_50.id, user_500.id, user_1000.id].shuffle
+      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
+
+      # alpha型が先（sort_key昇順）→ numeric型が後（sort_key昇順）
+      expect(sorted_users.map(&:id)).to eq [
+        user_a200.id,  # alpha, sort_key: A0000000200
+        user_a300.id,  # alpha, sort_key: A0000000300
+        user_b100.id,  # alpha, sort_key: B0000000100
+        user_50.id,    # numeric, sort_key: 0000000050
+        user_500.id,   # numeric, sort_key: 0000000500
+        user_1000.id   # numeric, sort_key: 0000001000
+      ]
+    end
+
+    it "sorts mixed alpha and numeric uids with numeric_first setting" do
+      # numeric_first設定で、numeric型が先に並びalpha型が後に並ぶことを確認する
+      site.organization_uid_sort_order = 'numeric_first'
+      site.save!
+
+      title_same = create :gws_user_title, order: 15
+      group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
+
+      user_a200 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "A200"
+      user_a300 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "A300"
+      user_b100 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "B100"
+      user_50 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "50"
+      user_500 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "500"
+      user_1000 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "1000"
+
+      target_ids = [user_a200.id, user_a300.id, user_b100.id, user_50.id, user_500.id, user_1000.id].shuffle
+      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
+
+      # numeric型が先（sort_key昇順）→ alpha型が後（sort_key昇順）
+      expect(sorted_users.map(&:id)).to eq [
+        user_50.id,    # numeric, sort_key: 0000000050
+        user_500.id,   # numeric, sort_key: 0000000500
+        user_1000.id,  # numeric, sort_key: 0000001000
+        user_a200.id,  # alpha, sort_key: A0000000200
+        user_a300.id,  # alpha, sort_key: A0000000300
+        user_b100.id   # alpha, sort_key: B0000000100
+      ]
     end
 
     it "updates organization_uid_sort_fields when organization_uid changes" do
