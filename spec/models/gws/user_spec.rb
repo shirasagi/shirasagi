@@ -56,563 +56,260 @@ describe Gws::User, type: :model, dbscope: :example do
   end
 
   context "#order_by_title" do
-    # 役職(降順) > 所属(昇順) > 職員番号 > uid > id
-    let!(:title1) { create :gws_user_title, order: 10 }
-    let!(:title2) { create :gws_user_title, order: 20 }
+    # ソート順: 役職order(降順) > 所属order(昇順) > 職員番号タイプ > 職員番号ソートキー(昇順) > uid(昇順) > id(昇順)
 
-    let!(:group1) { create :gws_group, name: "#{site.name}/#{unique_id}", order: 10 }
-    let!(:group2) { create :gws_group, name: "#{site.name}/#{unique_id}", order: 20 }
+    context "職員番号のソートキー生成" do
+      it "数字のみ → numeric型、10桁ゼロ埋め" do
+        user = create :gws_user, organization_id: site.id, organization_uid: "5880"
+        expect(user.organization_uid_type).to eq 'numeric'
+        expect(user.organization_uid_sort_key).to eq '0000005880'
+      end
 
-    let!(:organization_uid1) { "100" }
-    let!(:organization_uid2) { "9999" }
-    let!(:organization_uid3) { "1" }
-    let!(:organization_uid4) { "101" }
-    let!(:organization_uid5) { "99" }
-    let!(:organization_uid6) { "102" }
-    let!(:organization_uid7) { "5" }
-    let!(:organization_uid8) { "6" }
+      it "アルファベット+数字 → alpha型、数字部分のみ10桁ゼロ埋め" do
+        user = create :gws_user, organization_id: site.id, organization_uid: "KB005"
+        expect(user.organization_uid_type).to eq 'alpha'
+        expect(user.organization_uid_sort_key).to eq 'KB0000000005'
+      end
 
-    let(:user_t1_g1_u1) do
-      create :gws_user, organization_id: site.id, in_title_id: title1.id, group_ids: [group1.id],
-organization_uid: organization_uid1
-    end
-    let(:user_t1_g1_u2) do
-      create :gws_user, organization_id: site.id, in_title_id: title1.id, group_ids: [group1.id],
-organization_uid: organization_uid2
-    end
-    let(:user_t1_g2_u3) do
-      create :gws_user, organization_id: site.id, in_title_id: title1.id, group_ids: [group2.id],
-organization_uid: organization_uid3
-    end
-    let(:user_t1_g2_u4) do
-      create :gws_user, organization_id: site.id, in_title_id: title1.id, group_ids: [group2.id],
-organization_uid: organization_uid4
-    end
-    let(:user_t2_g1_u5) do
-      create :gws_user, organization_id: site.id, in_title_id: title2.id, group_ids: [group1.id],
-organization_uid: organization_uid5
-    end
-    let(:user_t2_g1_u6) do
-      create :gws_user, organization_id: site.id, in_title_id: title2.id, group_ids: [group1.id],
-organization_uid: organization_uid6
-    end
-    let(:user_t2_g2_u7) do
-      create :gws_user, organization_id: site.id, in_title_id: title2.id, group_ids: [group2.id],
-organization_uid: organization_uid7
-    end
-    let(:user_t2_g2_u8) do
-      create :gws_user, organization_id: site.id, in_title_id: title2.id, group_ids: [group2.id],
-organization_uid: organization_uid8
+      it "職員番号を変更するとソートキーも更新される" do
+        user = create :gws_user, organization_id: site.id, organization_uid: "100"
+        expect(user.organization_uid_type).to eq 'numeric'
+        expect(user.organization_uid_sort_key).to eq '0000000100'
+
+        user.organization_uid = "A200"
+        user.save!
+        user.reload
+        expect(user.organization_uid_type).to eq 'alpha'
+        expect(user.organization_uid_sort_key).to eq 'A0000000200'
+      end
+
+      it "職員番号が空になるとソートキーもnilになる" do
+        user = create :gws_user, organization_id: site.id, organization_uid: "100"
+        user.organization_uid = nil
+        user.save!
+        user.reload
+        expect(user.organization_uid_type).to be_nil
+        expect(user.organization_uid_sort_key).to be_nil
+      end
+
+      it "アンダースコアやハイフンはソートキーに保持される" do
+        user_with_underscore = create :gws_user, organization_id: site.id, organization_uid: "user_001"
+        user_without = create :gws_user, organization_id: site.id, organization_uid: "user001"
+        expect(user_with_underscore.organization_uid_sort_key).to eq 'user_0000000001'
+        expect(user_without.organization_uid_sort_key).to eq 'user0000000001'
+      end
     end
 
-    it "sorts users by title order, main group order, organization uid, uid, and id" do
-      # ユーザーを作成
-      user_t2_g2_u8  # title2(20), group2(20), organization_uid: "6" (6)
-      user_t2_g2_u7  # title2(20), group2(20), organization_uid: "5" (5)
-      user_t2_g1_u6  # title2(20), group1(10), organization_uid: "102" (102)
-      user_t2_g1_u5  # title2(20), group1(10), organization_uid: "99" (99)
-      user_t1_g2_u4  # title1(10), group2(20), organization_uid: "101" (101)
-      user_t1_g2_u3  # title1(10), group2(20), organization_uid: "1" (1)
-      user_t1_g1_u2  # title1(10), group1(10), organization_uid: "9999" (9999)
-      user_t1_g1_u1  # title1(10), group1(10), organization_uid: "100" (100)
+    context "数字のみの職員番号の並び順" do
+      let!(:title1) { create :gws_user_title, order: 15 }
+      let!(:group1) { create :gws_group, name: "#{site.name}/#{unique_id}", order: 15 }
 
-      # order_by_titleスコープでソートされたユーザーの期待値
-      expected_users = [
-        user_t2_g1_u5,  # organization_uid: "99" (99)
-        user_t2_g1_u6,  # organization_uid: "102" (102)
-        user_t2_g2_u7,  # organization_uid: "5" (5)
-        user_t2_g2_u8,  # organization_uid: "6" (6)
-        user_t1_g1_u1,  # organization_uid: "100" (100)
-        user_t1_g1_u2,  # organization_uid: "9999" (9999)
-        user_t1_g2_u3,  # organization_uid: "1" (1)
-        user_t1_g2_u4   # organization_uid: "101" (101)
-      ]
+      def create_users(*uids)
+        uids.map do |uid|
+          create :gws_user, organization_id: site.id, in_title_id: title1.id,
+            group_ids: [group1.id], organization_uid: uid
+        end
+      end
 
-      sorted_users = Gws::User.site(site).in(id: expected_users.map(&:id)).order_by_title(site)
+      def sorted_uids(users)
+        ids = users.map(&:id).shuffle
+        Gws::User.site(site).in(id: ids).order_by_title(site).map(&:organization_uid)
+      end
 
-      expect(sorted_users.map(&:id)).to eq expected_users.map(&:id)
+      it "文字列順ではなく数値として小さい順に並ぶ" do
+        # 文字列比較では "10081" < "5880" だが、数値として正しく並ぶ
+        users = create_users("10081", "5880", "10144", "8885", "10143")
+
+        expect(sorted_uids(users)).to eq %w[5880 8885 10081 10143 10144]
+      end
+
+      it "西暦+連番形式も数値として小さい順に並ぶ" do
+        # 2024年の職員が先、2025年の職員が後
+        users = create_users("2025001", "2024002", "2025999", "2024001", "2024100")
+
+        expect(sorted_uids(users)).to eq %w[2024001 2024002 2024100 2025001 2025999]
+      end
     end
 
-    it "exercises all 6 sort priorities: title > group > uid_type > sort_key > uid > id" do
-      # 全6ソート優先度が正しく効くことを1つのテストで複合的に検証する
-      # 優先度: (1) title_order DESC, (2) main_group_order ASC,
-      #         (3) organization_uid_type DIR, (4) organization_uid_sort_key ASC,
-      #         (5) uid ASC, (6) id ASC
-      site.organization_uid_sort_order = 'alpha_first'
-      site.save!
+    context "アルファベット混在の職員番号の並び順" do
+      let!(:title1) { create :gws_user_title, order: 15 }
+      let!(:group1) { create :gws_group, name: "#{site.name}/#{unique_id}", order: 15 }
 
-      title_high = create :gws_user_title, order: 20
-      title_low = create :gws_user_title, order: 10
-      group_a = create :gws_group, name: "#{site.name}/#{unique_id}", order: 10
-      group_b = create :gws_group, name: "#{site.name}/#{unique_id}", order: 20
+      def create_users(*uids)
+        uids.map do |uid|
+          create :gws_user, organization_id: site.id, in_title_id: title1.id,
+            group_ids: [group1.id], organization_uid: uid
+        end
+      end
 
-      # (1) title_order で分かれる: title_high(20) が先（降順）
-      user1 = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
-        group_ids: [group_a.id], organization_uid: "Z999", uid: "u-zzz"
-      user2 = create :gws_user, organization_id: site.id, in_title_id: title_low.id,
-        group_ids: [group_a.id], organization_uid: "A001", uid: "u-aaa"
+      def sorted_uids(users)
+        ids = users.map(&:id).shuffle
+        Gws::User.site(site).in(id: ids).order_by_title(site).map(&:organization_uid)
+      end
 
-      # (2) title同じ, group_order で分かれる: group_a(10) が先（昇順）
-      user3 = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
-        group_ids: [group_a.id], organization_uid: "500"
-      user4 = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
-        group_ids: [group_b.id], organization_uid: "100"
+      it "同じプレフィックスの場合、数値部分が小さい順に並ぶ" do
+        # A200 < A300 < A499（Aグループ内で数値昇順）、B100 < B400（Bグループ内で数値昇順）
+        users = create_users("A499", "B400", "A200", "B100", "A300")
 
-      # (3) title・group同じ, uid_type で分かれる: alpha_first設定なので alpha が先
-      user5_alpha = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
-        group_ids: [group_a.id], organization_uid: "A100"
-      user5_numeric = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
-        group_ids: [group_a.id], organization_uid: "200"
+        expect(sorted_uids(users)).to eq %w[A200 A300 A499 B100 B400]
+      end
 
-      # (4) title・group・uid_type同じ, sort_key で分かれる
-      user6_small = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
-        group_ids: [group_a.id], organization_uid: "B010"
-      user6_large = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
-        group_ids: [group_a.id], organization_uid: "B999"
+      it "異なるプレフィックスはアルファベット順、同じプレフィックス内は数値順に並ぶ" do
+        # A < KB のアルファベット順。A200が A1234 より先（数値: 200 < 1234）
+        users = create_users("KB005", "A1234", "A200")
 
-      # (5) title・group・uid_type・sort_key全て同じ（org_uid=nil）, uid で分かれる
-      user7_alpha_uid = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
-        group_ids: [group_a.id], organization_uid: nil, uid: "fall-alpha"
-      user7_beta_uid = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
-        group_ids: [group_a.id], organization_uid: nil, uid: "fall-beta"
-
-      # (6) 全て同じ（org_uid=nil, uid=nil）, id で分かれる
-      user8_first = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
-        group_ids: [group_a.id], organization_uid: nil, uid: nil, email: "tie1-#{unique_id}@example.jp"
-      user8_second = create :gws_user, organization_id: site.id, in_title_id: title_high.id,
-        group_ids: [group_a.id], organization_uid: nil, uid: nil, email: "tie2-#{unique_id}@example.jp"
-
-      all_users = [
-        user1, user2, user3, user4, user5_alpha, user5_numeric,
-        user6_small, user6_large, user7_alpha_uid, user7_beta_uid,
-        user8_first, user8_second
-      ]
-      target_ids = all_users.map(&:id).shuffle
-
-      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
-      sorted_ids = sorted_users.map(&:id)
-
-      # title_high(20) グループが全て先に来る（降順）
-      # その中で group_a(10) が group_b(20) より先
-      # group_a 内で organization_uid_type 昇順: nil < "alpha" < "numeric"
-      # org_uid=nil(type=nil) のユーザーが最初、uid昇順 → id昇順
-      # alpha型の中で sort_key昇順: A100 < B010 < B999 < Z999
-      # numeric型の中で sort_key昇順: 200 < 500
-      expected_ids = [
-        # title_high, group_a: type=nil, uid=nil（MongoDB: nil < string）, id昇順
-        user8_first.id,
-        user8_second.id,
-        # title_high, group_a: type=nil, uid昇順
-        user7_alpha_uid.id, # uid: fall-alpha
-        user7_beta_uid.id,  # uid: fall-beta
-        # title_high, group_a: alpha型 sort_key昇順
-        user5_alpha.id,  # A100 (alpha, sort_key: A0000000100)
-        user6_small.id,  # B010 (alpha, sort_key: B0000000010)
-        user6_large.id,  # B999 (alpha, sort_key: B0000000999)
-        user1.id,        # Z999 (alpha, sort_key: Z0000000999)
-        # title_high, group_a: numeric型 sort_key昇順
-        user5_numeric.id, # 200 (numeric, sort_key: 0000000200)
-        user3.id,         # 500 (numeric, sort_key: 0000000500)
-        # title_high, group_b
-        user4.id,         # 100 (numeric)
-        # title_low, group_a
-        user2.id          # A001 (alpha)
-      ]
-
-      expect(sorted_ids).to eq expected_ids
+        expect(sorted_uids(users)).to eq %w[A200 A1234 KB005]
+      end
     end
 
-    it "handles users without titles correctly" do
-      # 役職なしのユーザーを作成
-      user_no_title = create :gws_user, organization_id: site.id, group_ids: [group1.id], organization_uid: "200"
+    context "alpha型とnumeric型が混在する場合の並び順" do
+      let!(:title1) { create :gws_user_title, order: 15 }
+      let!(:group1) { create :gws_group, name: "#{site.name}/#{unique_id}", order: 15 }
 
-      # 役職ありのユーザーと混在させてソート
-      user_t1_g1_u1
-      user_no_title
+      def create_users(*uids)
+        uids.map do |uid|
+          create :gws_user, organization_id: site.id, in_title_id: title1.id,
+            group_ids: [group1.id], organization_uid: uid
+        end
+      end
 
-      sorted_users = Gws::User.site(site).order_by_title(site)
+      def sorted_uids(users)
+        ids = users.map(&:id).shuffle
+        Gws::User.site(site).in(id: ids).order_by_title(site).map(&:organization_uid)
+      end
 
-      # 役職なしのユーザーは最後に来ることを確認
-      expect(sorted_users.last.id).to eq user_no_title.id
+      it "alpha_first設定: アルファベット混在が先、数字のみが後に並ぶ" do
+        site.organization_uid_sort_order = 'alpha_first'
+        site.save!
+
+        users = create_users("A200", "A300", "B100", "50", "500", "1000")
+
+        # alpha型（A200, A300, B100）が先、各グループ内は小さい順
+        # numeric型（50, 500, 1000）が後、小さい順
+        expect(sorted_uids(users)).to eq %w[A200 A300 B100 50 500 1000]
+      end
+
+      it "numeric_first設定: 数字のみが先、アルファベット混在が後に並ぶ" do
+        site.organization_uid_sort_order = 'numeric_first'
+        site.save!
+
+        users = create_users("A200", "A300", "B100", "50", "500", "1000")
+
+        # numeric型（50, 500, 1000）が先、小さい順
+        # alpha型（A200, A300, B100）が後、各グループ内は小さい順
+        expect(sorted_uids(users)).to eq %w[50 500 1000 A200 A300 B100]
+      end
     end
 
-    it "handles users with same title order but different group orders" do
-      # 同じ役職orderを持つユーザーを作成
-      title_same = create :gws_user_title, order: 15
-      group_low = create :gws_group, name: "#{site.name}/#{unique_id}", order: 5
-      group_high = create :gws_group, name: "#{site.name}/#{unique_id}", order: 25
+    context "全ソート優先度の複合テスト" do
+      it "役職 > 所属 > 職員番号タイプ > ソートキー > uid > id の順に並ぶ" do
+        site.organization_uid_sort_order = 'alpha_first'
+        site.save!
 
-      user_low_group = create :gws_user, organization_id: site.id, in_title_id: title_same.id, group_ids: [group_low.id],
-organization_uid: "300"
-      user_high_group = create :gws_user, organization_id: site.id, in_title_id: title_same.id, group_ids: [group_high.id],
-organization_uid: "301"
+        title_high = create :gws_user_title, order: 20
+        title_low = create :gws_user_title, order: 10
+        group_a = create :gws_group, name: "#{site.name}/group-a", order: 10
+        group_b = create :gws_group, name: "#{site.name}/group-b", order: 20
 
-      sorted_users = Gws::User.site(site).order_by_title(site)
+        # 各ソート優先度で結果が分かれるようにデータを作成
+        users = []
 
-      # グループorderが低い（5）ユーザーが先に来ることを確認
-      low_group_index = sorted_users.find_index { |u| u.id == user_low_group.id }
-      high_group_index = sorted_users.find_index { |u| u.id == user_high_group.id }
+        # title_high + group_a: alpha型
+        users << create(:gws_user, organization_id: site.id, in_title_id: title_high.id,
+          group_ids: [group_a.id], organization_uid: "A100")
+        users << create(:gws_user, organization_id: site.id, in_title_id: title_high.id,
+          group_ids: [group_a.id], organization_uid: "B999")
 
-      expect(low_group_index).to be < high_group_index
+        # title_high + group_a: numeric型
+        users << create(:gws_user, organization_id: site.id, in_title_id: title_high.id,
+          group_ids: [group_a.id], organization_uid: "200")
+        users << create(:gws_user, organization_id: site.id, in_title_id: title_high.id,
+          group_ids: [group_a.id], organization_uid: "500")
+
+        # title_high + group_a: 職員番号なし → uid で分かれる
+        users << create(:gws_user, organization_id: site.id, in_title_id: title_high.id,
+          group_ids: [group_a.id], organization_uid: nil, uid: "uid-aaa")
+        users << create(:gws_user, organization_id: site.id, in_title_id: title_high.id,
+          group_ids: [group_a.id], organization_uid: nil, uid: "uid-zzz")
+
+        # title_high + group_b
+        users << create(:gws_user, organization_id: site.id, in_title_id: title_high.id,
+          group_ids: [group_b.id], organization_uid: "300")
+
+        # title_low + group_a
+        users << create(:gws_user, organization_id: site.id, in_title_id: title_low.id,
+          group_ids: [group_a.id], organization_uid: "A001")
+
+        target_ids = users.map(&:id).shuffle
+        sorted = Gws::User.site(site).in(id: target_ids).order_by_title(site)
+
+        # 各ユーザーを [役職, 所属, 職員番号] のラベルで表示し、並び順を検証
+        sorted_labels = sorted.map do |u|
+          title_label = u.title_orders&.values&.first == 20 ? "部長" : "課長"
+          main_group = u.gws_main_group(site)
+          group_label = main_group ? main_group.name.split("/").last : nil
+          uid_label = u.organization_uid || "(#{u.uid || 'id'})"
+          "#{title_label}/#{group_label}/#{uid_label}"
+        end
+
+        expect(sorted_labels).to eq [
+          # 1. 役職order降順: 部長(20) が先
+          # 2. 所属order昇順: group-a(10) が先
+          # 3. 職員番号タイプ: nil < alpha < numeric
+          "部長/group-a/(uid-aaa)",  # type=nil, uid昇順
+          "部長/group-a/(uid-zzz)",  # type=nil, uid昇順
+          "部長/group-a/A100",       # alpha, sort_key昇順
+          "部長/group-a/B999",       # alpha, sort_key昇順
+          "部長/group-a/200",        # numeric, sort_key昇順
+          "部長/group-a/500",        # numeric, sort_key昇順
+          # 2. 所属order昇順: group-b(20) が後
+          "部長/group-b/300",
+          # 1. 役職order降順: 課長(10) が後
+          "課長/group-a/A001"
+        ]
+      end
     end
 
-    it "handles users with same title and group orders but different organization uids" do
-      # 同じ役職・グループorderを持つユーザーを作成
-      title_same = create :gws_user_title, order: 15
-      group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
+    context "エッジケース" do
+      let!(:title1) { create :gws_user_title, order: 15 }
+      let!(:group1) { create :gws_group, name: "#{site.name}/#{unique_id}", order: 15 }
 
-      user_uid_100 = create :gws_user, organization_id: site.id, in_title_id: title_same.id, group_ids: [group_same.id],
-organization_uid: "100"
-      user_uid_200 = create :gws_user, organization_id: site.id, in_title_id: title_same.id, group_ids: [group_same.id],
-organization_uid: "200"
+      it "役職なしのユーザーは役職ありのユーザーより後に並ぶ" do
+        user_with_title = create :gws_user, organization_id: site.id, in_title_id: title1.id,
+          group_ids: [group1.id], organization_uid: "9999"
+        user_no_title = create :gws_user, organization_id: site.id,
+          group_ids: [group1.id], organization_uid: "1"
 
-      sorted_users = Gws::User.site(site).order_by_title(site)
+        ids = [user_with_title.id, user_no_title.id]
+        sorted = Gws::User.site(site).in(id: ids).order_by_title(site)
 
-      # organization_uidが小さい（100）ユーザーが先に来ることを確認
-      uid_100_index = sorted_users.find_index { |u| u.id == user_uid_100.id }
-      uid_200_index = sorted_users.find_index { |u| u.id == user_uid_200.id }
+        # 役職あり(9999)が先、役職なし(1)が後 — 職員番号の大小にかかわらず
+        expect(sorted.map(&:organization_uid)).to eq %w[9999 1]
+      end
 
-      expect(uid_100_index).to be < uid_200_index
-    end
+      it "職員番号が未設定のユーザーは職員番号ありのユーザーより先に並ぶ" do
+        user_nil = create :gws_user, organization_id: site.id, in_title_id: title1.id,
+          group_ids: [group1.id], organization_uid: nil
+        user_with = create :gws_user, organization_id: site.id, in_title_id: title1.id,
+          group_ids: [group1.id], organization_uid: "100"
 
-    it "handles users with empty organization uid" do
-      # organization_uidが空のユーザーを作成
-      user_empty_uid = create :gws_user, organization_id: site.id, in_title_id: title1.id, group_ids: [group1.id],
-organization_uid: ""
-      user_with_uid = create :gws_user, organization_id: site.id, in_title_id: title1.id, group_ids: [group1.id],
-organization_uid: "100"
+        ids = [user_nil.id, user_with.id]
+        sorted = Gws::User.site(site).in(id: ids).order_by_title(site)
 
-      sorted_users = Gws::User.site(site).order_by_title(site)
+        expect(sorted.map(&:organization_uid)).to eq [nil, "100"]
+      end
 
-      # organization_uidが空のユーザーが先に来ることを確認（空文字列は他の文字列より小さい）
-      empty_uid_index = sorted_users.find_index { |u| u.id == user_empty_uid.id }
-      with_uid_index = sorted_users.find_index { |u| u.id == user_with_uid.id }
+      it "職員番号が同じnilの場合、uid昇順 → id昇順でフォールバックする" do
+        user_uid_beta = create :gws_user, organization_id: site.id, in_title_id: title1.id,
+          group_ids: [group1.id], organization_uid: nil, uid: "beta"
+        user_uid_alpha = create :gws_user, organization_id: site.id, in_title_id: title1.id,
+          group_ids: [group1.id], organization_uid: nil, uid: "alpha"
 
-      expect(empty_uid_index).to be < with_uid_index
-    end
+        ids = [user_uid_beta.id, user_uid_alpha.id]
+        sorted = Gws::User.site(site).in(id: ids).order_by_title(site)
 
-    it "falls back to uid and id when higher priority keys are identical" do
-      # すべての優先キーが同一になった場合に uid → id の順で比較されることを検証
-      title_same = create :gws_user_title, order: 15
-      group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
-
-      user_uid_nil1 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: nil, uid: nil, email: "tie-#{unique_id}@example.jp"
-      user_uid_nil2 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: nil, uid: nil, email: "tie-#{unique_id}@example.jp"
-      user_uid_alpha = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: nil, uid: "alpha"
-      user_uid_beta = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: nil, uid: "beta"
-
-      target_ids = [
-        user_uid_nil1.id,
-        user_uid_nil2.id,
-        user_uid_alpha.id,
-        user_uid_beta.id
-      ]
-
-      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
-
-      alpha_index = sorted_users.find_index { |u| u.id == user_uid_alpha.id }
-      beta_index = sorted_users.find_index { |u| u.id == user_uid_beta.id }
-      expect(alpha_index).to be < beta_index
-
-      nil1_index = sorted_users.find_index { |u| u.id == user_uid_nil1.id }
-      nil2_index = sorted_users.find_index { |u| u.id == user_uid_nil2.id }
-      expect(nil1_index).to be < nil2_index
-    end
-
-    it "sorts users by organization_uid_sort_key in numeric order, not string order" do
-      # 職員番号が数値として正しくソートされることを確認
-      # 文字列比較では "10081" < "5880" となるが、ソートキーでは 5880 < 10081 となる
-      title_same = create :gws_user_title, order: 15
-      group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
-
-      user_5880 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "5880"
-      user_8885 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "8885"
-      user_10081 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "10081"
-      user_10143 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "10143"
-      user_10144 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "10144"
-
-      # organization_uid_sort_fieldsが自動設定されていることを確認
-      expect(user_5880.reload.organization_uid_type).to eq 'numeric'
-      expect(user_5880.organization_uid_sort_key).to eq '0000005880'
-      expect(user_8885.reload.organization_uid_type).to eq 'numeric'
-      expect(user_8885.organization_uid_sort_key).to eq '0000008885'
-      expect(user_10081.reload.organization_uid_type).to eq 'numeric'
-      expect(user_10081.organization_uid_sort_key).to eq '0000010081'
-
-      target_ids = [
-        user_5880.id,
-        user_8885.id,
-        user_10081.id,
-        user_10143.id,
-        user_10144.id
-      ].shuffle
-
-      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
-
-      # 数値順でソートされていることを確認（5880 < 8885 < 10081 < 10143 < 10144）
-      sorted_ids = sorted_users.map(&:id)
-      expect(sorted_ids).to eq [
-        user_5880.id,
-        user_8885.id,
-        user_10081.id,
-        user_10143.id,
-        user_10144.id
-      ]
-    end
-
-    it "sorts alphanumeric organization_uids correctly" do
-      # アルファベット混在の職員番号が自然順で正しくソートされることを確認
-      title_same = create :gws_user_title, order: 15
-      group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
-
-      user_a1234 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "A1234"
-      user_a200 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "A200"
-      user_kb005 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "KB005"
-
-      expect(user_a200.reload.organization_uid_type).to eq 'alpha'
-      expect(user_a200.organization_uid_sort_key).to eq 'A0000000200'
-      expect(user_a1234.reload.organization_uid_type).to eq 'alpha'
-      expect(user_a1234.organization_uid_sort_key).to eq 'A0000001234'
-      expect(user_kb005.reload.organization_uid_type).to eq 'alpha'
-      expect(user_kb005.organization_uid_sort_key).to eq 'KB0000000005'
-
-      target_ids = [user_a1234.id, user_a200.id, user_kb005.id].shuffle
-      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
-
-      # alpha_first（デフォルト）: alpha同士はソートキーの辞書順
-      # A0000000200 < A0000001234 < KB0000000005
-      expect(sorted_users.map(&:id)).to eq [user_a200.id, user_a1234.id, user_kb005.id]
-    end
-
-    it "sorts alpha before numeric when organization_uid_sort_order is alpha_first" do
-      # サイト設定がalpha_firstの場合、アルファベット混在が先に表示される
-      site.organization_uid_sort_order = 'alpha_first'
-      site.save!
-
-      title_same = create :gws_user_title, order: 15
-      group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
-
-      user_alpha = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "A100"
-      user_numeric = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "100"
-
-      target_ids = [user_alpha.id, user_numeric.id]
-      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
-
-      # alpha("alpha") < numeric("numeric") の辞書順 → alphaが先
-      expect(sorted_users.map(&:id)).to eq [user_alpha.id, user_numeric.id]
-    end
-
-    it "sorts numeric before alpha when organization_uid_sort_order is numeric_first" do
-      # サイト設定がnumeric_firstの場合、数字のみが先に表示される
-      site.organization_uid_sort_order = 'numeric_first'
-      site.save!
-
-      title_same = create :gws_user_title, order: 15
-      group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
-
-      user_alpha = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "A100"
-      user_numeric = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "100"
-
-      target_ids = [user_alpha.id, user_numeric.id]
-      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
-
-      # type降順: "numeric" > "alpha" → numericが先
-      expect(sorted_users.map(&:id)).to eq [user_numeric.id, user_alpha.id]
-    end
-
-    it "sorts mixed alpha and numeric uids with alpha_first setting" do
-      # alpha型とnumeric型が複数ずつ混在した場合に、型ごとにグルーピングされ
-      # 各グループ内でsort_key昇順に並ぶことを確認する
-      site.organization_uid_sort_order = 'alpha_first'
-      site.save!
-
-      title_same = create :gws_user_title, order: 15
-      group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
-
-      user_a200 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "A200"
-      user_a300 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "A300"
-      user_b100 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "B100"
-      user_50 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "50"
-      user_500 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "500"
-      user_1000 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "1000"
-
-      target_ids = [user_a200.id, user_a300.id, user_b100.id, user_50.id, user_500.id, user_1000.id].shuffle
-      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
-
-      # alpha型が先（sort_key昇順）→ numeric型が後（sort_key昇順）
-      expect(sorted_users.map(&:id)).to eq [
-        user_a200.id,  # alpha, sort_key: A0000000200
-        user_a300.id,  # alpha, sort_key: A0000000300
-        user_b100.id,  # alpha, sort_key: B0000000100
-        user_50.id,    # numeric, sort_key: 0000000050
-        user_500.id,   # numeric, sort_key: 0000000500
-        user_1000.id   # numeric, sort_key: 0000001000
-      ]
-    end
-
-    it "sorts mixed alpha and numeric uids with numeric_first setting" do
-      # numeric_first設定で、numeric型が先に並びalpha型が後に並ぶことを確認する
-      site.organization_uid_sort_order = 'numeric_first'
-      site.save!
-
-      title_same = create :gws_user_title, order: 15
-      group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
-
-      user_a200 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "A200"
-      user_a300 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "A300"
-      user_b100 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "B100"
-      user_50 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "50"
-      user_500 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "500"
-      user_1000 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "1000"
-
-      target_ids = [user_a200.id, user_a300.id, user_b100.id, user_50.id, user_500.id, user_1000.id].shuffle
-      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
-
-      # numeric型が先（sort_key昇順）→ alpha型が後（sort_key昇順）
-      expect(sorted_users.map(&:id)).to eq [
-        user_50.id,    # numeric, sort_key: 0000000050
-        user_500.id,   # numeric, sort_key: 0000000500
-        user_1000.id,  # numeric, sort_key: 0000001000
-        user_a200.id,  # alpha, sort_key: A0000000200
-        user_a300.id,  # alpha, sort_key: A0000000300
-        user_b100.id   # alpha, sort_key: B0000000100
-      ]
-    end
-
-    it "updates organization_uid_sort_fields when organization_uid changes" do
-      user = create :gws_user, organization_id: site.id, organization_uid: "100"
-      expect(user.organization_uid_type).to eq 'numeric'
-      expect(user.organization_uid_sort_key).to eq '0000000100'
-
-      user.organization_uid = "A200"
-      user.save
-      user.reload
-      expect(user.organization_uid_type).to eq 'alpha'
-      expect(user.organization_uid_sort_key).to eq 'A0000000200'
-    end
-
-    it "sets organization_uid_sort_fields to nil when organization_uid is blank" do
-      user = create :gws_user, organization_id: site.id, organization_uid: "100"
-      expect(user.organization_uid_type).to eq 'numeric'
-
-      user.organization_uid = nil
-      user.save
-      user.reload
-      expect(user.organization_uid_type).to be_nil
-      expect(user.organization_uid_sort_key).to be_nil
-    end
-
-    it "handles alphanumeric organization_uid correctly" do
-      user = create :gws_user, organization_id: site.id, organization_uid: "KB005"
-      expect(user.organization_uid_type).to eq 'alpha'
-      expect(user.organization_uid_sort_key).to eq 'KB0000000005'
-    end
-
-    it "sorts same-prefix alphanumeric uids by numeric part within each prefix" do
-      # alpha_first設定で、同じアルファベットで始まる職員番号が数値部分で正しくソートされることを確認
-      # A200, A300, A499, B100, B400 のようなケース
-      site.organization_uid_sort_order = 'alpha_first'
-      site.save!
-
-      title_same = create :gws_user_title, order: 15
-      group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
-
-      user_a200 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "A200"
-      user_a300 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "A300"
-      user_a499 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "A499"
-      user_b100 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "B100"
-      user_b400 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "B400"
-
-      # ソートキーがプレフィックス+ゼロ埋め数値になっていることを確認
-      expect(user_a200.reload.organization_uid_sort_key).to eq 'A0000000200'
-      expect(user_a300.reload.organization_uid_sort_key).to eq 'A0000000300'
-      expect(user_a499.reload.organization_uid_sort_key).to eq 'A0000000499'
-      expect(user_b100.reload.organization_uid_sort_key).to eq 'B0000000100'
-      expect(user_b400.reload.organization_uid_sort_key).to eq 'B0000000400'
-
-      target_ids = [user_a200.id, user_a300.id, user_a499.id, user_b100.id, user_b400.id].shuffle
-      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
-
-      # Aプレフィックスが先、その中で数値昇順。次にBプレフィックス、その中で数値昇順
-      expect(sorted_users.map(&:id)).to eq [
-        user_a200.id, user_a300.id, user_a499.id, user_b100.id, user_b400.id
-      ]
-    end
-
-    it "sorts year-serial format organization_uids correctly" do
-      # 西暦+連番形式（例: 2024001, 2024002, 2025001）の職員番号が正しくソートされることを確認
-      title_same = create :gws_user_title, order: 15
-      group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
-
-      user_2024001 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "2024001"
-      user_2024002 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "2024002"
-      user_2024100 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "2024100"
-      user_2025001 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "2025001"
-      user_2025999 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
-        group_ids: [group_same.id], organization_uid: "2025999"
-
-      # 純粋な数値なのでnumeric型になることを確認
-      expect(user_2024001.reload.organization_uid_type).to eq 'numeric'
-      expect(user_2024001.organization_uid_sort_key).to eq '0002024001'
-      expect(user_2025999.reload.organization_uid_type).to eq 'numeric'
-      expect(user_2025999.organization_uid_sort_key).to eq '0002025999'
-
-      target_ids = [
-        user_2024001.id, user_2024002.id, user_2024100.id, user_2025001.id, user_2025999.id
-      ].shuffle
-      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
-
-      # 数値順でソートされることを確認
-      expect(sorted_users.map(&:id)).to eq [
-        user_2024001.id, user_2024002.id, user_2024100.id, user_2025001.id, user_2025999.id
-      ]
-    end
-
-    it "preserves underscores and hyphens in sort key" do
-      # user_001 と user001 が異なるソートキーになることを確認
-      user_with_underscore = create :gws_user, organization_id: site.id, organization_uid: "user_001"
-      user_without = create :gws_user, organization_id: site.id, organization_uid: "user001"
-
-      expect(user_with_underscore.organization_uid_sort_key).to eq 'user_0000000001'
-      expect(user_without.organization_uid_sort_key).to eq 'user0000000001'
-      expect(user_with_underscore.organization_uid_sort_key).not_to eq user_without.organization_uid_sort_key
+        expect(sorted.map(&:uid)).to eq %w[alpha beta]
+      end
     end
   end
 
