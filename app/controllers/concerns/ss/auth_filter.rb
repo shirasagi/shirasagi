@@ -69,7 +69,12 @@ module SS::AuthFilter
     end
   end
 
+  def skip_update_last_logged_in?
+    false
+  end
+
   def set_last_logged_in(timestamp = Time.zone.now.to_i)
+    return if skip_update_last_logged_in?
     session[:user]["last_logged_in"] = timestamp if session[:user]
   end
 end

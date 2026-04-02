@@ -149,6 +149,8 @@ Rails.application.routes.draw do
         webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, as: :mails, defaults: { webmail_mode: 'account' }
       get ":webmail_mode-:account/mails/imap_error" => "mails#imap_error",
         webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, as: :mails_imap_error, defaults: { webmail_mode: 'account' }
+      match ":webmail_mode-:account/mails/auto_save" => "mails#auto_save", via: [:post, :put],
+        webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, as: :mails_auto_save, defaults: { webmail_mode: 'account' }
       get "addresses" => "addresses#index"
       get "multi_checkboxes" => "multi_checkboxes#index"
     end
