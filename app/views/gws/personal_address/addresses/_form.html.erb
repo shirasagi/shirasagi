@@ -1,3 +1,15 @@
+<%= jquery do %>
+$('a.ajax-box').data('on-select', function ($a, prevSelected) {
+  var $item = $a.closest(".list-item");
+  var name = $item.data("name");
+  var address = $item.data("address");
+
+  $('[name="item[name]"]').val(name);
+  $('[name="item[email]"]').val(address);
+  SS_SearchUI.defaultSelector($a, prevSelected);
+});
+<% end %>
+
 <dl class="see">
   <dt><%= @model.t :member_id %><%= @model.tt :member_id %></dt>
   <dd>
