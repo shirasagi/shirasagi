@@ -30,6 +30,7 @@ class Gws::Discussion::PortalController < ApplicationController
     set_recent_items
     set_todo
     set_bookmarks
+    set_members
 
     @items
   end
@@ -63,6 +64,19 @@ class Gws::Discussion::PortalController < ApplicationController
 
   def set_bookmarks
     @bookmarks = @bookmarker.bookmarks.values.take(@cur_site.discussion_bookmark_limit)
+  end
+
+  def set_members
+    members = @forum.overall_members.active.
+      readable_users(@cur_user, site: @cur_site).
+      order_by_title(@cur_site)
+
+    grouped_members = members.group_by do |member|
+      member.gws_main_group(@cur_site) || @cur_site
+    end
+    @grouped_members = grouped_members.sort_by do |group, _|
+      [(group.order.nil? ? 1 : 0), group.order.to_i, group.id]
+    end
   end
 
   def topic_options
