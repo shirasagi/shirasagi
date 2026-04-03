@@ -45,10 +45,12 @@ module Cms::Addon::List
 
       before_validation :validate_conditions
       before_validation :validate_loop_format
+      before_validation :clear_loop_liquid, if: :clear_loop_liquid?
 
       validates :no_items_display_state, inclusion: { in: %w(show hide), allow_blank: true }
       validates :loop_format, inclusion: { in: %w(shirasagi liquid), allow_blank: true }
       validates :loop_liquid, liquid_format: true, if: ->{ loop_format_liquid? }
+      validate :validate_loop_liquid_and_loop_setting_id
     end
 
     def sort_options
@@ -211,6 +213,29 @@ module Cms::Addon::List
       options = loop_format_options.to_h.invert.with_indifferent_access
       return if options[loop_format]
       self.loop_format = options.keys.first
+    end
+
+    def validate_loop_liquid_and_loop_setting_id
+      return if loop_liquid.blank? || loop_setting_id.blank?
+      errors.add(:base, I18n.t("cms.errors.messages.loop_liquid_and_loop_setting_id_are_exclusive"))
+    end
+
+    def clear_loop_liquid?
+      # avoid silent data loss: only clear when loop_setting_id is newly set (nil -> value),
+      # and do not clear when user tries to set loop_liquid simultaneously (let validation fail).
+      loop_setting_id_changes = changes["loop_setting_id"]
+      return false if loop_setting_id_changes.blank?
+
+      before_value, after_value = loop_setting_id_changes
+      return false if before_value.present?
+      return false if after_value.blank?
+      return false if changes["loop_liquid"].present?
+
+      true
+    end
+
+    def clear_loop_liquid
+      self.loop_liquid = nil
     end
 
     def interpret_default_location(default_site, &block)
