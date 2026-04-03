@@ -1,4 +1,7 @@
-<dl class="see mod-gws-facility-custom_fields">
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+%>
+<dl class="see">
   <dd class="wide">
     <%= link_to(I18n.t('gws/workflow.columns.index'), gws_workflow2_form_form_columns_path(form_id: @item), class: :btn) %>
     <%= link_to(I18n.t('ss.links.preview'), new_gws_workflow2_form_file_path(state: 'preview', form_id: @item, format: :html), class: %w(btn preview)) %>
@@ -31,7 +34,7 @@
 
 
 <%= jquery do %>
-  var $rootElement = $('#addon-gws-agents-addons-workflow-column_setting');
+  var $rootElement = $('#<%= addon[:id] %>');
   $rootElement.find('.preview').colorbox({
     fixed: true,
     width: "90%",
@@ -39,8 +42,8 @@
     onComplete: function() {
       var $content = $('#cboxLoadedContent');
       $content.find('footer.send').hide();
-      $content.find('form').on('submit', function(e) {
-        e.preventDefault();
+      $content.find('form').on('submit', function(ev) {
+        ev.preventDefault();
         return false;
       });
       $content.find('.toggle-body').each(function() {
@@ -49,8 +52,8 @@
           $this.show();
         }
       });
-      $content.find('.ajax-box').on('click', function(e) {
-        e.preventDefault();
+      $content.find('.ajax-box').on('click', function(ev) {
+        ev.preventDefault();
         return false;
       });
     }

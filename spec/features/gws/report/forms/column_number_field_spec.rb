@@ -17,8 +17,8 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
     let(:tooltip) { tooltips.join("\n") }
     let(:prefix_label) { unique_id[0, 10] }
     let(:postfix_label) { unique_id[0, 10] }
-    let(:prefix_explanation) { unique_id[0, 10] }
-    let(:postfix_explanation) { unique_id[0, 10] }
+    let(:prefix_explanation) { Array.new(2) { "<b class=\"bold-#{_1}\">#{unique_id}</b>" } }
+    let(:postfix_explanation) { Array.new(2) { "<i class=\"italic-#{_1}\">#{unique_id}</i>" } }
     let(:min_decimal) { rand(10) }
     let(:max_decimal) { min_decimal + rand(10) }
     let(:initial_decimal) { (min_decimal + max_decimal) / 2 }
@@ -55,8 +55,8 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
           fill_in "item[tooltips]", with: tooltip
           fill_in "item[prefix_label]", with: prefix_label
           fill_in "item[postfix_label]", with: postfix_label
-          fill_in "item[prefix_explanation]", with: prefix_explanation
-          fill_in "item[postfix_explanation]", with: postfix_explanation
+          fill_in "item[prefix_explanation]", with: prefix_explanation.join("\n")
+          fill_in "item[postfix_explanation]", with: postfix_explanation.join("\n")
 
           fill_in "item[min_decimal]", with: min_decimal
           fill_in "item[max_decimal]", with: max_decimal
@@ -84,8 +84,8 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       expect(column.tooltips).to eq tooltips
       expect(column.prefix_label).to eq prefix_label
       expect(column.postfix_label).to eq postfix_label
-      expect(column.prefix_explanation).to eq prefix_explanation
-      expect(column.postfix_explanation).to eq postfix_explanation
+      expect(column.prefix_explanation).to eq prefix_explanation.join("\n")
+      expect(column.postfix_explanation).to eq postfix_explanation.join("\n")
       expect(column.min_decimal).to eq min_decimal
       expect(column.max_decimal).to eq max_decimal
       expect(column.initial_decimal).to eq initial_decimal
@@ -94,6 +94,13 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       expect(column.max_length).to eq max_length
       expect(column.place_holder).to eq place_holder
       expect(column.additional_attr).to eq additional_attr
+
+      within ".gws-column-item[data-id='#{column.id}']" do
+        expect(page).to have_css(".bold-0")
+        expect(page).to have_css(".bold-1")
+        expect(page).to have_css(".italic-0")
+        expect(page).to have_css(".italic-1")
+      end
 
       #
       # Edit
@@ -120,8 +127,8 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       expect(column.tooltips).to eq tooltips
       expect(column.prefix_label).to eq prefix_label
       expect(column.postfix_label).to eq postfix_label
-      expect(column.prefix_explanation).to eq prefix_explanation
-      expect(column.postfix_explanation).to eq postfix_explanation
+      expect(column.prefix_explanation).to eq prefix_explanation.join("\n")
+      expect(column.postfix_explanation).to eq postfix_explanation.join("\n")
       expect(column.min_decimal).to eq min_decimal
       expect(column.max_decimal).to eq max_decimal
       expect(column.initial_decimal).to eq initial_decimal

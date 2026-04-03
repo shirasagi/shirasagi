@@ -34,8 +34,16 @@
 //= require gws/workflow2/approver
 
 SS.ready(function () {
-  // external link
-  $('a[href^=http]').not('[href*="' + location.hostname + '"]').attr({ target: '_blank', rel: "noopener" });
+  var renderExternalLinks = function($box) {
+    // external link
+    $box.find('a[href^=http]').not('[href*="' + location.hostname + '"]').attr({ target: '_blank', rel: "noopener" });
+  }
+  renderExternalLinks($(document));
+  $(document).on("cbox_complete", function() {
+    renderExternalLinks($("#cboxLoadedContent"))
+  }).on("ss:dialog:opened", function(ev) {
+    renderExternalLinks($(ev.target))
+  });
 
   // tabs
   var path = location.pathname + "/";

@@ -57,4 +57,37 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       end
     end
   end
+
+  context "link in preview" do
+    let(:prefix_explanation) do
+      <<~HTML
+        <a href="#{unique_url}" class="link">#{unique_id}</a>
+      HTML
+    end
+    let!(:column1) do
+      create(:gws_column_text_field, cur_site: site, form: form, order: 10, prefix_explanation: prefix_explanation)
+    end
+
+    it do
+      visit gws_report_forms_path(site: site)
+      click_on form.name
+      within "#addon-gws-agents-addons-report-column_setting" do
+        wait_for_cbox_opened { click_on I18n.t("ss.links.preview") }
+      end
+
+      within_cbox do
+        within "#addon-gws-agents-addons-report-custom_form" do
+          expect(page).to have_css(".addon-head h2", text: form.name)
+          expect(page).to have_css(".link")
+
+          link_element = first(".link")
+          # app/assets/javascripts/lib/base.js.erb で http から始まるリンクには "external" クラスが付与される。
+          expect(link_element["class"]).to include("external")
+          # app/assets/javascripts/gws/script.js で外部リンクには target="_blank" と rel="noopener" が付与される。
+          expect(link_element["target"]).to eq "_blank"
+          expect(link_element["rel"]).to eq "noopener"
+        end
+      end
+    end
+  end
 end
