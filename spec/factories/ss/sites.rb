@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :ss_site, class: SS::Site do
+  factory :ss_site, class: Cms::Site do
     name { "ss" }
     host { "test-ss" }
     domains { "test-ss.com" }

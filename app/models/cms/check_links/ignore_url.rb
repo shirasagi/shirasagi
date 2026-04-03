@@ -8,9 +8,14 @@ class Cms::CheckLinks::IgnoreUrl
 
   seqid :id
   field :name, type: String
-  permit_params :name
+  field :kind, type: String, default: "all"
+  permit_params :name, :kind
 
   validates :name, presence: true
+
+  def kind_options
+    I18n.t("cms.options.ignore_url_kind").map { |k, v| [v, k] }
+  end
 
   class << self
     def search(params = {})

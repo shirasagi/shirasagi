@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe "import_datasets", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
-  let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
-  let!(:node_search) { create_once :opendata_node_search_dataset }
+  let(:node) { create :opendata_node_dataset, name: "opendata_dataset" }
+  let!(:node_search) { create :opendata_node_search_dataset }
   let(:import_path) { opendata_import_datasets_path site, node }
 
   context "with auth" do

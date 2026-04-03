@@ -24,6 +24,8 @@ class Cms::SearchContents::HtmlController < ApplicationController
   end
 
   def update
+    raise "403" unless Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site)
+
     keyword     = params[:keyword].to_s
     replacement = params[:replacement].to_s
     option      = params[:option]

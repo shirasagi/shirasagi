@@ -20,7 +20,7 @@ class History::Log
   field :ref_coll, type: String
   field :filename, type: String
 
-  belongs_to :site, class_name: "SS::Site"
+  belongs_to :site, class_name: "Cms::Site"
 
   validates :url, presence: true
   validates :controller, presence: true

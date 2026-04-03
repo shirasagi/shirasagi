@@ -18,7 +18,7 @@ class Fs::FilesController < ApplicationController
     # サブディレクトリ型サブサイトの /fs と親サイトの /fs とは区別がつかない。
     # つまり、リクエスト・ホストからは一意にどのサイトの /fs にアクセスしているのか、容易に判別することはできない。
     @cms_sites ||= begin
-      sites = SS::Site.all.and("$or" => [ { domains: request_host }, { mypage_domain: request_host } ])
+      sites = Cms::Site.all.and("$or" => [ { domains: request_host }, { mypage_domain: request_host } ])
       sites = sites.order_by(id: 1)
       sites.to_a
     end

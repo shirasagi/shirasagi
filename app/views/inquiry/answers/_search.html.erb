@@ -1,5 +1,5 @@
 <%
-  @s = OpenStruct.new params[:s]
+  @s ||= OpenStruct.new params[:s]
 
   sy = Time.zone.today.year - 10
   ey = Time.zone.today.year

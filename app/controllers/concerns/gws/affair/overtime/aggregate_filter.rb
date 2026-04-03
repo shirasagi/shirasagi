@@ -22,7 +22,7 @@ module Gws::Affair::Overtime::AggregateFilter
 
   def set_fiscal_year
     return if params[:fiscal_year].blank?
-    @fiscal_year = params[:fiscal_year].to_i
+    @fiscal_year ||= params[:fiscal_year].to_i
   end
 
   def set_month
@@ -38,8 +38,9 @@ module Gws::Affair::Overtime::AggregateFilter
   end
 
   def set_result_groups
+    set_fiscal_year
     start_at = @cur_site.fiscal_last_date(@fiscal_year)
     start_at = start_at.change(hour: 23, min: 59)
-    @result_groups = ::Gws::Aggregation::Group.site(@cur_site).active_at(start_at)
+    @result_groups ||= ::Gws::Aggregation::Group.site(@cur_site).active_at(start_at)
   end
 end

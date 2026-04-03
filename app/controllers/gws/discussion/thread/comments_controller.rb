@@ -31,8 +31,29 @@ class Gws::Discussion::Thread::CommentsController < ApplicationController
     @crumbs << [ @topic.name, { action: :index } ]
   end
 
+  def set_forum
+    @forum ||= begin
+      raise "403" unless Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site)
+      forum = Gws::Discussion::Forum.site(@cur_site).find(params[:forum_id])
+      raise "404" unless forum.allowed?(:read, @cur_user, site: @cur_site) || forum.member_include?(@cur_user)
+      forum
+    end
+  end
+
   def set_topic
-    @topic = Gws::Discussion::Topic.find(params[:topic_id])
+    @topic ||= begin
+      set_forum
+      topic = Gws::Discussion::Topic.site(@cur_site).find(params[:topic_id])
+      raise "404" if topic.parent_id != @forum.id
+      topic
+    end
+  end
+
+  def set_items
+    @items ||= begin
+      set_topic
+      @topic.descendants
+    end
   end
 
   def index_path

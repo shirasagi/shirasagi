@@ -31,14 +31,7 @@ gem 'mongoid'
 gem 'mongo_session_store'
 
 # Assets
-gem 'autosize-rails'
-gem 'bxslider-rails'
-gem 'js_cookie_rails'
-gem 'jquery-form-rails'
-gem 'jquery-minicolors-rails'
 gem 'jquery-rails'
-gem 'jquery-ui-rails'
-gem 'marked-rails'
 
 # Additional (alphabetical order)
 gem 'addressable', require: 'addressable/uri'
@@ -120,7 +113,7 @@ gem 'unf'
 
 # elasticsearch
 gem 'faraday'
-gem 'elasticsearch', '~> 7'
+gem 'elasticsearch', '~> 8'
 
 # line
 gem 'line-bot-api', '~> 1.29'

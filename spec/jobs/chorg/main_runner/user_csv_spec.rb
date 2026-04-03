@@ -33,14 +33,16 @@ describe Chorg::MainRunner, dbscope: :example do
       expect { Cms::User.find_by(uid: 'import_user1') }.to raise_error Mongoid::Errors::DocumentNotFound
       expect { Cms::User.find_by(uid: 'import_user2') }.to raise_error Mongoid::Errors::DocumentNotFound
 
-      job = described_class.bind(site_id: site.id, task_id: task.id)
-      expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[新設] 成功: 2, 失敗: 0\n")).to_stdout
+      job = described_class.bind(site_id: site, task_id: task)
+      expect { ss_perform_now(job, revision.name, job_opts) }.to \
+        output(include("[#{I18n.t("chorg.options.changeset_type.add")}] 成功: 2, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
-      Job::Log.first.tap do |log|
+      Job::Log.all.each do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        expect(log.logs).not_to include(/ERROR -- :/)
       end
 
       g3 = Cms::Group.find_by(name: 'A/B/C')
@@ -70,6 +72,9 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(u.group_ids).to include(g4.id)
         expect(u.cms_role_ids).to include(r2.id)
       end
+
+      revision.reload
+      expect(revision.user_csv_file).to be_present
     end
   end
 end

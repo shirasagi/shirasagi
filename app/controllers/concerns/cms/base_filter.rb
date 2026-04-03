@@ -9,6 +9,7 @@ module Cms::BaseFilter
     helper Cms::FormHelper
     helper Map::MapHelper
     helper Cms::SnsHelper
+    helper Cms::SyntaxCheckableHelper
     before_action :validate_cms
     before_action :set_cms_assets
     before_action :set_site
@@ -78,8 +79,27 @@ module Cms::BaseFilter
   def set_node
     return if params[:cid].blank? || params[:cid].to_s == "-"
     @cur_node = Cms::Node.site(@cur_site).find params[:cid]
-    @cur_node.parents.each { |node| @crumbs << [node.name, view_context.contents_path(node)] }
-    @crumbs << [@cur_node.name, view_context.contents_path(@cur_node)]
+    @cur_node.parents.each do |node|
+      if node.allowed?(:read, @cur_user, site: @cur_site)
+        if node.public?
+          @crumbs << [ node.name, view_context.contents_path(node) ]
+        else
+          title = view_context.tag.span(node.name) + view_context.md_icons.outlined("public_off", size: 13)
+          title = view_context.tag.span(title.html_safe, class: "breadcrumb-title", title: I18n.t("cms.notices.private_node"))
+          @crumbs << [ title, view_context.contents_path(node) ]
+        end
+      else
+        @crumbs << [ node.name, nil ]
+      end
+    end
+
+    if @cur_node.public?
+      @crumbs << [ @cur_node.name, view_context.contents_path(@cur_node) ]
+    else
+      title = view_context.tag.span(@cur_node.name) + view_context.md_icons.outlined("public_off", size: 13)
+      title = view_context.tag.span(title.html_safe, class: "breadcrumb-title", title: I18n.t("cms.notices.private_node"))
+      @crumbs << [ title, view_context.contents_path(@cur_node) ]
+    end
   end
 
   def set_group

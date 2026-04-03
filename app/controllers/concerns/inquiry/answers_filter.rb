@@ -5,16 +5,11 @@ module Inquiry::AnswersFilter
     model Inquiry::Answer
 
     append_view_path "app/views/inquiry/answers"
-    append_view_path "app/views/cms/pages"
 
     before_action :set_items, only: %i[index download]
   end
 
   private
-
-  def set_items
-    # must be overridden by sub-class
-  end
 
   def send_csv(items)
     require "csv"
@@ -73,15 +68,18 @@ module Inquiry::AnswersFilter
   public
 
   def index
-    if params[:s].present? && params[:s][:group].present?
+    if @cur_user.cms_role_permit_any?(@cur_site, "read_other_inquiry_answers") && params.dig(:s, :group).present?
       @group = Cms::Group.site(@cur_site).active.find(params[:s][:group])
     end
 
+    @state = params.dig(:s, :state).presence || "unclosed"
+    @items = @items.search(params[:s]).state(@state)
     @items = @items.order_by(updated: -1).page(params[:page]).per(50)
   end
 
   def download
     @state = params.dig(:s, :state).presence || "unclosed"
+    @items = @items.search(params[:s]).state(@state)
     @items = @items.order_by(updated: -1)
     send_csv @items
   end
@@ -108,17 +106,24 @@ module Inquiry::AnswersFilter
   def destroy_all
     raise "400" if @selected_items.blank?
 
-    entries = @selected_items
+    entries = @selected_items.to_a
     @items = []
 
     entries.each do |item|
-      if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
-        next if item.destroy
-      else
+      unless item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
         item.errors.add :base, :auth_error
+        @items << item
       end
+
+      result = item.destroy
+      next if result
+
+      @items << item
+    rescue => e
+      Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
       @items << item
     end
+
     render_destroy_all(entries.size != @items.size)
   end
 

@@ -28,7 +28,7 @@ shared_examples "cms_node#spec_detail" do
   describe "node_fields" do
     it { expect(item.route).not_to eq nil }
     #it { expect(item.view_route).not_to eq nil }
-    it { expect(item.shortcut).not_to eq nil }
+    it { expect(item.shortcuts).not_to eq nil }
   end
 
   describe "content_methods" do

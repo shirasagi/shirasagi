@@ -12,6 +12,10 @@ describe "cms/pages", type: :feature, dbscope: :example do
 
   context "with for member state" do
     before do
+      # 書き出しテストの後に本テストが実行されると失敗する場合があるので、念のため書き出し済みのファイルを削除
+      FileUtils.rm_rf site.path
+      FileUtils.mkdir_p site.path
+
       node.for_member_state = 'enabled'
       node.save!
       login_cms_user

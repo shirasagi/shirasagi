@@ -22,20 +22,34 @@ require_relative "../app/models/ss/config"
 Bundler.require(*Rails.groups)
 
 module SS
-  mattr_reader(:version) { "1.20.0" }
+  mattr_reader(:version) { "1.21.0 (preview)" }
 
-  class Current < ActiveSupport::CurrentAttributes
-    attribute :env, :request
-    attribute :site, :user, :user_group, :organization, :token
-
+  class Current
     THREAD_LOCAL_VARIABLES = %i[env request site user user_group organization token].freeze
 
-    def self.with_scope
-      save_context = instance.attributes.dup
-      yield
-    ensure
+    class << self
+      def with_scope
+        save_context = THREAD_LOCAL_VARIABLES.index_with { send(_1) }
+        yield
+      ensure
+        THREAD_LOCAL_VARIABLES.each do |variable_name|
+          send("#{variable_name}=", save_context[variable_name])
+        end
+      end
+
       THREAD_LOCAL_VARIABLES.each do |variable_name|
-        instance.attributes[variable_name] = save_context[variable_name]
+        define_method(variable_name) do
+          instance[variable_name]
+        end
+        define_method("#{variable_name}=") do |value|
+          instance[variable_name] = value
+        end
+      end
+
+      private
+
+      def instance
+        ActiveSupport::IsolatedExecutionState[:ss_application] ||= {}
       end
     end
   end

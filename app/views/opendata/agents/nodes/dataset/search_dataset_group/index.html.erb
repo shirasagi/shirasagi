@@ -1,7 +1,7 @@
 <%
 
 categories = Opendata::Node::Category.site(@cur_site).sort(order: 1).map { |m| [m.name, m.id] }
-@s = OpenStruct.new params[:s]
+@s ||= OpenStruct.new params[:s]
 
 %>
 <%= form_for :s, url: @cur_node.url, html: { class: "opendata-search-groups-form", method: :get } do |f| %>

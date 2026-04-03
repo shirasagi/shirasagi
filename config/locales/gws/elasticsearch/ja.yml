@@ -22,6 +22,9 @@ ja:
       gws/addon/elasticsearch/group_setting:
         elasticsearch_state: 全文検索
         elasticsearch_hosts: 全文検索サーバー
+        elasticsearch_user: 全文検索サーバー/ユーザー
+        elasticsearch_password: 全文検索サーバー/パスワード
+        elasticsearch_ssl_verify_mode: 全文検索サーバー/SSL証明書チェック方法
 
   tooltip:
     gws/addon/elasticsearch/group_setting:
@@ -29,6 +32,13 @@ ja:
         - 全文検索を有効にするか無効にするかを選択します。
       elasticsearch_hosts:
         - 全文検索サーバーを入力します。
+      elasticsearch_user:
+        - 全文検索サーバーがユーザーIDとパスワードで保護されている場合、全文検索サーバーのユーザーIDを入力します。
+      elasticsearch_password:
+        - 全文検索サーバーがユーザーIDとパスワードで保護されている場合、全文検索サーバーのパスワードを入力します。
+      elasticsearch_ssl_verify_mode:
+        - 全文検索サーバーの証明書の検証モードを選択します。
+        - 全文検索サーバーが自己証明書を用いており証明書を検証できない場合、none を選択してください。
     gws/elasticsearch:
       tabs:
         all:
@@ -60,21 +70,22 @@ ja:
 
   job:
     models:
-      gws/elasticsearch/indexer/share_file_job: 全文検索/共有ファイルインデクサー
-      gws/elasticsearch/indexer/board_topic_job: 全文検索/掲示板インデクサー
-      gws/elasticsearch/indexer/board_post_job: 全文検索/掲示板投稿インデクサー
-      gws/elasticsearch/indexer/faq_topic_job: 全文検索/FAQインデクサー
-      gws/elasticsearch/indexer/faq_post_job: 全文検索/FAQインデクサー
-      gws/elasticsearch/indexer/qna_topic_job: 全文検索/Ｑ＆Ａインデクサー
-      gws/elasticsearch/indexer/qna_post_job: 全文検索/Ｑ＆Ａインデクサー
-      gws/elasticsearch/indexer/survey_form_job: 全文検索/アンケートインデクサー
-      gws/elasticsearch/indexer/circular_post_job: 全文検索/回覧板インデクサー
-      gws/elasticsearch/indexer/circular_comment_job: 全文検索/回覧板インデクサー
-      gws/elasticsearch/indexer/monitor_topic_job: 全文検索/照会・回答インデクサー
-      gws/elasticsearch/indexer/monitor_post_job: 全文検索/照会・回答インデクサー
-      gws/elasticsearch/indexer/memo_message_job: 全文検索/連絡メモインデクサー
-      gws/elasticsearch/indexer/report_file_job: 全文検索/レポートインデクサー
-      gws/elasticsearch/indexer/workflow_file_job: 全文検索/ワークフローインデクサー
-      gws/elasticsearch/indexer/workflow_form_job: 全文検索/ワークフローインデクサー
-      gws/elasticsearch/indexer/workflow2_file_job: 全文検索/ワークフロー2インデクサー
-      gws/elasticsearch/indexer/notice_post_job: 全文検索/お知らせインデクサー
+      gws/elasticsearch/indexer/share_file_job: GWS全文検索/共有ファイルインデクサー
+      gws/elasticsearch/indexer/board_topic_job: GWS全文検索/掲示板インデクサー
+      gws/elasticsearch/indexer/board_post_job: GWS全文検索/掲示板投稿インデクサー
+      gws/elasticsearch/indexer/faq_topic_job: GWS全文検索/FAQインデクサー
+      gws/elasticsearch/indexer/faq_post_job: GWS全文検索/FAQインデクサー
+      gws/elasticsearch/indexer/qna_topic_job: GWS全文検索/Ｑ＆Ａインデクサー
+      gws/elasticsearch/indexer/qna_post_job: GWS全文検索/Ｑ＆Ａインデクサー
+      gws/elasticsearch/indexer/survey_form_job: GWS全文検索/アンケートインデクサー
+      gws/elasticsearch/indexer/circular_post_job: GWS全文検索/回覧板インデクサー
+      gws/elasticsearch/indexer/circular_comment_job: GWS全文検索/回覧板インデクサー
+      gws/elasticsearch/indexer/monitor_topic_job: GWS全文検索/照会・回答インデクサー
+      gws/elasticsearch/indexer/monitor_post_job: GWS全文検索/照会・回答インデクサー
+      gws/elasticsearch/indexer/memo_message_job: GWS全文検索/連絡メモインデクサー
+      gws/elasticsearch/indexer/report_file_job: GWS全文検索/レポートインデクサー
+      gws/elasticsearch/indexer/workflow_file_job: GWS全文検索/ワークフロー 申請データ インデクサー
+      gws/elasticsearch/indexer/workflow_form_job: GWS全文検索/ワークフロー 申請フォーム インデクサー
+      gws/elasticsearch/indexer/workflow2_file_job: GWS全文検索/ワークフロー2 申請データ インデクサー
+      gws/elasticsearch/indexer/notice_post_job: GWS全文検索/お知らせインデクサー
+      gws/elasticsearch/indexer/workload_work_job: GWS全文検索/担当業務インデクサー

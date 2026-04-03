@@ -124,7 +124,19 @@ module Gws::Tabular
 
   def render_component(component)
     result = ApplicationController.new.render_to_string(component)
-    result.to_s.strip.presence
+    result = strip_action_view_annotations(result.to_s)
+    result.strip.presence
+  end
+
+  def strip_action_view_annotations(str)
+    return str if str.blank?
+
+    # `config.action_view.annotate_rendered_view_with_filenames = true` のときに挿入される
+    # `<!-- BEGIN ... -->` / `<!-- END ... -->` を除去する。
+    #
+    # これが通知件名など「文字列として保存・エスケープ表示」される箇所に混入すると、
+    # そのまま本文として表示されてしまうため、ここで吸収する。
+    str.gsub(/<!--\s*(?:BEGIN|END)\s+[^>]*?(?:app|vendor|lib|gems)\/[^>]*-->\s*/m, '')
   end
 
   def item_title(item, site:)

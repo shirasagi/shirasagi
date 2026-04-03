@@ -108,7 +108,9 @@ module Gws::Schedule::TodoFilter
 
   def index
     set_items
-    @items.page(params[:page]).per(50)
+    @items = @items.search(@s).
+      custom_order(params.dig(:s, :sort) || 'end_at_asc').
+      page(params[:page]).per(50)
   end
 
   def show

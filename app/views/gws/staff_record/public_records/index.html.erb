@@ -14,10 +14,12 @@
       <tr>
         <th style="width: 5%"><%= @model.t :section_name %></th>
         <th style="width: 18%"><%= @model.t :charge_name %></th>
-        <th style="width: 10%"><%= @model.t :title_ids %></th>
+        <th style="width: 5%"><%= @model.t :title_ids %></th>
         <th style="width: 10%"><%= @model.t :occupation_ids %></th>
+        <th style="width: 10%"><%= @model.t :code %></th>
         <th style="width: 10%"><%= @model.t :name %></th>
         <th style="width: 15%"><%= @model.t :kana %></th>
+        <th style="width: 10%"><%= @model.t :email %></th>
         <th style="width: 10%"><%= @model.t :tel_ext %></th>
         <th><%= @model.t :remark %></th>
       </tr>
@@ -28,7 +30,7 @@
         <% if item.section_name != last_section %>
           <% last_section = item.section_name %>
           <tr>
-            <th colspan="8"><%= item.send :section_name %></th>
+            <th colspan="10"><%= item.send :section_name %></th>
           </tr>
         <% end %>
         <tr>
@@ -36,8 +38,10 @@
           <td><%= link_to item.charge_name.presence || t('gws/staff_record.no_charge_name'), { action: :show, id: item.id } %></td>
           <td><%= tryb { item.titles.present? ? item.title(@cur_site).name : @item.title.name_with_code } %></td>
           <td><%= tryb { item.occupations.present? ? item.occupation(@cur_site).name : @item.occupation.name_with_code } %></td>
+          <td><%= item.send :code %></td>
           <td><%= link_to item.name, gws_staff_record_public_user_histories_path(user: item.id) %></td>
           <td><%= item.send :kana %></td>
+          <td><%= item.send :email %></td>
           <td><%= item.send :tel_ext %></td>
           <td><%= item.send :remark %></td>
         </tr>

@@ -11,7 +11,7 @@ class Cms::Line::DeliverCategory::CategoriesController < ApplicationController
   private
 
   def set_parent
-    @parent = Cms::Line::DeliverCategory::Base.site(@cur_site).find(params[:deliver_category_id])
+    @parent ||= Cms::Line::DeliverCategory::Base.site(@cur_site).find(params[:deliver_category_id])
   end
 
   def set_crumbs
@@ -21,7 +21,8 @@ class Cms::Line::DeliverCategory::CategoriesController < ApplicationController
   end
 
   def set_items
-    @items = @parent.children
+    set_parent
+    @items ||= @parent.children
   end
 
   def pre_params

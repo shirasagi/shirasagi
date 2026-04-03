@@ -54,10 +54,10 @@ Rails.application.routes.draw do
     get :contains_urls, on: :member
   end
 
-  concern :role do
-    get "role/edit" => "groups#role_edit", on: :member
-    put "role" => "groups#role_update", on: :member
-  end
+  # concern :role do
+  #   get "role/edit" => "groups#role_edit", on: :member
+  #   put "role" => "groups#role_update", on: :member
+  # end
 
   concern :lock do
     get :lock, on: :member
@@ -121,15 +121,16 @@ Rails.application.routes.draw do
       post :unlock_all, on: :collection
       post :reset_mfa_otp, on: :member
     end
-    resources :groups, concerns: [:deletion, :role, :import] do
+    resources :groups, concerns: [:deletion, :import] do
       match :download_all, on: :collection, via: %i[get post]
       resources :pages, path: ":contact_id/pages", only: %i[index], controller: "group_pages"
+      resource :role, only: %i[edit update], controller: "role_edits"
     end
     resources :members, concerns: [:deletion, :download, :import] do
       get :verify, on: :member
       post :verify, on: :member
     end
-    resources :contents, path: "contents/(:mod)"
+    resources :contents, path: "contents/(:mod)", only: %i[index]
 
     resources :nodes, concerns: [:deletion, :command, :change_state, :import] do
       get :routes, on: :collection
@@ -336,6 +337,17 @@ Rails.application.routes.draw do
     get "all_contents/download_all(.:format)" => "all_contents#download_all", as: "all_contents_download"
     match "all_contents/import(.:format)" => "all_contents#import", via: [:get, :post], as: "all_contents_import"
     get "all_contents/sampling_all(.:format)" => "all_contents#sampling_all", as: "all_contents_sampling"
+    get    "all_contents/moves"              => "all_contents/moves#index",        as: "all_contents_moves"
+    post   "all_contents/moves/import"       => "all_contents/moves#import",       as: "all_contents_moves_import"
+    get    "all_contents/moves/template"     => "all_contents/moves#template",     as: "all_contents_moves_template"
+    get    "all_contents/moves/result"       => "all_contents/moves#result",       as: "all_contents_moves_result"
+    post   "all_contents/moves/run"          => "all_contents/moves#run",          as: "all_contents_moves_run"
+    delete "all_contents/moves/reset"        => "all_contents/moves#reset",        as: "all_contents_moves_reset"
+    get    "all_contents/moves/download_logs" => "all_contents/moves#download_logs", as: "all_contents_moves_download_logs"
+    get    "all_contents/moves/download_result" => "all_contents/moves#download_result", as: "all_contents_moves_download_result"
+    get    "all_contents/moves/histories/:id" => "all_contents/moves#show_history", as: "all_contents_moves_history"
+    get "all_contents/moves/histories/:id/download" => "all_contents/moves#download_history",
+        as: "all_contents_moves_history_download"
     get "search_contents/html" => "search_contents/html#index"
     post "search_contents/html" => "search_contents/html#update"
     match "search_contents/pages" => "search_contents/pages#index", via: [:get, :post]
@@ -416,7 +428,7 @@ Rails.application.routes.draw do
       delete "delete_init_files" => "large_file_upload#delete_init_files"
       get "content_quota_navi" => "content_quota_navi#index"
 
-      resources :columns, only: %i[edit update]
+      resources :columns, path: ":form_id/columns", only: %i[edit update]
       resources :files, path: ":cid/files", concerns: [:deletion, :file_api] do
         get :contrast_ratio, on: :collection
       end
@@ -544,7 +556,7 @@ Rails.application.routes.draw do
       get :delete, on: :member
     end
     resources :max_file_sizes, concerns: :deletion
-    resource :image_resize, except: %i[new create destroy]
+    resource :image_resize, except: %i[new create]
     resources :nodes, concerns: [:deletion, :change_state, :import] do
       match :download, on: :collection, via: %i[get post]
     end
@@ -553,6 +565,8 @@ Rails.application.routes.draw do
       post :resume_edit, on: :member
       put :publish_all, on: :collection
       put :close_all, on: :collection
+      post :check_content, on: :collection
+      post :correct_content, on: :collection
     end
     resources :import_pages, concerns: [:deletion, :convert, :change_state]
     resources :import_nodes, concerns: [:deletion, :change_state]

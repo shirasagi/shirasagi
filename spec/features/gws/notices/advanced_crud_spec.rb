@@ -61,7 +61,12 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       end
       within 'form#item-form' do
         within '.gws-addon-readable-setting' do
-          click_on I18n.t('ss.buttons.delete')
+          wait_for_event_fired "change" do
+            within ".gws-addon-readable-setting-group" do
+              expect(page).to have_css("tr[data-id]", count: 1)
+              click_on I18n.t('ss.buttons.delete_all')
+            end
+          end
           wait_for_cbox_opened { click_on I18n.t('ss.apis.users.index') }
         end
       end

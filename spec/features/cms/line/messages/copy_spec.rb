@@ -5,7 +5,7 @@ describe "cms/line/messages", type: :feature, dbscope: :example, js: true do
   let(:show_path) { cms_line_message_path site, item }
   let(:copy_path) { copy_cms_line_message_path site, item }
 
-  let!(:node) { create_once :article_node_page, filename: "docs", name: "article" }
+  let!(:node) { create :article_node_page, filename: "docs", name: "article" }
   let!(:page1) { create(:article_page, cur_node: node) }
   let!(:image) do
     tmp_ss_file(Cms::TempFile, user: cms_user, site: site,

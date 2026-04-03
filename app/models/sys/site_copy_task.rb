@@ -13,8 +13,8 @@ class Sys::SiteCopyTask
   field :target_host_host, type: String
   field :target_host_domains, type: SS::Extensions::Words
   field :target_host_subdir, type: String
-  belongs_to :target_host_parent, class_name: "SS::Site"
-  belongs_to :source_site, class_name: "SS::Site"
+  belongs_to :target_host_parent, class_name: "Cms::Site"
+  belongs_to :source_site, class_name: "Cms::Site"
   field :copy_contents, type: SS::Extensions::Words
 
   permit_params :target_host_name, :target_host_host, :target_host_domains, :target_host_subdir,
@@ -44,7 +44,7 @@ class Sys::SiteCopyTask
   def validate_target_host_host
     return if target_host_host.blank?
     return if closed.present?
-    errors.add :target_host_host, :duplicate if SS::Site.ne(id: id).where(host: target_host_host).exists?
+    errors.add :target_host_host, :duplicate if Cms::Site.ne(id: id).where(host: target_host_host).exists?
   end
 
   def validate_target_host_domains
@@ -56,7 +56,7 @@ class Sys::SiteCopyTask
       self.target_host_domains_with_subdir << (target_host_subdir.present? ? "#{domain}/#{target_host_subdir}" : domain)
     end
 
-    if SS::Site.ne(id: id).any_in(domains_with_subdir: target_host_domains_with_subdir).exists?
+    if Cms::Site.ne(id: id).any_in(domains_with_subdir: target_host_domains_with_subdir).exists?
       errors.add :target_host_domains_with_subdir, :duplicate
     end
   end

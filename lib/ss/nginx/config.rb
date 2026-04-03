@@ -38,7 +38,7 @@ class SS::Nginx::Config
   end
 
   def cms_conf(conf = {})
-    SS::Site.all.each do |site|
+    Cms::Site.all.each do |site|
       site.domains.each do |domain|
         next if conf[domain]
         domain_name, port = domain.split(':')

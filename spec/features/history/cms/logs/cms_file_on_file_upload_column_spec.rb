@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:node) do
-    create_once :article_node_page, filename: "docs", name: "article",
+    create :article_node_page, filename: "docs", name: "article",
                 group_ids: [cms_group.id], st_form_ids: [form.id]
   end
   let!(:item) { create :article_page, cur_node: node, group_ids: [cms_group.id] }

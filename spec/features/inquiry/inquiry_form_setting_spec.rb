@@ -53,6 +53,10 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
   let(:email_column) { node.columns[2] }
 
   before do
+    # 書き出しテストの後に本テストが実行されると失敗する場合があるので、念のため書き出し済みのファイルを削除
+    FileUtils.rm_rf site.path
+    FileUtils.mkdir_p site.path
+
     node.columns.create! attributes_for(:inquiry_column_name).reverse_merge({cur_site: site}).merge(question: 'enabled')
     node.columns.create! attributes_for(:inquiry_column_optional).reverse_merge({cur_site: site})
     node.columns.create! attributes_for(:inquiry_column_email).reverse_merge({cur_site: site}).merge(question: 'enabled')

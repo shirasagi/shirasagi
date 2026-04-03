@@ -28,6 +28,10 @@ class Gws::Affair::Overtime::Aggregate::SearchGroupsController < ApplicationCont
   end
 
   def set_items
+    set_fiscal_year
+    set_month
+    set_result_groups
+
     @groups = @result_groups.select { |group| @group_ids.include?(group.group_id) }
     @title = I18n.t("gws/affair.labels.overtime.search.title", year: @fiscal_year, month: @month)
     @items, = @model.site(@cur_site).where(date_fiscal_year: @fiscal_year, date_month: @month).capital_aggregate_by_group

@@ -16,10 +16,9 @@ class Cms::CheckLinks::PagesController < ApplicationController
   end
 
   def set_items
-    @items = @model.site(@cur_site).
+    @items ||= @model.site(@cur_site).
       and_report(@cur_report).
-      allow(:read, @cur_user, site: @cur_site).
-      order_by(ref: 1)
+      allow(:read, @cur_user, site: @cur_site)
   end
 
   def set_item
@@ -31,6 +30,7 @@ class Cms::CheckLinks::PagesController < ApplicationController
 
   def index
     @items = @items.search(params[:s]).
+      order_by(ref: 1).
       page(params[:page]).per(50)
   end
 

@@ -262,7 +262,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         click_on I18n.t('ss.buttons.publish_save')
         # 保存完了を待つ
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 10)
+        wait_for_notice I18n.t('ss.notice.saved')
         wait_for_all_ckeditors_ready
         wait_for_all_turbo_frames
 

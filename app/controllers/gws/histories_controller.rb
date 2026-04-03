@@ -21,14 +21,20 @@ class Gws::HistoriesController < ApplicationController
       return
     end
 
-    ymd = params[:ymd].to_s
+    @s ||= begin
+      ymd = params[:ymd].to_s
 
-    @s = OpenStruct.new(params[:s])
-    @s.ymd = ymd if ymd != "-"
+      s = OpenStruct.new(params[:s])
+      s.ymd = ymd if ymd != "-"
+      s
+    end
   end
 
   def set_items
-    @items = @model.site(@cur_site).search(@s)
+    @items ||= begin
+      set_ymd
+      @model.site(@cur_site).search(@s)
+    end
   end
 
   def today

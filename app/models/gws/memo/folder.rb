@@ -53,6 +53,7 @@ class Gws::Memo::Folder
     errors.add :base, :included_memo if messages.count > 0
     errors.add :base, :used_folder if filters.count > 0
     errors.add :base, :found_children if children.exists?
+    throw :abort if errors.present?
     errors.empty?
   end
 
@@ -70,7 +71,7 @@ class Gws::Memo::Folder
 
   def destroy_folders
     verify_folders
-    return throw :abort if errors.present?
+    throw :abort if errors.present?
     destroy_children
   end
 

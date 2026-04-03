@@ -150,6 +150,7 @@ en:
       reloaded_mailboxes: 同期しました。
       over_threshold: "メールボックスの容量が残り %{size} です。"
       imap_login_failed: "IMAP ログインに失敗しました。"
+      auto_saved: 下書きが自動保存されました。
       multiple:
         copy: "%{count} 件のメールをコピーしました。"
         move: "%{count} 件のメールを移動しました。"
@@ -391,3 +392,5 @@ en:
     models:
       webmail/history_archive_job: ウェブメール/操作履歴アーカイブ作成
       webmail/role_import_job: ウェブメール/ロール・権限インポート
+      webmail/group_import_job: ウェブメール/グループインポート
+      webmail/mail_export_job: ウェブメール/エクスポート

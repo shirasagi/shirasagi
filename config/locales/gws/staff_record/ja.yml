@@ -101,6 +101,7 @@ ja:
         name: 職員氏名
         code: 職員番号
         kana: 職員氏名（カナ）
+        email: メールアドレス
         multi_section: 本務・兼務
         section_name: 所属
         title_ids: 役職
@@ -149,6 +150,7 @@ ja:
       name: 職員氏名を入力します。
       code: 職員番号を入力します。
       kana: 職員氏名（カナ）を入力します。
+      email: メールアドレスを入力します。
       multi_section: 本務・兼務を選択します。
       section_name: 所属を選択します。
       title_ids: 役職を選択します。
@@ -168,4 +170,4 @@ ja:
 
   job:
     models:
-      gws/staff_record/copy_situation_job: 電子職員録/現況コピージョブ
+      gws/staff_record/copy_situation_job: GWS電子職員録/現況コピージョブ

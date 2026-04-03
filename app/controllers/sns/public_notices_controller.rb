@@ -14,11 +14,15 @@ class Sns::PublicNoticesController < ApplicationController
     @crumbs = []
   end
 
+  def set_items
+    @items ||= @model.and_public.and_show_login
+  end
+
   public
 
   def index
-    @items = @model.and_public.
-      and_show_login.
+    set_items
+    @items = @items.
       search(params[:s]).
       page(params[:page]).per(50)
   end

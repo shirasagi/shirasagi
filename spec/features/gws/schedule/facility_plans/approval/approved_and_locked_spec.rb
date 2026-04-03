@@ -49,10 +49,10 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       wait_for_js_ready
       within "#addon-gws-agents-addons-schedule-approval" do
         within "span[data-facility-id='#{facility.id}']" do
-          wait_cbox_open { first("input[value='approve']").click }
+          wait_for_cbox_opened { first("input[value='approve']").click }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within "#ajax-box form#item-form" do
           click_on I18n.t("ss.buttons.save")
         end
@@ -140,10 +140,10 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       wait_for_js_ready
       within "#addon-gws-agents-addons-schedule-approval" do
         within "span[data-facility-id='#{facility.id}']" do
-          wait_cbox_open { first("input[value='approve']").click }
+          wait_for_cbox_opened { first("input[value='approve']").click }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within "#ajax-box form#item-form" do
           click_on I18n.t("ss.buttons.save")
         end

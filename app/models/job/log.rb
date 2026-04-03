@@ -1,7 +1,7 @@
 class Job::Log
   include SS::Model::JobLog
 
-  belongs_to :site, class_name: "SS::Site"
+  belongs_to :site, class_name: "Cms::Site"
 
   scope :site, ->(site) { where(site_id: (site.nil? ? nil : site.id)) }
 

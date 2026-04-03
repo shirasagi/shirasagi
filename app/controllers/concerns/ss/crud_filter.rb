@@ -25,9 +25,14 @@ module SS::CrudFilter
     args.empty? ? super(template: params[:action]) : super
   end
 
+  def set_items
+    @items ||= @model.all
+  end
+
   def set_item
     @item ||= begin
-      item = @model.find(params[:id])
+      set_items
+      item = @items.find(params[:id])
       item.attributes = fix_params
       item
     end

@@ -42,7 +42,12 @@
       <dd>
         <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
           <table class="index ajax-selected">
-            <thead><tr><th class="name"><%= Gws::CustomGroup.t :name %></th><th class="deselect"></th></tr></thead>
+            <thead>
+            <tr>
+              <th class="name"><%= Gws::CustomGroup.t :name %></th>
+              <th class="deselect"><%= button_tag t("ss.buttons.delete_all"), name: "delete_all", type: :button, class: "btn btn-red" %></th>
+            </tr>
+            </thead>
             <tbody>
               <% @item.readable_custom_groups.each do |group| %>
               <tr data-id="<%= group.id %>">
@@ -68,7 +73,12 @@
       <dd>
         <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
           <table class="index ajax-selected">
-            <thead><tr><th class="name"><%= Gws::Group.t :name %></th><th class="deselect"></th></tr></thead>
+            <thead>
+            <tr>
+              <th class="name"><%= Gws::Group.t :name %></th>
+              <th class="deselect"><%= button_tag t("ss.buttons.delete_all"), name: "delete_all", type: :button, class: "btn btn-red" %></th>
+            </tr>
+            </thead>
             <tbody>
               <% @item.readable_groups.each do |group| %>
               <tr data-id="<%= group.id %>">
@@ -93,7 +103,12 @@
       <dd>
         <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
           <table class="index ajax-selected">
-            <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+            <thead>
+            <tr>
+              <th class="name"><%= Gws::User.t :name %></th>
+              <th class="deselect"><%= button_tag t("ss.buttons.delete_all"), name: "delete_all", type: :button, class: "btn btn-red" %></th>
+            </tr>
+            </thead>
             <tbody>
               <% @item.readable_members.each do |user| %>
               <tr data-id="<%= user.id %>">

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "sitemap_pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
-  let(:node) { create_once :sitemap_node_page, filename: "docs", name: "sitemap" }
+  let(:node) { create :sitemap_node_page, filename: "docs", name: "sitemap" }
   let(:item) { create :sitemap_page, cur_site: site, cur_node: node }
   let(:index_path) { sitemap_pages_path site.id, node }
   let(:new_path) { new_sitemap_page_path site.id, node }
@@ -11,7 +11,7 @@ describe "sitemap_pages", type: :feature, dbscope: :example, js: true do
   let(:delete_path) { delete_sitemap_page_path site.id, node, item }
   let(:move_path) { move_sitemap_page_path site.id, node, item }
   let(:copy_path) { copy_sitemap_page_path site.id, node, item }
-  let!(:article_node) { create_once :article_node_page }
+  let!(:article_node) { create :article_node_page }
   let!(:article_page) { create :article_page, cur_site: site, cur_node: article_node }
 
   context "with auth" do

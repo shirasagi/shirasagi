@@ -3,8 +3,8 @@ require 'spec_helper'
 describe "member_blogs", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let!(:layout) { create(:cms_layout, site: site, name: "blog") }
-  let!(:blogs_node) { create_once :member_node_blog, filename: "blogs", name: "blogs", layout: layout }
-  let!(:node) { create_once :member_node_blog_page, filename: "blogs/shirasagi-blog", name: "shirasagi-blog", layout: layout }
+  let!(:blogs_node) { create :member_node_blog, filename: "blogs", name: "blogs", layout: layout }
+  let!(:node) { create :member_node_blog_page, filename: "blogs/shirasagi-blog", name: "shirasagi-blog", layout: layout }
   let(:item) { create(:member_blog_page, cur_node: node) }
   let(:path) { member_blog_pages_path(site, node) }
   subject(:logs_path) { history_cms_logs_path site.id }

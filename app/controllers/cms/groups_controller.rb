@@ -68,23 +68,6 @@ class Cms::GroupsController < ApplicationController
     disable_all
   end
 
-  def role_edit
-    set_item
-    return "404" if @item.users.blank?
-    render :role_edit
-  end
-
-  def role_update
-    set_item
-    role_ids = params[:item][:cms_role_ids].select(&:present?).map(&:to_i)
-
-    @item.users.each do |user|
-      set_ids = user.cms_role_ids - Cms::Role.site(@cur_site).map(&:id) + role_ids
-      user.set(cms_role_ids: set_ids)
-    end
-    render_update true
-  end
-
   def download_all
     return if request.get? || request.head?
 

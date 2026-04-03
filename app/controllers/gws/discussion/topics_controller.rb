@@ -22,16 +22,20 @@ class Gws::Discussion::TopicsController < ApplicationController
   end
 
   def set_items
-    @items = @model.in(id: @forum.children.pluck(:id)).
-      reorder(order: 1, created: 1).
-      search(params[:s]).
-      page(params[:page]).per(50)
+    @items ||= begin
+      set_forum
+      @model.all.site(@cur_site).where(parent_id: @forum)
+    end
   end
 
   public
 
   def index
     set_items
+    @items = @items.
+      reorder(order: 1, created: 1).
+      search(params[:s]).
+      page(params[:page]).per(50)
   end
 
   def show

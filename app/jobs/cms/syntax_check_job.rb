@@ -9,10 +9,15 @@ class Cms::SyntaxCheckJob < Cms::ApplicationJob
   def perform(*args)
     options = args.extract_options!
     @force = options.fetch(:force, false)
+    @error_count = 0
     each_page do |page|
       if syntax_check_result_old?(page)
         update_syntax_check_result(page)
       end
+    end
+
+    if @error_count > 0
+      Rails.logger.error { "#{@error_count.to_fs(:delimited)}件のエラーがありました。" }
     end
   end
 
@@ -29,6 +34,11 @@ class Cms::SyntaxCheckJob < Cms::ApplicationJob
       criteria.in(id: ids).to_a.each do |page|
         Rails.logger.tagged("#{page.filename}(#{page.id})") do
           yield page
+        rescue => e
+          @error_count += 1
+          Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+
+          raise unless Rails.env.production?
         end
       end
     end

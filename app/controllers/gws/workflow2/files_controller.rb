@@ -57,7 +57,7 @@ class Gws::Workflow2::FilesController < ApplicationController
 
   def set_items
     set_search_params
-    @items ||= @model.site(@cur_site).without_deleted.search(@s)
+    @items ||= @model.site(@cur_site).without_deleted
   end
 
   def set_item
@@ -109,7 +109,7 @@ class Gws::Workflow2::FilesController < ApplicationController
   public
 
   def index
-    @items = @items.page(params[:page]).per(50)
+    @items = @items.search(@s).page(params[:page]).per(50)
   end
 
   def show

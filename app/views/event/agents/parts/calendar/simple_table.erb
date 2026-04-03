@@ -30,7 +30,7 @@
   <div class="event-table">
     <table class="calendar">
       <caption>
-        <%= link_to_monthly @current_month_date, name: I18n.l(@current_month_date.to_date, format: :long_month), path: @cur_part.parent.try(:url).to_s %>
+        <%= link_to_monthly @current_month_date, name: I18n.l(@current_month_date.to_date, format: :long_month), path: @cur_part.parent.try(:url).to_s, nofollow: true %>
       </caption>
       <thead>
         <tr>
@@ -45,7 +45,7 @@
             <tr>
           <% end %>
           <td class="<%= event_td_class(date, @current_month_date) %>">
-          <%= link_to_daily date, name: date.day, path: @cur_part.parent.try(:url).to_s, enable: events.present? %>
+          <%= link_to_daily date, name: date.day, path: @cur_part.parent.try(:url).to_s, enable: events.present?, nofollow: true %>
           </td>
           <% if (i % 7) == 6 %>
             </tr>

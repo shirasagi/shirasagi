@@ -10,7 +10,14 @@
   else
     window_name = yield(:title) if content_for?(:title)
     window_name ||= @item.try(:name).presence
-    window_name ||= @crumbs.last.try(:first)
+    window_name ||= @crumbs.last.then do |name, _path|
+      if name.try(:html_safe?)
+        name = sanitize(name, tags: SS::EMPTY_ARRAY)
+        name.sub!("public_off", "") # remove matrial-icons
+        name.strip!
+      end
+      name
+    end
   end
   if window_name.present?
     title = "#{window_name} | #{ss_application_name}"
@@ -72,21 +79,7 @@
       <article id="main">
       <%= render "layouts/ss/password_warn" %>
       <% if !@ss_maintenance_mode %>
-        <ol class="breadcrumb" id="crumbs">
-          <% if @crumbs.size > 0 && (!@ss_rescue || @ss_rescue && (@ss_mode == :cms || @ss_mode == :gws)) %>
-            <% @crumbs.each_with_index do |item, idx| %>
-              <li <%== %(class="active") if @crumbs.size == idx + 1 %>><%= link_to *item %></li>
-              <% break if @ss_rescue %><%# only one crumb in rescue mode %>
-            <% end %>
-
-            <% if @webmail_other_account_path && webmail_other_account?(@webmail_other_account_path) && !@ss_rescue %>
-              <li class="webmail-accounts">
-                <span><%= t('webmail.links.select_account') %></span>
-                <%= webmail_other_account_select(@webmail_other_account_path) %>
-              </li>
-            <% end %>
-          <% end %>
-        </ol>
+        <%= render "layouts/ss/breadcrumb" %>
       <% end %>
 
       <% if !@ss_rescue %>

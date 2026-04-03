@@ -34,7 +34,7 @@
     <table class="calendar">
       <caption>
         <%= link_to_archive_monthly @current_month_date, name: "#{@year}#{t_date('year')}#{@month}#{t_date('month')}",
-          path: @cur_part.parent.try(:url).to_s %>
+          path: @cur_part.parent.try(:url).to_s, nofollow: true %>
       </caption>
       <thead>
         <tr>
@@ -50,7 +50,7 @@
               </tr><tr>
             <% end %>
             <td class="<%= event_td_class(date, @current_month_date) %>">
-              <%= link_to_archive_daily date, name: date.day, path: @cur_part.parent.try(:url).to_s, enable: blog ? true : false %>
+              <%= link_to_archive_daily date, name: date.day, path: @cur_part.parent.try(:url).to_s, enable: blog ? true : false, nofollow: true %>
             </td>
           <% end %>
         </tr>

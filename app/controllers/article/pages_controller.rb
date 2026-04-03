@@ -32,7 +32,7 @@ class Article::PagesController < ApplicationController
       return
     end
 
-    csv_params = params.require(:item).permit(:encoding, :form_id)
+    csv_params = params.require(:item).permit(:encoding, :form_id, :truncate)
     csv_params.merge!(fix_params)
 
     form = nil
@@ -43,9 +43,12 @@ class Article::PagesController < ApplicationController
       end
     end
 
-    criteria = @model.site(@cur_site).
-      node(@cur_node).
-      allow(:read, @cur_user, site: @cur_site, node: @cur_node)
+    criteria = @model.all
+    criteria = criteria.site(@cur_site)
+    criteria = criteria.node(@cur_node)
+    criteria = criteria.allow(:read, @cur_user, site: @cur_site, node: @cur_node)
+    # 効率を優先し id の降順に並べる
+    criteria = criteria.reorder(id: -1)
 
     if form.present?
       criteria = criteria.where(form_id: form)
@@ -53,7 +56,8 @@ class Article::PagesController < ApplicationController
       criteria = criteria.exists(form_id: false)
     end
 
-    exporter = Cms::PageExporter.new(mode: "article", site: @cur_site, criteria: criteria)
+    exporter = Cms::PageExporter.new(
+      mode: "article", site: @cur_site, truncate: csv_params.fetch(:truncate, 'yes') != 'no', criteria: criteria)
     enumerable = exporter.enum_csv(csv_params)
 
     filename = @model.to_s.tableize.tr("/", "_")

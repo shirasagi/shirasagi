@@ -141,13 +141,13 @@ save_node filename: "img", name: "画像", route: "uploader/file"
 save_node filename: "materials", name: "資料", route: "uploader/file"
 save_node filename: "ads", name: "広告", route: "ads/banner"
 
-save_node filename: "docs", name: "お知らせ", route: "article/page", shortcut: "show",
+save_node filename: "docs", name: "お知らせ", route: "article/page", shortcuts: %w(system quota),
   layout_id: layouts["portal-general"].id
 save_node filename: "event", name: "イベント", route: "event/page",
   layout_id: layouts["portal-event"].id,
   page_layout_id: layouts["portal-event"].id
 
-save_node filename: "dataset", name: "データカタログ", route: "opendata/dataset", shortcut: "show",
+save_node filename: "dataset", name: "データカタログ", route: "opendata/dataset", shortcuts: %w(system quota),
   layout_id: layouts["dataset-top"].id,
   page_layout_id: layouts["dataset-page"].id
 save_node filename: "dataset/bunya", name: "分野", route: "opendata/dataset_category",
@@ -173,7 +173,7 @@ save_node filename: "dataset/search_group", name: "データセットグルー�
 save_node filename: "dataset/search", name: "データセット検索", route: "opendata/search_dataset",
   layout_id: layouts["dataset-bunya"].id
 
-save_node filename: "app", name: "アプリマーケット", route: "opendata/app", shortcut: "show",
+save_node filename: "app", name: "アプリマーケット", route: "opendata/app", shortcuts: %w(system quota),
   layout_id: layouts["app-top"].id,
   page_layout_id: layouts["app-page"].id
 save_node filename: "app/bunya", name: "分野", route: "opendata/app_category",
@@ -181,7 +181,7 @@ save_node filename: "app/bunya", name: "分野", route: "opendata/app_category",
 save_node filename: "app/search", name: "アプリ検索", route: "opendata/search_app",
   layout_id: layouts["app-bunya"].id
 
-save_node filename: "idea", name: "アイデアボックス", route: "opendata/idea", shortcut: "show",
+save_node filename: "idea", name: "アイデアボックス", route: "opendata/idea", shortcuts: %w(system quota),
   layout_id: layouts["idea-top"].id,
   page_layout_id: layouts["idea-page"].id
 save_node filename: "idea/bunya", name: "分野", route: "opendata/idea_category",

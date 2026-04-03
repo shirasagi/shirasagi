@@ -44,4 +44,28 @@ describe "cms_agents_parts_sns_share", type: :feature, dbscope: :example do
       expect(find('div.twitter a')['data-url']).to eq node.full_url[0..-2]
     end
   end
+
+  context "link_only" do
+    let!(:site) { cms_site }
+    let!(:part) do
+      sns_share_states = Cms::Addon::SnsShare::SERVICES.index_with { "link_only" }
+      create :cms_part_sns_share, cur_site: site, sns_share_states: sns_share_states
+    end
+    let!(:layout) { create_cms_layout part, cur_site: site }
+    let!(:node) { create :cms_node, cur_site: site, layout: layout }
+
+    before do
+      Capybara.app_host = "http://#{site.domain}"
+    end
+
+    it "#index" do
+      visit node.url
+      expect(status_code).to eq 200
+      expect(page).to have_css(".cms-sns_share")
+      expect(page).to have_css(".fb_share_link", text: I18n.t("cms.sns_share.fb_share_button"))
+      expect(page).to have_css(".twitter_link", text: I18n.t("cms.sns_share.tweet"))
+      expect(page).to have_css(".hatena_link", text: I18n.t("cms.sns_share.hatena"))
+      expect(page).to have_css(".line_link", text: I18n.t("cms.sns_share.line"))
+    end
+  end
 end

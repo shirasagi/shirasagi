@@ -12,10 +12,14 @@ module SS
   SAFE_IMAGE_SUB_TYPES = %w(gif jpeg png webp).freeze
 
   DEFAULT_TRASH_THRESHOLD = 1
-  DEFAULT_TRASH_THRESHOLD_UNIT = 'year'.freeze
+  DEFAULT_TRASH_THRESHOLD_UNIT = 'year'
 
   HTTP_STATUS_CODE_FORBIDDEN = "403"
   HTTP_STATUS_CODE_NOT_FOUND = "404"
+
+  DEFAULT_FACEBOOK_API_VERSION = 'v17.0'
+  FACEBOOK_SDK_JS_URL = "https://connect.facebook.net/ja_JP/sdk.js#xfbml=1"
+  FACEBOOK_SHARER_URL = "https://www.facebook.com/sharer/sharer.php"
 
   mattr_accessor(:max_items_per_page) { 50 }
 
@@ -30,14 +34,82 @@ module SS
   # 403
   class ForbiddenError < RuntimeError
     def initialize(msg = nil)
-      super(msg || HTTP_STATUS_CODE_FORBIDDEN)
+      super(msg || "403")
     end
   end
 
   # 404
   class NotFoundError < RuntimeError
     def initialize(msg = nil)
-      super(msg || HTTP_STATUS_CODE_NOT_FOUND)
+      super(msg || "404")
+    end
+  end
+
+  # この設定を利用する前に、環境変数 "HTTP_PROXY" や "HTTPS_PROXY" の利用を検討すること。
+  ProxySetting = Data.define(:disable, :uri, :username, :password, :ssl_verify_mode) do
+    def self.load
+      disable = SS.config.proxy.disable
+      uri = SS.config.proxy.proxy_http_basic_authentication["proxy_uri"]
+      username = SS.config.proxy.proxy_http_basic_authentication["proxy_username"]
+      password = SS.config.proxy.proxy_http_basic_authentication["proxy_password"]
+      password = SS::Crypto.decrypt(password) || password if password.present?
+      ssl_verify_mode = SS.config.proxy.ssl_verify_mode
+
+      new(disable: disable, uri: uri, username: username, password: password, ssl_verify_mode: ssl_verify_mode)
+    end
+
+    @@instance = nil
+
+    def self.instance
+      @@instance ||= self.load
+    end
+
+    def self.instance=(setting)
+      @@instance = setting
+    end
+
+    def disabled?
+      disable
+    end
+
+    def enabled?
+      !disabled?
+    end
+
+    def faraday_proxy_options
+      return nil if disabled? || uri.blank?
+
+      proxy_options = { uri: uri }
+      if username && password
+        proxy_options[:user] = username
+        proxy_options[:password] = password
+      end
+      proxy_options
+    end
+
+    def faraday_ssl_options
+      return nil if disabled? || ssl_verify_mode.blank?
+
+      case ssl_verify_mode
+      when "VERIFY_NONE"
+        { verify: false }
+      else
+        # nil means "verify: true"
+        nil
+      end
+    end
+
+    def ssl_verify_mode_constant
+      return if disabled? || ssl_verify_mode.blank?
+
+      case ssl_verify_mode
+      when "VERIFY_NONE"
+        OpenSSL::SSL::VERIFY_NONE
+      when "VERIFY_PEER"
+        OpenSSL::SSL::VERIFY_PEER
+      else
+        nil
+      end
     end
   end
 
@@ -166,4 +238,39 @@ module SS
     return true if err.to_s == HTTP_STATUS_CODE_NOT_FOUND
     false
   end
+
+  def format_error(attribute, message)
+    if message.is_a?(Symbol)
+      message = I18n.t("errors.messages.#{message}")
+    end
+    I18n.t("errors.format", attribute: attribute, message: message)
+  end
+
+  def cms_sites(cur_user)
+    return SS::EMPTY_ARRAY if SS.config.cms.disable
+
+    Cms::Site.without_deleted.select do |site|
+      cur_user.groups.active.in(name: site.groups.active.pluck(:name).map{ |name| /^#{::Regexp.escape(name)}(\/|$)/ } ).present?
+    end
+  end
+
+  def gws_sites(cur_user)
+    return SS::EMPTY_ARRAY if SS.config.gws.disable
+
+    cur_user.root_groups.select { |group| group.gws_use? }
+  end
+
+  def facebook_sdk_js_url(version:, app_id: nil)
+    params = { version: version }
+    params[:appId] = app_id if app_id
+    "#{SS::FACEBOOK_SDK_JS_URL}&#{params.to_query}"
+  end
+
+  # rubocop:disable Naming/MethodParameterName
+  def facebook_sharer_url(u:, src: "sdkpreparse")
+    params = { u: u }
+    params[:src] = src if src
+    "#{FACEBOOK_SHARER_URL}?#{params.to_query}"
+  end
+  # rubocop:enable Naming/MethodParameterName
 end

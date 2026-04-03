@@ -1,15 +1,12 @@
 class Webmail::MailImporter
   include ActiveModel::Model
+  include SS::HumanAttributeName
 
   attr_accessor :cur_user, :in_file, :account
 
   SUPPORTED_MIME_TYPES = %w(application/zip message/rfc822).freeze
 
   class << self
-    def t(*args)
-      human_attribute_name(*args)
-    end
-
     def import_mails(user, account, *mails)
       importer = Webmail::MailImporter.new(cur_user: user, account: account)
       mails.each do |mail|

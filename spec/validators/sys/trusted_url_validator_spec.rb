@@ -16,7 +16,7 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
 
   around do |example|
     # Rails.application.current_request = request
-    SS::Current.set(env: request, request: request) do
+    SS::Current.with(env: request, request: request) do
       example.run
     end
   end
@@ -74,6 +74,18 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
 
       # invalid urls
       expect(described_class.trusted_url?("https://●●")).to be_falsey
+    end
+  end
+
+  describe ".trusted_url? with wildcard" do
+    let(:trusted1_url) { "https://*.#{trusted1_domain}/" }
+    let(:trusted_urls) { [ trusted1_url ] }
+
+    it do
+      expect(described_class.trusted_url?("https://#{unique_id}.#{trusted1_domain}/")).to be_truthy
+      expect(described_class.trusted_url?("https://#{trusted1_domain}/")).to be_falsey
+      expect(described_class.trusted_url?("https://#{trusted2_domain}/")).to be_falsey
+      expect(described_class.trusted_url?("https://#{unique_id}.#{trusted2_domain}/")).to be_falsey
     end
   end
 

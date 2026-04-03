@@ -31,7 +31,8 @@ class Gws::Affair::CapitalsController < ApplicationController
   end
 
   def set_items
-    @items = @cur_year.yearly_capitals
+    set_year
+    @items ||= @cur_year.yearly_capitals
   end
 
   public

@@ -72,7 +72,9 @@ class Gws::Share::Apis::FolderCrudController < ApplicationController
       @item.group_ids = (@item.group_ids + @parent.group_ids).uniq
       @item.user_ids = (@item.user_ids + @parent.user_ids).uniq
     end
-    render_create @item.save
+    result = @item.save
+    flash[:notice] = t("ss.notice.saved") if result
+    render_create result
   end
 
   def rename
@@ -97,7 +99,10 @@ class Gws::Share::Apis::FolderCrudController < ApplicationController
     @item.attributes["before_folder_name"] = save_name
     @item.attributes["controller"] = "gws/share/folders"
     @item.attributes["action"] = "update"
-    render_change @item.save
+
+    result = @item.save
+    flash[:notice] = t("ss.notice.saved") if result
+    render_change result
   end
 
   def delete
@@ -112,6 +117,9 @@ class Gws::Share::Apis::FolderCrudController < ApplicationController
     raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
 
     @item.attributes["action"] = "destroy"
-    render_destroy @item.destroy
+    result = @item.destroy
+
+    flash[:notice] = t("ss.notice.deleted") if result
+    render_destroy result
   end
 end

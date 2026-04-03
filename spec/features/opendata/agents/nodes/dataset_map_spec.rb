@@ -5,8 +5,8 @@ describe "opendata_agents_nodes_dataset_map", type: :feature, dbscope: :example,
   let(:layout) { create_cms_layout }
   let(:node) { create :opendata_node_dataset_map, layout_id: layout.id, filename: "node" }
 
-  let(:node_dataset) { create_once :opendata_node_dataset, name: "datasets" }
-  let!(:node_search) { create_once :opendata_node_search_dataset }
+  let(:node_dataset) { create :opendata_node_dataset, name: "datasets" }
+  let!(:node_search) { create :opendata_node_search_dataset }
 
   let(:license) { create(:opendata_license, cur_site: site) }
 
@@ -37,6 +37,10 @@ describe "opendata_agents_nodes_dataset_map", type: :feature, dbscope: :example,
         item.resources = [resource]
         item.save!
       end
+
+      # 書き出しテストの後に本テストが実行されると失敗する場合があるので、念のため書き出し済みのファイルを削除
+      FileUtils.rm_rf site.path
+      FileUtils.mkdir_p site.path
     end
 
     it "#index" do

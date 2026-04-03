@@ -36,7 +36,7 @@ save_node route: "chat/bot", filename: "chatbot", name: "チャットボット",
 
 ## article
 save_node route: "article/page", filename: "docs", name: "記事",
-  page_layout_id: @layouts["pages"].id, shortcut: "show", sort: 'order', limit: 20,
+  page_layout_id: @layouts["pages"].id, shortcuts: %w(system quota), sort: 'order', limit: 20,
   st_form_ids: [@form.id, @form2.id, @form3.id, @form4.id, @form5.id], st_form_default_id: @form4.id
 save_node route: "article/page", filename: "watersupply", name: "水道使用 開始・停止受付",
   keywords: %w(サイト名), sort: "updated -1", limit: 20
@@ -148,14 +148,14 @@ save_node route: "category/page", filename: "kurashi/zeikin/other", name: "そ�
 save_node route: "category/page", filename: "kurashi/zeikin/shimin", name: "市民税"
 save_node route: "category/page", filename: "kurashi/zeikin/tokubetsu", name: "特別徴収"
 save_node route: "category/page", filename: "kurashi/zeikin/yogo", name: "税務用語"
-save_node route: "category/page", filename: "oshirase", name: "お知らせ", shortcut: "show"
+save_node route: "category/page", filename: "oshirase", name: "お知らせ", shortcuts: %w(system quota)
 save_node route: "category/page", filename: "oshirase/event", name: "イベント",
   sort: "released -1", limit: 20
 save_node route: "category/page", filename: "oshirase/kanko", name: "観光・文化・スポーツ"
 save_node route: "category/page", filename: "oshirase/kenko", name: "健康・福祉"
 save_node route: "category/page", filename: "oshirase/kosodate", name: "子育て・教育"
 save_node route: "category/page", filename: "oshirase/kurashi", name: "くらし・手続き",
-  page_layout_id: @layouts["pages"].id, shortcut: "show", view_route: 'article/page'
+  page_layout_id: @layouts["pages"].id, shortcuts: %w(system quota), view_route: 'article/page'
 save_node route: "category/page", filename: "oshirase/sangyo", name: "産業・仕事"
 save_node route: "category/page", filename: "oshirase/shisei", name: "市政情報"
 save_node route: "category/page", filename: "sangyo/jinzai", name: "人材募集", order: 10
@@ -201,7 +201,7 @@ save_node route: "category/node", filename: "shisei/soshiki/kikikanri", name: "�
 save_node route: "category/page", filename: "shisei/toke", name: "統計・人口", order: 90
 save_node route: "category/page", filename: "shisei/toshi", name: "都市整備", order: 100
 save_node route: "category/page", filename: "shisei/zaisei", name: "財政・行政改革", order: 110
-save_node route: "category/page", filename: "urgency", name: "緊急情報", shortcut: "show"
+save_node route: "category/page", filename: "urgency", name: "緊急情報", shortcuts: %w(system quota)
 save_node route: "category/node", filename: "faq", name: "よくある質問", sort: "order", loop_format: 'liquid'
 save_node route: "category/page", filename: "faq/kurashi", name: "くらし・手続き", order: 10
 save_node route: "category/page", filename: "faq/kosodate", name: "子育て・教育", order: 20
@@ -264,9 +264,9 @@ save_node route: "event/page", filename: "calendar", name: "イベントカレ�
   st_category_ids: %w(calendar/bunka calendar/kohen calendar/sports).map { |c| @categories[c].id }
 
 ## uploader
-save_node route: "uploader/file", filename: "css", name: "CSS", shortcut: "show"
-save_node route: "uploader/file", filename: "img", name: "画像", shortcut: "show"
-save_node route: "uploader/file", filename: "js", name: "javascript", shortcut: "show"
+save_node route: "uploader/file", filename: "css", name: "CSS", shortcuts: %w(system quota)
+save_node route: "uploader/file", filename: "img", name: "画像", shortcuts: %w(system quota)
+save_node route: "uploader/file", filename: "js", name: "javascript", shortcuts: %w(system quota)
 save_node route: "uploader/file", filename: "dataset", name: "javascript"
 
 ## faq
@@ -286,12 +286,12 @@ save_node route: "cms/group_page", filename: "shisei/soshiki/kikaku/seisaku", na
 
 ## urgency
 save_node route: "urgency/layout", filename: "urgency-layout", name: "緊急災害レイアウト",
-  urgency_default_layout_id: @layouts["top"].id, shortcut: "show"
+  urgency_default_layout_id: @layouts["top"].id, shortcuts: %w(system quota)
 
 ## inquiry
 inquiry_html = File.read("nodes/inquiry.inquiry_html") rescue nil
 inquiry_sent_html = File.read("nodes/inquiry.inquiry_sent_html") rescue nil
-@inquiry_node = save_node route: "inquiry/form", filename: "inquiry", name: "市へのお問い合わせ", shortcut: "show",
+@inquiry_node = save_node route: "inquiry/form", filename: "inquiry", name: "市へのお問い合わせ", shortcuts: %w(system quota),
   from_name: "シラサギサンプルサイト",
   inquiry_captcha: "enabled", notice_state: "disabled",
   inquiry_html: inquiry_html, inquiry_sent_html: inquiry_sent_html,

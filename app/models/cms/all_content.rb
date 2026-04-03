@@ -1,8 +1,8 @@
 class Cms::AllContent < Cms::PageExporter
   include ActiveModel::Model
 
-  def initialize(site:, criteria: nil)
-    super(mode: "all", site: site, criteria: criteria || new_enumerator)
+  def initialize(site:, truncate: true, criteria: nil)
+    super(mode: "all", site: site, truncate: truncate, criteria: criteria || new_enumerator)
   end
 
   private

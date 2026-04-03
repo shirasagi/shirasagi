@@ -1,0 +1,125 @@
+require 'spec_helper'
+
+describe Cms::Page::GenerateJob, dbscope: :example do
+  let(:site) { cms_site }
+  let(:user) { cms_user }
+  let(:layout) { create_cms_layout }
+  let(:node) { create :article_node_page, cur_site: cms_site, layout_id: layout.id }
+
+  let!(:page1) do
+    create(
+      :article_page, cur_site: cms_site, cur_user: user, cur_node: node, state: 'public', layout: layout,
+      file_ids: [ss_file1.id])
+  end
+  let!(:page2) do
+    create(:article_page, cur_site: cms_site, cur_user: user, cur_node: node, state: 'public', layout: layout)
+  end
+  let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
+  let!(:column1) do
+    create(:cms_column_file_upload, cur_site: site, cur_form: form, order: 1, file_type: "image")
+  end
+  let!(:column2) do
+    create(:cms_column_free, cur_site: site, cur_form: form, order: 2)
+  end
+
+  let!(:ss_file1) { create :ss_file, site: site, user: user, state: 'public' }
+  let!(:ss_file2) { create :ss_file, site: site, user: user, state: 'public' }
+  let!(:ss_file3) { create :ss_file, site: site, user: user, state: 'public' }
+  let!(:ss_file4) { create :ss_file, site: site, user: user, state: 'public' }
+
+  before do
+    node.st_form_ids = [ form.id ]
+    node.save!
+
+    page2.form = form
+    page2.column_values = [
+      column1.value_type.new(column: column1, file_id: ss_file2.id, file_label: ss_file2.humanized_name),
+      column2.value_type.new(column: column2, value: unique_id * 2, file_ids: [ ss_file3.id, ss_file4.id ])
+    ]
+    page2.save!
+
+    Cms::Task.create!(site_id: site.id, node_id: nil, name: 'cms:generate_pages', state: 'ready')
+    Cms::Task.create!(site_id: site.id, node_id: node.id, name: 'cms:generate_pages', state: 'ready')
+  end
+
+  describe "#perform without node" do
+    before do
+      @save_file_publisher = SS::FilePublisher.singleton
+      SS::FilePublisher.singleton = SS::FilePublisher::BySymLink.new
+
+      Fs.rm_rf node.path
+
+      Fs.rm_rf page1.path
+      Fs.rm_rf ss_file1.public_path
+
+      Fs.rm_rf page2.path
+      Fs.rm_rf ss_file2.public_path
+      Fs.rm_rf ss_file3.public_path
+      Fs.rm_rf ss_file4.public_path
+
+      expect { described_class.bind(site_id: site.id).perform_now }.to output(include(page1.url, page2.url)).to_stdout
+    end
+
+    after do
+      SS::FilePublisher.singleton = @save_file_publisher
+    end
+
+    it do
+      expect(File.size(page1.path)).to be > 0
+      expect(File.size(ss_file1.public_path)).to be > 0
+      expect(FileTest.symlink?(ss_file1.public_path)).to be_truthy
+
+      expect(File.size(page2.path)).to be > 0
+      expect(File.size(ss_file2.public_path)).to be > 0
+      expect(File.size(ss_file3.public_path)).to be > 0
+      expect(File.size(ss_file4.public_path)).to be > 0
+      expect(FileTest.symlink?(ss_file2.public_path)).to be_truthy
+      expect(FileTest.symlink?(ss_file3.public_path)).to be_truthy
+      expect(FileTest.symlink?(ss_file4.public_path)).to be_truthy
+      expect(Cms::Task.count).to eq 2
+      Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_pages').first.tap do |task|
+        expect(task.state).to eq 'completed'
+        expect(task.started).not_to be_nil
+        expect(task.closed).not_to be_nil
+        expect(task.total_count).to eq 2
+        expect(task.current_count).to eq 2
+        expect(task.logs).to include(include(page1.filename))
+        expect(task.node_id).to be_nil
+        # logs are saved in a file
+        expect(::File.size(task.log_file_path)).to be > 0
+        # and there are no `logs` field
+        expect(task[:logs]).to be_nil
+      end
+      Cms::Task.where(site_id: site.id, node_id: node.id, name: 'cms:generate_pages').first.tap do |task|
+        expect(task.state).to eq 'ready'
+      end
+
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      end
+
+      Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_pages').first.tap do |task|
+        Cms::GenerationReportCreateJob.bind(site_id: site.id).perform_now(task.id)
+
+        expect(Job::Log.count).to eq 2
+        Job::Log.all.each do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        expect(Cms::GenerationReport::Title.all.count).to eq 1
+        title = Cms::GenerationReport::Title.all.first
+        expect(title.site_id).to eq site.id
+        expect(title.name).to include("generate page performance log")
+        expect(title.task_id).to eq task.id
+        expect(title.sha256_hash).to be_present
+        expect(title.generation_type).to eq "pages"
+
+        expect(Cms::GenerationReport::History[title].all.count).to eq 5
+        expect(Cms::GenerationReport::Aggregation[title].all.count).to eq 1
+      end
+    end
+  end
+end

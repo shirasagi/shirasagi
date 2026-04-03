@@ -13,9 +13,7 @@ end
 use_agent = @ss_mode == :gws && @item.agent_enabled? && @cur_user.gws_role_permit_any?(@cur_site, :agent_all_gws_workflow_files, :agent_private_gws_workflow_files)
 
 if @ss_mode == :cms
-  approver_ids = Cms::User.site(@cur_site).select do |user|
-    @item.allowed?(:approve, user, site: @cur_site)
-  end.pluck(:id)
+  approver_ids = Workflow.approvable_users(cur_site: @cur_site, item: @item).pluck(:id)
 end
 
 %>

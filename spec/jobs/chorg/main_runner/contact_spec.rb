@@ -103,14 +103,16 @@ describe Chorg::MainRunner, dbscope: :example do
 
       it do
         # execute
-        job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+        job = described_class.bind(site_id: site, task_id: task)
+        expect { ss_perform_now(job, revision.name, job_opts) }.to \
+          output(include("[#{I18n.t("chorg.options.changeset_type.move")}] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
-        Job::Log.first.tap do |log|
+        Job::Log.all.each do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
+          expect(log.logs).not_to include(/ERROR -- :/)
         end
 
         group1.reload
@@ -250,14 +252,16 @@ describe Chorg::MainRunner, dbscope: :example do
 
       it do
         # execute
-        job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+        job = described_class.bind(site_id: site, task_id: task)
+        expect { ss_perform_now(job, revision.name, job_opts) }.to \
+          output(include("[#{I18n.t("chorg.options.changeset_type.move")}] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
-        Job::Log.first.tap do |log|
+        Job::Log.all.each do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
+          expect(log.logs).not_to include(/ERROR -- :/)
         end
 
         group1.reload
@@ -401,14 +405,16 @@ describe Chorg::MainRunner, dbscope: :example do
 
       it do
         # execute
-        job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+        job = described_class.bind(site_id: site, task_id: task)
+        expect { ss_perform_now(job, revision.name, job_opts) }.to \
+          output(include("[#{I18n.t("chorg.options.changeset_type.move")}] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
-        Job::Log.first.tap do |log|
+        Job::Log.all.each do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
+          expect(log.logs).not_to include(/ERROR -- :/)
         end
 
         group1.reload
@@ -549,14 +555,16 @@ describe Chorg::MainRunner, dbscope: :example do
 
       it do
         # execute
-        job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+        job = described_class.bind(site_id: site, task_id: task)
+        expect { ss_perform_now(job, revision.name, job_opts) }.to \
+          output(include("[#{I18n.t("chorg.options.changeset_type.move")}] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
-        Job::Log.first.tap do |log|
+        Job::Log.all.each do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
+          expect(log.logs).not_to include(/ERROR -- :/)
         end
 
         group1.reload

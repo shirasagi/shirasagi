@@ -48,11 +48,14 @@ class Gws::Affair::Attendance::TimeCardsController < ApplicationController
   end
 
   def set_items
-    @items ||= @model.site(@cur_site).
-      user(@cur_user).
-      allow(:use, @cur_user, site: @cur_site, permission_name: module_name).
-      where(:date.gte => @active_year_range.first).
-      search(params[:s])
+    @items ||= begin
+      set_active_year_range
+
+      @model.site(@cur_site).
+        user(@cur_user).
+        allow(:use, @cur_user, site: @cur_site, permission_name: module_name).
+        where(:date.gte => @active_year_range.first)
+    end
   end
 
   def set_item
@@ -134,6 +137,7 @@ class Gws::Affair::Attendance::TimeCardsController < ApplicationController
 
   def index
     @items = @items.
+      search(params[:s]).
       page(params[:page]).per(50)
     @item = @items.where(date: @cur_month).first
   end

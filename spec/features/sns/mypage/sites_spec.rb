@@ -66,8 +66,8 @@ describe "sns_mypage", type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t("ss.notice.deleted")
 
-      expect(SS::Site.all.count).to eq 2
-      expect(SS::Site.without_deleted.count).to eq 1
+      expect(Cms::Site.all.count).to eq 2
+      expect(Cms::Site.without_deleted.count).to eq 1
 
       visit index_path
       within ".mypage-sites" do

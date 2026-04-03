@@ -5,6 +5,12 @@ describe "cms/pages", type: :feature, dbscope: :example do
   let(:node) { create :cms_node_node, filename: "node" }
   let!(:item) { create :cms_page, cur_node: node, basename: 'page' }
 
+  before do
+    # 書き出しテストの後に本テストが実行されると失敗する場合があるので、念のため書き出し済みのファイルを削除
+    FileUtils.rm_rf site.path
+    FileUtils.mkdir_p site.path
+  end
+
   context "with descendant page" do
     before { login_cms_user }
 

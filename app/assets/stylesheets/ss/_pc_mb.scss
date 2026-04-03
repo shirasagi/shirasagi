@@ -679,7 +679,7 @@ _:future,
   border-bottom: 1px solid #dcdcdc;
   background: init.$white;
   .icon-material::before {
-    top: 6px;
+    top: 5px;
     left: 16px;
   }
   .icon-material-display {
@@ -722,10 +722,12 @@ _:future,
       text-align: center;
     }
     &.opened::before {
-      content: "arrow_back";
+      // Material Icons Outlined: arrow_back
+      content: "\e5c4";
     }
     &.closed::before {
-      content: "arrow_forward";
+      // Material Icons Outlined: arrow_forward
+      content: "\e5c8";
     }
   }
   @media only screen and (max-width: 768px) {
@@ -1526,19 +1528,28 @@ _:future,
     font-size: 20px;
   }
   .icon-material-display::before {
-    content: "display_settings" !important;
+    // Material Icons Outlined: settings_display (was display_settings)
+    content: "\e8bd" !important;
   }
   .icon-material-import-node::before {
-    content: "drive_folder_upload" !important;
+    // Material Icons Outlined: drive_folder_upload
+    content: "\e9a3" !important;
   }
   .icon-material-more-horiz::before {
-    content: "more_horiz" !important;
+    // Material Icons Outlined: more_horiz
+    content: "\e5d3" !important;
   }
   .icon-material-settings::before {
-    content: "settings" !important;
+    // Material Icons Outlined: settings
+    content: "\e8b8" !important;
   }
   .icon-material-shortcut::before {
-    content: "shortcut" !important;
+    // Material Icons Outlined: shortcut
+    content: "\f060" !important;
+  }
+  .icon-material-folder::before {
+    // Material Icons Outlined: folder
+    content: "\e2c7" !important;
   }
 }
 
@@ -1581,49 +1592,6 @@ _:future,
 #ss-pc {
   margin-top: 10px;
   @include init.btn;
-}
-// -------------------------------------------------------------------------------------------------
-// breadcrumb
-.breadcrumb {
-  @include init.clear;
-  margin: 0 0 10px -42px;
-  border-bottom: init.$border-gray4;
-  background: init.$gray5;
-  list-style: none;
-  @include init.mb {
-    display: none;
-  }
-  li {
-    float: left;
-    &:first-child a::before {
-      border: 0;
-    }
-  }
-  a {
-    display: block;
-    position: relative;
-    padding: 10px 28px;
-    color: init.$black;
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      border-top: 20px solid transparent;
-      border-bottom: 20px solid transparent;
-      border-left: 12px solid #c6c6c6;
-    }
-    &::after {
-      content: "";
-      position: absolute;
-      z-index: 1;
-      top: 0;
-      right: -11px;
-      border-top: 20px solid transparent;
-      border-bottom: 20px solid transparent;
-      border-left: 12px solid init.$gray5;
-    }
-  }
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -2063,7 +2031,8 @@ footer.send {
     }
 
     &::before {
-      content: "pageview";
+      // Material Icons Outlined: pageview
+      content: "\e8a0";
       position: absolute;
       top: 5px;
       left: 10px;

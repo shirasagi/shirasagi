@@ -33,13 +33,15 @@
     width: calc(100% - 20px);
   }
   header {
+    display: flex;
+    align-items: baseline;
+
     h2 {
-      display: inline-block;
-      width: 300px;
+      display: inline-flex;
     }
     .version {
-      padding: 2px;
-      float: right;
+      margin-left: auto;
+      padding: 0 5px;
       color: #888;
       font-size: 90%;
     }
@@ -211,6 +213,11 @@
       grid-template-columns: auto 1fr;
       grid-template-rows: auto auto;
       gap: 5px;
+
+      @include init.mb {
+        display: flex;
+        flex-direction: column;
+      }
     }
 
     .otp-setup-qrcode {
@@ -240,6 +247,10 @@
     .otp-setup-registration-without-qrcode-body {
       margin: 10px;
       line-height: 2;
+    }
+
+    .otp-setup-qr-code-trademark-notice {
+      grid-column: 1 / span 2;
     }
   }
 

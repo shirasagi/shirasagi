@@ -19,13 +19,17 @@ class Gws::Monitor::AnswersController < ApplicationController
   end
 
   def set_items
-    @items = @model.site(@cur_site).topic
-    @items = @items.and_public
-    @items = @items.and_attended(@cur_user, site: @cur_site, group: @cur_group)
+    @items ||= begin
+      items = @model.site(@cur_site).topic
+      items = items.and_public
+      items = items.and_attended(@cur_user, site: @cur_site, group: @cur_group)
+      items
+    end
+  end
+
+  def set_index_items
+    set_items
     @items = @items.and_answered(@cur_group)
-    @items = @items.search(params[:s])
-    @items = @items.custom_order(params.dig(:s, :sort))
-    @items = @items.page(params[:page]).per(50)
   end
 
   def check_attended

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "opendata_my_ideas", type: :feature, dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create_once :opendata_node_my_idea, name: "opendata_my_idea" }
+  let(:node) { create :opendata_node_my_idea, name: "opendata_my_idea" }
 
   let(:index_path) { opendata_my_ideas_path site, node }
 

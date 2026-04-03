@@ -1,4 +1,4 @@
-<% @s = OpenStruct.new params[:s] %>
+<% @s ||= OpenStruct.new params[:s] %>
 <%
    category_options = []
    Opendata::Node::Category.each { |e| category_options << [e.name, e._id]}

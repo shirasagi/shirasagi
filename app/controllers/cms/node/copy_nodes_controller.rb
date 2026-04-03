@@ -20,7 +20,8 @@ class Cms::Node::CopyNodesController < ApplicationController
 
   def job_options
     {
-      target_node_name: params[:item][:target_node_name]
+      target_node_name: @item.target_node_name, target_node_index_name: @item.target_node_index_name,
+      target_node_filename: @item.target_node_filename
     }
   end
 
@@ -33,13 +34,17 @@ class Cms::Node::CopyNodesController < ApplicationController
   end
 
   def get_params
-    params.require(:item).permit(@model.permitted_fields).merge({})
+    params.require(:item).permit(@model.permitted_fields)
   end
 
   public
 
   def index
     set_item
+
+    prefix = I18n.t("workflow.cloned_name_prefix")
+    @item.target_node_name = "[#{prefix}] #{@cur_node.name}"
+    @item.target_node_index_name = "[#{prefix}] #{@cur_node.index_name}" if @cur_node.index_name.present?
 
     respond_to do |format|
       format.html { render }

@@ -1,3 +1,6 @@
+<%
+  is_item_cms_content = @item.ref_coll.match?(/cms_nodes|cms_pages|cms_parts|cms_layouts/)
+%>
 <%= form_for :item, url: { action: :undo_delete }, html: { method: :delete, id: "item-form", multipart: true } do |f| %>
   <%= error_messages_for :item %>
 
@@ -7,7 +10,18 @@
       <div class="addon-body">
         <dl class="see">
           <dt><%= @item.model.t(:name) %></dt>
-          <dd><%= @item.data[:name] %></dd>
+          <% if is_item_cms_content %>
+            <%# CMS コンテンツの場合、復元時に変更できるようにする。 %>
+            <dd><%= text_field_tag "#{f.object_name}[name]", params.dig(f.object_name, :name) || @item.data[:name] %></dd>
+          <% else %>
+            <dd><%= @item.data[:name] %></dd>
+          <% end %>
+
+          <% if is_item_cms_content %>
+            <%# CMS コンテンツの場合、復元時に変更できるようにする。 %>
+            <dt><%= @item.model.t(:index_name) %></dt>
+            <dd><%= text_field_tag "#{f.object_name}[index_name]", params.dig(f.object_name, :index_name) || @item.data[:index_name] %></dd>
+          <% end %>
 
           <% if @item.model.ancestors.include?(Cms::Content) %>
             <dt><%= @item.model.t(:basename) %></dt>
@@ -15,7 +29,7 @@
             <dd class="hide"><%= text_field_tag "#{f.object_name}[basename]", ::File.basename(@item.data[:filename]) %></dd>
           <% end %>
 
-          <% if @item.ref_coll =~ /cms_nodes|cms_pages|cms_parts|cms_layouts/ && @item.parent.present? %>
+          <% if is_item_cms_content && @item.parent.present? %>
             <dt><%= @model.t(:parent) %></dt>
             <dd>
               <label><%= check_box_tag "#{f.object_name}[parent]", true, false, {} %> <%= t("history.options.target.restore") %></label>
@@ -27,7 +41,7 @@
             <dd><%= select_tag "#{f.object_name}[children]", options_for_select(@item.target_options) %></dd>
           <% end %>
 
-          <% if @item.ref_coll == 'ss_files' || @item.ref_coll == 'cms_files' %>
+          <% if @item.ref_coll == 'ss_files' %>
             <dt><%= @model.t(:state) %></dt>
             <dd><%= I18n.t("cms.notices.restoring_share_file_from_trash") %></dd>
           <% elsif @item.data[:state].present? %>

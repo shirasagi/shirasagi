@@ -6,13 +6,13 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
     let(:admin) { gws_user }
     let!(:user1) do
       Gws::User.create(
-        name: "name-#{unique_id}", uid: "uid-#{unique_id}", email: unique_email, in_password: "pass",
+        name: "name-#{unique_id}", uid: "uid-#{unique_id}", email: unique_email, in_password: ss_pass,
         group_ids: [ admin.groups.first.id ], gws_role_ids: admin.gws_role_ids,
         lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s)
     end
     let!(:user2) do
       Gws::User.create(
-        name: "name-#{unique_id}", uid: "uid-#{unique_id}", email: unique_email, in_password: "pass",
+        name: "name-#{unique_id}", uid: "uid-#{unique_id}", email: unique_email, in_password: ss_pass,
         group_ids: [ admin.groups.first.id ], gws_role_ids: admin.gws_role_ids,
         lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s)
     end

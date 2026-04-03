@@ -2,8 +2,9 @@ require 'zlib'
 
 module Cms::Michecker::Base
   extend ActiveSupport::Concern
-  include ActiveModel::Model
   extend SS::Translation
+  include ActiveModel::Model
+  include SS::HumanAttributeName
 
   included do
     attr_accessor :items
@@ -17,10 +18,6 @@ module Cms::Michecker::Base
       end
 
       new(items: items)
-    end
-
-    def t(*args)
-      human_attribute_name *args
     end
 
     private

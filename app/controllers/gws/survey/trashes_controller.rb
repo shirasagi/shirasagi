@@ -24,8 +24,7 @@ class Gws::Survey::TrashesController < ApplicationController
   def set_items
     @items = @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site).
-      only_deleted.
-      search(params[:s])
+      only_deleted
   end
 
   def set_item
@@ -42,6 +41,6 @@ class Gws::Survey::TrashesController < ApplicationController
   public
 
   def index
-    @items = @items.order_by(updated: -1, id: 1).page(params[:page]).per(50)
+    @items = @items.search(params[:s]).order_by(updated: -1, id: 1).page(params[:page]).per(50)
   end
 end

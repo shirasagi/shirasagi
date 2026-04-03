@@ -16,6 +16,15 @@ module Job::TasksFilter
     @model
   end
 
+  def set_items
+    @items ||= begin
+      items = item_criteria
+      items = items.where(site_id: @cur_site) if @cur_site && @cur_site.is_a?(SS::Model::Site)
+      items = items.where(group_id: @cur_site) if @cur_site && @cur_site.is_a?(SS::Model::Group)
+      items
+    end
+  end
+
   def set_item
     @item = item_criteria.find(params[:id])
     raise "404" unless @item

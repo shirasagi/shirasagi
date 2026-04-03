@@ -148,7 +148,7 @@ end
 save_node route: "cms/page", filename: "service1", name: "サービス1", layout_id: layouts["general"].id
 
 ## article
-save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show", layout_id: layouts["general"].id
+save_node route: "article/page", filename: "docs", name: "記事", shortcuts: %w(system quota), layout_id: layouts["general"].id
 
 ## uploader
 save_node route: "uploader/file", filename: "css", name: "CSS"
@@ -157,7 +157,7 @@ save_node route: "uploader/file", filename: "js", name: "javascript"
 save_node route: "uploader/file", filename: "fonts", name: "fonts"
 
 ## inquiry
-inquiry_node = save_node route: "inquiry/form", filename: "contact", name: "お問い合わせ", shortcut: "show",
+inquiry_node = save_node route: "inquiry/form", filename: "contact", name: "お問い合わせ", shortcuts: %w(system quota),
   layout_id: layouts["confirm"].id,
   inquiry_html: '<p>名前とメールアドレス、内容を入力してください。</p>',
   inquiry_sent_html: '<p>送信しました。</p>',

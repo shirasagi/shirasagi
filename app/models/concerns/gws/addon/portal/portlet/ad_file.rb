@@ -45,6 +45,7 @@ module Gws::Addon::Portal::Portlet
     private
 
     def normalize_ad_links
+      return if self.frozen?
       return if ad_links.blank?
 
       self.ad_links = ad_links.reject { blank_ad_link?(_1) }

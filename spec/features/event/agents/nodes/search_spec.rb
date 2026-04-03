@@ -17,6 +17,12 @@ describe "event_agents_nodes_search", type: :feature, dbscope: :example do
   let!(:item2) { create :event_page, cur_node: node, event_recurrences: [event_recur2] }
   let!(:item3) { create :event_page, cur_node: node, event_recurrences: [event_recur3] }
 
+  before do
+    # 書き出しテストの後に本テストが実行されると失敗する場合があるので、念のため書き出し済みのファイルを削除
+    FileUtils.rm_rf site.path
+    FileUtils.mkdir_p site.path
+  end
+
   context 'when sort is updated_desc' do
     it "index" do
       visit node.full_url

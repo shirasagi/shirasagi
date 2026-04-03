@@ -1,5 +1,6 @@
 class Uploader::File
   include ActiveModel::Model
+  include SS::HumanAttributeName
 
   attr_accessor :path, :binary, :site, :sanitizer_state
   attr_reader :saved_path, :is_dir
@@ -83,7 +84,7 @@ class Uploader::File
 
   def link
     return path.sub(/.*?\/_\//, "/") if Fs.mode == :grid_fs
-    "/sites#{path.sub(/^#{::Regexp.escape(SS::Site.root)}/, '')}"
+    "/sites#{path.sub(/^#{::Regexp.escape(Cms::Site.root)}/, '')}"
   end
 
   def filename
@@ -208,10 +209,6 @@ class Uploader::File
   end
 
   class << self
-    def t(*args)
-      human_attribute_name *args
-    end
-
     def file(path)
       return nil if !Fs.exist?(path) && (Fs.mode != :grid_fs)
       Uploader::File.new(path: path, saved_path: path, is_dir: Fs.directory?(path))

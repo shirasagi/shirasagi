@@ -20,8 +20,8 @@ RSpec.describe SS::Migration20240424000000, dbscope: :example do
       close_other_opendata_resources close_private_opendata_resources close_member_opendata_resources
     ).compact
   end
-  let!(:node_search_dataset) { create_once :opendata_node_search_dataset, filename: "dataset/search" }
-  let(:node) { create_once :opendata_node_dataset }
+  let!(:node_search_dataset) { create :opendata_node_search_dataset, filename: "dataset/search" }
+  let(:node) { create :opendata_node_dataset }
   let(:dataset) { create(:opendata_dataset, cur_node: node, group_ids: [group.id]) }
   let(:license) { create(:opendata_license, cur_site: site) }
   let(:csv_file) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }

@@ -57,17 +57,17 @@ describe Cms::ContentLinkCheckerComponent, type: :component, dbscope: :example d
       before do
         success_return = { body: "", status: 200, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
         Addressable::URI.join(site.full_url, success_url1).to_s.tap do |u|
-          stub_request(:get, /^#{::Regexp.escape(u)}/).to_return(success_return)
+          stub_request(:any, /^#{::Regexp.escape(u)}/).to_return(success_return)
         end
-        stub_request(:get, /^#{::Regexp.escape(success_url2)}/).to_return(success_return)
-        stub_request(:get, /^#{::Regexp.escape(success_url3)}/).to_return(success_return)
-        # stub_request(:get, /^#{::Regexp.escape(success_url4)}/).to_return(success_return)
+        stub_request(:any, /^#{::Regexp.escape(success_url2)}/).to_return(success_return)
+        stub_request(:any, /^#{::Regexp.escape(success_url3)}/).to_return(success_return)
+        # stub_request(:any, /^#{::Regexp.escape(success_url4)}/).to_return(success_return)
         failed_return = { body: "", status: 404, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
         Addressable::URI.join(site.full_url, failed_url1).to_s.tap do |u|
-          stub_request(:get, u).to_return(failed_return)
+          stub_request(:any, u).to_return(failed_return)
         end
-        stub_request(:get, failed_url2).to_return(failed_return)
-        stub_request(:get, failed_url3).to_return(failed_return)
+        stub_request(:any, failed_url2).to_return(failed_return)
+        stub_request(:any, failed_url3).to_return(failed_return)
       end
 
       let(:html) do
@@ -195,8 +195,8 @@ describe Cms::ContentLinkCheckerComponent, type: :component, dbscope: :example d
         WebMock.disable_net_connect!
 
         failed_return = { body: "", status: 404, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
-        stub_request(:get, url1).to_return(failed_return)
-        stub_request(:get, url2).to_return(failed_return)
+        stub_request(:any, url1).to_return(failed_return)
+        stub_request(:any, url2).to_return(failed_return)
       end
 
       after do
@@ -229,6 +229,52 @@ describe Cms::ContentLinkCheckerComponent, type: :component, dbscope: :example d
               expect(results.css(".nofollow").text.strip).to eq "[nofollow]"
               expect(results.css(".url").text.strip).to eq url2
               expect(results.css(".message").text.strip).to be_blank
+            end
+          end
+        end
+      end
+    end
+
+    context "with ignore url" do
+      let(:url1) { unique_url }
+      let(:html) do
+        <<~HTML.freeze
+          <a href="#{url1}">#{url1}</a>
+        HTML
+      end
+      let!(:article) { create :article_page, cur_node: node, layout: layout, html: html, state: "public" }
+      let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: url1 }
+
+      before do
+        WebMock.disable_net_connect!
+
+        failed_return = { body: "", status: 404, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
+        stub_request(:any, url1).to_return(failed_return)
+      end
+
+      after do
+        WebMock.reset!
+        WebMock.allow_net_connect!
+      end
+
+      it do
+        checker = Cms::ContentLinkChecker.check(cur_site: site, cur_user: user, page: article, html: html)
+        component = described_class.new(cur_site: site, cur_user: user, checker: checker)
+        fragment = render_inline component
+        fragment.css("#errorLinkChecker").tap do |error_elements|
+          expect(error_elements).to have(1).items
+          error_elements[0].css("h2").tap do |elements|
+            expect(elements).to have(1).items
+            expect(elements[0].text.strip).to include(I18n.t("cms.link_check"))
+          end
+          error_elements[0].css(".errorExplanationBody").tap do |elements|
+            expect(elements).to have(1).items
+
+            elements[0].css("[data-url='#{url1}']").tap do |results|
+              expect(results).to have(1).items
+              expect(results.css(".skip").text.strip).to eq "[skip]"
+              expect(results.css(".url").text.strip).to eq url1
+              expect(results.css(".message")).to be_blank
             end
           end
         end

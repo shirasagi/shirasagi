@@ -7,7 +7,7 @@ describe "cms_delete_linked_pages", type: :feature, dbscope: :example, js: true 
   let!(:form1) { create(:cms_form, cur_site: cms_site, state: 'public', sub_type: 'static') }
   let!(:column1) { create(:cms_column_free, cur_site: site, cur_form: form1, order: 1) }
   let!(:column2) { create(:cms_column_free, cur_site: site, cur_form: form1, order: 2) }
-  let(:ss_file) { create_once :ss_file, user: cms_user }
+  let(:ss_file) { create :ss_file, user: cms_user }
   
   let!(:page1) do
     create(

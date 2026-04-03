@@ -27,7 +27,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       within "#addon-basic" do
         click_on I18n.t('ss.qr_code')
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_selector("td.thumb img")
 
         find(".qr-png").all("a")[0].click
@@ -44,7 +44,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         expect(::File.basename(downloads[1])).to eq "QRCode_160px.png"
         expect(::File.basename(downloads[2])).to eq "QRCode_240px.png"
         expect(::File.basename(downloads[3])).to eq "QRCode_480px.png"
-        wait_cbox_close { find('#cboxClose').click }
+        wait_for_cbox_closed { find('#cboxClose').click }
       end
     end
   end

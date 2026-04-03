@@ -49,10 +49,6 @@ class Member::Bookmark
       { method: :post, class: "favorite-cancel" })
   end
 
-  def becomes_with_route
-    self
-  end
-
   private
 
   def set_name

@@ -4,7 +4,7 @@ module Gws::Reference::Notice::Folder
 
   included do
     belongs_to :folder, class_name: "Gws::Notice::Folder"
-    validates :folder_id, presence: true
+    validates :folder_id, presence: true, except_on: %i[soft_delete]
     permit_params :folder_id
   end
 

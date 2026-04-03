@@ -3,7 +3,7 @@ class SS::RemoveSiteJob < SS::ApplicationJob
   # 2. 残りを MODULES_BOUND_TO_SITE より削除する
   # 3. 最後に site と public 配下のファイルを削除する
   def perform(site_id)
-    @site = SS::Site.find(site_id)
+    @site = Cms::Site.find(site_id)
 
     ## basic contents
     models = [::Cms::Page, ::Cms::Part, ::Cms::Layout, ::Cms::Node]

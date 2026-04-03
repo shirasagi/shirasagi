@@ -88,6 +88,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
         )
         expect(mail_body(mail)).to include(answer_url)
         expect(mail_body(mail)).not_to include(name)
+        expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
     end
   end
@@ -117,6 +118,8 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('inquiry.submit')
         end
       end
+      inquiry_sent_text = Nokogiri::HTML.fragment(inquiry_form.inquiry_sent_html).text.strip
+      expect(page).to have_css(".inquiry-sent", text: inquiry_sent_text)
 
       expect(Inquiry::Answer.site(site).count).to eq 1
       answer = Inquiry::Answer.first
@@ -139,6 +142,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
         )
         expect(mail_body(mail)).to include(answer_url)
         expect(mail_body(mail)).not_to include(name)
+        expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
     end
   end

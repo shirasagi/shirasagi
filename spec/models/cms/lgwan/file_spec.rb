@@ -4,7 +4,7 @@ describe Cms::Lgwan::File, type: :model, dbscope: :example do
   let(:site) { cms_site }
   let(:user) { cms_user }
 
-  let(:node) { create_once :article_node_page, filename: unique_id, name: "article" }
+  let(:node) { create :article_node_page, filename: unique_id, name: "article" }
   let(:item) { create(:article_page, cur_node: node, file_ids: [file.id]) }
   let(:file) { create(:ss_file, site: site, user: user, filename: "logo.png") }
 

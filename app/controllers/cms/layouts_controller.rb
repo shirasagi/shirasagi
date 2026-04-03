@@ -2,7 +2,6 @@ class Cms::LayoutsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
   include Cms::SyntaxCheckable
-  helper Cms::SyntaxCheckableHelper
 
   model Cms::Layout
 

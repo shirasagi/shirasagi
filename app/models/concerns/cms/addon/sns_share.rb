@@ -17,8 +17,9 @@ module Cms::Addon
 
     def sns_share_states_options
       [
-        [I18n.t('ss.options.state.show'), 'show'],
-        [I18n.t('ss.options.state.hide'), 'hide'],
+        [I18n.t('cms.options.sns_share_state.show'), 'show'],
+        [I18n.t('cms.options.sns_share_state.link_only'), 'link_only'],
+        [I18n.t('cms.options.sns_share_state.hide'), 'hide'],
       ]
     end
 
@@ -31,17 +32,21 @@ module Cms::Addon
     end
 
     def sns_share_state_label(name)
-      value = sns_share_state(name) != 'hide' ? 'show' : 'hide'
-      I18n.t("ss.options.state.#{value}")
+      case sns_share_state(name)
+      when 'hide'
+        I18n.t("cms.options.sns_share_state.hide")
+      when 'link_only'
+        I18n.t("cms.options.sns_share_state.link_only")
+      else # 'show'
+        I18n.t("cms.options.sns_share_state.show")
+      end
     end
 
     def sort_sns_share_services
-      list = sns_share_services
-      list = sns_share_orders.sort_by { |name, order| order } if sns_share_orders.present?
-      list = list.select do |name, _|
-        sns_share_state(name) != "hide"
-      end
-      list.map { |name, order| name }
+      services = sns_share_services.map { [ _1, sns_share_state(_1) || 'show' ] }
+      services.select! { |_service_name, service_type| service_type != 'hide' }
+      services.sort_by! { |service_name, _service_type| sns_share_order(service_name) || 0 }
+      services
     end
   end
 end

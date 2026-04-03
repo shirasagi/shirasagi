@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
   let(:site) { cms_site }
-  let!(:node_search) { create_once :opendata_node_search_dataset }
-  let!(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
+  let!(:node_search) { create :opendata_node_search_dataset }
+  let!(:node) { create :opendata_node_dataset, name: "opendata_dataset" }
 
   describe "update_plan_date not set" do
     let(:today) { Date.parse("2019/2/25") }
@@ -115,6 +115,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         mail = ActionMailer::Base.deliveries.first
         expect(mail_body(mail)).to include(dataset1.private_show_path)
         expect(mail_body(mail)).not_to include(dataset2.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 
@@ -199,6 +200,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
         expect(mail_body(mail)).to include(dataset.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 
@@ -342,6 +344,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         expect(mail_body(mail)).not_to include(dataset3.private_show_path)
         expect(mail_body(mail)).not_to include(dataset4.private_show_path)
         expect(mail_body(mail)).not_to include(dataset5.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 
@@ -361,6 +364,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         expect(mail_body(mail)).not_to include(dataset3.private_show_path)
         expect(mail_body(mail)).not_to include(dataset4.private_show_path)
         expect(mail_body(mail)).not_to include(dataset5.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 
@@ -380,6 +384,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         expect(mail_body(mail)).to include(dataset3.private_show_path)
         expect(mail_body(mail)).not_to include(dataset4.private_show_path)
         expect(mail_body(mail)).not_to include(dataset5.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
   end
@@ -507,6 +512,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         expect(mail_body(mail)).not_to include(dataset3.private_show_path) #2020/1/31
         expect(mail_body(mail)).not_to include(dataset4.private_show_path)
         expect(mail_body(mail)).not_to include(dataset5.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 
@@ -525,6 +531,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         expect(mail_body(mail)).not_to include(dataset3.private_show_path) #2020/1/31
         expect(mail_body(mail)).not_to include(dataset4.private_show_path)
         expect(mail_body(mail)).not_to include(dataset5.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
 
       ActionMailer::Base.deliveries.clear
@@ -537,6 +544,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         expect(mail_body(mail)).not_to include(dataset3.private_show_path) #2020/1/31
         expect(mail_body(mail)).not_to include(dataset4.private_show_path)
         expect(mail_body(mail)).not_to include(dataset5.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 
@@ -555,6 +563,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         expect(mail_body(mail)).not_to include(dataset3.private_show_path) #2020/1/31
         expect(mail_body(mail)).not_to include(dataset4.private_show_path)
         expect(mail_body(mail)).not_to include(dataset5.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
 
       ActionMailer::Base.deliveries.clear
@@ -567,6 +576,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         expect(mail_body(mail)).to include(dataset3.private_show_path) #2020/1/31
         expect(mail_body(mail)).not_to include(dataset4.private_show_path)
         expect(mail_body(mail)).not_to include(dataset5.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 
@@ -585,6 +595,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         expect(mail_body(mail)).not_to include(dataset3.private_show_path) #2020/1/31
         expect(mail_body(mail)).not_to include(dataset4.private_show_path)
         expect(mail_body(mail)).not_to include(dataset5.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
 
       ActionMailer::Base.deliveries.clear
@@ -597,6 +608,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         expect(mail_body(mail)).to include(dataset3.private_show_path) #2020/1/31
         expect(mail_body(mail)).not_to include(dataset4.private_show_path)
         expect(mail_body(mail)).not_to include(dataset5.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
   end
@@ -677,6 +689,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         mail = ActionMailer::Base.deliveries.first
         expect(mail_body(mail)).to include(dataset1.private_show_path) #2019/11/30
         expect(mail_body(mail)).not_to include(dataset2.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 
@@ -711,6 +724,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         mail = ActionMailer::Base.deliveries.first
         expect(mail_body(mail)).to include(dataset1.private_show_path) #2019/11/30
         expect(mail_body(mail)).not_to include(dataset2.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 
@@ -745,6 +759,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         mail = ActionMailer::Base.deliveries.first
         expect(mail_body(mail)).to include(dataset1.private_show_path) #2019/11/30
         expect(mail_body(mail)).not_to include(dataset2.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
 
       ActionMailer::Base.deliveries.clear
@@ -878,6 +893,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         expect(mail_body(mail)).to include(dataset3.private_show_path)
         expect(mail_body(mail)).to include(dataset4.private_show_path)
         expect(mail_body(mail)).not_to include(dataset5.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 
@@ -910,6 +926,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         expect(mail_body(mail)).not_to include(dataset3.private_show_path)
         expect(mail_body(mail)).not_to include(dataset4.private_show_path)
         expect(mail_body(mail)).not_to include(dataset5.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 
@@ -928,6 +945,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         expect(mail_body(mail)).not_to include(dataset3.private_show_path)
         expect(mail_body(mail)).not_to include(dataset4.private_show_path)
         expect(mail_body(mail)).not_to include(dataset5.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 
@@ -946,6 +964,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         expect(mail_body(mail)).to include(dataset3.private_show_path)
         expect(mail_body(mail)).not_to include(dataset4.private_show_path)
         expect(mail_body(mail)).not_to include(dataset5.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 
@@ -964,6 +983,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         expect(mail_body(mail)).not_to include(dataset3.private_show_path)
         expect(mail_body(mail)).to include(dataset4.private_show_path)
         expect(mail_body(mail)).not_to include(dataset5.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 
@@ -982,6 +1002,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         expect(mail_body(mail)).not_to include(dataset3.private_show_path)
         expect(mail_body(mail)).not_to include(dataset4.private_show_path)
         expect(mail_body(mail)).not_to include(dataset5.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 
@@ -1014,6 +1035,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         expect(mail_body(mail)).to include(dataset3.private_show_path)
         expect(mail_body(mail)).not_to include(dataset4.private_show_path)
         expect(mail_body(mail)).not_to include(dataset5.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
   end

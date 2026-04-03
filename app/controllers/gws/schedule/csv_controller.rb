@@ -40,7 +40,7 @@ class Gws::Schedule::CsvController < ApplicationController
     filename = "gws_schedule_plans_template.csv"
     response.status = 200
     send_enum(
-      Gws::Schedule::PlanCsv::Exporter.enum_template_csv(site: @cur_site, user: @cur_user),
+      Gws::Schedule::PlanCsv::Exporter.enum_template_csv(site: @cur_site, user: @cur_user, truncate: true),
       type: 'text/csv; charset=Shift_JIS', filename: filename
     )
   end

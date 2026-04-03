@@ -2,6 +2,8 @@
   html = cache_component do
     render_cate_form
   end
+  return html if html.blank?
+
   selected.each do |id|
     html.sub!("data-unchecked=\"#{id}\"", "checked=\"checked\"")
   end

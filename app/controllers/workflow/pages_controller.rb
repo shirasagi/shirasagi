@@ -130,6 +130,7 @@ class Workflow::PagesController < ApplicationController
 
     if result
       request_approval
+      flash[:notice] = t("workflow.notice.requested")
       render json: create_success_response
     else
       render json: @item.errors.full_messages, status: :unprocessable_content
@@ -166,12 +167,14 @@ class Workflow::PagesController < ApplicationController
 
     if result
       request_approval
+      flash[:notice] = t("workflow.notice.requested")
       render json: create_success_response
     else
       render json: @item.errors.full_messages, status: :unprocessable_content
     end
   end
 
+  # rubocop:disable Rails/ActionControllerFlashBeforeRender
   def approve_update
     raise "403" unless @item.allowed?(:approve, @cur_user)
 
@@ -267,11 +270,14 @@ class Workflow::PagesController < ApplicationController
       )
     end
 
+    flash[:notice] = t("workflow.notice.approved")
     render json: create_success_response
   end
+  # rubocop:enable Rails/ActionControllerFlashBeforeRender
 
   alias pull_up_update approve_update
 
+  # rubocop:disable Rails/ActionControllerFlashBeforeRender
   def remand_update
     raise "403" unless @item.allowed?(:approve, @cur_user)
 
@@ -306,8 +312,11 @@ class Workflow::PagesController < ApplicationController
         url: params[:url], comment: params[:remand_comment]
       )
     end
+
+    flash[:notice] = t("workflow.notice.remanded")
     render json: create_success_response
   end
+  # rubocop:enable Rails/ActionControllerFlashBeforeRender
 
   def request_cancel
     set_item

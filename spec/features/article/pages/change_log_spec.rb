@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "article_pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
-  let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
+  let(:node) { create :article_node_page, filename: "docs", name: "article" }
   let(:item) { create(:article_page, cur_node: node) }
   let(:show_path) { article_page_path site.id, node, item }
   context "Check change log text for orphan/non-orphan  backup" do

@@ -340,4 +340,5 @@ en:
           - <b>Closed</b> - Puts the inquiry in a closed state.
   job:
     models:
-      gws/monitor/trash_purge_job: Inquiries and responses/Empty post trash
+      gws/monitor/trash_purge_job: GWS Inquiries and responses/Empty post trash
+      gws/monitor/delete_job: GWS Inquiries and responses/Deletion of inquiries beyond the save period

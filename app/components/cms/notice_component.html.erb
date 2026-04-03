@@ -1,0 +1,18 @@
+<%= cache_component do %>
+  <div class="index notices cms-notices">
+    <div class="list-head"><%= t "cms.notice" %></div>
+    <ul class="list-items">
+      <% cms_notices.each do |item| %>
+        <li class="list-item" data-id="<%= item.id %>">
+          <div class="info">
+            <%= link_to item.name, cms_public_notice_path(site: cur_site, id: item), class: "title notice-severity-#{item.notice_severity}" %>
+            <span class="datetime"><%= ss_time_tag item.released %></span>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+    <% if next_page? %>
+      <div class="notices-more"><%= link_to I18n.t("ss.links.more"), cms_public_notices_path(site: cur_site) %></div>
+    <% end %>
+  </div>
+<% end %>

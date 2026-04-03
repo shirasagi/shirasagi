@@ -2,6 +2,10 @@ class SS::Csv
   UTF8_BOM = "\uFEFF".freeze
   MAX_READ_ROWS = 100
 
+  MAX_COUNT = 10
+  OVERFLOW_THRESHOLD = 10
+  DEFAULT_TRUNCATE_MESSAGE = "...".freeze
+
   class BaseExporter
     include Enumerable
 
@@ -435,6 +439,22 @@ class SS::Csv
       name.gsub('\/', "/")
     end
 
+    # 長すぎるとエクセルのセルからはみ出る。セルからはみ出てしまうと、見づらくなるし操作しずらくなる。
+    # そこで、所定の長さを超えた場合、切り詰める。
+    def truncate_overflows(items, message_template = nil)
+      overflow_length = items.length - MAX_COUNT
+      return items if overflow_length <= OVERFLOW_THRESHOLD
+
+      if message_template
+        truncate_message = I18n.t(message_template, count: overflow_length, default: DEFAULT_TRUNCATE_MESSAGE)
+      end
+      truncate_message ||= DEFAULT_TRUNCATE_MESSAGE
+
+      items = items[0, 10]
+      items.append(truncate_message)
+      items
+    end
+
     private
 
     def with_keeping_io_position(io)
@@ -450,10 +470,16 @@ class SS::Csv
       UTF8_BOM.bytes == bom.bytes
     end
 
+    def utf16le_bom?(bom)
+      bytes = bom.bytes
+      bytes[0] == 0xff && bytes[1] == 0xfe
+    end
+
     def _detect_encoding(io)
       bom = io.read(3)
       return Encoding::ASCII_8BIT if bom.blank?
       return Encoding::UTF_8 if utf8_bom?(bom)
+      return Encoding::UTF_16LE if utf16le_bom?(bom)
 
       body = bom + io.read(997)
 
@@ -488,6 +514,10 @@ class SS::Csv
         pos = io.pos
         bom = io.read(3)
         io.pos = pos if !utf8_bom?(bom)
+      elsif encoding == Encoding::UTF_16LE
+        pos = io.pos
+        bom = io.read(2)
+        io.pos = pos if !utf16le_bom?(bom)
       end
 
       if io.is_a?(StringIO) && io.pos > 0

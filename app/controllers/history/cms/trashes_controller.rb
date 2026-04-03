@@ -8,10 +8,8 @@ class History::Cms::TrashesController < ApplicationController
 
   private
 
-  # overwrite
-  def get_params
-    return fix_params if params[:item].blank?
-    super
+  def cms_content_params
+    params.require(:item).permit(*%i[name index_name basename parent children]).merge(fix_params)
   end
 
   def file_params
@@ -58,10 +56,12 @@ class History::Cms::TrashesController < ApplicationController
     end
 
     if @item.ref_coll == "ss_files"
+      restore_params = nil
       file_params = { cur_group: @cur_group.id }
     else
-      restore_params = get_params
+      restore_params = cms_content_params
       restore_params = restore_params.to_unsafe_h if restore_params.respond_to?(:to_unsafe_h)
+      file_params = nil
     end
 
     job_class = History::Trash::RestoreJob.bind(site_id: @cur_site, user_id: @cur_user)

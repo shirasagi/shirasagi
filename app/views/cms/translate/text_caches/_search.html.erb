@@ -1,5 +1,5 @@
 <%
-  @s = OpenStruct.new params[:s]
+  @s ||= OpenStruct.new params[:s]
 
   @target_options = @cur_site.translate_targets.map { |item| [item.label, item.code] }
   @target_options.unshift([t("translate.lang"),""])

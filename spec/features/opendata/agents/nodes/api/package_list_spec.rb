@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe "opendata_agents_nodes_api", type: :feature, dbscope: :example do
-  let!(:node) { create_once :opendata_node_api, name: "opendata_api" }
-  let!(:node_dataset) { create_once :opendata_node_dataset }
-  let!(:node_search_dataset) { create_once :opendata_node_search_dataset, filename: "dataset/search" }
+  let!(:node) { create :opendata_node_api, name: "opendata_api" }
+  let!(:node_dataset) { create :opendata_node_dataset }
+  let!(:node_search_dataset) { create :opendata_node_search_dataset, filename: "dataset/search" }
 
   let!(:dataset1) { create(:opendata_dataset, cur_node: node_dataset) }
   let!(:dataset2) { create(:opendata_dataset, cur_node: node_dataset) }

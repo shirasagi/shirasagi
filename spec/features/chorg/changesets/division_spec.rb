@@ -37,9 +37,6 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
     let(:new_name2) { "name-#{unique_id}" }
     let(:new_order2) { rand(1..10) }
     let(:new_ldap_dn2) { "dc=#{new_name2},dc=city,dc=example,dc=jp" }
-    let(:new_name3) { "name-#{unique_id}" }
-    let(:new_order3) { rand(1..10) }
-    let(:new_ldap_dn3) { "dc=#{new_name3},dc=city,dc=example,dc=jp" }
 
     it do
       #

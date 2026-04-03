@@ -14,7 +14,7 @@
   <% end %>
   <%= download_ics Date.new(@year, @month, 1), class: "event-ics-file" %>
   <ul>
-    <li class="prev"><%= link_to_monthly Date.new(@year, @month, 1).advance(days: -1), display: params[:display] %></li>
-    <li class="next"><%= link_to_monthly Date.new(@year, @month, 1).advance(months: 1), display: params[:display] %></li>
+    <li class="prev"><%= link_to_monthly Date.new(@year, @month, 1).advance(days: -1), display: params[:display], nofollow: true %></li>
+    <li class="next"><%= link_to_monthly Date.new(@year, @month, 1).advance(months: 1), display: params[:display], nofollow: true %></li>
   </ul>
 </nav>

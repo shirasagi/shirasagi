@@ -1,4 +1,4 @@
-<% @s = OpenStruct.new params[:s] %>
+<% @s ||= OpenStruct.new params[:s] %>
 <div class="opendata-datasets datasets">
   <%= form_for :s, url: @cur_node.url, html: { class: "opendata-search-datasets-form", method: :get } do |f| %>
     <dl>

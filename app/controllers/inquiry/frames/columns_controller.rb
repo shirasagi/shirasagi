@@ -44,17 +44,17 @@ class Inquiry::Frames::ColumnsController < ApplicationController
   public
 
   def show
-    raise "403" unless @item.form.allowed?(:read, @cur_user, site: @cur_site)
+    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
     render
   end
 
   def edit
-    raise "403" unless @item.form.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render
   end
 
   def update
-    raise "403" unless @item.form.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
@@ -68,7 +68,7 @@ class Inquiry::Frames::ColumnsController < ApplicationController
   end
 
   def destroy
-    raise "403" unless @item.form.allowed?(:delete, @cur_user, site: @cur_site)
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
 
     unless @item.destroy
       render template: "show", status: :unprocessable_content

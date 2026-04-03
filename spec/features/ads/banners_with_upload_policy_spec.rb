@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "ads_banners_with_upload_policy", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
-  let!(:node) { create_once :ads_node_banner, name: "ads" }
+  let!(:node) { create :ads_node_banner, name: "ads" }
   let!(:bindings) { { user: cms_user, site: site, node: node } }
   let(:content_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
   let!(:file1) { tmp_ss_file Cms::TempFile, contents: content_path, basename: "logo-#{unique_id}.png", **bindings }

@@ -6,7 +6,7 @@
   <h2><%= t("gws/schedule.search_times") %></h2>
 </header>
 
-<% @s = OpenStruct.new params[:s] %>
+<% @s ||= OpenStruct.new params[:s] %>
 <%= form_for :s, url: gws_schedule_search_times_path, html: { class: :search } do |f| %>
   <%= error_messages_for :time_search %>
   <dl class="see gws-schedule-search-field">

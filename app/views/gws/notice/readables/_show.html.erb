@@ -18,7 +18,7 @@
       <% end %>
     </div>
     <div class="aside">
-      <span class="updated"><%= I18n.l(@item.updated) %></span>
+      <span class="updated"><%= ss_time_tag @item.released || @item.updated %></span>
       <span class="user"><%= gws_public_user_long_name(@item.contributor_name.presence || @item.user_long_name) %></span>
       <span class="severity">
         <span class="severity-label"><%= @model.t :severity %></span>

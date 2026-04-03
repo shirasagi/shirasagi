@@ -22,8 +22,8 @@
         <% end %>
 
         <%= error_messages_for :item %>
-        <%= hidden_field_tag :ref, params[:ref] %>
-        <%= hidden_field_tag form_key, params[form_key] if params[form_key].present? %>
+        <%= hidden_field_tag :ref, params[:ref], id: nil %>
+        <%= hidden_field_tag form_key, params[form_key], id: nil if params[form_key].present? %>
 
         <div class="form-group">
           <label><%== t("ss.views.login/login.id") %></label>

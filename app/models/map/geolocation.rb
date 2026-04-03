@@ -7,7 +7,7 @@ class Map::Geolocation
   field :location, type: Point, sphere: true
 
   belongs_to :owner_item, class_name: "Object", polymorphic: true
-  belongs_to :site, class_name: "SS::Site"
+  belongs_to :site, class_name: "Cms::Site"
   field :name, type: String
   field :filename, type: String
   field :depth, type: Integer

@@ -54,7 +54,7 @@ describe Cms::NodeImporter, dbscope: :example do
       expect(item.layout.id).to eq layout.id
       expect(item.order).to eq 10
       expect(item.page_layout.id).to eq page_layout.id
-      expect(item.shortcut).to eq "show"
+      expect(item.shortcuts).to include(Cms::Node::SHORTCUT_SYSTEM, Cms::Node::SHORTCUT_QUOTA)
       expect(item.view_route).to eq "article/page"
       expect(item.keywords).to eq %w(自治体サンプル 自治体サンプル 自治体サンプル)
       expect(item.description).to eq "概要です"

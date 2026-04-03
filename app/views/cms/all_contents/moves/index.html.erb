@@ -1,0 +1,70 @@
+<%= render "tabs" %>
+
+<%= form_tag(cms_all_contents_moves_import_path, method: :post, multipart: true) do %>
+  <div class="addon-views">
+    <div class="addon-view" id="cms-all-contents-move-settings">
+      <div class="addon-head">
+        <h2><%= t("cms.all_contents_moves.settings_head") %></h2>
+      </div>
+      <div class="addon-body">
+        <% if @errors %>
+          <div id="errorExplanation" class="errorExplanation">
+            <h2><%= t('errors.template.header', count: @errors.length) %></h2>
+            <ul>
+              <% @errors.each do |error| %>
+                <li><%= error %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <dl class="see">
+          <dt><%= t("ss.file") %></dt>
+          <dd><%= file_field_tag "item[in_file]" %></dd>
+          <dd>
+            <%= link_to t('cms.all_contents_moves.download_template'),
+                cms_all_contents_moves_template_path(format: :csv),
+                id: "btn-download-template" %>
+          </dd>
+
+          <dt><%= t('ss.encoding') %></dt>
+          <dd>
+            <% %w(UTF-8 Shift_JIS).each do |encoding| %>
+              <label>
+                <%= radio_button_tag "template_encoding", encoding, encoding == 'UTF-8', id: nil %>
+                <%= t("ss.options.csv_encoding.#{encoding}") %>
+              </label>
+            <% end %>
+          </dd>
+          <dt></dt>
+          <dd>
+            <p><%= t("cms.all_contents_moves.description") %></p><br>
+            <%= t("cms.all_contents_moves.steps_html").html_safe %><br>
+            <p class="notice"><%= t("cms.all_contents_moves.branch_page_notice") %></p>
+            <p class="notice"><%= t("cms.all_contents_moves.link_break_notice") %></p>
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <% if @histories.present? %>
+      <%= render "history", histories: @histories %>
+    <% end %>
+  </div>
+
+  <footer class="send ss-sticky ss-sticky-bottom">
+    <%= submit_tag t("cms.all_contents_moves.read_csv"), class: "btn btn-primary" %>
+  </footer>
+<% end %>
+
+<%= jquery do %>
+SS.ready(function() {
+  $("#btn-download-template").on("click", function(ev) {
+    ev.preventDefault();
+    var encoding = $("input[name='template_encoding']:checked").val() || "UTF-8";
+    var url = $(this).attr("href");
+    url = url + (url.indexOf("?") >= 0 ? "&" : "?") + "encoding=" + encodeURIComponent(encoding);
+    location.href = url;
+  });
+});
+<% end %>

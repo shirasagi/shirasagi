@@ -1,4 +1,4 @@
-<% @s = OpenStruct.new params[:s] %>
+<% @s ||= OpenStruct.new params[:s] %>
 <div class="rdf-prop-search-form">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
     <%= select_tag "s[vocab]",  options_for_select(@vocab_options, params[:s][:vocab]) %>

@@ -79,6 +79,9 @@ module Cms::Reference::Files
 
   def remove_public_files
     files.each do |file|
+      next if file.owner_item_id != self.id
+      next if file.owner_item_type != self.class.name
+
       file.remove_public_file
     end
   end

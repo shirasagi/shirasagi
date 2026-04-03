@@ -43,7 +43,7 @@ FactoryBot.define do
     route { "cms/crumb" }
   end
 
-  factory :cms_part_sns_share, class: Cms::Part::Crumb, traits: [:cms_part] do
+  factory :cms_part_sns_share, class: Cms::Part::SnsShare, traits: [:cms_part] do
     route { "cms/sns_share" }
   end
 

@@ -8,6 +8,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
     create(:cms_column_text_field, cur_site: site, cur_form: form, input_type: 'text')
   end
   let(:name) { unique_id }
+  let(:index_name) { unique_id }
   let(:column1_value) { unique_id }
 
   before do
@@ -24,6 +25,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
+          fill_in 'item[index_name]', with: index_name
           fill_in "item[column_values][][in_wrap][value]", with: column1_value
           click_on I18n.t('ss.buttons.publish_save')
         end
@@ -44,6 +46,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         page2 = Article::Page.all.ne(id: page1.id).first
         expect(page2.name).to eq "[#{I18n.t('workflow.cloned_name_prefix')}] #{name}"
+        expect(page2.index_name).to eq "[#{I18n.t('workflow.cloned_name_prefix')}] #{index_name}"
         expect(page2.first_released).to be_blank
 
         visit article_pages_path(site: site, cid: node)
@@ -62,6 +65,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
+          fill_in 'item[index_name]', with: index_name
           fill_in "item[column_values][][in_wrap][value]", with: column1_value
           # find("a[data-column-id=\"#{column2.id}\"]").click
           within first(".column-value-cms-column-fileupload") do
@@ -106,6 +110,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(page).to have_content(column1_value)
 
         Article::Page.all.find_by(name: "[#{I18n.t('workflow.cloned_name_prefix')}] #{name}").tap do |item|
+          expect(item.index_name).to eq "[#{I18n.t('workflow.cloned_name_prefix')}] #{index_name}"
           expect(item.column_values.length).to eq 2
           item.column_values.where(column_id: column2.id).first.tap do |column_value|
             expect(column_value.file_id).not_to be_nil

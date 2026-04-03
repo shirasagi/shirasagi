@@ -1,0 +1,7 @@
+<%= cache_component do %>
+  <nav class="main-navi">
+    <% items.each do |search_folder| %>
+      <h2><%= link_to search_folder.name, cms_page_search_contents_path(site: cur_site, id: search_folder), class: "icon-search" %></h2>
+    <% end %>
+  </nav>
+<% end %>

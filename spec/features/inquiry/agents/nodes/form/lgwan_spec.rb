@@ -120,6 +120,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         expect(notify_mail.body.multipart?).to be_falsey
         expect(mail_body(notify_mail)).to include("「#{node.name}」に入力がありました。")
         expect(mail_body(notify_mail)).to include(inquiry_answer_path(site: site, cid: node, id: answer))
+        expect(notify_mail.message_id).to end_with("@#{site.domain}.mail")
       end
 
       ActionMailer::Base.deliveries[1].tap do |notify_mail|
@@ -129,6 +130,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         expect(notify_mail.body.multipart?).to be_falsey
         expect(mail_body(notify_mail)).to include("「#{node.name}」に入力がありました。")
         expect(mail_body(notify_mail)).to include(inquiry_answer_path(site: site, cid: node, id: answer))
+        expect(notify_mail.message_id).to end_with("@#{site.domain}.mail")
       end
 
       ActionMailer::Base.deliveries.last.tap do |reply_mail|
@@ -138,6 +140,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         expect(reply_mail.body.multipart?).to be_falsey
         expect(mail_body(reply_mail)).to include('上部テキスト')
         expect(mail_body(reply_mail)).to include('下部テキスト')
+        expect(reply_mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 

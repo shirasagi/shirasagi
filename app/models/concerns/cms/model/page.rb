@@ -50,6 +50,10 @@ module Cms::Model::Page
   end
 
   module ClassMethods
+
+    ALLOWED_CUSTOM_ORDER_FIELD = %w(updated released).freeze
+    CUSTOM_ORDER_ASC_DIRECTION = %w(asc -1).freeze
+
     def and_linking_pages(page)
       cond = []
       file_urls = []
@@ -83,13 +87,22 @@ module Cms::Model::Page
       all.where(:id.ne => page.id).where("$and" => [{ "$or" => cond }])
     end
 
+    def sort_options
+      ALLOWED_CUSTOM_ORDER_FIELD.flat_map do |field_name|
+        %w(desc asc).map { |direction| [ I18n.t("ss.options.sort.#{field_name}_#{direction}"), "#{field_name}_#{direction}" ] }
+      end
+    end
+
     def custom_order(key)
-      if key.start_with?('updated_')
-        all.order_by(updated: key.end_with?('_asc') ? 1 : -1)
-      elsif key.start_with?('released_')
-        all.order_by(released: key.end_with?('_asc') ? 1 : -1)
+      field_name, direction = key.split('_', 2)
+      return unless ALLOWED_CUSTOM_ORDER_FIELD.include?(field_name)
+
+      if CUSTOM_ORDER_ASC_DIRECTION.include?(direction)
+        # asc
+        all.reorder(field_name => 1)
       else
-        all
+        # desc; this is default
+        all.reorder(field_name => -1)
       end
     end
 
@@ -273,9 +286,7 @@ module Cms::Model::Page
     nil
   end
 
-  def sort_options
-    %w(updated_desc updated_asc released_desc released_asc).map { |k| [I18n.t("ss.options.sort.#{k}"), k] }
-  end
+  delegate :sort_options, to: :class
 
   def attached_files
     if self.class.include?(Cms::Addon::Form::Page) && self.form

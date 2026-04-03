@@ -15,6 +15,10 @@ describe "cms_agents_nodes_group_page", type: :feature, dbscope: :example do
 
     before do
       Capybara.app_host = "http://#{site.domain}"
+
+      # 書き出しテストの後に本テストが実行されると失敗する場合があるので、念のため書き出し済みのファイルを削除
+      FileUtils.rm_rf site.path
+      FileUtils.mkdir_p site.path
     end
 
     it "#index" do
@@ -47,6 +51,10 @@ describe "cms_agents_nodes_group_page", type: :feature, dbscope: :example do
 
     before do
       Capybara.app_host = "http://#{site.domain}"
+
+      # 書き出しテストの後に本テストが実行されると失敗する場合があるので、念のため書き出し済みのファイルを削除
+      FileUtils.rm_rf site.path
+      FileUtils.mkdir_p site.path
     end
 
     it "#index" do
@@ -87,6 +95,10 @@ describe "cms_agents_nodes_group_page", type: :feature, dbscope: :example do
 
     before do
       Capybara.app_host = "http://#{site.domain}"
+
+      # 書き出しテストの後に本テストが実行されると失敗する場合があるので、念のため書き出し済みのファイルを削除
+      FileUtils.rm_rf site.path
+      FileUtils.mkdir_p site.path
     end
 
     it "#index" do

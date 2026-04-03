@@ -2,6 +2,8 @@ class Gws::Notice::TrashesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
+  helper Gws::Notice::PlanHelper
+
   before_action :set_items
   before_action :set_item, only: [:show, :delete, :destroy, :undo_delete]
   before_action :set_selected_items, only: [:destroy_all, :soft_delete_all]
@@ -24,8 +26,7 @@ class Gws::Notice::TrashesController < ApplicationController
   def set_items
     @items = @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site).
-      only_deleted.
-      search(params[:s])
+      only_deleted
   end
 
   def set_item
@@ -42,6 +43,7 @@ class Gws::Notice::TrashesController < ApplicationController
   public
 
   def index
+    @items = @items.search(params[:s])
     @items = @items.reorder(updated: -1, id: -1).page(params[:page]).per(50)
   end
 end

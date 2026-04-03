@@ -18,8 +18,11 @@ class Gws::SitesController < ApplicationController
   end
 
   def set_item
-    @item = Gws::Group.find(@cur_site.id)
-    @item.attributes = fix_params
+    @item ||= begin
+      item = Gws::Group.find(@cur_site.id)
+      item.attributes = fix_params
+      item
+    end
   end
 
   def set_addons

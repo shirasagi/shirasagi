@@ -36,15 +36,16 @@ Rails.application.routes.draw do
     scope(path: ':category', defaults: { category: '-' }) do
       resources :topics, concerns: [:state_change, :topic_comment, :topic_files],
                 except: [:new, :create, :edit, :update, :destroy] do
+                  match :forward, on: :member, via: %i[get post]
                   get :print, on: :member
                 end
       resources :answers, concerns: [:state_change, :topic_comment, :topic_files],
                 except: [:new, :create, :edit, :update, :destroy] do
+                  match :forward, on: :member, via: %i[get post]
                   get :print, on: :member
                 end
 
       resources :admins, concerns: [:soft_deletion, :state_change, :topic_comment, :topic_files], except: [:destroy] do
-        get :forward, on: :member
         match :copy, on: :member, via: [:get, :post]
         match :publish, on: :member, via: %i[get post]
         post :close, on: :member

@@ -17,13 +17,13 @@ class Inquiry::AnswersController < ApplicationController
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
   end
 
-  def set_items
-    @state = params.dig(:s, :state).presence || "unclosed"
+  def permit_fields
+    [ :state, :comment, group_ids: SS::EMPTY_ARRAY ]
+  end
 
-    @items = @model.site(@cur_site).
+  def set_items
+    @items ||= @model.site(@cur_site).
       allow(:read, @cur_user).
-      where(node_id: @cur_node.id).
-      search(params[:s]).
-      state(@state)
+      where(node_id: @cur_node.id)
   end
 end

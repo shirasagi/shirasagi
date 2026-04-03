@@ -49,7 +49,7 @@
   <input type="button" value="<%= t('ss.buttons.print') %>" class="btn btn-print" />
 </div>
 
-<% @s = OpenStruct.new params[:s] %>
+<% @s ||= OpenStruct.new params[:s] %>
 <%= form_for :s, url: "", html: { method: :get, class: :search } do |f| %>
   <% if @facility_categories.present? %>
     <%= f.select :facility_category_id, options_for_select(@facility_categories.to_options(offset: 1), @facility_category.try(:id)), { include_blank: t('gws/schedule.tabs.facility') }, { data: { controller: "ss--submit-on-change" } } %>

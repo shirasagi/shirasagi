@@ -1,0 +1,5 @@
+.ajax-selected {
+  &:not(:has(tbody tr)) {
+    display: none;
+  }
+}

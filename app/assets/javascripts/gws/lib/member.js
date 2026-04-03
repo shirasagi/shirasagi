@@ -61,15 +61,6 @@ this.Gws_Member = (function () {
     })
   };
 
-  Gws_Member.confirmReadableSetting = function () {
-    return $('.save').on('click', function () {
-//$(submit).trigger("click")
-      if ($('.gws-addon-readable-setting tbody tr').length === 0) {
-        return confirm(i18next.t("gws.confirm.readable_setting.empty"));
-      }
-    });
-  };
-
   Gws_Member.copyGroups = function (el) {
     this.groups = el.closest('dl').find('tbody tr').clone(true);
     this.showLog(el, this.groups.length + i18next.t('gws.member_log.copy_groups'));

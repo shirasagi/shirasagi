@@ -1,4 +1,4 @@
-<% @s = OpenStruct.new params[:s] %>
+<% @s ||= OpenStruct.new params[:s] %>
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
     <%= f.select :group_id, group_options, { include_blank: Gws::Group.model_name.human }, { data: { controller: "ss--submit-on-change" } } %>

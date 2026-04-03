@@ -36,6 +36,9 @@ module Cms::Addon
 
     def remove_thumb_public_file
       return if thumb.blank?
+      return if thumb.owner_item_id != self.id
+      return if thumb.owner_item_type != self.class.name
+
       thumb.remove_public_file
     end
   end

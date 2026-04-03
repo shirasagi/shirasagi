@@ -13,7 +13,7 @@ describe "image_map_pages", type: :feature, dbscope: :example, js: true do
     html.join("\n")
   end
   let(:layout) { create :cms_layout, html: layout_html }
-  let!(:node) { create_once :image_map_node_page, filename: "image-map", name: "image-map" }
+  let!(:node) { create :image_map_node_page, filename: "image-map", name: "image-map" }
 
   let(:usemap) { "image-map-#{node.id}" }
   let(:coords1) { [0, 0, 100, 100] }

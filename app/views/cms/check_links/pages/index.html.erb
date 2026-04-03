@@ -6,7 +6,7 @@
     <div style="padding-top: 2px; color: red;"><%= t("cms.notices.check_links_report_annotation") %></div>
   </div>
   <div class="list-head">
-    <% @s = OpenStruct.new params[:s] %>
+    <% @s ||= OpenStruct.new params[:s] %>
     <div class="list-head-search-full">
       <%= form_for :s, url: "", html: { method: :get } do |f| %>
         <span style="margin-right: 10px;">

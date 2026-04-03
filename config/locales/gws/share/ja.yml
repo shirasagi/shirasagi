@@ -108,6 +108,19 @@ ja:
         descendants_files_count: 総ファイル数
         descendants_total_file_size: 総ファイル容量
 
+  activemodel:
+    models:
+      gws/share/recover_file_service: ファイル復元サービス
+    attributes:
+      gws/share/recover_file_service:
+        name: ファイル名
+        folder: フォルダー
+        folder_id: フォルダー名
+    errors:
+      models:
+        gws/share/recover_file_service:
+          not_found_parent: 親フォルダーが存在しません。
+
   tooltip:
     gws/share/category:
       name:
@@ -131,6 +144,11 @@ ja:
       share_max_folder_size:
         - フォルダーの総容量制限を入力します。
         - 最上位のフォルダーの設定が下位の全てのフォルダーに適用されます。
+
+  input_guide:
+    gws/share/recover_file_service:
+      not_found_parent: |-
+        ボタン「フォルダーを選択する」をクリックし、復元先のフォルダーを選択してください。
 
   job:
     models:

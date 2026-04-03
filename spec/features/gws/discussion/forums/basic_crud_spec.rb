@@ -24,7 +24,7 @@ describe "gws_discussion_forums", type: :feature, dbscope: :example, js: true do
       fill_in "item[name]", with: name
       click_button I18n.t('ss.buttons.save')
     end
-    expect(first('#addon-basic')).to have_text(name)
+    expect(page).to have_css('#addon-basic', text: name)
   end
 
   it "#show" do
@@ -40,7 +40,7 @@ describe "gws_discussion_forums", type: :feature, dbscope: :example, js: true do
       fill_in "item[name]", with: name
       click_button I18n.t('ss.buttons.save')
     end
-    expect(first('#addon-basic')).to have_text(name)
+    expect(page).to have_css('#addon-basic', text: name)
   end
 
   it "#delete" do

@@ -46,16 +46,17 @@ describe Gws::StaffRecord::User, type: :model, dbscope: :example do
       csv = ::CSV.parse(csv, headers: true)
 
       expect(csv.length).to eq 1
-      expect(csv.headers.length).to eq 22
+      expect(csv.headers.length).to eq 23
       expect(csv.headers).to include(*%i[id name code order kana].map { |f| described_class.t(f) })
       expect(csv.headers).not_to include(*%i[section_order].map { |f| described_class.t(f) })
       csv.first.tap do |row|
-        expect(row.length).to eq 22
+        expect(row.length).to eq 23
         expect(row[described_class.t(:id)]).to eq staff_record_user1.id.to_s
         expect(row[described_class.t(:name)]).to eq staff_record_user1.name
         expect(row[described_class.t(:code)]).to eq staff_record_user1.code
         expect(row[described_class.t(:order)]).to eq staff_record_user1.order.to_s
         expect(row[described_class.t(:kana)]).to eq staff_record_user1.kana
+        expect(row[described_class.t(:email)]).to eq staff_record_user1.email
         expect(row[described_class.t(:multi_section)]).to eq staff_record_user1.label(:multi_section)
         expect(row[described_class.t(:section_name)]).to eq staff_record_user1.section_name
         expect(row[described_class.t(:title_ids)]).to eq title1.code
@@ -92,16 +93,17 @@ describe Gws::StaffRecord::User, type: :model, dbscope: :example do
       csv = ::CSV.parse(csv, headers: true)
 
       expect(csv.length).to eq 1
-      expect(csv.headers.length).to eq 22
+      expect(csv.headers.length).to eq 23
       expect(csv.headers).to include(*%i[id name code order kana].map { |f| described_class.t(f) })
       expect(csv.headers).not_to include(*%i[section_order].map { |f| described_class.t(f) })
       csv.first.tap do |row|
-        expect(row.length).to eq 22
+        expect(row.length).to eq 23
         expect(row[described_class.t(:id)]).to eq staff_record_user1.id.to_s
         expect(row[described_class.t(:name)]).to eq staff_record_user1.name
         expect(row[described_class.t(:code)]).to eq staff_record_user1.code
         expect(row[described_class.t(:order)]).to eq staff_record_user1.order.to_s
         expect(row[described_class.t(:kana)]).to eq staff_record_user1.kana
+        expect(row[described_class.t(:email)]).to eq staff_record_user1.email
         expect(row[described_class.t(:multi_section)]).to eq staff_record_user1.label(:multi_section)
         expect(row[described_class.t(:section_name)]).to eq staff_record_user1.section_name
         expect(row[described_class.t(:title_ids)]).to eq title1.code

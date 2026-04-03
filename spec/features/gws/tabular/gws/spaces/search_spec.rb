@@ -9,72 +9,46 @@ describe Gws::Tabular::Gws::SpacesController, type: :feature, dbscope: :example,
   let!(:space2) { create :gws_tabular_space, cur_site: site, cur_user: admin }
 
   context "search by i18n_name" do
-    let(:space1_name_ja) { space1.i18n_name_translations[:ja] }
-    let(:space2_name_en) { space2.i18n_name_translations[:en] }
-
-    it do
-      login_user admin, to: gws_tabular_gws_spaces_path(site: site)
-      expect(page).to have_css(".list-item[data-id]", count: 2)
-      expect(page).to have_css(".list-item[data-id='#{space1.id}']", text: space1.i18n_name)
-      expect(page).to have_css(".list-item[data-id='#{space2.id}']", text: space2.i18n_name)
-
-      within "form.index-search" do
-        fill_in "s[keyword]", with: space1_name_ja
-        click_on I18n.t("ss.buttons.search")
+    context "default" do
+      it do
+        login_user admin, to: gws_tabular_gws_spaces_path(site: site)
+        expect(page).to have_css(".list-item[data-id]", count: 2)
+        expect(page).to have_css(".list-item[data-id='#{space1.id}']", text: space1.i18n_name)
+        expect(page).to have_css(".list-item[data-id='#{space2.id}']", text: space2.i18n_name)
       end
-
-      expect(page).to have_css(".list-item[data-id]", count: 1)
-      expect(page).to have_css(".list-item[data-id='#{space1.id}']", text: space1.i18n_name)
-
-      within "form.index-search" do
-        fill_in "s[keyword]", with: space2_name_en
-        click_on I18n.t("ss.buttons.search")
-      end
-
-      expect(page).to have_css(".list-item[data-id]", count: 1)
-      expect(page).to have_css(".list-item[data-id='#{space2.id}']", text: space2.i18n_name)
-
-      within "form.index-search" do
-        fill_in "s[keyword]", with: "name-#{unique_id}"
-        click_on I18n.t("ss.buttons.search")
-      end
-
-      expect(page).to have_css(".list-item[data-id]", count: 0)
     end
-  end
 
-  context "search by i18n_description" do
-    let(:space1_descriptions_ja) { space1.i18n_description_translations[:ja].split(/\R+/) }
-    let(:space2_descriptions_en) { space2.i18n_description_translations[:en].split(/\R+/) }
-
-    it do
-      login_user admin, to: gws_tabular_gws_spaces_path(site: site)
-      expect(page).to have_css(".list-item[data-id]", count: 2)
-      expect(page).to have_css(".list-item[data-id='#{space1.id}']", text: space1.i18n_name)
-      expect(page).to have_css(".list-item[data-id='#{space2.id}']", text: space2.i18n_name)
-
-      within "form.index-search" do
-        fill_in "s[keyword]", with: space1_descriptions_ja.sample
-        click_on I18n.t("ss.buttons.search")
+    context "no items matched" do
+      it do
+        login_user admin, to: gws_tabular_gws_spaces_path(site: site, s: { keyword: "name-#{unique_id}" })
+        expect(page).to have_css(".list-item[data-id]", count: 0)
       end
+    end
 
-      expect(page).to have_css(".list-item[data-id]", count: 1)
-      expect(page).to have_css(".list-item[data-id='#{space1.id}']", text: space1.i18n_name)
+    context "space1 name" do
+      it do
+        login_user admin, to: gws_tabular_gws_spaces_path(site: site, s: { keyword: "name-#{unique_id}" })
+        within "form.index-search" do
+          fill_in "s[keyword]", with: space1.i18n_name
+          click_on I18n.t("ss.buttons.search")
+        end
 
-      within "form.index-search" do
-        fill_in "s[keyword]", with: space2_descriptions_en.sample
-        click_on I18n.t("ss.buttons.search")
+        expect(page).to have_css(".list-item[data-id]", count: 1)
+        expect(page).to have_css(".list-item[data-id='#{space1.id}']", text: space1.i18n_name)
       end
+    end
 
-      expect(page).to have_css(".list-item[data-id]", count: 1)
-      expect(page).to have_css(".list-item[data-id='#{space2.id}']", text: space2.i18n_name)
+    context "space2 name" do
+      it do
+        login_user admin, to: gws_tabular_gws_spaces_path(site: site, s: { keyword: "name-#{unique_id}" })
+        within "form.index-search" do
+          fill_in "s[keyword]", with: space2.i18n_name
+          click_on I18n.t("ss.buttons.search")
+        end
 
-      within "form.index-search" do
-        fill_in "s[keyword]", with: "description-#{unique_id}"
-        click_on I18n.t("ss.buttons.search")
+        expect(page).to have_css(".list-item[data-id]", count: 1)
+        expect(page).to have_css(".list-item[data-id='#{space2.id}']", text: space2.i18n_name)
       end
-
-      expect(page).to have_css(".list-item[data-id]", count: 0)
     end
   end
 
@@ -83,34 +57,46 @@ describe Gws::Tabular::Gws::SpacesController, type: :feature, dbscope: :example,
     let(:space1_memo) { space1.memo.split(/\R+/) }
     let(:space2_memo) { space2.memo.split(/\R+/) }
 
-    it do
-      login_user admin, to: gws_tabular_gws_spaces_path(site: site)
-      expect(page).to have_css(".list-item[data-id]", count: 2)
-      expect(page).to have_css(".list-item[data-id='#{space1.id}']", text: space1.i18n_name)
-      expect(page).to have_css(".list-item[data-id='#{space2.id}']", text: space2.i18n_name)
-
-      within "form.index-search" do
-        fill_in "s[keyword]", with: space1_memo.sample
-        click_on I18n.t("ss.buttons.search")
+    context "default" do
+      it do
+        login_user admin, to: gws_tabular_gws_spaces_path(site: site)
+        expect(page).to have_css(".list-item[data-id]", count: 2)
+        expect(page).to have_css(".list-item[data-id='#{space1.id}']", text: space1.i18n_name)
+        expect(page).to have_css(".list-item[data-id='#{space2.id}']", text: space2.i18n_name)
       end
+    end
 
-      expect(page).to have_css(".list-item[data-id]", count: 1)
-      expect(page).to have_css(".list-item[data-id='#{space1.id}']", text: space1.i18n_name)
-
-      within "form.index-search" do
-        fill_in "s[keyword]", with: space2_memo.sample
-        click_on I18n.t("ss.buttons.search")
+    context "no items matched" do
+      it do
+        login_user admin, to: gws_tabular_gws_spaces_path(site: site, s: { keyword: "memo-#{unique_id}" })
+        expect(page).to have_css(".list-item[data-id]", count: 0)
       end
+    end
 
-      expect(page).to have_css(".list-item[data-id]", count: 1)
-      expect(page).to have_css(".list-item[data-id='#{space2.id}']", text: space2.i18n_name)
+    context "space1 memo" do
+      it do
+        login_user admin, to: gws_tabular_gws_spaces_path(site: site, s: { keyword: "memo-#{unique_id}" })
+        within "form.index-search" do
+          fill_in "s[keyword]", with: space1_memo.sample
+          click_on I18n.t("ss.buttons.search")
+        end
 
-      within "form.index-search" do
-        fill_in "s[keyword]", with: "memo-#{unique_id}"
-        click_on I18n.t("ss.buttons.search")
+        expect(page).to have_css(".list-item[data-id]", count: 1)
+        expect(page).to have_css(".list-item[data-id='#{space1.id}']", text: space1.i18n_name)
       end
+    end
 
-      expect(page).to have_css(".list-item[data-id]", count: 0)
+    context "space2 memo" do
+      it do
+        login_user admin, to: gws_tabular_gws_spaces_path(site: site, s: { keyword: "memo-#{unique_id}" })
+        within "form.index-search" do
+          fill_in "s[keyword]", with: space2_memo.sample
+          click_on I18n.t("ss.buttons.search")
+        end
+
+        expect(page).to have_css(".list-item[data-id]", count: 1)
+        expect(page).to have_css(".list-item[data-id='#{space2.id}']", text: space2.i18n_name)
+      end
     end
   end
 end

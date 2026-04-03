@@ -1,27 +1,38 @@
 require 'spec_helper'
 
-describe "cms_contents", type: :feature, dbscope: :example do
-  subject(:site) { cms_site }
-  subject(:index_path) { cms_contents_path site.id }
+describe "cms_contents", type: :feature, dbscope: :example, js: true do
+  let!(:site) { cms_site }
 
   it "without login" do
-    visit index_path
+    visit cms_contents_path(site: site)
     expect(current_path).to eq sns_login_path
   end
 
   it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
+    login_ss_user to: cms_contents_path(site: site)
+    expect(page).to have_title(/403 Forbidden/)
   end
 
   context "with auth" do
-    before { login_cms_user }
+    let!(:node1) { create :article_node_page, cur_site: site, shortcuts: [ Cms::Node::SHORTCUT_SYSTEM ] }
 
     it "#index" do
-      visit index_path
-      expect(status_code).to eq 200
-      expect(current_path).to eq index_path
+      login_cms_user to: cms_contents_path(site: site)
+      within ".cms-shortcut-nodes" do
+        expect(page).to have_css("[data-id='#{node1.id}']", text: node1.name)
+
+        fill_in "s[keyword]", with: unique_id
+        click_on I18n.t("ss.buttons.search")
+      end
+      within ".cms-shortcut-nodes" do
+        expect(page).to have_css("[data-id]", count: 0)
+
+        fill_in "s[keyword]", with: node1.name
+        click_on I18n.t("ss.buttons.search")
+      end
+      within ".cms-shortcut-nodes" do
+        expect(page).to have_css("[data-id='#{node1.id}']", text: node1.name)
+      end
     end
   end
 
@@ -30,14 +41,8 @@ describe "cms_contents", type: :feature, dbscope: :example do
     let!(:high_notice) { create(:cms_notice, notice_severity: Cms::Notice::NOTICE_SEVERITY_HIGH) }
     # subject(:notice_path) { notice_cms_content_path site.id, item }
 
-    before do
-      login_cms_user
-    end
-
     it "#index and #notice" do
-      visit index_path
-      expect(status_code).to eq 200
-      expect(current_path).not_to eq sns_login_path
+      login_cms_user to: cms_contents_path(site: site)
 
       within "div.notices" do
         severity_high   = page.all(".notice-severity-high").map(&:text)
@@ -56,6 +61,42 @@ describe "cms_contents", type: :feature, dbscope: :example do
       within ".main-box h2" do
         expect(page).to have_content(high_notice.name)
       end
+    end
+  end
+
+  context "when shortcuts include 'navi'" do
+    let!(:node1) { create :article_node_page, cur_site: site, shortcuts: [ Cms::Node::SHORTCUT_NAVI ] }
+    let!(:page1) { create :article_page, cur_site: site, cur_node: node1 }
+
+    it do
+      login_cms_user to: cms_contents_path(site: site)
+      within first(".main-navi") do
+        expect(page).to have_css(".icon-material-folder", text: node1.name)
+      end
+      expect(page).to have_no_css(".cms-shortcut-nodes")
+
+      within first(".main-navi") do
+        click_on node1.name
+      end
+      within first(".main-navi") do
+        expect(page).to have_css(".icon-material-folder", text: node1.name)
+      end
+      within ".breadcrumb" do
+        expect(page).to have_link(node1.name)
+      end
+      within ".list-items" do
+        expect(page).to have_css("[data-id='#{page1.id}']", text: page1.name)
+        click_on page1.name
+      end
+
+      wait_for_all_turbo_frames
+      wait_for_all_ckeditors_ready
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+      within first(".main-navi") do
+        expect(page).to have_css(".icon-material-folder", text: node1.name)
+      end
+      expect(page).to have_css("#addon-basic", text: page1.name)
     end
   end
 end

@@ -118,7 +118,7 @@ module Voice::Downloadable
       port = url.port
       path = url.path
 
-      SS::Site.find_by_domain("#{host}:#{port}", path) || SS::Site.find_by_domain(host.to_s, path)
+      Cms::Site.find_by_domain("#{host}:#{port}", path) || Cms::Site.find_by_domain(host.to_s, path)
     end
   end
 end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "opendata_agents_nodes_api", type: :feature, dbscope: :example do
-  let!(:node) { create_once :opendata_node_api, name: "opendata_api" }
+  let!(:node) { create :opendata_node_api, name: "opendata_api" }
   let!(:node_area) { create :opendata_node_area }
 
   let(:package_list_path) { "#{node.url}1/package_list" }
@@ -13,10 +13,10 @@ describe "opendata_agents_nodes_api", type: :feature, dbscope: :example do
   let(:package_search_path) { "#{node.url}1/package_search" }
   let(:resource_search_path) { "#{node.url}1/resource_search" }
 
-  let!(:node_dataset) { create_once :opendata_node_dataset }
+  let!(:node_dataset) { create :opendata_node_dataset }
   let!(:node_dataset_group1) { create(:opendata_dataset_group, cur_site: cms_site, categories: [ OpenStruct.new({ _id: 1 }) ]) }
   let!(:node_dataset_group2) { create(:opendata_dataset_group, cur_site: cms_site, categories: [ OpenStruct.new({ _id: 2 }) ]) }
-  let!(:node_search_dataset) { create_once :opendata_node_search_dataset, filename: "dataset/search" }
+  let!(:node_search_dataset) { create :opendata_node_search_dataset, filename: "dataset/search" }
   let!(:page_dataset1) do
     create(:opendata_dataset, cur_node: node_dataset, dataset_group_ids: [node_dataset_group1.id],
                               area_ids: [ node_area.id ], tags: %w(TEST_1))

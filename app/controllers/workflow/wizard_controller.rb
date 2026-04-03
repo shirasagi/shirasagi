@@ -75,9 +75,7 @@ class Workflow::WizardController < ApplicationController
     criteria = criteria.nin(id: same_level_user_ids + [ @item.workflow_user_id ])
     criteria = criteria.order_by(filename: 1)
 
-    @items = criteria.select do |user|
-      @item.allowed?(:read, user, site: @cur_site) && @item.allowed?(:approve, user, site: @cur_site)
-    end
+    @items = Workflow.approvable_users(cur_site: @cur_site, item: @item, criteria: criteria)
     @items = Kaminari.paginate_array(@items).page(params[:page]).per(50)
 
     render template: 'reroute', layout: false

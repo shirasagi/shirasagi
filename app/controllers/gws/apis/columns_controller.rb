@@ -7,6 +7,10 @@ class Gws::Apis::ColumnsController < ApplicationController
 
   private
 
+  def set_items
+    @items ||= Gws::Column::Base.site(@cur_site).where(form_id: params[:form_id])
+  end
+
   def set_item
     super
     @model = @item.try(:class)

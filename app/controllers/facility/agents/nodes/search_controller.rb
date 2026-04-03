@@ -9,39 +9,39 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
   private
 
   def set_query
-    @keyword      = params[:keyword].try { |keyword| keyword.to_s }
-    @category_ids = params[:category_ids].select(&:numeric?).map(&:to_i) rescue []
-    @service_ids  = params[:service_ids].select(&:numeric?).map(&:to_i) rescue []
-    @location_ids = params[:location_ids].select(&:numeric?).map(&:to_i) rescue []
+    @keyword      ||= params[:keyword].try { |keyword| keyword.to_s }
+    @category_ids ||= params[:category_ids].select(&:numeric?).map(&:to_i) rescue []
+    @service_ids  ||= params[:service_ids].select(&:numeric?).map(&:to_i) rescue []
+    @location_ids ||= params[:location_ids].select(&:numeric?).map(&:to_i) rescue []
 
-    @q_category = @category_ids.present? ? { category_ids: @category_ids } : {}
-    @q_service  = @service_ids.present? ? { service_ids: @service_ids } : {}
-    @q_location = @location_ids.present? ? { location_ids: @location_ids } : {}
+    @q_category ||= @category_ids.present? ? { category_ids: @category_ids } : {}
+    @q_service  ||= @service_ids.present? ? { service_ids: @service_ids } : {}
+    @q_location ||= @location_ids.present? ? { location_ids: @location_ids } : {}
 
-    @categories = Facility::Node::Category.site(@cur_site).and_public(@cur_date).in(id: @category_ids)
-    @services   = Facility::Node::Service.site(@cur_site).and_public(@cur_date).in(id: @service_ids)
-    @locations  = Facility::Node::Location.site(@cur_site).and_public(@cur_date).in(id: @location_ids)
+    @categories ||= Facility::Node::Category.site(@cur_site).and_public(@cur_date).in(id: @category_ids)
+    @services   ||= Facility::Node::Service.site(@cur_site).and_public(@cur_date).in(id: @service_ids)
+    @locations  ||= Facility::Node::Location.site(@cur_site).and_public(@cur_date).in(id: @location_ids)
   end
 
   def set_items
-    @items = Facility::Node::Page.site(@cur_site).and_public(@cur_date).
-      where(@cur_node.condition_hash).
-      search(name: @keyword).
-      in(@q_category).
-      in(@q_service).
-      in(@q_location).
-      order_by(name: 1)
+    @items ||= begin
+      set_query
+
+      Facility::Node::Page.site(@cur_site).and_public(@cur_date).
+        where(@cur_node.condition_hash).
+        search(name: @keyword).
+        in(@q_category).
+        in(@q_service).
+        in(@q_location).
+        order_by(name: 1)
+    end
   end
 
   def set_markers
-    @items = Facility::Node::Page.site(@cur_site).and_public(@cur_date).
-      where(@cur_node.condition_hash).
-      search(name: @keyword).
-      in(@q_category).
-      in(@q_service).
-      in(@q_location).
-      order_by(name: 1)
-    @markers = @items.pluck(:map_points).flatten.compact
+    @markers ||= begin
+      set_items
+      @items.pluck(:map_points).flatten.compact
+    end
   end
 
   def set_filter_items

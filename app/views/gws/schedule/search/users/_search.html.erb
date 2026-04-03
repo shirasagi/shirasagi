@@ -2,7 +2,7 @@
   <h2><%= t("gws/schedule.search_users") %></h2>
 </header>
 
-<% @s = OpenStruct.new params[:s] %>
+<% @s ||= OpenStruct.new params[:s] %>
 <%= form_for :s, url: gws_schedule_search_users_path, html: { method: :get, class: :search } do |f| %>
   <%= error_messages_for :item %>
 

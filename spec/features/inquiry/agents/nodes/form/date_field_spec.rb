@@ -93,6 +93,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         # inquiry_column_datetime
         expect(mail_body(notify_mail)).to include("- " + node.columns[1].name)
         expect(mail_body(notify_mail)).to include(datetime_iso8601)
+        expect(notify_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
     end
   end
@@ -164,6 +165,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         # inquiry_column_datetime
         expect(mail_body(notify_mail)).to include("- " + node.columns[1].name)
         expect(mail_body(notify_mail)).to include(datetime_iso8601)
+        expect(notify_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
     end
   end

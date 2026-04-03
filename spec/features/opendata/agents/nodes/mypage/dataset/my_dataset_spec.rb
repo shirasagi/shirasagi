@@ -166,6 +166,7 @@ describe "opendata_agents_nodes_my_dataset", type: :feature, dbscope: :example, 
         expect(mail_body(mail)).to include(member.name)
         expect(mail_body(mail)).to include(item_name)
         expect(mail_body(mail)).to include(Opendata::Dataset.first.private_show_path)
+        expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
 
       login_cms_user

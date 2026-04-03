@@ -28,7 +28,7 @@ module Mobile::PublicFilter
     body.force_encoding(Encoding::UTF_8) if body.encoding != Encoding::UTF_8
 
     # sub sites
-    site_urls = SS::Site.without_deleted.select { |site| @cur_site.full_root_url == site.full_root_url }.map(&:url)
+    site_urls = Cms::Site.without_deleted.select { |site| @cur_site.full_root_url == site.full_root_url }.map(&:url)
     site_urls = site_urls.sort_by { |url| url.count("/") }.reverse
 
     # links

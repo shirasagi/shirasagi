@@ -28,6 +28,10 @@ class Gws::Affair::Overtime::Aggregate::SearchUsersController < ApplicationContr
   end
 
   def set_items
+    set_query
+    set_fiscal_year
+    set_month
+
     @users = Gws::User.in(id: @user_ids).to_a
     @title = I18n.t("gws/affair.labels.overtime.search.title", year: @fiscal_year, month: @month)
     @items, = @model.site(@cur_site).where(date_fiscal_year: @fiscal_year, date_month: @month).capital_aggregate_by_users

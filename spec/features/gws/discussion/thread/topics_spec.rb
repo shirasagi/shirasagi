@@ -34,8 +34,8 @@ describe "gws_discussion_topics", type: :feature, dbscope: :example, js: true do
       fill_in "item[text]", with: "text"
       click_button I18n.t('ss.buttons.save')
     end
-    expect(current_path).to eq index_path
     wait_for_notice I18n.t("ss.notice.saved")
+    expect(current_path).to eq index_path
     within ".gws-discussion" do
       expect(page).to have_css(".addon-head", text: name)
     end
@@ -46,7 +46,7 @@ describe "gws_discussion_topics", type: :feature, dbscope: :example, js: true do
     within "form#item-form" do
       click_button I18n.t('ss.buttons.delete')
     end
-    expect(current_path).to eq portal_path
     wait_for_notice I18n.t("ss.notice.deleted")
+    expect(current_path).to eq portal_path
   end
 end

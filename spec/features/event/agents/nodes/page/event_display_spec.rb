@@ -23,6 +23,12 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example, js: true 
   let!(:item1) { create :event_page, cur_node: node, event_recurrences: [event_recur1], category_ids: [cate1.id] }
   let!(:item2) { create :event_page, cur_node: node, event_recurrences: [event_recur2], category_ids: [cate2.id] }
 
+  before do
+    # 書き出しテストの後に本テストが実行されると失敗する場合があるので、念のため書き出し済みのファイルを削除
+    FileUtils.rm_rf site.path
+    FileUtils.mkdir_p site.path
+  end
+
   context "table" do
     let(:event_display) { 'table' }
 

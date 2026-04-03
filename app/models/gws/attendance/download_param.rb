@@ -2,6 +2,7 @@ class Gws::Attendance::DownloadParam
   extend SS::Translation
   include ActiveModel::Model
   include SS::PermitParams
+  include SS::HumanAttributeName
 
   attr_accessor :cur_site, :cur_user, :from_date, :to_date, :user_ids, :encoding
 
@@ -12,33 +13,6 @@ class Gws::Attendance::DownloadParam
   validate :validate_to_date
   validate :validate_user_ids
   validates :encoding, presence: true
-
-  class << self
-    def t(*args)
-      human_attribute_name(*args)
-    end
-
-    def tt(key, html_wrap = true)
-      modelnames = ancestors.select { |x| x.respond_to?(:model_name) }
-      msg = ""
-      modelnames.each do |modelname|
-        msg = I18n.t("tooltip.#{modelname.model_name.i18n_key}.#{key}", default: "")
-        break if msg.present?
-      end
-      return msg if msg.blank? || !html_wrap
-
-      msg = [msg] if msg.class.to_s == "String"
-      list = msg.map { |d| "<li>" + d.to_s.gsub(/\r\n|\n/, "<br />") + "<br /></li>" }
-
-      h = []
-      h << %(<div class="tooltip">?)
-      h << %(<ul class="tooltip-content">)
-      h << list
-      h << %(</ul>)
-      h << %(</div>)
-      h.join("\n").html_safe
-    end
-  end
 
   private
 

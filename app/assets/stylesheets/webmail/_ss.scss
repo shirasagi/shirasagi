@@ -180,6 +180,17 @@ li.webmail-accounts {
     padding: 0 15px;
   }
 }
+.webmail-auto-save-notice {
+  visibility: hidden;
+  &.saved {
+    visibility: visible;
+  }
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  padding: 5px;
+  background: #f2f2f2;
+}
 
 @media print {
   .webmail-print {
@@ -265,6 +276,10 @@ li.webmail-accounts {
     .icon-reply {
       margin-right: 0.2rem;
       color: #a5f;
+      vertical-align: top;
+    }
+    .icon-auto-save {
+      margin-right: 0.2rem;
       vertical-align: top;
     }
     .title {

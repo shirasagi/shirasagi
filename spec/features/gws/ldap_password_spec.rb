@@ -83,7 +83,7 @@ describe "ldap_pass_change", type: :feature, dbscope: :example, ldap: true, js: 
 
         Gws::User.find(user_in_csv.id).tap do |modified_user|
           expect(modified_user.ldap_dn).to eq "uid=user1,ou=001001政策課,ou=001企画政策部,dc=example,dc=jp"
-          auth = { url: ldap_url, username: modified_user.ldap_dn, password: "pass" }
+          auth = { url: ldap_url, username: modified_user.ldap_dn, password: ss_pass }
           expect(Ldap::Connection.authenticate(**auth)).to be_falsey
           auth = { url: ldap_url, username: modified_user.ldap_dn, password: new_password_in_csv }
           expect(Ldap::Connection.authenticate(**auth)).to be_truthy
@@ -167,7 +167,7 @@ describe "ldap_pass_change", type: :feature, dbscope: :example, ldap: true, js: 
 
         Webmail::User.find(user_in_csv.id).tap do |modified_user|
           expect(modified_user.ldap_dn).to eq "uid=user1,ou=001001政策課,ou=001企画政策部,dc=example,dc=jp"
-          auth = { url: ldap_url, username: modified_user.ldap_dn, password: "pass" }
+          auth = { url: ldap_url, username: modified_user.ldap_dn, password: ss_pass }
           expect(Ldap::Connection.authenticate(**auth)).to be_falsey
           auth = { url: ldap_url, username: modified_user.ldap_dn, password: new_password_in_csv }
           expect(Ldap::Connection.authenticate(**auth)).to be_truthy

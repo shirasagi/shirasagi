@@ -89,10 +89,6 @@ module Cms::Elasticsearch::Indexer::Base
     @index ||= "s#{self.site.id}"
   end
 
-  def index_type
-    @index_type ||= '_doc'
-  end
-
   def index_item_id
     "page-#{@id}"
   end
@@ -110,18 +106,18 @@ module Cms::Elasticsearch::Indexer::Base
 
     enum_es_docs.each do |id, doc|
       index_params = {
-        index: index_name, type: index_type, id: id, body: doc
+        index: index_name, id: id, body: doc
       }
       index_params[:pipeline] = 'attachment' if id.start_with?('file-')
-      with_rescue(Elasticsearch::Transport::Transport::ServerError) do
+      with_rescue(Elastic::Transport::Transport::ServerError) do
         es_client.index(index_params)
       end
     end
 
     if remove_file_ids.present?
       remove_file_ids.each do |id|
-        with_rescue(Elasticsearch::Transport::Transport::ServerError) do
-          es_client.delete(index: index_name, type: index_type, id: "file-#{id}")
+        with_rescue(Elastic::Transport::Transport::ServerError) do
+          es_client.delete(index: index_name, id: "file-#{id}")
         end
       end
     end
@@ -134,14 +130,14 @@ module Cms::Elasticsearch::Indexer::Base
     es_client = self.site.elasticsearch_client
     return unless es_client
 
-    with_rescue(Elasticsearch::Transport::Transport::ServerError, severity: -1) do
-      es_client.delete(index: index_name, type: index_type, id: index_item_id)
+    with_rescue(Elastic::Transport::Transport::ServerError, severity: -1) do
+      es_client.delete(index: index_name, id: index_item_id)
     end
 
     if remove_file_ids.present?
       remove_file_ids.uniq.each do |id|
-        with_rescue(Elasticsearch::Transport::Transport::ServerError, severity: -1) do
-          es_client.delete(index: index_name, type: index_type, id: "file-#{id}")
+        with_rescue(Elastic::Transport::Transport::ServerError, severity: -1) do
+          es_client.delete(index: index_name, id: "file-#{id}")
         end
       end
     end
@@ -179,8 +175,8 @@ module Cms::Elasticsearch::Indexer::Base
 
     es_client = self.site.elasticsearch_client
     file_ids.uniq.each do |id|
-      with_rescue(Elasticsearch::Transport::Transport::ServerError, severity: -1) do
-        es_client.delete(index: index_name, type: index_type, id: "file-#{id}")
+      with_rescue(Elastic::Transport::Transport::ServerError, severity: -1) do
+        es_client.delete(index: index_name, id: "file-#{id}")
       end
     end
   end

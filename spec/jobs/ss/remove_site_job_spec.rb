@@ -51,7 +51,7 @@ describe SS::RemoveSiteJob, dbscope: :example do
 
   context "with site" do
     it do
-      expect(SS::Site.all.map(&:host)).to match_array [site.host, site1_host, site2_host]
+      expect(Cms::Site.all.map(&:host)).to match_array [site.host, site1_host, site2_host]
 
       expect(Cms::Page.where(site_id: site1_id).count).to eq 2
       expect(Cms::Part.where(site_id: site1_id).count).to eq 1
@@ -77,7 +77,7 @@ describe SS::RemoveSiteJob, dbscope: :example do
         expect(log.logs).to include(/remove #{site1_name}/)
       end
 
-      expect(SS::Site.all.map(&:host)).to match_array [site.host, site2_host]
+      expect(Cms::Site.all.map(&:host)).to match_array [site.host, site2_host]
 
       expect(Cms::Page.where(site_id: site1_id).count).to eq 0
       expect(Cms::Part.where(site_id: site1_id).count).to eq 0

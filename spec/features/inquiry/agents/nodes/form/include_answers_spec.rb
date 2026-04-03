@@ -146,6 +146,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         # inquiry_column_number
         expect(mail_body(notify_mail)).to include("- " + node.columns[8].name)
         expect(mail_body(notify_mail)).to include("123")
+        expect(notify_mail.message_id).to end_with("@#{site.domain}.mail")
       end
 
       ActionMailer::Base.deliveries[1].tap do |notify_mail|
@@ -182,6 +183,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         # inquiry_column_number
         expect(mail_body(notify_mail)).to include("- " + node.columns[8].name)
         expect(mail_body(notify_mail)).to include("123")
+        expect(notify_mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 

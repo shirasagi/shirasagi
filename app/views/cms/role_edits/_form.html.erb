@@ -1,0 +1,19 @@
+<dl class="see">
+  <dt><%= t("ss.group_users") %></dt>
+  <dd>
+    <%= @item.users.map { tag.span(_1.long_name, data: { user_id: _1.id }) }.join(", ").html_safe %>
+  </dd>
+
+  <dt><%= t("ss.role") %></dt>
+  <dd>
+    <%= hidden_field_tag "#{f.object_name}[cms_role_ids][]", nil, id: nil %>
+    <% Cms::Role.site(@cur_site).order_by(name: 1).each do |role| %>
+      <label><%= check_box_tag("#{f.object_name}[cms_role_ids][]", role.id, false, id: nil) %> <%= role.name %></label><br />
+    <% end %>
+  </dd>
+</dl>
+
+<% @crud_buttons = proc do |f| %>
+  <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
+  <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{cms_group_path(id: @item)}'; return false;" %>
+<% end %>

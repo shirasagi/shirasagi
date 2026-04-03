@@ -90,6 +90,8 @@ class Gws::Elasticsearch::Diagnostic::AnalyzersController < ApplicationControlle
   end
 
   def update
+    raise "403" unless @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_groups)
+
     if params.key?(:change_analyzer)
       @item = Item.new
       @item.attributes = params.require(:item).permit(:text)

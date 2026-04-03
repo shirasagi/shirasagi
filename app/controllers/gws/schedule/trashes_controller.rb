@@ -16,8 +16,7 @@ class Gws::Schedule::TrashesController < ApplicationController
   def set_items
     @items ||= begin
       Gws::Schedule::Plan.site(@cur_site).only_deleted.
-        allow(:trash, @cur_user, site: @cur_site).
-        search(params[:s])
+        allow(:trash, @cur_user, site: @cur_site)
     end
   end
 
@@ -25,6 +24,7 @@ class Gws::Schedule::TrashesController < ApplicationController
 
   def index
     @items = @items.
+      search(params[:s]).
       order_by(start_at: -1).
       page(params[:page]).per(50)
   end

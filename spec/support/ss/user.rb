@@ -1,3 +1,13 @@
+module SS
+  module UserSupport
+    mattr_accessor :pass
+  end
+end
+
+def ss_pass
+  SS::UserSupport.pass ||= "p@ss-#{unique_id}"
+end
+
 def ss_user
   ss_user = SS::User.where(email: build(:ss_user).email).first
   ss_user ||= create(:ss_user)
@@ -11,18 +21,18 @@ def ss_group
 end
 
 def ss_site
-  ss_site = SS::Site.where(host: build(:ss_site).host).first
+  ss_site = Cms::Site.where(host: build(:ss_site).host).first
   ss_site ||= create(:ss_site, group_ids: [ss_group.id])
   ss_site
 end
 
 def login_user(user, pass: nil, login_path: nil, to: nil)
   visit login_path.presence || sns_login_path
-  ref = to.presence || '/robots.txt'
+  ref = to.presence || sns_connection_path
   within "form" do
     fill_in "item[email]", with: user.email.presence || user.uid
-    fill_in "item[password]", with: pass.presence || user.in_password.presence || "pass"
-    set_value_to_hidden_input('input#ref', ref)
+    fill_in "item[password]", with: pass.presence || user.in_password.presence || ss_pass
+    set_value_to_hidden_input('input[name="ref"]', ref)
     click_button I18n.t("ss.login", locale: I18n.default_locale)
   end
   # rubocop:disable Rails/I18nLocaleAssignment
@@ -34,7 +44,11 @@ def login_user(user, pass: nil, login_path: nil, to: nil)
   if ref == '/robots.txt'
     expect(page).to have_content('User-agent')
   else
-    expect(page).to have_css('#head', text: user.name)
+    Retriable.retriable(on: [ Selenium::WebDriver::Error::WebDriverError ]) do
+      within "#head" do
+        expect(page).to have_css('.user-name', text: user.name)
+      end
+    end
   end
 end
 
@@ -47,6 +61,6 @@ def set_value_to_hidden_input(selector, value)
   end
 end
 
-def login_ss_user
-  login_user ss_user
+def login_ss_user(to: nil)
+  login_user ss_user, to: to
 end

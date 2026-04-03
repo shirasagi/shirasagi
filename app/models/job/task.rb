@@ -13,7 +13,7 @@ class Job::Task
   field :at, type: Integer, default: -> { Time.zone.now.to_i }, overwrite: true
   field :active_job, type: Hash
 
-  belongs_to :site, class_name: "SS::Site"
+  belongs_to :site, class_name: "Cms::Site"
   belongs_to :group, class_name: "SS::Group"
 
   before_validation :set_name

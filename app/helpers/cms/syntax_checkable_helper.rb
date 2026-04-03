@@ -4,9 +4,9 @@ module Cms::SyntaxCheckableHelper
 
   def syntax_check_violation_count(item = nil)
     item ||= @item
+    return if !item.is_a?(Cms::SyntaxCheckResult)
 
-    violation_count = item.try(:syntax_check_result_violation_count)
-    violation_count ||= 0
+    violation_count = item.syntax_check_result_violation_count || 0
     return if violation_count == 0
 
     title = t("cms.syntax_check_violation_count", count: violation_count, total: violation_count.to_fs(:delimited))

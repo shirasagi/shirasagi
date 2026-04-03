@@ -17,7 +17,7 @@
   areas = Opendata::Node::Area.site(@cur_site).sort(order: 1).pluck(:name, :id)
   categories = transform_category(@cur_categories)
   estat_categories = transform_category(@cur_estat_categories)
-  @s = OpenStruct.new params[:s]
+  @s ||= OpenStruct.new params[:s]
 %>
 
 <div class="search-form">

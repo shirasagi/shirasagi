@@ -82,7 +82,7 @@ module Tasks
 
       def remove_improper_htmls
         each_sites do |site|
-          perform_job(::Cms::RemoveImproperHtmlsJob, site: site, email: ENV["email"], dry_run: ENV["dry_run"])
+          perform_job(::Cms::ConsistencyCheckJob, site: site, email: ENV["email"], repair: ENV["dry_run"].blank?)
         end
       end
 
@@ -108,7 +108,7 @@ module Tasks
         each_sites do |site|
           begin
             puts "#{site.host}: #{site.name}"
-            Cms::ReloadSiteUsageJob.bind(site_id: site).perform_now
+            ::Cms::ReloadSiteUsageJob.bind(site_id: site).perform_now
           rescue => e
             Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
             puts("Failed to update usage: #{site.host}")
@@ -249,6 +249,18 @@ module Tasks
 
             puts item.name
           end
+        end
+      end
+
+      def consistency_check
+        with_site(ENV['site']) do |site|
+          perform_job(::Cms::ConsistencyCheckJob, site: site)
+        end
+      end
+
+      def consistency_repair
+        with_site(ENV['site']) do |site|
+          perform_job(::Cms::ConsistencyCheckJob, site: site, repair: true)
         end
       end
     end

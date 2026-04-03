@@ -162,6 +162,22 @@ describe Cms::Page, type: :model, dbscope: :example do
         expect(subject.errors[:redirect_link]).to include(I18n.t("errors.messages.trusted_url"))
       end
     end
+
+    context "if #redirect_link is forgotten to load" do
+      before do
+        subject.update!(redirect_link: unique_url)
+      end
+
+      it do
+        subject.class.all.first.tap do |item|
+          expect(item.url).to eq subject.redirect_link
+        end
+        # if the rss_link is forgotten to load
+        subject.class.all.only(:_id, :route, :name, :filename, :site_id, :depth, :order).first.tap do |item|
+          expect(item.url).to eq "/#{subject.filename}"
+        end
+      end
+    end
   end
 
   context "database access" do

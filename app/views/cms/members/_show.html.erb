@@ -26,7 +26,7 @@
   <dd><%= @item.oauth_token %></dd>
 
   <dt><%= @model.t :last_loggedin %></dt>
-  <dd><%= @item.last_loggedin.try { |time| I18n.l(time, format: :picker) } %></dd>
+  <dd><%= ss_time_tag @item.last_loggedin %></dd>
 </dl>
 
 <% activity_logs = Member::ActivityLog.site(@cur_site).where(member_id: @item).order_by(updated: -1).limit(8) %>

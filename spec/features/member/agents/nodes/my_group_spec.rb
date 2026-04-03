@@ -142,6 +142,7 @@ describe 'members/agents/nodes/my_group', type: :feature, dbscope: :example, js:
         expect(mail_body(mail)).to include(cms_member.name)
         expect(mail_body(mail)).to include(invitation_message)
         expect(mail_body(mail)).to include(member_invitation_signature.gsub("\n", "\r\n"))
+        expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
 
         mail_body(mail) =~ /(#{::Regexp.escape(node_registration.full_url)}[^ \t\r\n]+)/
         url = $1
@@ -232,6 +233,7 @@ describe 'members/agents/nodes/my_group', type: :feature, dbscope: :example, js:
         expect(mail_body(mail)).to include(cms_member.name)
         expect(mail_body(mail)).to include(invitation_message)
         expect(mail_body(mail)).to include(group_invitation_signature.gsub("\n", "\r\n"))
+        expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
 
         mail_body(mail) =~ /(#{::Regexp.escape(node_my_group.full_url)}[^ \t\r\n]+\/accept)/
         url = $1
@@ -333,6 +335,7 @@ describe 'members/agents/nodes/my_group', type: :feature, dbscope: :example, js:
         expect(mail_body(mail)).to include(cms_member.name)
         expect(mail_body(mail)).to include(invitation_message)
         expect(mail_body(mail)).to include(group_invitation_signature.gsub("\n", "\r\n"))
+        expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
 
         mail_body(mail) =~ /(#{::Regexp.escape(node_my_group.full_url)}[^ \t\r\n]+\/accept)/
         url = $1

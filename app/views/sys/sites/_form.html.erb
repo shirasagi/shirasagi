@@ -12,7 +12,7 @@
   <dd><%= f.text_field :subdir %></dd>
 
   <dt><%= @model.t :parent_id %><%= @model.tt :parent_id %></dt>
-  <dd><%= f.select :parent_id, SS::Site.all.map { |s| [s.name, s.id] }, include_blank: true %></dd>
+  <dd><%= f.select :parent_id, Cms::Site.all.map { |s| [s.name, s.id] }, include_blank: true %></dd>
 
   <dt><%= @model.t :https %><%= @model.tt :https %></dt>
   <dd><%= f.select :https, @item.https_options %></dd>
@@ -58,7 +58,7 @@
     <table class="index ajax-selected">
       <thead>
       <tr>
-        <th class="name"><%= SS::Site.t :name %></th>
+        <th class="name"><%= Cms::Site.t :name %></th>
         <th></th>
       </tr>
       </thead>
@@ -84,7 +84,7 @@
     <table class="index ajax-selected">
       <thead>
       <tr>
-        <th class="name"><%= SS::Site.t :name %></th>
+        <th class="name"><%= Cms::Site.t :name %></th>
         <th></th>
       </tr>
       </thead>

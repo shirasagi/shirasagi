@@ -7,7 +7,7 @@ describe "opendata_main", type: :feature, dbscope: :example do
     before { login_cms_user }
 
     context "when dataset node is given" do
-      let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
+      let(:node) { create :opendata_node_dataset, name: "opendata_dataset" }
       let(:index_path) { opendata_main_path site, node }
 
       it do
@@ -18,7 +18,7 @@ describe "opendata_main", type: :feature, dbscope: :example do
     end
 
     context "when app node is given" do
-      let(:node) { create_once :opendata_node_app, name: "opendata_app" }
+      let(:node) { create :opendata_node_app, name: "opendata_app" }
       let(:index_path) { opendata_main_path site, node }
 
       it do
@@ -29,7 +29,7 @@ describe "opendata_main", type: :feature, dbscope: :example do
     end
 
     context "when idea node is given" do
-      let(:node) { create_once :opendata_node_idea, name: "opendata_idea" }
+      let(:node) { create :opendata_node_idea, name: "opendata_idea" }
       let(:index_path) { opendata_main_path site, node }
 
       it do

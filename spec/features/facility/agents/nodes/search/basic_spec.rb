@@ -4,6 +4,12 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
   let(:layout) { create_cms_layout }
   let(:node)   { create :facility_node_search, layout_id: layout.id, filename: "node" }
 
+  before do
+    # 書き出しテストの後に本テストが実行されると失敗する場合があるので、念のため書き出し済みのファイルを削除
+    FileUtils.rm_rf cms_site.path
+    FileUtils.mkdir_p cms_site.path
+  end
+
   context "public" do
     let(:item) { create :facility_node_page, filename: "node/item" }
     let!(:map) do

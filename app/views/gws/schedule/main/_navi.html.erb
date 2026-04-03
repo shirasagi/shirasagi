@@ -1,53 +1,11 @@
-<% menus = capture do %>
-  <% if Gws::Schedule::Plan.allowed?(:use, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/schedule.tabs.personal'), gws_schedule_plans_path %></h3>
-  <% end %>
-
-  <% if false %>
-  <% if Gws::Schedule::Plan.allowed?(:use, @cur_user, site: @cur_site) %>
-    <% @cur_user.schedule_tabs_visible_groups(@cur_site).each do |group| %>
-      <h3><%= link_to group.trailing_name, gws_schedule_group_plans_path(group: group.id), class: "group" %></h3>
-    <% end %>
-    <% @cur_user.schedule_tabs_visible_custom_groups(@cur_site).each do |g| %>
-      <h3><%= link_to g.name, gws_schedule_custom_group_plans_path(group: g.id), class: "custom-group" %></h3>
-    <% end %>
-    <h3><%= link_to t('gws/schedule.tabs.group'), gws_schedule_all_groups_path, class: "group-all" %></h3>
-  <% end %>
-  <% end %>
-
-  <% if @cur_user.gws_role_permit_any?(@cur_site, :use_private_gws_facility_plans) %>
-    <h3><%= link_to t('gws/schedule.tabs.facility'), gws_schedule_facilities_path %></h3>
-    <h3><%= link_to t('gws/schedule.navi.approve_facility_plan'), gws_schedule_facility_approval_plans_path %></h3>
-  <% end %>
-  <% if Gws::Schedule::Plan.allowed?(:use, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/schedule.tabs.search'), gws_schedule_search_path %></h3>
-    <h3><%= link_to t('ss.links.import'), gws_schedule_csv_path %></h3>
-    <% if Gws::Schedule::Plan.allowed?(:trash, @cur_user, site: @cur_site) %>
-      <h3><%= link_to t('ss.links.trash'), gws_schedule_trashes_path, class: 'trash' %></h3>
-    <% end %>
-  <% end %>
-
-  <% if Gws::Schedule::Holiday.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/schedule.navi.holiday'), gws_schedule_holidays_path, class: "management" %></h3>
-  <% end %>
-  <% if Gws::Schedule::Category.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/schedule.navi.category'), gws_schedule_categories_path, class: "management" %></h3>
-  <% end %>
-
-  <% if Gws::Facility::Category.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/facility.navi.category'), gws_facility_categories_path, class: "management" %></h3>
-  <% end %>
-  <% if Gws::Facility::Item.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/facility.navi.item'), gws_facility_items_path, class: "management" %></h3>
-    <h3><%= link_to t('gws/facility.navi.usage'), gws_facility_usage_main_path, class: "management" %></h3>
-    <h3><%= link_to t('gws/facility.navi.state'), gws_facility_state_main_path, class: "management" %></h3>
-  <% end %>
-<% end %>
+<% menus = Gws::Schedule.enum_menu_items(@cur_site, @cur_user).to_a %>
 
 <% if menus.present? %>
   <nav class="mod-navi current-navi">
     <%= gws_menu_icon(:schedule, gws_schedule_main_path) %>
-    <%= menus %>
+    <% menus.each do |menu| %>
+      <h3><%= link_to(menu.label, menu.path, class: menu.css_classes) %></h3>
+    <% end %>
   </nav>
 <% end %>
 

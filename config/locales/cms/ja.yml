@@ -27,7 +27,6 @@ ja:
     group: グループ
     import_node: フォルダー取り込み
     import_node_index: 取り込みフォルダー
-    import_page: 取り込みページ
     import_page_index: 取り込みページ
     important_notice: 重要なお知らせ
     input_directly: 直接入力する
@@ -142,6 +141,18 @@ ja:
     yearly_archive: 年別アーカイブ
     monthly_archive: 月別アーカイブ
     syntax_check_violation_count: "アクセシビリティ違反が%{total}件あります。"
+    overflow_keyword:
+      one: "他1件のキーワード"
+      other: "他%{count}キーワード"
+    overflow_category:
+      one: "他1件のカテゴリー"
+      other: "他%{count}カテゴリー"
+    overflow_page:
+      one: "他1件のページ"
+      other: "他%{count}ページ"
+    overflow_value:
+      one: "他1件の値"
+      other: "他%{count}件の値"
     node_columns:
       filename: 'ファイル名'
       route: 'フォルダー属性'
@@ -150,7 +161,7 @@ ja:
       order: '並び順'
       layout_filename: 'レイアウト'
       page_layout_filename: 'ページレイアウト'
-      shortcut: 'ショートカット'
+      shortcuts: 'ショートカット'
       view_route: '既定のモジュール'
       keywords: 'キーワード'
       description: '概要'
@@ -255,6 +266,71 @@ ja:
           <li style="list-style-type: disc;">つまり本CSVを利用することで効率よく網羅的にサイト構築結果を確認することができます。</li>
         </ul>
       keep_updated: 更新日時を変更しない
+      moves_tab: "一括移動"
+    all_contents_moves:
+      settings_head: "一括移動設定"
+      check_result_head: "チェック結果"
+      history_head: "一括移動履歴"
+      download_template: "ひな形ダウンロード"
+      read_csv: "読み込み"
+      execute_move: "移動実行"
+      confirm_move: "選択したページを移動してもよろしいですか？"
+      reset: "リセット"
+      checking_message: "CSVを読み込み中です。"
+      moving_message: "ページの移動処理を実行中"
+      show_detail: "詳細を見る"
+      download_result: "実行結果ダウンロード"
+      history_notice: "※ 過去二週間分の履歴を表示しています。二週間以上古い履歴はシステムにより自動的に削除されます。"
+      errors:
+        page_not_found: "指定されたページが見つかりません。"
+        no_selection: "移動するページを選択してください。"
+        same_filename: "移動元と移動先のファイル名が同じです。"
+        not_found_parent_node: "移動先のフォルダーが存在しません。"
+        not_have_move_permission: "ページを移動する権限がありません。"
+        invalid_filename_chars: "ファイル名に使用できない文字が含まれています。"
+        destination_folder_not_public: "公開中のページの移動先フォルダーが非公開です。"
+        branch_page_can_not_move: "差し替えページのため移動できません。"
+        locked: "ページが編集ロック中です。"
+      csv_headers:
+        page_id: "ページID"
+        name: "タイトル"
+        index_name: "一覧用タイトル"
+        filename: "ファイル名"
+        layout: "レイアウト"
+        order: "並び順"
+        keywords: "キーワード"
+        description: "概要"
+        summary_html: "サマリー"
+        category: "カテゴリー"
+        parent_crumb_urls: "親フォルダー"
+        contact_state: "表示設定"
+        contact_group: "所属"
+        contact_group_contact: "連絡先"
+        contact_group_relation: "連絡先連動設定"
+        contact_group_name: "表示用グループ名"
+        contact_charge: "担当部署・係"
+        contact_tel: "電話番号"
+        contact_fax: "ファックス番号"
+        contact_email: "メールアドレス"
+        contact_postal_code: "郵便番号"
+        contact_address: "住所"
+        contact_link_url: "リンクURL"
+        contact_link_name: "リンク名"
+        contact_sub_groups: "所属（組織一覧用）"
+        group_ids: "管理グループ"
+      history_executed_at: "実行日時"
+      history_user_name: "実行ユーザー名"
+      finish: "終了する"
+      confirm_reset: "移動結果画面を終了します。結果の詳細は履歴からダウンロードできます。よろしいですか？"
+      description: "CSVファイルを使用して、複数のページを一括でフォルダー間移動できます。移動と同時にタイトル、連絡先、カテゴリーなどの属性を変更することも可能です。組織改編時のページ移動にご利用ください。"
+      steps_html: |
+        <ol>
+          <li>「ひな形ダウンロード」からCSVをダウンロードし、移動先のファイル名や変更したい属性を編集します。</li>
+          <li>編集したCSVを選択し「読み込み」をクリックすると、CSVの内容がチェックされます。</li>
+          <li>チェック結果を確認し、移動するページを選択して「移動実行」をクリックします。</li>
+        </ol>
+      branch_page_notice: "※ 差し替えページはCSVに含まれませんが、マスターページを移動すると差し替えページも自動的に移動されます。"
+      link_break_notice: "※ 他のページからリンクされているページを移動すると、リンク切れが発生します。チェック結果で参照元が表示された場合は、移動後にリンク元ページの修正が必要です。"
     roles:
       admin: 管理者
       user: 編集者
@@ -304,6 +380,7 @@ ja:
       loop_html_load_error: ループHTMLテンプレートの読み込みに失敗しました。
       loop_html_not_found: 選択されたループHTMLテンプレートが見つかりませんでした。
       loop_html_server_error: サーバーエラーが発生しました。しばらくしてから再度お試しください。
+
       check_links_report:
         - "%{time} 時点でのレポートです。"
         - "リンク切れを修正した場合、再度リンクチェックを実行し、新しいレポートを作成してください。"
@@ -346,10 +423,11 @@ ja:
       line_mail_handler_subject: "【%{subject}】\n\n%{body}"
       generation_report_jos_is_started: "書き出し性能レポート作成ジョブを実行しました。"
       content_quota_navi:
-        - "ショートカットに表示されているフォルダーのおおよその使用量を表示しています。"
+        - "ショートカットに「フォルダー使用量」が設定されているフォルダーのおおよその使用量を表示しています。"
         - "対象のフォルダー属性: %{routes} "
       prevent_external_preview: 別サイトに遷移しようとしています。プレビュー時は別サイトへは遷移できません。
       prevent_external_submit: プレビューでフォームデータの送信(POST)はできません。
+      private_node: このフォルダーは非公開です。非公開フォルダー配下のフォルダー・ページは自身の状態が公開であっても公開されません。
     apis:
       categories:
         index: カテゴリーを選択する
@@ -416,7 +494,7 @@ ja:
       ruby_off: ふりがなをはずす
       back_to_contents: コンテンツへ戻る
       michecker: miChecker で確認する
-      download: フォルダ容量をCSVダウンロードする
+      download: フォルダー容量をCSVダウンロードする
       check_preview: プレビューで確認する
       open_remark: 詳細を開く
       page_expiration_setting: 公開期限ページ設定
@@ -439,7 +517,9 @@ ja:
       to: 複製先
       job_history: 実行ログ
       link_to_job_history: ジョブ実行履歴
-      target_node_name: フォルダー名
+      target_node_name: タイトル
+      target_node_index_name: 一覧用タイトル
+      target_node_filename: フォルダー名
       started_job: 処理を開始します。ジョブ実行履歴で結果をご確認下さい
     download_nodes:
       messages:
@@ -674,13 +754,26 @@ ja:
         start_with: 前方一致
         end_with: 後方一致
         all: 完全一致
+      ignore_url_kind:
+        all: 完全一致
+        start_with: 前方一致
+        end_with: 後方一致
+        include: 部分一致
+      shortcut:
+        system: ショートカット
+        quota: フォルダー使用量
+        navi: 左メニュー
+      sns_share_state:
+        show: 公式プラグインで表示
+        link_only: リンク形式で表示
+        hide: 非表示
     site_search:
       no_results: 選択候補がありません。
       no_choices: 選択候補がありません。
       max_item: 個まで選択できます。
     sns_share:
       fb_share: Facebook シェア
-      fb_lang: ja_JP
+      fb_share_button: シェアする
       twitter: X(旧Twitter)
       tweet: ツイート
       hatena: はてなブックマーク
@@ -897,7 +990,7 @@ ja:
     use_cms_michecker: micheckerの利用
     delete_cms_ignore_alert: リンクチェック警告を無視して削除する
     edit_cms_ignore_alert: リンクチェック警告を無視して非公開保存する
-    use_cms_sitemap: フォルダ容量のCSVダウンロード
+    use_cms_sitemap: フォルダー容量のCSVダウンロード
     use_cms_check_links: リンクチェックの利用
     run_cms_check_links: リンクチェックの実行
     read_other_cms_check_links_errors: エラーの閲覧（全て）
@@ -1113,7 +1206,7 @@ ja:
         name: タイトル
         keyword: キーワード
         index_name: 一覧用タイトル
-        depth: フォルダ階層
+        depth: フォルダー階層
         order: 並び順
         user: 作成者
         md5: ハッシュ値
@@ -1376,7 +1469,9 @@ ja:
         font_color: 文字色
         background_color: 背景色
       cms/copy_nodes_task:
-        target_node_name: 複製先フォルダー名
+        target_node_name: 複製先タイトル
+        target_node_index_name: 複製先一覧用タイトル
+        target_node_filename: 複製先フォルダー名
       cms/addon/source_cleaner:
         target_type: 対象の種別
         target_value: 対象の名称
@@ -1623,6 +1718,7 @@ ja:
         group_ids: 管理グループ
       cms/check_links/ignore_url:
         name: 除外URL
+        kind: 一致パターン
       cms/line/message:
         name: タイトル
         body: JSON
@@ -1881,7 +1977,7 @@ ja:
         average_sub_total_view: 平均子合計ビュー処理時間
         average_sub_total_elapsed: 平均子合計全処理時間
       cms/page_expiration_setting:
-        expiration_setting_type: 公開期限      
+        expiration_setting_type: 公開期限
       cms/syntax_check_result:
         syntax_check_result_checked: アクセシビリティチェック実施日時
         syntax_check_result_violation_count: アクセシビリティ違反件数
@@ -1952,6 +2048,7 @@ ja:
       link_check_failed_unauthorized: リンク先の内容を取得できませんでした。（認証がかかっています）
       link_check_failed_not_found: リンク先の内容を取得できませんでした。
       link_check_failed_redirection: リンク先のリダイレクトが多すぎる為、内容を取得できませんでした。
+      link_check_failed_cyclic_redirection: リンク先のリダイレクトが循環しています。
       mobile_size_check_success: 成功
       mobile_size_check_failure: 失敗
       mobile_size_check_disable: モバイルサイズが設定されていません。
@@ -2202,10 +2299,10 @@ ja:
           サイトマップを表示します。
         - |-
           アップローダー/アップローダー
-          ファイルをアップロードするためのフォルダです。
+          ファイルをアップロードするためのフォルダーです。
         - |-
           緊急災害レイアウト/緊急災害レイアウト
-          緊急災害時にレイアウトを切り替えるためのフォルダです。
+          緊急災害時にレイアウトを切り替えるためのフォルダーです。
       foldername:
         - フォルダー名はURLに利用します。
         - 半角英数字で入力します。
@@ -2214,11 +2311,16 @@ ja:
         - フォルダーのレイアウトを選択します。
       page_layout_id:
         - ページのレイアウトを選択します。
-        - 初期値は上位のフォルダの設定を継承しています。
-      shortcut:
-        - 表示を選択することで管理画面のサイトトップ「コンテンツ」に表示されます。
+        - 初期値は上位のフォルダーの設定を継承しています。
+      shortcuts:
+        - 頻繁にアクセスするフォルダーをショートカットとして表示することができます。
+        - 表示できる場所は、「ショートカットのおすすめ」、「フォルダー使用量」、「左ナビ」の3箇所です。
+        - 表示したい場所を選択してください。
+        -
+        - なお、フォルダー使用量として表示可能なフォルダーは、記事リスト、フォルダーリスト、ページリストの3種類のみで、
+        - これら以外のフォルダーで「フォルダー使用量」を選択しても無視されます。
       view_route:
-        - サイトトップ「コンテンツ」から遷移したときの「モジュール」を設定します。
+        - フォルダーを開いた際の表示する機能を設定します。
       conditions:
         - 自フォルダー内のリスト以外で表示するリストのフォルダー名を記述します。
         - |-
@@ -2243,7 +2345,7 @@ ja:
         - |-
           下記のように記述します。
           #{class}　リンク先のファイル名が表示されます。ファイル名に拡張子がある場合、拡張子を除いた部分が表示されます。
-          #{class_categories} リンク先ページ内がカテゴリに関連付けられている場合、全てのカテゴリのフォルダ名が表示されます。
+          #{class_categories} リンク先ページ内がカテゴリに関連付けられている場合、全てのカテゴリのフォルダー名が表示されます。
           #{date}　リンク先のページの公開日時が「2015/4/1」の形式で表示されます。
           #{date.default}　リンク先のページの公開日時が「2015/4/1」の形式で表示されます。
           #{date.iso}　リンク先のページの公開日時が「2015-04-01」の形式で表示されます。
@@ -2894,7 +2996,7 @@ ja:
 
     cms/addon/image_resize_setting:
       image_resize_setting:
-        - フォルダー内のページ編集時に「ファイル>アップロード」から画像ファイルをアップする際の最大横幅、縦幅、画質を設定可能です。
+        - フォルダー内のページ編集時に「ファイル>アップロード」から画像ファイルをアップする際の最大横幅、縦幅を設定可能です。
 
     cms/addon/tag_setting:
       st_tags:
@@ -3316,6 +3418,8 @@ ja:
         - ・内部リンクでドメインを除いてURLを記述している場合
         - /kurashi/
         - /kurashi/xxxx.html
+      kind:
+        - 一致パターンを選択します。
 
     cms/addon/site_search/history:
       upper_html:
@@ -3598,7 +3702,7 @@ ja:
     index_name: 一覧用タイトル
     filename: フォルダー名
     layout: レイアウト
-    depth: フォルダ階層
+    depth: フォルダー階層
     order: 並び順
     keywords: キーワード
     description: 概要
@@ -3611,6 +3715,8 @@ ja:
   job:
     models:
       cms/node/generate_job: CMS/フォルダー書き出し
+      cms/node/import_job: CMS/フォルダーインポート
+      cms/node/release_job: CMS/フォルダー公開
       cms/page/generate_job: CMS/ページ書き出し
       cms/page/release_job: CMS/ページ公開
       cms/page/remove_job: CMS/ページ削除
@@ -3641,3 +3747,4 @@ ja:
       cms/elasticsearch/indexer/page_release_job: CMS全文検索/ページの追加
       cms/form_db/import_urls_job: CMS/定型DBインポート（サイト全体）
       cms/syntax_check_job: CMS/アクセシビリティチェック
+      cms/consistency_check_job: CMS/一貫性チェック

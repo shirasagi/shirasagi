@@ -1,12 +1,11 @@
 /**
  *= require jquery-datetimepicker/build/jquery.datetimepicker.min.css
  *= require jquery.multi-select
- *= require jquery.minicolors
- *= require jquery-ui
+ *= require @claviska/jquery-minicolors/jquery.minicolors.css
+ *= require jquery-ui/dist/themes/base/jquery-ui.css
  *= require fullcalendar/dist/fullcalendar.css
  *= require fullcalendar-scheduler/dist/scheduler.css
  *= require cropperjs/dist/cropper.css
- *= require bxslider
  *= require tippy.js/dist/tippy.css
  *= require tippy.js/themes/light.css
  *= require tippy.js/themes/light-border.css
@@ -21,6 +20,7 @@
 
 // core
 @use "github-markdown";
+@use "ss/breadcrumb";
 @use "ss/list_item";
 @use "ss/ckeditor";
 @use "ss/login";
@@ -34,6 +34,7 @@
 @use "ss/file_field";
 @use "ss/link_item/ss" as link_item;
 @use "ss/main_navi";
+@use "ss/ajax_selected";
 @use "sys/ss" as sys;
 @use "sns/ss" as sns;
 @use "cms/ss" as cms;

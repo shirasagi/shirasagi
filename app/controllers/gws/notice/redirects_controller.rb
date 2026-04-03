@@ -4,6 +4,14 @@ class Gws::Notice::RedirectsController < ApplicationController
 
   model Gws::Notice::Post
 
+  private
+
+  def set_items
+    @items ||= @model.site(@cur_site)
+  end
+
+  public
+
   def show
     set_item
 

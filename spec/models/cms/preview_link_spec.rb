@@ -11,7 +11,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
   shared_examples "expand preview link" do
     it do
-      item = described_class.new(cur_site, preview_url, preview_path, url)
+      item = described_class.parse(cur_site, preview_url, preview_path, url)
       expect(item.expanded).to eq expanded
       expect(item.external?).to eq external
     end
@@ -43,6 +43,14 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "#" do
           let(:url) { "#" }
+          let(:expanded) { url }
+          let(:external) { false }
+
+          it_behaves_like "expand preview link"
+        end
+
+        context "invalid anchor: #/foo/bar.baz" do
+          let(:url) { "#/foo/bar.baz" }
           let(:expanded) { url }
           let(:external) { false }
 
@@ -477,6 +485,16 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
           it_behaves_like "expand preview link"
         end
       end
+
+      context "invalid path: ' /page .html '" do
+        let(:preview_path) { nil }
+        let(:url) { " /page .html " }
+        # let(:expanded) { cms_preview_path(site: cur_site, path: " /page .html ") }
+        let(:expanded) { "/.s#{cur_site.id}/preview/ /page .html " }
+        let(:external) { false }
+
+        it_behaves_like "expand preview link"
+      end
     end
 
     context "in subsite1" do
@@ -816,6 +834,22 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
           it_behaves_like "expand preview link"
         end
+
+        context "href //scdn.line-apps.com/n/line_it/thirdparty/loader.min.js" do
+          let(:url) { "//scdn.line-apps.com/n/line_it/thirdparty/loader.min.js" }
+          let(:expanded) { url }
+          let(:external) { true }
+
+          it_behaves_like "expand preview link"
+        end
+
+        context "invalid url: 'https://invalid.example.jp /'" do
+          let(:url) { "https://invalid.example.jp /" }
+          let(:expanded) { url }
+          let(:external) { true }
+
+          it_behaves_like "expand preview link"
+        end
       end
     end
   end
@@ -1002,6 +1036,14 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "mailto:mail@sample.example.com" do
           let(:url) { "mailto:mail@sample.example.com" }
+          let(:expanded) { url }
+          let(:external) { false }
+
+          it_behaves_like "expand preview link"
+        end
+
+        context "javascript:void(0);" do
+          let(:url) { "javascript:void(0);" }
           let(:expanded) { url }
           let(:external) { false }
 

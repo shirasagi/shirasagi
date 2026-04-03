@@ -789,6 +789,13 @@ this.SS = (function () {
   SS.onDoubleClickGuardClick = function(ev) {
     var $element = $(ev.target);
     var timeout = $element.data("ss-timeout") || SS.defaultTimeoutMillis;
+    // NOTE:
+    // - `ss_button_to` uses JS to build and submit a form and calls `ev.preventDefault()` even on "OK".
+    // - So, `defaultPrevented` alone can't distinguish "canceled" vs "will submit".
+    // - `SS_ButtonTo` marks submit path with `ev.ssButtonToSubmit = true`.
+    if (ev.isDefaultPrevented() && !ev.ssButtonToSubmit) {
+      return;
+    }
 
     $.rails.disableFormElement($element);
     if (timeout > -1) {

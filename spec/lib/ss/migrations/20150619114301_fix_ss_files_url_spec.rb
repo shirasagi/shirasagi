@@ -25,11 +25,11 @@ RSpec.describe SS::Migration20150619114301, dbscope: :example do
     @after_html = ::File.open(after_html_path).read
     @after_layout_html = ::File.open(after_layout_html_path).read
 
-    create_once :cms_page, name: "cms_page", html: @before_html
-    create_once :article_page, name: "article_page", html: @before_html
-    create_once :cms_part_free, name: "free_part", html: @before_html
-    create_once :article_part_page, name: "list_part", upper_html: @before_html, lower_html: @before_html
-    create_once :cms_layout, name: "layout", html: @before_layout_html
+    create :cms_page, name: "cms_page", html: @before_html
+    create :article_page, name: "article_page", html: @before_html
+    create :cms_part_free, name: "free_part", html: @before_html
+    create :article_part_page, name: "list_part", upper_html: @before_html, lower_html: @before_html
+    create :cms_layout, name: "layout", html: @before_layout_html
 
     SS.config.replace_value_at(:env, :multibyte_filename, "underscore")
     SS::File.destroy_all

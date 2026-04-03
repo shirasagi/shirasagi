@@ -25,12 +25,12 @@ class Gws::Monitor::Management::AdminsController < ApplicationController
   end
 
   def set_items
-    @items = @model.site(@cur_site).topic
-    @items = @items.allow(:read, @cur_user, site: @cur_site)
-    @items = @items.without_deleted
-    @items = @items.search(params[:s])
-    @items = @items.custom_order(params.dig(:s, :sort))
-    @items = @items.page(params[:page]).per(50)
+    @items ||= begin
+      items = @model.site(@cur_site).topic
+      items = items.allow(:read, @cur_user, site: @cur_site)
+      items = items.without_deleted
+      items
+    end
   end
 
   def check_readable

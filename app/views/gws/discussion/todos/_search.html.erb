@@ -2,7 +2,7 @@
   <input type="button" value="<%= t('ss.buttons.print') %>" class="btn btn-print" />
 </div>
 
-<% @s = OpenStruct.new params[:s] %>
+<% @s ||= OpenStruct.new params[:s] %>
 <%= form_for :s, url: "", html: { method: :get, class: :search } do |f| %>
   <%= f.text_field :keyword, style: "width: 140px;", placeholder: t("gws/schedule.search_plans") %>
   <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />

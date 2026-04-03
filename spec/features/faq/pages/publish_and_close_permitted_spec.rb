@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "article_pages", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
-  let!(:node) { create_once :faq_node_page, filename: "docs", name: "faq" }
+  let!(:node) { create :faq_node_page, filename: "docs", name: "faq" }
   let!(:group) { create(:cms_group, name: unique_id) }
   let!(:user1) { create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", group_ids: [ group.id ]) }
   let(:index_path) { faq_pages_path site.id, node }

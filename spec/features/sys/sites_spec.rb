@@ -29,8 +29,8 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t("ss.notice.saved")
 
-      expect(SS::Site.all.count).to eq 1
-      SS::Site.all.first.tap do |site|
+      expect(Cms::Site.all.count).to eq 1
+      Cms::Site.all.first.tap do |site|
         expect(site.name).to eq name
         expect(site.host).to eq host
         expect(site.domains).to eq [ domain ]
@@ -47,7 +47,7 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t("ss.notice.saved")
 
-      SS::Site.all.first.tap do |site|
+      Cms::Site.all.first.tap do |site|
         expect(site.name).to eq name2
       end
 
@@ -61,8 +61,8 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t("ss.notice.deleted")
 
-      expect(SS::Site.all.count).to eq 1
-      SS::Site.all.first.tap do |site|
+      expect(Cms::Site.all.count).to eq 1
+      Cms::Site.all.first.tap do |site|
         expect(site.name).to eq name2
         expect(site.host).to eq host
         expect(site.domains).to eq [ domain ]
@@ -139,8 +139,8 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
     before { login_sys_user }
 
     it do
-      expect(SS::Site.all.count).to eq 2
-      expect(SS::Site.without_deleted.count).to eq 2
+      expect(Cms::Site.all.count).to eq 2
+      expect(Cms::Site.without_deleted.count).to eq 2
 
       visit sys_sites_path
       within ".list-items" do
@@ -157,8 +157,8 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t("ss.notice.deleted")
 
-      expect(SS::Site.all.count).to eq 2
-      expect(SS::Site.without_deleted.count).to eq 1
+      expect(Cms::Site.all.count).to eq 2
+      expect(Cms::Site.without_deleted.count).to eq 1
 
       visit sys_sites_path
       within ".list-items" do
@@ -202,7 +202,7 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
     before { login_sys_user }
 
     it do
-      expect(SS::Site.all.count).to eq 2
+      expect(Cms::Site.all.count).to eq 2
 
       visit sys_sites_path
 
@@ -214,8 +214,8 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t("ss.notice.deleted")
 
-      expect(SS::Site.all.count).to eq 2
-      expect(SS::Site.without_deleted.count).to eq 0
+      expect(Cms::Site.all.count).to eq 2
+      expect(Cms::Site.without_deleted.count).to eq 0
     end
   end
 

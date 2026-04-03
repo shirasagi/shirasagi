@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
-  let!(:node) { create_once :uploader_node_file, name: "uploader" }
+  let!(:node) { create :uploader_node_file, name: "uploader" }
   let!(:index_path) { uploader_files_path site.id, node }
 
   before { login_cms_user }

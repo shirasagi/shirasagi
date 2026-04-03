@@ -310,11 +310,11 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
       wait_for_all_turbo_frames
       within ".mod-workflow-approve" do
         fill_in "item[comment]", with: approve_comment1
-        wait_cbox_open { click_on I18n.t("workflow.links.approver_file_upload") }
+        wait_for_cbox_opened { click_on I18n.t("workflow.links.approver_file_upload") }
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        wait_cbox_close { click_on I18n.t("ss.buttons.attach") }
+        wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
       end
       within ".mod-workflow-approve" do
         click_on I18n.t("workflow.buttons.approve")
@@ -344,7 +344,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
       within_dialog do
         expect(page).to have_css(".approver-comment", text: approve_comment1)
         expect(page).to have_css(".file-view[data-file-id='#{file1.id}']", text: file1.humanized_name)
-        wait_cbox_close { click_on "cancel" }
+        wait_for_cbox_closed { click_on "cancel" }
       end
 
       Gws::Tabular::File[form.current_release].tap do |file_model|
@@ -470,11 +470,11 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
       wait_for_all_turbo_frames
       within ".mod-workflow-circulation" do
         fill_in "item[comment]", with: circulation_comment1
-        wait_cbox_open { click_on I18n.t("workflow.links.approver_file_upload") }
+        wait_for_cbox_opened { click_on I18n.t("workflow.links.approver_file_upload") }
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        wait_cbox_close { click_on I18n.t("ss.buttons.attach") }
+        wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
       end
       within ".mod-workflow-circulation" do
         click_on I18n.t("workflow.links.set_seen")
@@ -504,7 +504,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
       within_dialog do
         expect(page).to have_css(".approver-comment", text: circulation_comment1)
         expect(page).to have_css(".file-view[data-file-id='#{file2.id}']", text: file2.humanized_name)
-        wait_cbox_close { click_on "cancel" }
+        wait_for_cbox_closed { click_on "cancel" }
       end
 
       Gws::Tabular::File[form.current_release].tap do |file_model|

@@ -5,7 +5,7 @@ describe "opendata_agents_parts_idea", type: :feature, dbscope: :example do
   let!(:parts) { create(:opendata_part_idea) }
   let(:index_path) { parts.url }
   before do
-    create_once :opendata_node_search_idea, filename: "idea/search"
+    create :opendata_node_search_idea, filename: "idea/search"
   end
 
   it "#index" do

@@ -4,7 +4,7 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
 
   context "with upload js file" do
-    let!(:node) { create_once :uploader_node_file, filename: "js" }
+    let!(:node) { create :uploader_node_file, filename: "js" }
     let!(:uploader_path) { uploader_files_path site.id, node }
     let!(:file) { Rails.root.join("spec", "fixtures", "ss", "sample.js").to_s }
 

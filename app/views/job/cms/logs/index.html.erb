@@ -14,13 +14,13 @@
   <% end %>
   <span class="datetime">
     <%= item.started.try do |time| %>
-      <%= content_tag("time", I18n.l(time, format: :picker), datetime: time.iso8601, title: time.iso8601) %>
+      <%= ss_time_tag time %>
       <%= link_to(t("ss.buttons.copy"), "#", class: "clipboard-copy-button", data: { text: time.iso8601 }) %>
     <% end %>
   </span>
   <span class="datetime">
     <%= item.closed.try do |time| %>
-      <%= content_tag("time", I18n.l(time, format: :picker), datetime: time.iso8601, title: time.iso8601) %>
+      <%= ss_time_tag time %>
       <%= link_to(t("ss.buttons.copy"), "#", class: "clipboard-copy-button", data: { text: time.iso8601 }) %>
     <% end %>
   </span>

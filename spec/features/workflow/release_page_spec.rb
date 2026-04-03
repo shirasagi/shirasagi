@@ -72,6 +72,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(mail_body(mail)).to include(cms_user.name)
           expect(mail_body(mail)).to include(item.name)
           expect(mail_body(mail)).to include(workflow_comment)
+          expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
         end
 
         #
@@ -90,11 +91,11 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         expect(item.workflow_state).to eq "approve"
         expect(item.state).to eq "ready"
         expect(item.release_date).to eq release_date
-        expect(item.workflow_approvers).to \
-          include({
-            level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
-            created: be_within(30.seconds).of(Time.zone.now)
-          })
+        expect(item.workflow_approvers).to include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve',
+          comment: approve_comment1, file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
+        })
+        # backup is created
         expect(item.backups.count).to eq 3
 
         expect(Sys::MailLog.count).to eq 2
@@ -105,6 +106,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail_body(mail)).to include(item.name)
+          expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
         end
 
         expect do
@@ -171,6 +173,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
             expect(mail_body(mail)).to include(cms_user.name)
             expect(mail_body(mail)).to include(item.name)
             expect(mail_body(mail)).to include(workflow_comment)
+            expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
           end
 
           #
@@ -189,11 +192,11 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(item.workflow_state).to eq "approve"
           expect(item.state).to eq "ready"
           expect(item.release_date).to eq release_date
-          expect(item.workflow_approvers).to \
-            include({
-              level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
-              created: be_within(30.seconds).of(Time.zone.now)
-            })
+          expect(item.workflow_approvers).to include({
+            level: 1, user_id: user1.id, editable: '', state: 'approve',
+            comment: approve_comment1, file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
+          })
+          # backup is created
           expect(item.backups.count).to eq 3
 
           expect(Sys::MailLog.count).to eq 2
@@ -204,6 +207,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
             expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
             expect(mail.body.multipart?).to be_falsey
             expect(mail_body(mail)).to include(item.name)
+            expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
           end
 
           expect do

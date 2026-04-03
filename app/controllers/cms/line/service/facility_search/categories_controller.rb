@@ -11,7 +11,7 @@ class Cms::Line::Service::FacilitySearch::CategoriesController < ApplicationCont
   private
 
   def set_hook
-    @hook = Cms::Line::Service::Hook::Base.find(params[:hook_id])
+    @hook ||= Cms::Line::Service::Hook::Base.site(@cur_site).find(params[:hook_id])
   end
 
   def fix_params
@@ -24,6 +24,7 @@ class Cms::Line::Service::FacilitySearch::CategoriesController < ApplicationCont
   end
 
   def set_items
-    @items = @hook.categories
+    set_hook
+    @items ||= @hook.categories
   end
 end

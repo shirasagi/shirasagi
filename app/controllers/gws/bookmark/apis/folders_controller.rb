@@ -19,7 +19,8 @@ class Gws::Bookmark::Apis::FoldersController < ApplicationController
   end
 
   def set_items
-    @items = @folders
+    set_folders
+    @items ||= @folders
   end
 
   public

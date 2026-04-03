@@ -31,6 +31,8 @@ class Gws::Affair::Worktime::AggregateController < ApplicationController
   end
 
   def set_items
+    set_query
+
     if @group_id.present?
       group = @groups.where(id: @group_id).first
     else

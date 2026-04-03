@@ -3,7 +3,7 @@ module Recommend::ContentFilter
 
   private
 
-  def set_items
+  def set_content_items
     cur_item = @cur_part || @cur_node
     display_list = []
     @items = []

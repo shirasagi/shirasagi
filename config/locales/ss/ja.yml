@@ -22,6 +22,7 @@ ja:
     operation: 操作
     organization: 組織
     qr_code: QRコード
+    qr_code_trademark_notice: QRコードは株式会社デンソーウェーブの登録商標です。
     regexp: 正規表現
     resize_image: 画像リサイズ
     no_resize_image: 画像リサイズしない
@@ -83,6 +84,19 @@ ja:
     upload_or_select_from_list: ファイルアップロードまたは一覧から選択
     auto_resizing_label: "%{size}（システム設定）"
     check: チェック
+    truncate_long_csv_value: 長い項目を省略しセル内に収まるようにする。
+    overflow_user:
+      one: "他1人のユーザー"
+      other: "他%{count}ユーザー"
+    overflow_group:
+      one: "他1件のグループ"
+      other: "他%{count}グループ"
+    overflow_custom_group:
+      one: "他1件のカスタムグループ"
+      other: "他%{count}カスタムグループ"
+    overflow_file:
+      one: "他1件のファイル"
+      other: "他%{count}ファイル"
 
     views:
       login/login:
@@ -210,6 +224,7 @@ ja:
       cancel: キャンセル
       edit: 編集
       delete: 削除
+      delete_all: すべて削除
       deleting: 削除中
       search: 検索
       replace: 置換
@@ -338,6 +353,7 @@ ja:
       approved: 承認しました。
       answered: 回答しました。
       started_import: インポートを開始しました。
+      started_move: 移動処理を開始しました。
       started_export: エクスポートを開始しました。
       started_upload: アップロードを開始しました。
       started_deliver: 配信を開始しました。
@@ -355,6 +371,7 @@ ja:
       restored: 元に戻しました。
       run: 実行しました。
       already_job_started: 実行準備中であるか、実行中です。
+      failed_to_check_status: ステータスの確認に失敗しました。ページを再読み込みしてください。
       clipboard_copied: コピーしました。
       clipboard_copy_failed: コピーできませんでした。クリップボードがサポートされていません。
       published: 公開しました。
@@ -383,6 +400,7 @@ ja:
       reset_mfa_otp: ワンタイムパスワードを初期化しました。
       wait_to_upload: アップロードの待機中。
       finished_uploading: アップロードしました。
+      unlocked: ロックを解除しました。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -770,7 +788,7 @@ ja:
         sort: 並び順
         limit: 表示件数
         layout_id: レイアウト
-        shortcut: ショートカット
+        shortcuts: ショートカット
         view_state: 状態
         text_index: 全文検索インデックス(未使用)
       ss/model/site:
@@ -942,7 +960,8 @@ ja:
         opengraph_type: OpenGraph
         opengraph_defaul_image_url: 既定の画像URL
       ss/addon/facebook_setting:
-        facebook_app_id: App ID
+        facebook_app_id: Facebook App ID
+        facebook_api_version: Facebook API Versin
       ss/addon/twitter_setting:
         twitter_poster_state: ページ連携
         twitter_card: カード形式
@@ -1064,6 +1083,9 @@ ja:
         elasticsearch_site_ids: サイト
         elasticsearch_indexes: インデックス
         elasticsearch_outside: 外部サイト検索(Fess)
+        elasticsearch_user: 全文検索サーバー/ユーザー
+        elasticsearch_password: 全文検索サーバー/パスワード
+        elasticsearch_ssl_verify_mode: 全文検索サーバー/SSL証明書チェック方法
       ss/addon/translate/site_setting:
         translate_state: ステータス
         translate_source_id: 元言語コード
@@ -1438,8 +1460,13 @@ ja:
         - かな機能にて公開画面にふりがなを付与した際の表記形式を設定します。
     ss/addon/facebook_setting:
       facebook_app_id:
-        - Facebook の App Id を設定します。
+        - Meta for Developers でアプリ作成後に発行されるアプリIDを設定します。
         - 設定すると「Facebook インサイト」でアクセスを解析できるようになります。
+      facebook_api_version:
+        - Meta for Developers でアプリ作成時に選択したAPIバージョンを設定します。
+        - '先頭の "v" は省略できません。小数点以下まで正確に設定してください。'
+        - "例: v25.0"
+    ss/addon/open_graph_setting:
       facebook_page_url:
         - Facebook ページの URL を設定します。
         - 設定するとシェアされた記事を見た別のユーザーが「いいね！」をすることができます。
@@ -1596,6 +1623,13 @@ ja:
         - 外部サイト検索を設定します。
         - 検索フォームにプルダウンが表示され、外部サイト検索ができるようになります。
         - Fess のインストールが必要です。
+      elasticsearch_user:
+        - 全文検索サーバーがユーザーIDとパスワードで保護されている場合、全文検索サーバーのユーザーIDを入力します。
+      elasticsearch_password:
+        - 全文検索サーバーがユーザーIDとパスワードで保護されている場合、全文検索サーバーのパスワードを入力します。
+      elasticsearch_ssl_verify_mode:
+        - 全文検索サーバーの証明書の検証モードを選択します。
+        - 全文検索サーバーが自己証明書を用いており証明書を検証できない場合、none を選択してください。
 
     ss/addon/source_cleaner/site_setting:
       source_cleaner_unwrap_tag_state:

@@ -102,6 +102,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
         expect(notify_mail.body.multipart?).to be_falsey
         expect(mail_body(notify_mail)).to include("「#{node.name}」に入力がありました。")
         expect(mail_body(notify_mail)).to include(inquiry_answer_path(site: site, cid: node, id: answer))
+        expect(notify_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
     end
   end
@@ -152,6 +153,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
         expect(notify_mail.body.multipart?).to be_falsey
         expect(mail_body(notify_mail)).to include("「#{node.name}」に入力がありました。")
         expect(mail_body(notify_mail)).to include(inquiry_answer_path(site: site, cid: node, id: answer))
+        expect(notify_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
     end
   end

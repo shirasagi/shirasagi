@@ -6,23 +6,27 @@ describe "cms_agents_nodes_node", type: :feature, dbscope: :example, js: true do
   context "public" do
     before do
       Capybara.app_host = "http://#{site.domain}"
+
+      # 書き出しテストの後に本テストが実行されると失敗する場合があるので、念のため書き出し済みのファイルを削除
+      FileUtils.rm_rf site.path
+      FileUtils.mkdir_p site.path
     end
 
     context "parent node" do
       let!(:node) do
-        create(:cms_node_node, filename: "node", loop_format: loop_format,
+        create(:cms_node_node, cur_site: site, basename: "node", loop_format: loop_format,
           loop_html: loop_html, upper_html: upper_html, lower_html: lower_html,
           child_limit: child_limit, child_loop_html: child_loop_html,
           child_upper_html: child_upper_html, child_lower_html: child_lower_html
         )
       end
-      let!(:child_node1) { create :cms_node_page, filename: "node/child1", sort: "order" }
-      let!(:child_node2) { create :cms_node_page, filename: "node/child2", sort: "order" }
+      let!(:child_node1) { create :cms_node_page, cur_site: site, cur_node: node, basename: "child1", sort: "order" }
+      let!(:child_node2) { create :cms_node_page, cur_site: site, cur_node: node, basename: "child2", sort: "order" }
 
-      let!(:child_node1_page1) { create :cms_page, cur_node: child_node1, order: 1 }
-      let!(:child_node1_page2) { create :cms_page, cur_node: child_node1, order: 2 }
-      let!(:child_node2_page1) { create :cms_page, cur_node: child_node2, order: 1 }
-      let!(:child_node2_page2) { create :cms_page, cur_node: child_node2, order: 2 }
+      let!(:child_node1_page1) { create :cms_page, cur_site: site, cur_node: child_node1, order: 1 }
+      let!(:child_node1_page2) { create :cms_page, cur_site: site, cur_node: child_node1, order: 2 }
+      let!(:child_node2_page1) { create :cms_page, cur_site: site, cur_node: child_node2, order: 1 }
+      let!(:child_node2_page2) { create :cms_page, cur_site: site, cur_node: child_node2, order: 2 }
 
       let(:loop_format) { 'shirasagi' }
       let(:loop_html) { '#{child_items}' }
@@ -66,23 +70,21 @@ describe "cms_agents_nodes_node", type: :feature, dbscope: :example, js: true do
 
     context "other issuer" do
       let!(:issuer_node) do
-        create(:cms_node_node, filename: "issuer-node", loop_format: loop_format,
+        create(:cms_node_node, cur_site: site, basename: "issuer-node", loop_format: loop_format,
           loop_html: loop_html, upper_html: upper_html, lower_html: lower_html,
           child_limit: child_limit, child_loop_html: child_loop_html,
           child_upper_html: child_upper_html, child_lower_html: child_lower_html,
           conditions: [ node.filename ]
         )
       end
-      let!(:node) do
-        create(:cms_node_node, filename: "node")
-      end
-      let!(:child_node1) { create :cms_node_page, filename: "node/child1", sort: "order" }
-      let!(:child_node2) { create :cms_node_page, filename: "node/child2", sort: "order" }
+      let!(:node) { create(:cms_node_node, cur_site: site, basename: "node") }
+      let!(:child_node1) { create :cms_node_page, cur_site: site, cur_node: node, basename: "child1", sort: "order" }
+      let!(:child_node2) { create :cms_node_page, cur_site: site, cur_node: node, basename: "child2", sort: "order" }
 
-      let!(:child_node1_page1) { create :cms_page, cur_node: child_node1, order: 1 }
-      let!(:child_node1_page2) { create :cms_page, cur_node: child_node1, order: 2 }
-      let!(:child_node2_page1) { create :cms_page, cur_node: child_node2, order: 1 }
-      let!(:child_node2_page2) { create :cms_page, cur_node: child_node2, order: 2 }
+      let!(:child_node1_page1) { create :cms_page, cur_site: site, cur_node: child_node1, order: 1 }
+      let!(:child_node1_page2) { create :cms_page, cur_site: site, cur_node: child_node1, order: 2 }
+      let!(:child_node2_page1) { create :cms_page, cur_site: site, cur_node: child_node2, order: 1 }
+      let!(:child_node2_page2) { create :cms_page, cur_site: site, cur_node: child_node2, order: 2 }
 
       let(:loop_format) { 'shirasagi' }
       let(:loop_html) { '#{child_items}' }

@@ -5,16 +5,6 @@ class Sns::MypageController < ApplicationController
 
   private
 
-  def cms_sites
-    SS::Site.without_deleted.select do |site|
-      @cur_user.groups.active.in(name: site.groups.active.pluck(:name).map{ |name| /^#{::Regexp.escape(name)}(\/|$)/ } ).present?
-    end
-  end
-
-  def gws_sites
-    @cur_user.root_groups.select { |group| group.gws_use? }
-  end
-
   def notices
     @notices = Sys::Notice.and_public.sys_admin_notice.reorder(notice_severity: 1, released: -1, id: -1).page(1).per(5)
   end
@@ -22,12 +12,12 @@ class Sns::MypageController < ApplicationController
   public
 
   def index
-    @cms_sites = cms_sites
-    @gws_sites = gws_sites
+    @cms_sites = SS.cms_sites(@cur_user)
+    @gws_sites = SS.gws_sites(@cur_user)
   end
 
   def cms
-    @sites = cms_sites
+    @sites = SS.cms_sites(@cur_user)
 
     if @sites.size == 1
       redirect_to cms_contents_path(@sites.first)
@@ -37,7 +27,7 @@ class Sns::MypageController < ApplicationController
   end
 
   def gws
-    @sites = gws_sites
+    @sites = SS.gws_sites(@cur_user)
 
     if @sites.size == 1
       redirect_to gws_portal_path(@sites.first)

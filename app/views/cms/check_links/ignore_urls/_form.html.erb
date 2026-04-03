@@ -1,4 +1,7 @@
 <dl class="see">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :kind %><%= @model.tt :kind %></dt>
+  <dd><%= f.select :kind, @item.kind_options %></dd>
 </dl>

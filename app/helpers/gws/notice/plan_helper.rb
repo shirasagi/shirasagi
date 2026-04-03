@@ -35,12 +35,13 @@ module Gws::Notice::PlanHelper
     return unless @cur_site.notice_calendar_menu_visible?
     return unless item.term_enabled?
 
-    unless item.class.public_states.include?(item.state)
+    if !item.class.public_states.include?(item.state) || item.deleted?
+      # item は非公開または削除されている
       return only_icon ? nil : text.presence
     end
 
     if item.closed? && !@cur_site.notice_back_number_menu_visible?
-      # @item はバックナンバー。しかし、バックナンバーが非表示に設定されている
+      # item はバックナンバー。しかし、バックナンバーが非表示に設定されている
       return only_icon ? nil : text.presence
     end
 
