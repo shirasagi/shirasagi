@@ -73,6 +73,7 @@ docker/mongo-init/*
 # Docs
 docs/
 ,memo/
+,test/
 
 # Coderabbit
 coderabbit.yml
