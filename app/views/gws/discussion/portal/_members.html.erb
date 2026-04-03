@@ -1,8 +1,19 @@
-<%= render "ss/crud/addon", addon: { head: head, css_class: css_class, toggle: true } do %>
-  <% @forum.overall_members.order_by_title(@cur_site).each do |member| %>
-    <p>
-      <%= gws_public_user_long_name(member.long_name) %>
-      <%= member.title(@cur_site).try(:name) %>
-    </p>
-  <% end %>
+<%= render "ss/crud/addon", addon: { head: head, class: css_class, toggle: true } do %>
+  <div class="list-items">
+    <% @grouped_members.each do |group, members| %>
+      <div class="list-item gws-discussion-member">
+        <div class="group"><%= group.section_name %></div>
+        <ul class="members">
+          <% members.each do |member| %>
+            <li>
+              <span class="long-name"><%= gws_public_user_long_name(member.long_name) %></span>
+              <% if member.title(@cur_site) %>
+                <span class="user-title"><%= member.title(@cur_site).name %></span>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
 <% end %>

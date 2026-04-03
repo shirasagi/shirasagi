@@ -365,3 +365,16 @@ a.user-detail {
     padding: 14px 0 0;
   }
 }
+
+// Contributor
+.gws-contributor-group {
+  padding: 5px 0;
+  &:not(:last-child) {
+    border-bottom: 1px solid #dcdcdc;
+  }
+  .contributor {
+    display: inline-block;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+}
