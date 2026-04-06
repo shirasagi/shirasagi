@@ -46,9 +46,13 @@ describe MailPage::ImportJob, dbscope: :example do
       expect(log.logs).to include(/INFO -- : .* Started Job/)
       expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
+      expect(log.logs).to include(/WARN -- : .* imported: #{node.name}\(#{node.filename}\)/)
+      expect(log.logs).not_to include(/WARN -- : .* remove: #{page1.name}\(#{page1.filename}\)/)
+      expect(log.logs).not_to include(/WARN -- : .* remove: #{page2.name}\(#{page2.filename}\)/)
+      expect(log.logs).not_to include(/WARN -- : .* remove: #{page3.name}\(#{page3.filename}\)/)
+
       expect(MailPage::Page.site(site).count).to eq 4
       expect(MailPage::Page.site(site).pluck(:name)).to match_array [page1.name, page2.name, page3.name, "UTF-8"]
-
     end
   end
 
@@ -67,6 +71,11 @@ describe MailPage::ImportJob, dbscope: :example do
       log = Job::Log.first
       expect(log.logs).to include(/INFO -- : .* Started Job/)
       expect(log.logs).to include(/INFO -- : .* Completed Job/)
+
+      expect(log.logs).to include(/WARN -- : .* imported: #{node.name}\(#{node.filename}\)/)
+      expect(log.logs).to include(/WARN -- : .* remove: #{page1.name}\(#{page1.filename}\)/)
+      expect(log.logs).not_to include(/WARN -- : .* remove: #{page2.name}\(#{page2.filename}\)/)
+      expect(log.logs).not_to include(/WARN -- : .* remove: #{page3.name}\(#{page3.filename}\)/)
 
       expect(MailPage::Page.site(site).count).to eq 3
       expect(MailPage::Page.site(site).pluck(:name)).to match_array [page2.name, page3.name, "UTF-8"]
@@ -88,6 +97,11 @@ describe MailPage::ImportJob, dbscope: :example do
       log = Job::Log.first
       expect(log.logs).to include(/INFO -- : .* Started Job/)
       expect(log.logs).to include(/INFO -- : .* Completed Job/)
+
+      expect(log.logs).to include(/WARN -- : .* imported: #{node.name}\(#{node.filename}\)/)
+      expect(log.logs).to include(/WARN -- : .* remove: #{page1.name}\(#{page1.filename}\)/)
+      expect(log.logs).to include(/WARN -- : .* remove: #{page2.name}\(#{page2.filename}\)/)
+      expect(log.logs).not_to include(/WARN -- : .* remove: #{page3.name}\(#{page3.filename}\)/)
 
       expect(MailPage::Page.site(site).count).to eq 2
       expect(MailPage::Page.site(site).pluck(:name)).to match_array [page3.name, "UTF-8"]

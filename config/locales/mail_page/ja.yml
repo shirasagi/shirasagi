@@ -27,6 +27,7 @@ ja:
       mail_page/addon/mail_setting:
         mail_page_from_conditions: 送信者メールアドレス
         mail_page_to_conditions: 宛先メールアドレス
+        mail_page_category_ids: カテゴリー設定
         mail_page_removal_state: 取り込み時の削除
         arrival_days: 緊急情報表示期間
       mail_page/addon/arrival_plan:
@@ -41,6 +42,8 @@ ja:
       mail_page_to_conditions:
         - メール取込の宛先メールアドレス（To）条件を設定します。
         - メールアドレスもしくはホスト名を設定し、取り込んだメールの送信アドレスと一致した際にページを作成します。
+      mail_page_category_ids:
+        - 設定するとメールを取り込んだ際にカテゴリーを設定することができます。
       mail_page_removal_state:
         - 設定するとメールを取り込んだ際に古いページを削除することができます。
         - 取り込み時点とページの更新日時を比較して削除します。

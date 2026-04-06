@@ -5,6 +5,9 @@
   <dt><%= @model.t :mail_page_to_conditions %></dt>
   <dd><%=br @item.mail_page_to_conditions %></dd>
 
+  <dt><%= @model.t :mail_page_category_ids %></dt>
+  <dd><%=br @item.mail_page_categories.pluck(:name) %></dd>
+
   <dt><%= @model.t :mail_page_removal_state %></dt>
   <dd><%= @item.label(:mail_page_removal_state) %></dd>
 

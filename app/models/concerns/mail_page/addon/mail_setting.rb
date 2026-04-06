@@ -9,11 +9,14 @@ module MailPage::Addon
       field :mail_page_from_conditions, type: SS::Extensions::Lines, default: ""
       field :mail_page_to_conditions, type: SS::Extensions::Lines, default: ""
       field :mail_page_removal_state, type: String, default: "none"
+      embeds_ids :mail_page_categories, class_name: "Category::Node::Base"
       field :arrival_days, type: Integer, default: 2
 
       validates :mail_page_removal_state, inclusion: { in: %w(none 1.day 1.week), allow_blank: true }
 
-      permit_params :mail_page_from_conditions, :mail_page_to_conditions, :mail_page_removal_state, :arrival_days
+      permit_params :mail_page_from_conditions, :mail_page_to_conditions,
+        :mail_page_removal_state, :arrival_days,
+        mail_page_category_ids: []
     end
 
     def mail_page_removal_state_options
@@ -32,6 +35,7 @@ module MailPage::Addon
       page.layout = self.page_layout || self.layout
       page.user_id = self.user_id
       page.group_ids = self.group_ids
+      page.category_ids = self.mail_page_category_ids
 
       page.name = mail.subject
       page.html = mail_body_to_html(extract_body(mail))
@@ -54,15 +58,15 @@ module MailPage::Addon
       return if duration.nil?
 
       cond = []
-      cond << { filename: /^#{filename}\// }
-      cond << { depth: depth + 1 }
+      cond << { filename: /^#{self.filename}\// }
+      cond << { depth: self.depth + 1 }
       cond << { updated: { "$lt" => (Time.zone.now - duration) } }
 
       base_criteria = MailPage::Page.site(site).and(cond)
       all_ids = base_criteria.pluck(:id)
       all_ids.each_slice(PER_BATCH) do |ids|
         base_criteria.in(id: ids).each do |page|
-          Rails.logger.warn("remove : #{page.name}(#{page.filename})")
+          Rails.logger.warn("remove: #{page.name}(#{page.filename})")
           page.destroy
         end
       end
