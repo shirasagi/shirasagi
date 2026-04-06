@@ -9,7 +9,7 @@ class Cms::LoopSettingsController < ApplicationController
   private
 
   def search_params
-    params.require(:s).permit(:html_format, :loop_html_setting_type, :keyword).tap do |s|
+    params.fetch(:s, {}).permit(:html_format, :loop_html_setting_type, :keyword).tap do |s|
       # 検索条件の正規化:
       # - 検索フォームの初期値は template
       # - shirasagi は template 固定
