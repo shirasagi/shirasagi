@@ -128,16 +128,10 @@ class Event::Agents::Nodes::PageController < ApplicationController
   end
 
   def index_daily_events
-    node_category_ids = @cur_node.st_categories.pluck(:id)
-    @events = events([@date.mongoize]).map do |page|
-      [
-        page,
-        page.categories.in(id: node_category_ids).and_public(@cur_date).order_by(order: 1)
-      ]
-    end
-
+    start_date = @date
+    close_date = @date
+    set_events(start_date..close_date)
     @cur_node.window_name ||= "#{@cur_node.name} #{I18n.l(@date, format: :long)}"
-
     render :daily
   end
 
@@ -151,7 +145,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @events = {}
     st_categories = @cur_node.st_categories.and_public(@cur_date).order_by(order: 1).to_a
     dates.each do |date|
-      @events[date] = Event::MonthCell.new(@cur_node, @month, date, st_categories)
+      @events[date] = Event::Cell.new(@cur_node, @month, date, st_categories)
     end
     dates = dates.map { |m| m.mongoize }
     events(dates).each do |page|

@@ -96,6 +96,36 @@ module Event::CalendarListHelper
     HTML
   end
 
+  def default_daily_list_loop_liquid
+    <<~HTML
+      {% for event in events %}
+        <article class="{% if event.page.new? %}new{% endif %}">
+          {% if event.category %}
+            <div class="data {{ event.category.basename }}">
+              <a href="{{ event.category.url }}">{{ event.category.name }}</a>
+            </div>
+          {% endif %}
+          <header>
+            <h2>
+              <a href="{{ event.url }}">
+                <span class="name">{{ event.name }}</span>
+                {% for specific in event.specifics %}
+                  {% if specific.datetime? %}
+                    <span class="{{ specific.kind }}">
+                      <time datetime="{{ specific.start_at | ss_time: "iso" }}" class="start">{{ specific.start_at | ss_time: "h_mm" }}</time>
+                      <span class="unit">-</span>
+                      <time datetime="{{ specific.end_at | ss_time: "iso" }}" class="end">{{ specific.end_at | ss_time: "h_mm" }}</time>
+                    </span>
+                  {% endif %}
+                {% endfor %}
+              </a>
+            </h2>
+          </header>
+        </article>
+      {% endfor %}
+    HTML
+  end
+
   def example_table_day_loop_liquid
     default_table_day_loop_liquid
   end
@@ -104,8 +134,11 @@ module Event::CalendarListHelper
     default_list_day_loop_liquid
   end
 
-  def render_table_day_events(date, cell)
-    source = @cur_node.table_day_loop_liquid || default_table_day_loop_liquid
+  def example_daily_list_loop_liquid
+    default_daily_list_loop_liquid
+  end
+
+  def render_calendar_events(date, cell, source)
     assigns = cell.assigns
     assigns.merge!({
       "date_label" => "#{date.month}#{t_date('month')}#{date.day}#{t_date('day')}",
@@ -115,14 +148,18 @@ module Event::CalendarListHelper
     render_list_with_liquid(source, assigns)
   end
 
+  def render_table_day_events(date, cell)
+    render_calendar_events(date, cell,
+      (@cur_node.table_day_loop_liquid.presence || default_table_day_loop_liquid))
+  end
+
   def render_list_day_events(date, cell)
-    source = @cur_node.list_day_loop_liquid || default_list_day_loop_liquid
-    assigns = cell.assigns
-    assigns.merge!({
-      "date_label" => "#{date.month}#{t_date('month')}#{date.day}#{t_date('day')}",
-      "wday_label" => t_wday(date),
-      "dl_class" => event_dl_class(date)
-    })
-    render_list_with_liquid(source, assigns)
+    render_calendar_events(date, cell,
+      (@cur_node.list_day_loop_liquid.presence || default_list_day_loop_liquid))
+  end
+
+  def render_daily_list_events(date, cell)
+    render_calendar_events(date, cell,
+      (@cur_node.daily_list_loop_liquid.presence || default_daily_list_loop_liquid))
   end
 end

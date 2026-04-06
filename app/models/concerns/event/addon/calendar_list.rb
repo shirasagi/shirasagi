@@ -9,9 +9,10 @@ module Event::Addon
       field :event_display_tabs, type: Array, default: []
       field :table_day_loop_liquid, type: String
       field :list_day_loop_liquid, type: String
+      field :daily_list_loop_liquid, type: String
 
       permit_params :event_display, event_display_tabs: []
-      permit_params :table_day_loop_liquid, :list_day_loop_liquid
+      permit_params :table_day_loop_liquid, :list_day_loop_liquid, :daily_list_loop_liquid
 
       validates :event_display, inclusion: { in: %w(list table map) }
       validate :validate_event_display_tabs

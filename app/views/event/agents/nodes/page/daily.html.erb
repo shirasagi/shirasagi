@@ -19,26 +19,8 @@
 </nav>
 
 <div id="event-list">
-  <% @events.each do |page, categories| %>
-    <div class="page">
-      <article class="<%= @cur_node.render_loop_html(page, html: '#{new}') %>">
-        <header>
-          <h2><%= link_to (page.event_name.present? ? page.event_name : page.name), page.url %></h2>
-        </header>
-        <% if page.summary_html.present? %>
-          <p><%= raw page.summary_html %></p>
-        <% end %>
-        <nav class="categories" aria-label="<%= t("event.category_of_the_event") %>">
-          <ul>
-            <% categories.entries.sort_by{ |c| c.order }.each do |cate| %>
-              <li class="<%= cate.basename %>">
-                <%= link_to cate.name, cate.url %>
-              </li>
-            <% end %>
-          </ul>
-        </nav>
-      </article>
-    </div>
+  <% @events.each do |date, cell| %>
+    <%= render_daily_list_events(date, cell) %>
   <% end %>
 </div>
 

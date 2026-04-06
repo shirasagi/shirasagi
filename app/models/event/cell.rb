@@ -1,4 +1,4 @@
-class Event::MonthCell
+class Event::Cell
   include SS::Liquidization
 
   attr_accessor :node, :request_month,
@@ -22,6 +22,10 @@ class Event::MonthCell
   def add(page)
     categories = page.category_ids.map { |id| category_hash[id] }.compact.sort_by(&:order)
     @events << Event.new(date, page, categories)
+  end
+
+  def today?
+    date.to_date == Time.zone.today
   end
 
   def holiday?
@@ -61,6 +65,7 @@ class Event::MonthCell
     export :day
     export :events
     export :categories
+    export :today?
     export :holiday?
     export :holiday_name
     export :substitute_html
@@ -73,7 +78,7 @@ class Event::MonthCell
     %w(
       date year month day
       events categories
-      holiday? holiday_name
+      today? holiday? holiday_name
       substitute_html request_month
       current_month? active? daily_url
     ).index_with { |name| send(name) }
