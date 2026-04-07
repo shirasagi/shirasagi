@@ -10,7 +10,7 @@ services:
       dockerfile: .devcontainer/Dockerfile
     volumes:
       - ..:/workspaces/shirasagi:cached
-    command: sleep infinity
+    command: sleep infinity # 開発コンテナが勝手にダウンしない為に設定する
     ports:
       - ${PORT:-3000}:${PORT:-3000}
     depends_on:
