@@ -74,23 +74,6 @@
     }
   };
 
-  var showLoopHtmlLoading = function($textarea, message) {
-    if (!$textarea || $textarea.length === 0) {
-      return;
-    }
-
-    var $msg = $textarea.data('loop-html-message');
-    if (!$msg || $msg.length === 0) {
-      $msg = $('<p class="loop-html-fetch-message" role="status" aria-live="polite" style="margin-top: 4px; display: none;"></p>');
-      $msg.insertAfter($textarea);
-      $textarea.data('loop-html-message', $msg);
-    }
-
-    $msg.removeClass('is-error').addClass('is-loading')
-      .css('color', '#666')
-      .text(message || <%= t("ss.notice.loading").to_json.html_safe %>)
-      .show();
-  };
 
   var showLoopHtmlError = function($textarea, message) {
     if (!$textarea || $textarea.length === 0) {
@@ -143,7 +126,6 @@
       $snippetSelect.prop('disabled', true);
     }
     setLoopHtmlLoadingState($loopHtmlTextarea, true);
-    showLoopHtmlLoading($loopHtmlTextarea);
 
     var url = '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>'.replace(':id', encodeURIComponent(loopSettingId));
     var xhr = $.ajax({
