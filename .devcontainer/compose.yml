@@ -29,6 +29,8 @@ services:
         required: false
     volumes:
       - db_data:/data/db
+    #ports:
+    #  - 27017:27017
 
   mail:
     image: ghcr.io/shirasagi/mail:latest
