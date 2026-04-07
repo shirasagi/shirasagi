@@ -196,39 +196,46 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example, js: true 
   end
 
   context "daily" do
-    let(:event_display) { %w(list table).sample }
+    let(:event_display) { 'list' }
     let(:index_url) { "#{node.full_url}#{today.strftime('%Y%m%d')}/" }
 
     context "with default liquid" do
       it "#index_daily" do
         visit index_url
         within "#event-list" do
-          expect(page).to have_selector("article", count: 3)
-          within all("article")[0] do
+          expect(page).to have_selector("div.page", count: 3)
+          within all("div.page")[0] do
             # name
             expect(page).to have_link(item1.event_name)
             # category
-            expect(page).to have_selector("div.data", count: 1)
-            expect(page).to have_link(cate2.name)
+            within "nav.categories" do
+              expect(page).to have_selector("li", count: 2)
+              within all("li")[0] do
+                expect(page).to have_link(cate2.name)
+              end
+              within all("li")[1] do
+                expect(page).to have_link(cate1.name)
+              end
+            end
             # datetime
             expect(page).to have_no_css(".datetime")
           end
-          within all("article")[1] do
+          within all("div.page")[1] do
             # name
             expect(page).to have_link(item2.event_name)
             # category
-            expect(page).to have_no_selector("div.data")
+            expect(page).to have_no_css("nav.categories")
             # datetime
             within ".datetime" do
               expect(page).to have_css("time.start", text: I18n.l(event_recur2[:start_at], format: :h_mm))
               expect(page).to have_css("time.end", text: I18n.l(event_recur2[:end_at], format: :h_mm))
             end
           end
-          within all("article")[2] do
+          within all("div.page")[2] do
             # name
             expect(page).to have_link(item3.event_name)
             # category
-            expect(page).to have_no_selector("div.data")
+            expect(page).to have_no_css("nav.categories")
             # datetime
             within ".datetime" do
               expect(page).to have_css("time.start", text: I18n.l(event_recur3[:start_at], format: :h_mm))

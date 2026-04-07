@@ -99,29 +99,40 @@ module Event::CalendarListHelper
   def default_daily_list_loop_liquid
     <<~HTML
       {% for event in events %}
-        <article class="{% if event.page.new? %}new{% endif %}">
-          {% if event.category %}
-            <div class="data {{ event.category.basename }}">
-              <a href="{{ event.category.url }}">{{ event.category.name }}</a>
-            </div>
-          {% endif %}
-          <header>
-            <h2>
-              <a href="{{ event.url }}">
-                <span class="name">{{ event.name }}</span>
-                {% for specific in event.specifics %}
-                  {% if specific.datetime? %}
-                    <span class="{{ specific.kind }}">
-                      <time datetime="{{ specific.start_at | ss_time: "iso" }}" class="start">{{ specific.start_at | ss_time: "h_mm" }}</time>
-                      <span class="unit">-</span>
-                      <time datetime="{{ specific.end_at | ss_time: "iso" }}" class="end">{{ specific.end_at | ss_time: "h_mm" }}</time>
-                    </span>
-                  {% endif %}
-                {% endfor %}
-              </a>
-            </h2>
-          </header>
-        </article>
+        <div class="page">
+          <article class="{% if event.page.new? %}new{% endif %}">
+            <header>
+              <h2>
+                <a href="{{ event.url }}">
+                  <span class="name">{{ event.name }}</span>
+                  {% for specific in event.specifics %}
+                    {% if specific.datetime? %}
+                      <span class="{{ specific.kind }}">
+                        <time datetime="{{ specific.start_at | ss_time: "iso" }}" class="start">{{ specific.start_at | ss_time: "h_mm" }}</time>
+                        <span class="unit">-</span>
+                        <time datetime="{{ specific.end_at | ss_time: "iso" }}" class="end">{{ specific.end_at | ss_time: "h_mm" }}</time>
+                      </span>
+                    {% endif %}
+                  {% endfor %}
+                </a>
+              </h2>
+            </header>
+            {% if event.page.summary %}
+              <div class="summary">{{ event.page.summary }}</div>
+            {% endif %}
+            {% if event.category %}
+              <nav class="categories" aria-label="イベントカテゴリー">
+                <ul>
+                  {% for category in event.categories %}
+                    <li class="{{ category.basename }}">
+                      <a href="{{ category.url }}">{{ category.name }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </nav>
+            {% endif %}
+          </article>
+        </div>
       {% endfor %}
     HTML
   end
