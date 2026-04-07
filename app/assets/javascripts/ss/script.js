@@ -72,6 +72,7 @@
 //= require cms/lib/form
 //= require cms/lib/source_cleaner
 //= require cms/lib/template_form
+//= require cms/lib/loop_setting_loader
 //= require cms/lib/column_file_upload
 //= require cms/lib/column_free
 //= require cms/lib/column_list
