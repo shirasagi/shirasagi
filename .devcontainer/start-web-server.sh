@@ -38,7 +38,7 @@ wait_for_port() {
   local i
 
   for i in $(seq 1 "$retries"); do
-    if ss -ltn | rg -q ":${port}\\b"; then
+    if ss -ltn | grep -P -q ":${port}\\b"; then
       echo "Web server is listening on port ${port} (${server})."
       return 0
     fi

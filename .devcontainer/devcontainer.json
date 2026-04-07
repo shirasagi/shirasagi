@@ -6,8 +6,7 @@
 
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/rails/devcontainer/features/activestorage": {},
-    "ghcr.io/devcontainers/features/node:1": {}
+    "ghcr.io/rails/devcontainer/features/activestorage": {}
   },
 
   "containerEnv": {
@@ -16,8 +15,11 @@
     "TZ": "Asia/Tokyo"
   },
 
+  // ローカルPCからアクセスできるように、コンテナ内のポートを転送する
   "forwardPorts": [3000, 9200, 10143, 10587],
 
+  // コンテナ初回作成時に一度だけ実行するセットアップ
   "postCreateCommand": "bin/setup --skip-server",
+  // コンテナ起動のたびに Web サーバーを立ち上げる
   "postStartCommand": ".devcontainer/start-web-server.sh"
 }
