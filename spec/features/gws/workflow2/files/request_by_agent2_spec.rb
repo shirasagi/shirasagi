@@ -51,6 +51,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       user2.save!
 
       user1_group.add_to_set(superior_user_ids: user1_superior.id)
+      # user2 はグループ長のため user2_group の上長を user2 にセット
       user2_group.add_to_set(superior_user_ids: user2.id)
     end
 
