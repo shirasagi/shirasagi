@@ -134,7 +134,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
           expect(item.workflow_state).to eq 'request'
           expect(item.workflow_approvers.count).to eq 1
           expect(item.workflow_approvers).to include(
-            { level: 1, user_type: "superior", user_id: user2_superior.id, state: 'request', comment: be_blank },
+            { level: 1, user_type: "superior", user_id: user2_superior.id, state: 'request', comment: be_blank }
           )
         end
 
@@ -229,7 +229,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
           expect(item.workflow_state).to eq 'request'
           expect(item.workflow_approvers.count).to eq 1
           expect(item.workflow_approvers).to include(
-            { level: 1, user_type: "superior", user_id: user2_superior.id, state: 'request', comment: be_blank },
+            { level: 1, user_type: "superior", user_id: user2_superior.id, state: 'request', comment: be_blank }
           )
         end
 
