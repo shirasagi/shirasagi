@@ -19,5 +19,5 @@
   "forwardPorts": [3000, 9200, 10143, 10587],
 
   "postCreateCommand": "bin/setup --skip-server",
-  "postStartCommand": "bundle exec puma -d"
+  "postStartCommand": ".devcontainer/start-web-server.sh"
 }
