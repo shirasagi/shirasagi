@@ -45,8 +45,7 @@ class Gws::Workflow2::Frames::ApproversController < ApplicationController
   end
 
   def use_agent?
-    return false unless @item.agent_enabled?
-    @cur_user.gws_role_permit_any?(@cur_site, :agent_all_gws_workflow_files, :agent_private_gws_workflow_files)
+    @item.agent_enabled?
   end
 
   def default_route_id
