@@ -8,8 +8,13 @@ class SS::Migration20260403000000
     ids.each do |id|
       site = Cms::Site.find(id) rescue nil
       next if site.nil?
-      site.redirect_link_state = "enabled"
-      site.update
+
+      begin
+        site.redirect_link_state = "enabled"
+        site.update!
+      rescue => e
+        Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      end
     end
   end
 end
