@@ -7,6 +7,15 @@ RSpec.describe SS::Migration20260403000000, dbscope: :example do
   let(:site3) { create :cms_site, name: unique_id, host: unique_id, domains: "#{unique_id}.example.jp" }
 
   context "not exists cms.yml setting" do
+    before do
+      @disable_redirect_link = SS.config.cms.disable_redirect_link
+      SS.config.replace_value_at(:cms, :disable_redirect_link, nil)
+    end
+
+    after do
+      SS.config.replace_value_at(:cms, :disable_redirect_link, @disable_redirect_link)
+    end
+
     it do
       expect(site1.redirect_link_enabled?).to be_falsey
       expect(site2.redirect_link_enabled?).to be_falsey
