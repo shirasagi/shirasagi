@@ -35,6 +35,7 @@ class MailPage::ImportJob < Cms::ApplicationJob
         node.urgency_switch_layout
         put_log("switch layout")
       end
+      node.remove_expired_pages
     end
   end
 end
