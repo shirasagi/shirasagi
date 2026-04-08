@@ -45,6 +45,13 @@
     <% end %>
   </dd>
 
+  <dt><%= @model.t :daily_list_loop_liquid %></dt>
+  <dd>
+    <% if @item.daily_list_loop_liquid.present? %>
+      <%= text_area_tag :daily_list_loop_liquid, @item.daily_list_loop_liquid, class: "html", style: "height: 240px;" %>
+    <% end %>
+  </dd>
+
   <dt><%= @model.t :new_days %></dt>
   <dd><%= @item.send :new_days %> <%= t "datetime.prompts.day" %></dd>
 </dl>
