@@ -28,7 +28,7 @@ describe Gws::Elasticsearch::Indexer::MonitorTopicJob, dbscope: :example, es: tr
 
       omittable_fields = %i[
         id groups group_names member_ids member_group_ids member_custom_group_ids
-        readable_member_ids readable_custom_group_ids text_index data file site_id attachment]
+        readable_member_ids readable_custom_group_ids text_index data file site_id attachment keywords description]
       unhandled_keys.reject! { |key| omittable_fields.include?(key.to_sym) }
       expect(unhandled_keys).to be_blank
     end
@@ -55,7 +55,7 @@ describe Gws::Elasticsearch::Indexer::MonitorTopicJob, dbscope: :example, es: tr
 
       omittable_fields = %i[
         id mode user_name groups group_names text member_ids member_group_ids member_custom_group_ids
-        readable_member_ids readable_custom_group_ids text_index site_id attachment]
+        readable_member_ids readable_custom_group_ids text_index site_id attachment keywords description]
       unhandled_keys.reject! { |key| omittable_fields.include?(key.to_sym) }
       expect(unhandled_keys).to be_blank
     end
