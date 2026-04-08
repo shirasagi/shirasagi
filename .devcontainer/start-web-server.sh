@@ -21,7 +21,11 @@ stop_pidfile() {
     pid="$(cat "$pidfile" 2>/dev/null || true)"
     if [[ -n "${pid}" ]] && kill -0 "$pid" 2>/dev/null; then
       kill "-$signal" "$pid" 2>/dev/null || true
-      sleep 1
+      local wait_count=0
+      while kill -0 "$pid" 2>/dev/null && [[ "$wait_count" -lt 10 ]]; do
+        sleep 1
+        wait_count=$((wait_count + 1))
+      done
     fi
     rm -f "$pidfile"
   fi
@@ -35,9 +39,8 @@ stop_existing_servers() {
 
 wait_for_port() {
   local retries=30
-  local i
 
-  for i in $(seq 1 "$retries"); do
+  for _ in $(seq 1 "$retries"); do
     if ss -ltn | grep -P -q ":${port}\\b"; then
       echo "Web server is listening on port ${port} (${server})."
       return 0
