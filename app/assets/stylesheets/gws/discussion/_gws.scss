@@ -167,4 +167,19 @@
   .list-item {
     padding: 15px;
   }
+  .gws-discussion-member {
+    display: block;
+    .group {
+      font-weight: 600;
+    }
+    .members {
+      padding-left: 10px;
+      li {
+        list-style: disc;
+        .user-title {
+          padding-left: 10px;
+        }
+      }
+    }
+  }
 }
