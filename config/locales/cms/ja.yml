@@ -64,6 +64,7 @@ ja:
     loop_html: ループHTML
     labels:
       snippets: スニペット
+      template: テンプレート
     max_file_size: 最大ファイルサイズ
     max_file_size_setting: 最大ファイルサイズ設定
     image_resize: 画像リサイズ
@@ -362,6 +363,7 @@ ja:
       twitter_post_enabled: X(旧Twitter)投稿が有効になっています。連携しない場合は、設定を解除してください。
       source_clean: "ソースクリーニングを実行してよろしいですか。\nソースクリーニングにより表示が崩れる可能性があります。"
       change_form: 定型フォームを変更してよろしいですか？
+      switch_to_loop_setting_discards_direct_input: テンプレートを適用すると直接入力した内容は破棄されます。よろしいですか？
       line_apply_richmenu: リッチメニューの反映処理を開始してよろしいですか？
       disallow_edit_ignore_syntax_check: アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。
       confirm_move_changes: 移動により影響を受けるコンテンツを確認しました。
@@ -628,6 +630,9 @@ ja:
       loop_format:
         shirasagi: SHIRASAGI
         liquid: Liquid
+      loop_html_setting_type:
+        template: テンプレート
+        snippet: スニペット
       alignment:
         flow: 自動
         left: 左
@@ -1296,6 +1301,7 @@ ja:
         description: 説明
         order: 並び順
         html_format: HTML種別
+        loop_html_setting_type: 種別
       cms/command:
         name: タイトル
         description: 説明
@@ -2678,6 +2684,10 @@ ja:
 
     cms/loop_setting:
       html_format: *loop_format
+      loop_html_setting_type:
+        - "Liquid 形式の用途を選択します。"
+        - "テンプレート: ループ HTML 全体をループ単位のテンプレートとして使用します。"
+        - "スニペット: 部品として、ループ HTML 内の任意の場所に挿入して使用します。"
 
     cms/addon/tabs:
       conditions:

@@ -31,9 +31,19 @@ module Cms::FormHelper
     items
   end
 
-  def ancestral_loop_settings
+  def ancestral_loop_settings(format = nil)
     items = []
-    settings = Cms::LoopSetting.site(@cur_site).shirasagi
+    settings = Cms::LoopSetting.site(@cur_site)
+
+    settings = case format.to_s
+    when 'liquid'
+      settings.liquid.template_type
+    when 'shirasagi', ''
+      settings.shirasagi
+    else
+      settings
+    end
+
     settings.each do |item|
       items << [item.name, item.id]
     end
@@ -42,7 +52,7 @@ module Cms::FormHelper
 
   def ancestral_html_settings_liquid
     items = []
-    settings = Cms::LoopSetting.site(@cur_site).liquid
+    settings = Cms::LoopSetting.site(@cur_site).liquid.snippet_type
     settings.each do |item|
       items << [item.name, item.id, { "data-snippet" => item.html.to_s }]
     end
@@ -60,6 +70,42 @@ module Cms::FormHelper
     st_forms = st_forms.and_public
     st_forms = st_forms.allow(:read, @cur_user, site: @cur_site)
     st_forms.order_by(update: 1)
+  end
+
+  # 指定データ配列(loop_setting_option_list)を select用optgroup(option)構造へ変換
+  #
+  # items: [["test/test1", id1], ["test/test2", id2], ["root", id3]]
+  # 戻り値: HTML Safe
+  def options_with_optgroup_for_loop_settings(items, input_direct_label: nil)
+    input_direct_label ||= t('cms.input_directly')
+    groups = Hash.new { |h, k| h[k] = [] }
+    nogroup = []
+
+    items.each do |name, id|
+      if name.include?('/')
+        group, leaf = name.split('/', 2)
+        groups[group] << [leaf, id]
+      else
+        nogroup << [name, id]
+      end
+    end
+
+    html = []
+    html << tag.option(input_direct_label, value: '')
+
+    nogroup.each do |name, id|
+      html << tag.option(name, value: id)
+    end
+
+    groups.keys.sort.each do |group|
+      html << tag.optgroup(label: group, class: 'title') do
+        groups[group].map do |leaf, id|
+          tag.option(leaf, value: id)
+        end.join.html_safe
+      end
+    end
+
+    safe_join(html)
   end
 
   # 指定データ配列(snippet_option_list)を select用optgroup(option)構造へ変換

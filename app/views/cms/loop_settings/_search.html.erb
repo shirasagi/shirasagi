@@ -1,0 +1,13 @@
+<% @s ||= OpenStruct.new params[:s] %>
+<div class="list-head-search">
+  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
+    <%= f.select :html_format, @model.new.html_format_options,
+          { include_blank: @model.t(:html_format) },
+          { data: { controller: "ss--submit-on-change" } } %>
+    <%= f.select :loop_html_setting_type, @model.new.loop_html_setting_type_options,
+          { include_blank: @model.t(:loop_html_setting_type) },
+          { data: { controller: "ss--submit-on-change" } } %>
+    <%= f.text_field :keyword %>
+    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+  <% end %>
+</div>

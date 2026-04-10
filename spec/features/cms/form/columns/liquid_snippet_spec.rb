@@ -11,34 +11,35 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
   let!(:liquid_setting_primary) do
     create(:cms_loop_setting,
       site: site,
-      html_format: "liquid",
-      state: "public",
+      html_format: 'liquid',
+      state: 'public',
       order: 30,
-      name: "Column Snippet Primary",
+      name: 'Column Snippet Primary',
       html: snippet_html_primary)
   end
 
   let!(:liquid_setting_secondary) do
     create(:cms_loop_setting,
       site: site,
-      html_format: "liquid",
-      state: "public",
+      html_format: 'liquid',
+      state: 'public',
       order: 10,
-      name: "Column Snippet Secondary",
+      name: 'Column Snippet Secondary',
       html: snippet_html_secondary)
   end
 
   let!(:liquid_setting_closed) do
     create(:cms_loop_setting,
       site: site,
-      html_format: "liquid",
-      state: "closed",
-      name: "Column Snippet Closed")
+      html_format: 'liquid',
+      state: 'closed',
+      name: 'Column Snippet Closed')
   end
 
   before do
     login_cms_user
   end
+
   def loop_snippet_select
     find('.loop-snippet-selector', visible: :all)
   end
@@ -47,13 +48,35 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
     select option_text, from: loop_snippet_select[:id]
   end
 
-  it "allows inserting liquid snippets into column layout field" do
+  def editor_or_textarea_value(field_id)
+    page.evaluate_script(<<~JS)
+      (function() {
+        var el = document.getElementById("#{field_id}");
+        if (!el) { return null; }
+
+        var editor = $(el).data('editor');
+        if (editor && typeof editor.getValue === 'function') {
+          return editor.getValue();
+        }
+
+        return el.value;
+      })();
+    JS
+  end
+
+  def wait_for_editor_or_textarea_value(field_id, expected_substring, timeout: Capybara.default_max_wait_time)
+    Selenium::WebDriver::Wait.new(timeout: timeout).until do
+      editor_or_textarea_value(field_id).to_s.include?(expected_substring)
+    end
+  end
+
+  it 'allows inserting liquid snippets into column layout field' do
     visit cms_form_path(site, form)
 
     click_on I18n.t('cms.buttons.manage_columns')
 
     within '.gws-column-list-toolbar[data-placement="top"]' do
-      wait_for_event_fired("gws:column:added") { click_on I18n.t('cms.columns.cms/free') }
+      wait_for_event_fired('gws:column:added') { click_on I18n.t('cms.columns.cms/free') }
     end
     wait_for_notice I18n.t('ss.notice.saved')
 
@@ -66,10 +89,6 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
     wait_for_cbox_opened { find('.btn-gws-column-item-detail').click }
 
     within_dialog do
-      # Wait for the dialog to fully load
-      sleep 1
-
-      # Find the layout field in the dialog
       expect(page).to have_css('.loop-snippet-selector', wait: 10)
 
       option_texts = loop_snippet_select.all('option').map(&:text)
@@ -80,21 +99,50 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       ordered_names = option_texts.reject(&:blank?)
       expect(ordered_names.index(liquid_setting_secondary.name)).to be < ordered_names.index(liquid_setting_primary.name)
 
-      fill_in_code_mirror 'item[layout]', with: "existing-column-layout"
+      fill_in_code_mirror 'item[layout]', with: 'existing-column-layout'
 
-      # Ensure CodeMirror value is synced to textarea before selecting snippet
       textarea = find('#item_layout', visible: false)
       page.execute_script("$(arguments[0]).data('editor')?.save()", textarea)
       wait_for_js_ready
 
       select_loop_snippet(liquid_setting_secondary.name)
-
-      # Wait for JavaScript to process the change event and insert snippet
       wait_for_js_ready
 
       textarea_value = find('#item_layout', visible: false).value
-      expect(textarea_value).to include("existing-column-layout")
+      expect(textarea_value).to include('existing-column-layout')
       expect(textarea_value).to include(snippet_html_secondary)
+    end
+  end
+
+  it 'loads selected liquid loop setting into column layout without loading translation message' do
+    visit cms_form_path(site, form)
+
+    click_on I18n.t('cms.buttons.manage_columns')
+
+    within '.gws-column-list-toolbar[data-placement="top"]' do
+      wait_for_event_fired('gws:column:added') { click_on I18n.t('cms.columns.cms/free') }
+    end
+    wait_for_notice I18n.t('ss.notice.saved')
+
+    within '.gws-column-form' do
+      fill_in 'item[name]', with: 'Test Column With Loop Setting'
+      click_on I18n.t('ss.buttons.save')
+    end
+    wait_for_notice I18n.t('ss.notice.saved')
+
+    wait_for_cbox_opened { find('.btn-gws-column-item-detail').click }
+
+    within_dialog do
+      expect(page).to have_css('.loop-setting-selector', wait: 10)
+
+      loop_setting_select = find('.loop-setting-selector', visible: :all)
+      select liquid_setting_primary.name, from: loop_setting_select[:id]
+      wait_for_editor_or_textarea_value('item_layout', 'column-snippet-primary')
+
+      expect(editor_or_textarea_value('item_layout')).to include('column-snippet-primary')
+      expect(find('.loop-snippet-selector', visible: :all)).to be_disabled
+      expect(page).to have_no_css('.translation_missing[title*="ss.notice.loading"]')
+      expect(page).to have_no_content('translation missing: ja.ss.notice.loading')
     end
   end
 end
