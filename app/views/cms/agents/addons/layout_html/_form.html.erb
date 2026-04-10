@@ -103,11 +103,11 @@
     // エラーメッセージを取得する関数
     var getErrorMessage = function(xhr) {
       if (xhr.status === 404) {
-        return '<%= I18n.t("cms.notices.loop_html_not_found") %>';
+        return <%= I18n.t("cms.notices.loop_html_not_found").to_json.html_safe %>;
       } else if (xhr.status >= 500) {
-        return '<%= I18n.t("cms.notices.loop_html_server_error") %>';
+        return <%= I18n.t("cms.notices.loop_html_server_error").to_json.html_safe %>;
       }
-      return '<%= I18n.t("cms.notices.loop_html_load_error") %>';
+      return <%= I18n.t("cms.notices.loop_html_load_error").to_json.html_safe %>;
     };
 
     // エラーメッセージを表示する関数
@@ -123,10 +123,10 @@
       });
 
       // ヘッダー（シラサギの標準キーを使用）
-      var $errorHeader = $('<h2>').text('<%= I18n.t("errors.template.header.one") %>');
+      var $errorHeader = $('<h2>').text(<%= I18n.t("errors.template.header.one").to_json.html_safe %>);
 
       // 本文（シラサギの標準キーを使用）
-      var $errorBody = $('<p>').text('<%= I18n.t("errors.template.body") %>');
+      var $errorBody = $('<p>').text(<%= I18n.t("errors.template.body").to_json.html_safe %>);
 
       // エラーメッセージリスト
       var $errorList = $('<ul>');
@@ -142,7 +142,7 @@
         var $retryButton = $('<button>', {
           type: 'button',
           class: 'btn btn-retry',
-          text: '<%= I18n.t("ss.buttons.reload") %>'
+          text: <%= I18n.t("ss.buttons.reload").to_json.html_safe %>
         }).on('click', function() {
           clearLoopHtmlError();
           retryCallback();
