@@ -6,41 +6,40 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
   let(:html) { unique_id }
   let(:html2) { unique_id }
   def loop_snippet_select
-  find('.loop-snippet-selector', visible: :all)
+    find('.loop-snippet-selector', visible: :all)
 end
 
-def select_loop_snippet(option_text)
-  select option_text, from: loop_snippet_select[:id]
-end
-
-def editor_or_textarea_value(field_id)
-  page.evaluate_script(<<~JS)
-    (function() {
-      var el = document.getElementById("#{field_id}");
-      if (!el) { return null; }
-
-      var editor = $(el).data('editor');
-      if (editor && typeof editor.getValue === 'function') {
-        return editor.getValue();
-      }
-
-      return el.value;
-    })();
-  JS
-end
-
-def wait_for_editor_or_textarea_value(field_id, expected_substring, timeout: Capybara.default_max_wait_time)
-  Selenium::WebDriver::Wait.new(timeout: timeout).until do
-    editor_or_textarea_value(field_id).to_s.include?(expected_substring)
+  def select_loop_snippet(option_text)
+    select option_text, from: loop_snippet_select[:id]
   end
-end
 
-context 'loop html snippet functionality' do
+  def editor_or_textarea_value(field_id)
+    page.evaluate_script(<<~JS)
+      (function() {
+        var el = document.getElementById("#{field_id}");
+        if (!el) { return null; }
+
+        var editor = $(el).data('editor');
+        if (editor && typeof editor.getValue === 'function') {
+          return editor.getValue();
+        }
+
+        return el.value;
+      })();
+    JS
+  end
+
+  def wait_for_editor_or_textarea_value(field_id, expected_substring, timeout: Capybara.default_max_wait_time)
+    Selenium::WebDriver::Wait.new(timeout: timeout).until do
+      editor_or_textarea_value(field_id).to_s.include?(expected_substring)
+    end
+  end
+
+  context 'loop html snippet functionality' do
 
     let!(:liquid_setting) do
-      create(:cms_loop_setting,
+      create(:cms_loop_setting, :liquid, :snippet_type,
         site: site,
-        html_format: "liquid",
         html: "{% for item in items %}<div class='loop-item'>{{ item.name }}</div>{% endfor %}",
         state: "public",
         order: 20,
@@ -49,9 +48,8 @@ context 'loop html snippet functionality' do
     end
 
     let!(:shirasagi_setting) do
-      create(:cms_loop_setting,
+      create(:cms_loop_setting, :shirasagi, :snippet_type,
         site: site,
-        html_format: "shirasagi",
         html: "<div class='shirasagi-item'>##{name}##</div>",
         state: "public",
         name: "Test Shirasagi Setting #{unique_id}"
@@ -239,9 +237,8 @@ context 'loop html snippet functionality' do
 
   context 'snippet functionality with multiple loop settings' do
     let!(:liquid_setting1) do
-      create(:cms_loop_setting,
+      create(:cms_loop_setting, :liquid, :snippet_type,
         site: site,
-        html_format: "liquid",
         html: "{% for item in items %}<div class='loop-item-1'>{{ item.name }}</div>{% endfor %}",
         state: "public",
         order: 5,
@@ -250,9 +247,8 @@ context 'loop html snippet functionality' do
     end
 
     let!(:liquid_setting2) do
-      create(:cms_loop_setting,
+      create(:cms_loop_setting, :liquid, :snippet_type,
         site: site,
-        html_format: "liquid",
         html: "{% for item in items %}<div class='loop-item-2'>{{ item.title }}</div>{% endfor %}",
         state: "public",
         order: 15,
@@ -261,9 +257,8 @@ context 'loop html snippet functionality' do
     end
 
     let!(:closed_setting) do
-      create(:cms_loop_setting,
+      create(:cms_loop_setting, :liquid, :snippet_type,
         site: site,
-        html_format: "liquid",
         html: "{% for item in items %}<div class='closed-item'>{{ item.content }}</div>{% endfor %}",
         state: "closed",
         name: "Closed Setting #{unique_id}"
@@ -364,7 +359,6 @@ context 'loop html snippet functionality' do
       select option_text, from: loop_setting_select[:id]
     end
 
-
     it 'loads selected liquid loop setting into html without loading translation message' do
       visit new_cms_form_path(site)
 
@@ -381,5 +375,4 @@ context 'loop html snippet functionality' do
       end
     end
   end
-
 end

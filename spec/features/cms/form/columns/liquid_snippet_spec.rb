@@ -9,9 +9,8 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
   end
 
   let!(:liquid_setting_primary) do
-    create(:cms_loop_setting,
+    create(:cms_loop_setting, :liquid, :snippet_type,
       site: site,
-      html_format: 'liquid',
       state: 'public',
       order: 30,
       name: 'Column Snippet Primary',
@@ -19,9 +18,8 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
   end
 
   let!(:liquid_setting_secondary) do
-    create(:cms_loop_setting,
+    create(:cms_loop_setting, :liquid, :snippet_type,
       site: site,
-      html_format: 'liquid',
       state: 'public',
       order: 10,
       name: 'Column Snippet Secondary',
@@ -29,11 +27,19 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
   end
 
   let!(:liquid_setting_closed) do
-    create(:cms_loop_setting,
+    create(:cms_loop_setting, :liquid, :snippet_type,
       site: site,
-      html_format: 'liquid',
       state: 'closed',
       name: 'Column Snippet Closed')
+  end
+
+  let!(:liquid_template_primary) do
+    create(:cms_loop_setting, :liquid, :template_type,
+      site: site,
+      state: 'public',
+      order: 30,
+      name: 'Column Template Primary',
+      html: snippet_html_primary)
   end
 
   before do
@@ -136,7 +142,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       expect(page).to have_css('.loop-setting-selector', wait: 10)
 
       loop_setting_select = find('.loop-setting-selector', visible: :all)
-      select liquid_setting_primary.name, from: loop_setting_select[:id]
+      select liquid_template_primary.name, from: loop_setting_select[:id]
       wait_for_editor_or_textarea_value('item_layout', 'column-snippet-primary')
 
       expect(editor_or_textarea_value('item_layout')).to include('column-snippet-primary')

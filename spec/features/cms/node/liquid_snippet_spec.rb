@@ -7,9 +7,8 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
   let(:snippet_html_low) { "{% for item in items %}<div class='snippet-low'>{{ item.title }}</div>{% endfor %}" }
 
   let!(:liquid_setting_high) do
-    create(:cms_loop_setting,
+    create(:cms_loop_setting, :liquid, :snippet_type,
       site: site,
-      html_format: "liquid",
       state: "public",
       order: 20,
       name: "Liquid Snippet High",
@@ -17,9 +16,8 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
   end
 
   let!(:liquid_setting_low) do
-    create(:cms_loop_setting,
+    create(:cms_loop_setting, :liquid, :snippet_type,
       site: site,
-      html_format: "liquid",
       state: "public",
       order: 5,
       name: "Liquid Snippet Low",
@@ -27,11 +25,19 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
   end
 
   let!(:liquid_setting_closed) do
-    create(:cms_loop_setting,
+    create(:cms_loop_setting, :liquid, :snippet_type,
       site: site,
-      html_format: "liquid",
       state: "closed",
       name: "Liquid Snippet Closed")
+  end
+
+  let!(:liquid_template_low) do
+    create(:cms_loop_setting, :liquid, :template_type,
+      site: site,
+      state: "public",
+      order: 5,
+      name: "Liquid Template Low",
+      html: snippet_html_low)
   end
 
   before do
@@ -113,7 +119,7 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
       select('Liquid', from: 'item[loop_format]') if page.has_select?('item[loop_format]')
       wait_for_js_ready
 
-      select_loop_setting('item_loop_setting_id_liquid', liquid_setting_low.name)
+      select_loop_setting('item_loop_setting_id_liquid', liquid_template_low.name)
       wait_for_editor_or_textarea_value('item_loop_liquid', snippet_html_low)
 
       expect(editor_or_textarea_value('item_loop_liquid')).to include(snippet_html_low)
