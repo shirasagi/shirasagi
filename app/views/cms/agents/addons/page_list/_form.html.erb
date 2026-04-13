@@ -54,11 +54,21 @@
       if (originalName) {
         $textarea.attr('name', originalName);
       }
+      $textarea.prop('readonly', false);
+      var editorOn = $textarea.data('editor');
+      if (editorOn) {
+        editorOn.setOption('readOnly', false);
+      }
     } else {
       if (!$textarea.data('original-name')) {
         $textarea.data('original-name', $textarea.attr('name'));
       }
       $textarea.removeAttr('name');
+      $textarea.prop('readonly', true);
+      var editorOff = $textarea.data('editor');
+      if (editorOff) {
+        editorOff.setOption('readOnly', true);
+      }
     }
   };
 
