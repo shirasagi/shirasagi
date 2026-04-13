@@ -65,40 +65,34 @@
   // ループHTML設定の選択時にテキストエリアをロック/アンロックし、HTMLを読み込む
   if ($loopSettingSelect.length && $htmlTextarea.length) {
     // CodeMirrorエディタの初期化を待つ
-    var lockAttempts = 0;
+    var initAttempts = 0;
     var maxRetries = 50;
-    var initLock = function() {
+    var waitForEditor = function() {
       return new Promise(function(resolve) {
-        var tryLock = function() {
-          lockAttempts++;
+        var tryWait = function() {
+          initAttempts++;
           var $codeMirror = $htmlTextarea.next('.CodeMirror');
           if ($codeMirror.length && $codeMirror[0].CodeMirror) {
-            if (window.Cms_Editor_CodeMirror && typeof window.Cms_Editor_CodeMirror.lock === 'function') {
-              window.Cms_Editor_CodeMirror.lock(lockSelector, lockTarget);
-            }
             resolve(true);
             return;
           }
 
-          if (lockAttempts < maxRetries) {
-            setTimeout(tryLock, 100);
+          if (initAttempts < maxRetries) {
+            setTimeout(tryWait, 100);
             return;
           }
 
-          if (window.Cms_Editor_CodeMirror && typeof window.Cms_Editor_CodeMirror.unlock === 'function') {
-            window.Cms_Editor_CodeMirror.unlock(lockSelector, lockTarget);
-          }
           if (window.console && typeof window.console.warn === 'function') {
-            window.console.warn("CodeMirror initialization timed out; stop retrying initLock()", {
-              selector: lockSelector, target: lockTarget, attempts: lockAttempts, maxRetries: maxRetries
+            window.console.warn("CodeMirror initialization timed out; stop retrying waitForEditor()", {
+              selector: lockSelector, target: lockTarget, attempts: initAttempts, maxRetries: maxRetries
             });
           }
           resolve(false);
         };
-        tryLock();
+        tryWait();
       });
     };
-    var initLockPromise = initLock();
+    var initLockPromise = waitForEditor();
 
     // エラーメッセージを取得する関数
     var getErrorMessage = function(xhr) {
@@ -167,12 +161,9 @@
       var editor = $htmlTextarea.data('editor');
       if (editor) {
         editor.setOption('readOnly', false);
+        editor.setOption('mode', 'text/html');
       }
       $(lockTarget).prop('readonly', false);
-
-      if (window.Cms_Editor_CodeMirror && typeof window.Cms_Editor_CodeMirror.unlock === 'function') {
-        window.Cms_Editor_CodeMirror.unlock(lockSelector, lockTarget);
-      }
     };
     var loopHtmlLoader = Cms_LoopSettingLoader.create({
       addonSelector: "<%= "##{addon[:id]}" %>",
@@ -189,6 +180,7 @@
         var editor = $textarea.data('editor');
         if (editor) {
           editor.setValue(html);
+          editor.setOption('mode', 'text/plain');
           editor.setOption('readOnly', true);
         } else {
           $textarea.val(html);

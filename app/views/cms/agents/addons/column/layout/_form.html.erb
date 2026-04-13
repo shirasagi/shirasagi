@@ -117,7 +117,13 @@
     // テキストエリアをアンロックする関数
     var unlockTextarea = function() {
       $snippetSelect.prop('disabled', false);
-      Cms_Editor_CodeMirror.unlock(lockSelector, lockTarget);
+
+      var editor = $layoutTextarea.data('editor');
+      if (editor) {
+        editor.setOption('readOnly', false);
+        editor.setOption('mode', 'text/html');
+      }
+      $layoutTextarea.prop('readonly', false);
     };
 
     // 機微情報を含み得る xhr 全体はログに出さず、表示してもよい情報だけを要約して返す
@@ -172,14 +178,11 @@
         var editor = $textarea.data('editor');
         if (editor) {
           editor.setValue(html);
+          editor.setOption('mode', 'text/plain');
           editor.setOption('readOnly', true);
         } else {
           $textarea.val(html);
           $textarea.prop('readonly', true);
-        }
-
-        if (lockSelector && lockTarget && window.Cms_Editor_CodeMirror && typeof Cms_Editor_CodeMirror.lock === 'function') {
-          Cms_Editor_CodeMirror.lock(lockSelector, lockTarget);
         }
 
         $snippetSelect.prop('disabled', true);
