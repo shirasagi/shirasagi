@@ -35,14 +35,15 @@ module Cms::FormHelper
     items = []
     settings = Cms::LoopSetting.site(@cur_site)
 
-    settings = case format.to_s
-    when 'liquid'
-      settings.liquid.template_type
-    when 'shirasagi', ''
-      settings.shirasagi
-    else
-      settings
-    end
+    settings =
+      case format.to_s
+      when 'liquid'
+        settings.liquid.template_type
+      when 'shirasagi', ''
+        settings.shirasagi
+      else
+        settings
+      end
 
     settings.each do |item|
       items << [item.name, item.id]
@@ -76,8 +77,9 @@ module Cms::FormHelper
   #
   # items: [["test/test1", id1], ["test/test2", id2], ["root", id3]]
   # 戻り値: HTML Safe
-  def options_with_optgroup_for_loop_settings(items, input_direct_label: nil)
+  def options_with_optgroup_for_loop_settings(items, input_direct_label: nil, selected: nil)
     input_direct_label ||= t('cms.input_directly')
+    selected_str = selected.to_s
     groups = Hash.new { |h, k| h[k] = [] }
     nogroup = []
 
@@ -91,16 +93,16 @@ module Cms::FormHelper
     end
 
     html = []
-    html << tag.option(input_direct_label, value: '')
+    html << tag.option(input_direct_label, value: '', selected: selected_str == '')
 
     nogroup.each do |name, id|
-      html << tag.option(name, value: id)
+      html << tag.option(name, value: id, selected: id.to_s == selected_str)
     end
 
     groups.keys.sort.each do |group|
       html << tag.optgroup(label: group, class: 'title') do
         groups[group].map do |leaf, id|
-          tag.option(leaf, value: id)
+          tag.option(leaf, value: id, selected: id.to_s == selected_str)
         end.join.html_safe
       end
     end
