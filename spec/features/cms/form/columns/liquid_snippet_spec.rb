@@ -112,11 +112,11 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       wait_for_js_ready
 
       select_loop_snippet(liquid_setting_secondary.name)
-      wait_for_js_ready
+      wait_for_editor_or_textarea_value('item_layout', 'column-snippet-secondary')
 
-      textarea_value = find('#item_layout', visible: false).value
-      expect(textarea_value).to include('existing-column-layout')
-      expect(textarea_value).to include(snippet_html_secondary)
+      value = editor_or_textarea_value('item_layout')
+      expect(value).to include('existing-column-layout')
+      expect(value).to include(snippet_html_secondary)
     end
   end
 

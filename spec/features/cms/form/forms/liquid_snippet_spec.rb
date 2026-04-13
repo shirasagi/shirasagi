@@ -7,7 +7,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
   let(:html2) { unique_id }
   def loop_snippet_select
     find('.loop-snippet-selector', visible: :all)
-end
+  end
 
   def select_loop_snippet(option_text)
     select option_text, from: loop_snippet_select[:id]
