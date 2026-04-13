@@ -11,52 +11,6 @@ def save_loop_setting(data)
 end
 
 # ============================================
-# SHIRASAGI形式のループHTML設定
-# ============================================
-
-# 基本的な記事リスト（日付、タイトル、リンク）
-save_loop_setting(
-  name: "記事/基本記事リスト（SHIRASAGI形式）",
-  description: "日付、タイトル、リンクを含む基本的な記事リストテンプレート（SHIRASAGI形式）",
-  html_format: "shirasagi",
-  state: "public",
-  loop_html_setting_type: "template",
-  order: 10,
-  html: <<~'HTML'
-    <article class="item-#{class} #{new} #{current}">
-      <header>
-        <time datetime="#{date}">#{date.long}</time>
-        <h2><a href="#{url}">#{index_name}</a></h2>
-      </header>
-    </article>
-  HTML
-)
-
-# ============================================
-# Liquid形式のループHTML設定
-# ============================================
-
-# 基本的な記事リスト（日付、タイトル、リンク）
-save_loop_setting(
-  name: "記事/基本記事リスト",
-  description: "日付、タイトル、リンクを含む基本的な記事リストテンプレート",
-  html_format: "liquid",
-  state: "public",
-  loop_html_setting_type: "template",
-  order: 10,
-  html: <<~HTML
-    {% for page in pages %}
-    <article class="item-{{ page.css_class }} {% if page.new? %}new{% endif %} {% if page.current? %}current{% endif %}">
-      <header>
-        <time datetime="{{ page.date }}">{{ page.date | ss_date: "long" }}</time>
-        <h2><a href="{{ page.url }}">{{ page.index_name | default: page.name }}</a></h2>
-      </header>
-    </article>
-    {% endfor %}
-  HTML
-)
-
-# ============================================
 # スニペット用データ（短いコード片）
 # ============================================
 
@@ -527,13 +481,13 @@ save_loop_setting(
 
 # フィルター - その他
 save_loop_setting(
-  name: "スニペット/フィルター/ファイルサイズ（人間可読形式）",
+  name: "スニペット/定型フォーム/ファイルサイズ（人間可読形式）",
   loop_html_setting_type: "snippet",
-  description: "ファイルサイズを人が視認しやすい形式で表示",
+  description: "定型フォームのファイル入力のサイズを人が視認しやすい形式で表示",
   html_format: "liquid",
   state: "public",
   order: 310,
-  html: "{{ page.file.size | human_size }}"
+  html: "{{ value.file.size | human_size }}"
 )
 
 save_loop_setting(
@@ -626,4 +580,139 @@ save_loop_setting(
   state: "public",
   order: 331,
   html: "<time datetime=\"{{ page.updated }}\">{{ page.updated | ss_time }}</time>"
+)
+
+# ページ変数 - パス・階層
+save_loop_setting(
+  name: "スニペット/ページ/ベース名",
+  loop_html_setting_type: "snippet",
+  description: "ページのベース名（パス末尾）を表示",
+  html_format: "liquid",
+  state: "public",
+  order: 340,
+  html: "{{ page.basename }}"
+)
+
+save_loop_setting(
+  name: "スニペット/ページ/ファイル名",
+  loop_html_setting_type: "snippet",
+  description: "ページのファイル名（パス）を表示",
+  html_format: "liquid",
+  state: "public",
+  order: 341,
+  html: "{{ page.filename }}"
+)
+
+save_loop_setting(
+  name: "スニペット/ページ/階層の深さ",
+  loop_html_setting_type: "snippet",
+  description: "ページの階層の深さを表示",
+  html_format: "liquid",
+  state: "public",
+  order: 342,
+  html: "{{ page.depth }}"
+)
+
+save_loop_setting(
+  name: "スニペット/ページ/並び順",
+  loop_html_setting_type: "snippet",
+  description: "ページの並び順の値を表示",
+  html_format: "liquid",
+  state: "public",
+  order: 343,
+  html: "{{ page.order }}"
+)
+
+# ページ変数 - 親ページ
+save_loop_setting(
+  name: "スニペット/ページ/親ページURL",
+  loop_html_setting_type: "snippet",
+  description: "親ページのURLを表示",
+  html_format: "liquid",
+  state: "public",
+  order: 350,
+  html: "{{ page.parent.url }}"
+)
+
+save_loop_setting(
+  name: "スニペット/ページ/親ページ名",
+  loop_html_setting_type: "snippet",
+  description: "親ページの名称を表示",
+  html_format: "liquid",
+  state: "public",
+  order: 351,
+  html: "{{ page.parent.name }}"
+)
+
+# パーツ
+save_loop_setting(
+  name: "スニペット/パーツ/パーツHTML",
+  loop_html_setting_type: "snippet",
+  description: "キーで指定したパーツのHTMLを表示（キー名は適宜変更）",
+  html_format: "liquid",
+  state: "public",
+  order: 360,
+  html: "{{ parts[\"key_name\"].html }}"
+)
+
+# コレクションフィルター
+save_loop_setting(
+  name: "スニペット/フィルター/フォルダ内ページ一覧",
+  loop_html_setting_type: "snippet",
+  description: "ノード配下のページ一覧を取得（第2引数は取得件数）",
+  html_format: "liquid",
+  state: "public",
+  order: 370,
+  html: "{% assign list = node | public_list: 10 %}"
+)
+
+save_loop_setting(
+  name: "スニペット/フィルター/フォーム値で絞り込み",
+  loop_html_setting_type: "snippet",
+  description: "定型フォームのカラム値でページ一覧を絞り込み（key.valueで指定）",
+  html_format: "liquid",
+  state: "public",
+  order: 371,
+  html: "{% assign list = pages | filter_by_column_value: \"key.value\" %}"
+)
+
+save_loop_setting(
+  name: "スニペット/フィルター/フォーム値でソート",
+  loop_html_setting_type: "snippet",
+  description: "定型フォームのカラム値でページ一覧を並び替え（昇順）",
+  html_format: "liquid",
+  state: "public",
+  order: 372,
+  html: "{% assign list = pages | sort_by_column_value: \"key\" %}"
+)
+
+save_loop_setting(
+  name: "スニペット/フィルター/同名ページ取得",
+  loop_html_setting_type: "snippet",
+  description: "タイトルが一致する別ノードのページ一覧を取得",
+  html_format: "liquid",
+  state: "public",
+  order: 373,
+  html: "{% assign list = page | same_name_pages %}"
+)
+
+# イベントフィルター
+save_loop_setting(
+  name: "スニペット/フィルター/有効な繰り返しイベント抽出",
+  loop_html_setting_type: "snippet",
+  description: "繰り返しイベントから現在有効なもののみを抽出",
+  html_format: "liquid",
+  state: "public",
+  order: 380,
+  html: "{% assign recurrences = page.event_recurrences | event_active_recurrences %}"
+)
+
+save_loop_setting(
+  name: "スニペット/フィルター/繰り返しイベント要約",
+  loop_html_setting_type: "snippet",
+  description: "繰り返しイベントを簡潔な文字列に要約",
+  html_format: "liquid",
+  state: "public",
+  order: 381,
+  html: "{{ page.event_recurrences | event_recurrence_summary }}"
 )
