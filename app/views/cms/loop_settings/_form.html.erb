@@ -24,12 +24,15 @@
 <%= jquery do %>
   var $htmlFormat = $('#item_html_format');
   var $loopHtmlSettingTypeField = $('.loop-html-setting-type-field');
+  var $loopHtmlSettingType = $('#item_loop_html_setting_type');
 
   var toggleLoopHtmlSettingTypeField = function() {
     if ($htmlFormat.val() === 'liquid') {
       $loopHtmlSettingTypeField.show();
+      $loopHtmlSettingType.prop('disabled', false);
     } else {
       $loopHtmlSettingTypeField.hide();
+      $loopHtmlSettingType.prop('disabled', true);
     }
   };
 
