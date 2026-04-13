@@ -129,6 +129,10 @@ this.Cms_LoopSettingLoader = (function () {
           }
         }
 
+        if (self.$snippetSelect.length) {
+          self.$snippetSelect.prop("disabled", !!loopSettingId);
+        }
+
         self.onAfterSuccess(data, loopSettingId, self.$textarea);
       },
       error: function(xhr2, status, error) {
@@ -152,10 +156,6 @@ this.Cms_LoopSettingLoader = (function () {
           self.setLoadingState(self.$textarea, false);
         } else {
           self.defaultSetLoadingState(false);
-        }
-
-        if (self.$snippetSelect.length) {
-          self.$snippetSelect.prop("disabled", !!loopSettingId);
         }
 
         self.onAfterComplete(loopSettingId, self.$textarea);
