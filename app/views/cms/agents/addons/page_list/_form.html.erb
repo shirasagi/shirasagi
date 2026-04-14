@@ -305,7 +305,7 @@
         <%= ss_stimulus_tag "ss/select_with_description" do %>
           <%= select_tag(
                 'item[loop_setting_id]',
-                options_with_optgroup_for_loop_settings(ancestral_loop_settings),
+                options_with_optgroup_for_loop_settings(ancestral_loop_settings, selected: @item.loop_setting_id),
                 id: 'item_loop_setting_id',
                 name: 'item[loop_setting_id]',
                 disabled: (@item.loop_format == 'liquid')
@@ -341,7 +341,7 @@
         <%= ss_stimulus_tag "ss/select_with_description" do %>
           <%= select_tag(
                 'item[loop_setting_id]',
-                options_with_optgroup_for_loop_settings(ancestral_loop_settings("liquid")),
+                options_with_optgroup_for_loop_settings(ancestral_loop_settings("liquid"), selected: @item.loop_setting_id),
                 id: 'item_loop_setting_id_liquid',
                 name: 'item[loop_setting_id]',
                 disabled: (@item.loop_format != 'liquid')

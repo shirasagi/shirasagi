@@ -11,7 +11,7 @@
     <%= ss_stimulus_tag "ss/select_with_description" do %>
       <% loop_setting_options = ancestral_loop_settings("liquid") %>
       <%= f.select :loop_setting_id,
-            options_with_optgroup_for_loop_settings(loop_setting_options),
+            options_with_optgroup_for_loop_settings(loop_setting_options, selected: @item.try(:loop_setting_id)),
             {},
             id: loop_setting_select_id,
             class: 'loop-setting-selector'
