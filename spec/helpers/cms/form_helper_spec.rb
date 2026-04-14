@@ -80,7 +80,9 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
     let!(:user) { cms_user }
     let!(:site) { cms_site }
     let!(:shirasagi_setting) { create(:cms_loop_setting, site: site, html_format: "shirasagi", state: "public") }
-    let!(:liquid_setting) { create(:cms_loop_setting, site: site, html_format: "liquid", state: "public") }
+    let!(:liquid_setting) do
+      create(:cms_loop_setting, site: site, html_format: "liquid", loop_html_setting_type: "snippet", state: "public")
+    end
     let!(:closed_setting) { create(:cms_loop_setting, site: site, html_format: "liquid", state: "closed") }
 
     before do
@@ -125,6 +127,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
         create(:cms_loop_setting,
           site: site,
           html_format: "liquid",
+          loop_html_setting_type: "snippet",
           html: liquid_html,
           state: "public",
           name: "Liquid Setting 1"
@@ -134,6 +137,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
         create(:cms_loop_setting,
           site: site,
           html_format: "liquid",
+          loop_html_setting_type: "snippet",
           html: liquid_html,
           state: "public",
           name: "Liquid Setting 2"
@@ -194,6 +198,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
         create(:cms_loop_setting,
           site: site,
           html_format: "liquid",
+          loop_html_setting_type: "snippet",
           html: liquid_html,
           state: "public",
           name: "Liquid Setting"
