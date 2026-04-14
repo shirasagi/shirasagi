@@ -8,7 +8,12 @@ describe "cms loop setting propagation to folders (E2E)", type: :feature, dbscop
 
   let(:loop_setting_name) { "propagation-setting-#{unique_id}" }
 
-  before { login_cms_user }
+  before do
+    # 他テストが書き出した静的HTMLが残ると x_sendfile でそれが優先されるため、毎回掃除する
+    FileUtils.rm_rf site.path
+    FileUtils.mkdir_p site.path
+    login_cms_user
+  end
 
   # 初期 / 更新済み の対比がひと目で分かるよう、初期 = <p>新規作成</p>、更新後 = <p>更新済み</p> を必ず含める
   def shirasagi_html(marker)
@@ -112,5 +117,84 @@ describe "cms loop setting propagation to folders (E2E)", type: :feature, dbscop
     let(:body_html) { method(:liquid_html) }
 
     include_examples "loop setting html update propagates to folder page"
+  end
+
+  #
+  # Cms::Form の LayoutHtml アドオンが loop_setting を参照しているケース
+  # （Cms::Form#render_html が loop_setting.html を優先して使うことの検証）
+  #
+  context "Cms::Form layout html with loop setting" do
+    let(:form_loop_setting_name) { "form-propagation-setting-#{unique_id}" }
+    let(:form_html_template) do
+      lambda do |marker|
+        <<~HTML.strip
+          <section class="propagation-form">
+            <p class="propagation-status">#{marker}</p>
+            {% for value in values %}<div class="propagation-value">{{ value }}</div>{% endfor %}
+          </section>
+        HTML
+      end
+    end
+
+    let!(:loop_setting) do
+      create(:cms_loop_setting, :liquid, :template_type,
+             cur_site: site,
+             name: form_loop_setting_name,
+             html: form_html_template.call("新規作成"))
+    end
+    let!(:form) do
+      create(:cms_form,
+             cur_site: site, state: "public", sub_type: "entry",
+             html: "<!-- direct html should be ignored when loop_setting is present -->",
+             loop_setting_id: loop_setting.id)
+    end
+    let!(:column) do
+      create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 1)
+    end
+    let!(:article_node) do
+      create(:article_node_page, cur_site: site, layout_id: layout.id,
+             filename: "form-node", st_form_ids: [form.id])
+    end
+    let!(:article_page) do
+      create(:article_page,
+             cur_site: site, cur_node: article_node, layout_id: layout.id,
+             form: form, filename: "form-node/form-page", state: "public",
+             name: "form-article-#{unique_id}",
+             column_values: [
+               column.value_type.new(column_id: column.id, order: 0, value: "<em>column-body</em>")
+             ])
+    end
+
+    it "reflects the edited Cms::LoopSetting html ('新規作成' → '更新済み') on a form-backed page" do
+      # 1. 初期状態: ループHTMLの「新規作成」が公開ページに反映されていること
+      Capybara.app_host = "http://#{site.domain}"
+      visit article_page.full_url
+      expect(page).to have_css('.propagation-form .propagation-status', text: '新規作成')
+      expect(page).to have_no_css('.propagation-form .propagation-status', text: '更新済み')
+
+      # 2. 管理画面からループHTMLを編集
+      Capybara.app_host = nil
+      visit edit_cms_loop_setting_path(site.id, loop_setting)
+      within "form#item-form" do
+        fill_in_code_mirror "item[html]", with: form_html_template.call("更新済み")
+        click_button I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      loop_setting.reload
+      expect(loop_setting.html).to include('<p class="propagation-status">更新済み</p>')
+
+      # 3. ループHTMLを参照しているノード・ページを再書き出し
+      #    （管理画面の「フォルダーの書き出し」「ページの書き出し」相当のジョブを実行）
+      Cms::Node::GenerateJob.bind(site_id: site.id).perform_now
+      Cms::Page::GenerateJob.bind(site_id: site.id).perform_now
+
+      # 4. 公開ページを再表示すると、更新済みの内容に差し替わっている
+      #    （Chrome は同一 URL の HTML レスポンスをキャッシュするため、クエリで確実に revalidate させる）
+      Capybara.app_host = "http://#{site.domain}"
+      visit "#{article_page.full_url}?_=#{Time.now.to_i}"
+      expect(page).to have_css('.propagation-form .propagation-status', text: '更新済み')
+      expect(page).to have_no_css('.propagation-form .propagation-status', text: '新規作成')
+    end
   end
 end
