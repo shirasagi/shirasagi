@@ -165,6 +165,46 @@
       }
       $(lockTarget).prop('readonly', false);
     };
+    var isDev = <%= Rails.env.development? ? "true" : "false" %>;
+
+    // 機微情報を含み得る xhr 全体はログに出さず、表示してもよい情報だけを要約して返す
+    var sanitizeForConsole = function(value, maxLen) {
+      if (value === undefined || value === null) {
+        return null;
+      }
+
+      var s = String(value);
+      s = s.replace(/[\r\n\t]+/g, ' ').replace(/\s\s+/g, ' ').trim();
+      if (maxLen && s.length > maxLen) {
+        s = s.substring(0, maxLen) + '…';
+      }
+      return s;
+    };
+
+    var buildAjaxErrorLog = function(xhr, status, error) {
+      var httpStatus = xhr && typeof xhr.status !== 'undefined' ? xhr.status : null;
+      var statusText = xhr && xhr.statusText ? xhr.statusText : null;
+      var messageParts = [];
+      if (status) { messageParts.push(status); }
+      if (error) { messageParts.push(error); }
+      if (statusText) { messageParts.push(statusText); }
+
+      var log = {
+        status: httpStatus,
+        message: sanitizeForConsole(messageParts.filter(Boolean).join(' / '), 200)
+      };
+
+      // 開発時のみ、レスポンス本文の短い抜粋を出す（本番では内部情報を出さない）
+      if (isDev) {
+        var responseSnippet = sanitizeForConsole(xhr && xhr.responseText, 300);
+        if (responseSnippet) {
+          log.responseSnippet = responseSnippet;
+        }
+      }
+
+      return log;
+    };
+
     var loopHtmlLoader = Cms_LoopSettingLoader.create({
       addonSelector: "<%= "##{addon[:id]}" %>",
       loopSettingSelect: "#<%= loop_setting_select_id %>",
@@ -173,6 +213,11 @@
       apiPathTemplate: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>',
       acceptEmptyHtml: true,
       setLoadingState: function() {},
+      setTextareaSubmittable: function(_$textarea, submittable) {
+        if (submittable) {
+          unlockTextarea();
+        }
+      },
       onBeforeUpdate: function() {
         clearLoopHtmlError();
       },
@@ -188,7 +233,12 @@
         }
       },
       onAfterError: function(xhr, status, error) {
-        console.error('Loop setting fetch error:', xhr, status, error);
+        var log = buildAjaxErrorLog(xhr, status, error);
+        if (isDev) {
+          console.error('Loop setting fetch error:', log);
+        } else {
+          console.error('Loop setting fetch error:', { status: log.status, message: log.message });
+        }
 
         unlockTextarea();
 
