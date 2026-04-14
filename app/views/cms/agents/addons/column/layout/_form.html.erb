@@ -6,7 +6,7 @@
 <%= code_editor "##{addon[:id]} .html", mode: :html %>
 
 <dl class="see">
-  <dt class="wide"><%= t("cms.labels.loop_html") %><%= tt("cms.labels.loop_html") %></dt>
+  <dt class="wide"><%= t("cms.loop_html") %><%= tt("cms.labels.loop_html") %></dt>
   <dd class="wide">
     <%= ss_stimulus_tag "ss/select_with_description" do %>
       <% loop_setting_options = ancestral_loop_settings("liquid") %>
