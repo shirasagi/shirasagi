@@ -2,9 +2,10 @@ require 'spec_helper'
 
 # 既定フィールドの詳細画面テスト
 describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true do
-  let(:site) { cms_site }
-  let!(:node) { create :article_node_page, cur_site: site, cur_user: cms_user }
-  let!(:file) { tmp_ss_file contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: cms_user, basename: "#{unique_id}.jpg" }
+  let!(:site) { cms_site }
+  let!(:user) { cms_user }
+  let!(:node) { create :article_node_page, cur_site: site, cur_user: user }
+  let!(:file) { tmp_ss_file contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: user, basename: "#{unique_id}.jpg" }
   let(:logo_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
   let(:keyvisual_path) { "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg" }
 
@@ -106,7 +107,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
         within "#addon-cms-agents-addons-file" do
           within ".file-view.unused" do
-            expect(page).to have_content(I18n.t("ss.unused_file"))
+            expect(page).to have_css(".unused-message", text: I18n.t("ss.unused_file"))
             expect(page).to have_content(I18n.t("ss.buttons.delete"))
             wait_for_cbox_opened { click_link I18n.t("ss.buttons.delete") }
           end
@@ -125,6 +126,41 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         end
       end
     end
+
+    describe "when file_url_with is `name` but page was created by `filename`" do
+      let!(:item) do
+        create(
+          :article_page, cur_site: site, cur_user: user, cur_node: node, file_ids: [file.id], group_ids: [cms_group.id])
+      end
+
+      before do
+        html = <<~HTML
+          <a class="icon-png" href="#{file.url}">#{file.humanized_name}</a>
+        HTML
+        item.update!(html: html)
+
+        @save_file_url_with = SS.config.replace_value_at(:ss, :file_url_with, "name")
+        file.update!(name: ss_japanese_text)
+      end
+
+      after do
+        SS.config.replace_value_at(:ss, :file_url_with, @save_file_url_with)
+      end
+
+      it do
+        visit article_page_path(site: site, cid: node, id: item)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+        within "#addon-cms-agents-addons-file" do
+          expect(page).to have_css(".file-view", count: 1)
+          within ".file-view" do
+            expect(page).to have_no_css(".unused-message")
+          end
+        end
+      end
+    end
   end
 end
 
@@ -132,14 +168,14 @@ end
 describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let!(:node) do
-    create :article_node_page, cur_site: site, cur_user: cms_user, filename: "docs", name: "article", group_ids: [cms_group.id],
+    create :article_node_page, cur_site: site, cur_user: user, filename: "docs", name: "article", group_ids: [cms_group.id],
     st_form_ids: [form.id]
   end
   let!(:item) { create :article_page, cur_node: node, group_ids: [cms_group.id] }
   let!(:edit_path) { edit_article_page_path site.id, node, item }
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry', group_ids: [cms_group.id]) }
   let!(:column2) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 2) }
-  let!(:file) { tmp_ss_file contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: cms_user, basename: "#{unique_id}.jpg" }
+  let!(:file) { tmp_ss_file contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: user, basename: "#{unique_id}.jpg" }
   let(:logo_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
 
   before do
@@ -211,7 +247,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         element = find(".file-view[data-file-id='#{shirasagi_file.id}']")
         expect(element['class']).to include('unused')
         expect(page).to have_css(".file-view.unused", text: shirasagi_file.name)
-        expect(page).to have_content(I18n.t("ss.unused_file"))
+        expect(page).to have_css(".unused-message", text: I18n.t("ss.unused_file"))
 
         within ".file-view.unused" do
           expect(page).to have_link(I18n.t("ss.buttons.delete"))
