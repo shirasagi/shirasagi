@@ -300,7 +300,7 @@
     <% end %>
 
     <% if @model.use_loop_html %>
-      <dt><%= t("cms.labels.template") %><%= @model.tt :loop_html %></dt>
+      <dt><%= t("cms.loop_html") %><%= @model.tt :loop_html %></dt>
       <dd>
         <%= ss_stimulus_tag "ss/select_with_description" do %>
           <%= select_tag(
