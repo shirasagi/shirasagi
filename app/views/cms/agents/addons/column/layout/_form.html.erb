@@ -171,6 +171,11 @@
       apiPathTemplate: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>',
       acceptEmptyHtml: false,
       setLoadingState: function() {},
+      setTextareaSubmittable: function(_$textarea, submittable) {
+        if (submittable) {
+          unlockTextarea();
+        }
+      },
       onBeforeUpdate: function() {
         clearLoopHtmlError();
       },
