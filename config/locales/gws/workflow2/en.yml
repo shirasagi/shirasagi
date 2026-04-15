@@ -84,8 +84,8 @@ en:
       approver_name: Name
       approver_alternator: (Proxy approver)
     search_delegatees:
-      index: Select a original delegate
-      select: Set a original delegate
+      index: Select an original delegate
+      select: Set an original delegate
       search: Search
 #    agent_type:
 #      myself: Apply for oneself
@@ -134,7 +134,7 @@ en:
         user_occupation_is_not_found: The user occupation is not found.
         user_whos_occupation_is_not_found: "The active user who has occupation %{occupation_name} is not found."
         user_is_not_found: The user is not found.
-        workflow_user_is_not_selected: The delegate is not selected.
+        workflow_user_is_not_selected: An original delegate is not selected.
 
   gws_notification:
     gws/workflow2/file:

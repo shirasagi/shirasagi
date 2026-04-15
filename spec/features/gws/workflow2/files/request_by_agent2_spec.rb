@@ -93,7 +93,8 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         wait_for_all_turbo_frames
 
         within ".mod-workflow-request" do
-          choose "item_workflow_agent_type_agent"
+          # 「代理で申請する」を明示的に選択しなくても、本来の申請者を選択すると自動で選択される
+          # choose I18n.t("gws/workflow.agent_type.agent")
           wait_for_cbox_opened { click_on I18n.t("gws/workflow2.search_delegatees.index") }
         end
         within_cbox do
@@ -190,7 +191,8 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         wait_for_all_turbo_frames
 
         within ".mod-workflow-request" do
-          choose "item_workflow_agent_type_agent"
+          # 「代理で申請する」を明示的に選択しなくても、本来の申請者を選択すると自動で選択される
+          # choose I18n.t("gws/workflow.agent_type.agent")
           wait_for_cbox_opened { click_on I18n.t("gws/workflow2.search_delegatees.index") }
         end
         within_cbox do
