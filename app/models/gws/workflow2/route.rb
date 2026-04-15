@@ -73,8 +73,6 @@ class Gws::Workflow2::Route
       end
       unless SS.config.workflow.disable_my_group
         ret << [ t("my_group"), "my_group" ]
-        # 上長が複数存在する場合、うまく動作しないので一時的に無効化
-        # ret << [ t("my_group_alternate"), "my_group_alternate" ]
       end
 
       routes = all.site(cur_site)

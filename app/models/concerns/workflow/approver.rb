@@ -2,7 +2,7 @@ module Workflow::Approver
   extend ActiveSupport::Concern
   extend SS::Translation
 
-  attr_accessor :workflow_reset, :workflow_cancel_request, :workflow_approver_alternate
+  attr_accessor :workflow_reset, :workflow_cancel_request
 
   WORKFLOW_STATE_PUBLIC = "public".freeze
   WORKFLOW_STATE_CLOSED = "closed".freeze
@@ -49,7 +49,7 @@ module Workflow::Approver
     permit_params :workflow_user_id, :workflow_state, :workflow_kind, :workflow_comment, :workflow_pull_up, :workflow_on_remand
     permit_params workflow_approvers: []
     permit_params workflow_required_counts: []
-    permit_params :workflow_reset, :workflow_cancel_request, :workflow_approver_alternate
+    permit_params :workflow_reset, :workflow_cancel_request
     permit_params workflow_circulations: []
 
     before_validation :reset_workflow, if: -> { workflow_reset.present? && workflow_reset }
@@ -176,10 +176,6 @@ module Workflow::Approver
   end
 
   def workflow_approver_alternator?(user)
-    if route_my_group_alternate?
-      return workflow_approvers[1][:user_id] == user.id rescue false
-    end
-
     level = workflow_current_level
     approvers = workflow_approvers_at(level)
     approvers.any? { |approver| approver[:user_id] == user.id && approver[:alternate_to].present? }
@@ -200,26 +196,6 @@ module Workflow::Approver
     self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
     self.requested = Time.zone.now
     true
-  end
-
-  # 所属長承認（代理承認者）
-  def set_workflow_approver_alternate
-    return unless workflow_approver_alternate
-
-    copy = workflow_approvers.to_a
-    copy.delete_at(1)
-
-    user_id = workflow_approver_alternate.presence
-    if user_id && user = Gws::User.site(site).find(user_id) rescue nil
-      workflow_approver = {}
-      workflow_approver[:level] = 1
-      workflow_approver[:user_type] = 'Gws::User'
-      workflow_approver[:user_id] = user.id
-      workflow_approver[:state] = WORKFLOW_STATE_REQUEST
-      workflow_approver[:comment] = ''
-      copy << workflow_approver
-    end
-    self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
   end
 
   def update_current_workflow_approver_state(user_or_id, state, comment = nil)

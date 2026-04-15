@@ -2,7 +2,6 @@ class Gws::Workflow2::Frames::ApproversController < ApplicationController
   include Gws::ApiFilter
 
   before_action :set_frame_id
-  before_action :set_workflow_approver_alternate, only: [:update]
 
   helper_method :ref, :route_options, :use_agent?, :route_id, :route, :find_approver, :find_circulator, :routing_error?
   helper_method :with_approval?
@@ -15,18 +14,6 @@ class Gws::Workflow2::Frames::ApproversController < ApplicationController
 
   def set_frame_id
     @frame_id = "workflow-approver-frame"
-  end
-
-  def set_workflow_approver_alternate
-    return unless @item.route_my_group_alternate?
-    return if params[:item][:workflow_approver_alternate]
-
-    # default value
-    if alternate = @item.workflow_approvers[1]
-      @item.workflow_approvers = [@item.workflow_approvers[0]]
-      @item.workflow_approver_alternate = [alternate[:user_id]]
-      @workflow_approver_alternate = Gws::User.site(@cur_site).find(alternate[:user_id]) rescue nil
-    end
   end
 
   def ref

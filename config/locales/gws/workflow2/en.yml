@@ -257,7 +257,6 @@ en:
         group_ids: Group
         level: Level %{level}
         my_group: Approval by the superior
-        my_group_alternate: Approval by the superior (Can be changed to proxy approver)
         approver_at: Level %{level} approver
         required_count_at: No. of approvals required in level %{level}.
         approvers_level: Level

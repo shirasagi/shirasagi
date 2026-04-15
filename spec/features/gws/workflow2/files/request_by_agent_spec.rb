@@ -378,10 +378,10 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       end
     end
 
-    context "with route 'my_group' / 'my_group_alternate'" do
+    context "with route 'my_group'" do
       let!(:form) do
         create(
-          :gws_workflow2_form_application, default_route_id: %w(my_group my_group_alternate).sample,
+          :gws_workflow2_form_application, default_route_id: "my_group",
           state: "public", approval_state: "with_approval", agent_state: "enabled"
         )
       end

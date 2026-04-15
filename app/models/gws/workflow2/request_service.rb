@@ -1,12 +1,10 @@
 class Gws::Workflow2::RequestService
   include ActiveModel::Model
 
-  PERMIT_PARAMS = [
-    :workflow_agent_type, :workflow_user_id, :workflow_comment, :workflow_approver_alternate
-  ].freeze
+  PERMIT_PARAMS = %i[workflow_agent_type workflow_user_id workflow_comment].freeze
 
   attr_accessor :cur_site, :cur_group, :cur_user, :route_id, :route, :item, :ref,
-    :workflow_agent_type, :workflow_user_id, :workflow_comment, :workflow_approver_alternate
+    :workflow_agent_type, :workflow_user_id, :workflow_comment
 
   validate :validate_item_form, :validate_item_state
 
@@ -90,8 +88,6 @@ class Gws::Workflow2::RequestService
   # rubocop:enable Rails/Pluck
 
   def reset_workflow_approvers(item)
-    item.workflow_approver_alternate = workflow_approver_alternate
-    item.set_workflow_approver_alternate
     item.workflow_approvers = item.workflow_approvers.map do |approver|
       approver = approver.slice(:level, :user_type, :user_id, :state, :editable, :alternate_to)
       approver[:state] = "pending" if approver[:user_id].present?

@@ -89,8 +89,6 @@ class Gws::Workflow2::ApproverResolver
       resolve_restart
     when :my_group
       resolve_my_group
-    when :my_group_alternate
-      resolve_my_group_alternate
     when Gws::Workflow::Route, Gws::Workflow2::Route
       resolve_route
     end
@@ -133,11 +131,6 @@ class Gws::Workflow2::ApproverResolver
     @workflow_approver_attachment_uses = %w(disabled)
     @resolved_circulations = []
     @workflow_circulation_attachment_uses = []
-  end
-
-  def resolve_my_group_alternate
-    resolve_my_group
-    @workflow_required_counts = [ 1 ]
   end
 
   def resolve_route

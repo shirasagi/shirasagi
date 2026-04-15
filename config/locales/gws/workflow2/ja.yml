@@ -257,7 +257,6 @@ ja:
         group_ids: グループ
         level: "%{level} 段目"
         my_group: "所属長承認"
-        my_group_alternate: "所属長承認（代理承認者へ変更可）"
         approver_at: "%{level} 段目の承認者"
         required_count_at: "%{level} 段目の必要承認数"
         approvers_level: 段
