@@ -50,8 +50,8 @@ describe Gws::Tabular::Gws::ColumnsController, type: :feature, dbscope: :example
     let(:tooltips3) { "tooltip-#{unique_id}" }
     let(:prefix_label3) { "pre-#{unique_id}"[0, 10] }
     let(:postfix_label3) { "pos-#{unique_id}"[0, 10] }
-    let(:prefix_explanation3) { "<b>prefix-#{unique_id}</b>" }
-    let(:postfix_explanation3) { "<b>postfix-#{unique_id}</b>" }
+    let(:prefix_explanation3) { Array.new(2) { "<b class=\"bold-#{_1}\">prefix-#{unique_id}</b>" } }
+    let(:postfix_explanation3) { Array.new(2) { "<i class=\"italic-#{_1}\">postfix-#{unique_id}</i>" } }
     let(:input_type3) { %w(single multi multi_html).sample }
     let(:input_type_label3) { I18n.t("gws/tabular.options.text_input_type.#{input_type3}") }
     let(:max_length3) { rand(100..200) }
@@ -222,8 +222,8 @@ describe Gws::Tabular::Gws::ColumnsController, type: :feature, dbscope: :example
           fill_in "item[tooltips]", with: tooltips3
           fill_in "item[prefix_label]", with: prefix_label3
           fill_in "item[postfix_label]", with: postfix_label3
-          fill_in "item[prefix_explanation]", with: prefix_explanation3
-          fill_in "item[postfix_explanation]", with: postfix_explanation3
+          fill_in "item[prefix_explanation]", with: prefix_explanation3.join("\n")
+          fill_in "item[postfix_explanation]", with: postfix_explanation3.join("\n")
           # text_field
           select input_type_label3, from: "item[input_type]"
           fill_in "item[max_length]", with: max_length3
@@ -256,8 +256,8 @@ describe Gws::Tabular::Gws::ColumnsController, type: :feature, dbscope: :example
       expect(column.tooltips.first).to eq tooltips3
       expect(column.prefix_label).to eq prefix_label3
       expect(column.postfix_label).to eq postfix_label3
-      expect(column.prefix_explanation).to eq prefix_explanation3
-      expect(column.postfix_explanation).to eq postfix_explanation3
+      expect(column.prefix_explanation).to eq prefix_explanation3.join("\n")
+      expect(column.postfix_explanation).to eq postfix_explanation3.join("\n")
       # text_field
       expect(column.input_type).to eq input_type3
       expect(column.max_length).to eq max_length3
@@ -276,6 +276,13 @@ describe Gws::Tabular::Gws::ColumnsController, type: :feature, dbscope: :example
       # tabular common
       expect(column.unique_state).to eq unique_state3
       expect(column.index_state).to eq index_state3
+
+      within ".gws-column-item[data-id='#{column.id}']" do
+        expect(page).to have_css(".bold-0")
+        expect(page).to have_css(".bold-1")
+        expect(page).to have_css(".italic-0")
+        expect(page).to have_css(".italic-1")
+      end
     end
   end
 end

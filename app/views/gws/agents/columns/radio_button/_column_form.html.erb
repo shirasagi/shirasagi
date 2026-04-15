@@ -9,7 +9,7 @@
   <%= hidden_field_tag("#{object_name}[#{column.id}]", nil, id: nil) %>
 
   <% if column.prefix_explanation.present? -%>
-    <div class="prefix-block"><%= sanitize_easy(br(column.prefix_explanation)) %></div>
+    <div class="prefix-block"><%= sanitize_easy(br(column.prefix_explanation, html_escape: false)) %></div>
   <% end -%>
 
   <% if column.prefix_label.present? -%>
@@ -44,7 +44,7 @@
   <% end %>
 
   <% if column.postfix_explanation.present? -%>
-    <div class="postfix-block"><%= sanitize_easy(br(column.postfix_explanation)) %></div>
+    <div class="postfix-block"><%= sanitize_easy(br(column.postfix_explanation, html_escape: false)) %></div>
   <% end %>
 
   <% if !column.required? %>

@@ -2,7 +2,7 @@
 <%= render 'gws/agents/columns/main/common_label', column: column %>
 <dd class="<%= @section_id %>">
   <% if column.prefix_explanation.present? -%>
-    <div class="prefix-block"><%= sanitize_easy(br(column.prefix_explanation)) %></div>
+    <div class="prefix-block"><%= sanitize_easy(br(column.prefix_explanation, html_escape: false)) %></div>
   <% end -%>
 
   <div class="input-group gap-5 align-items-center">
@@ -20,6 +20,6 @@
   </div>
 
   <% if column.postfix_explanation.present? -%>
-    <div class="postfix-block"><%= sanitize_easy(br(column.postfix_explanation)) %></div>
+    <div class="postfix-block"><%= sanitize_easy(br(column.postfix_explanation, html_escape: false)) %></div>
   <% end -%>
 </dd>
