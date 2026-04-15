@@ -214,6 +214,7 @@ module Workflow::Approver
     copy_approvers.each do |approver|
       if approver[:user_type] == 'superior'
         approver[:user_id] = superior_user.id
+        approver[:user] = superior_user if approver.key?(:user)
       end
     end
     self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy_approvers)

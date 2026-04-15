@@ -3,12 +3,7 @@
 <% render_approver_row = proc do |_level, _editable, user_type, user_id, user_name| %>
   <tr data-type="<%= user_type %>" data-id="<%= user_id %>">
     <td>
-      <% if user_type == "superior" && use_agent? %>
-        <span class="user myself-approvers"><%= user_name %></span>
-        <span class="user agent-approvers hide"><span class="info"><%= I18n.t("gws/workflow2.errors.messages.plz_select_delegatee") %></span></span>
-      <% else %>
-        <span class="user"><%= user_name %></span>
-      <% end %>
+      <span class="user"><%= user_name %></span>
     </td>
   </tr>
 <% end %>
@@ -42,12 +37,7 @@
 <% render_approver_error_row = proc do |_level, user_type, error| %>
   <tr data-type="<%= user_type %>" data-id="error">
     <td>
-      <% if user_type == "superior" && use_agent? %>
-        <span class="user myself-approvers"><span class="error"><%= error %></span></span>
-        <span class="user agent-approvers hide"><span class="info"><%= I18n.t("gws/workflow2.errors.messages.plz_select_delegatee") %></span></span>
-      <% else %>
-        <span class="user"><span class="error"><%= error %></span></span>
-      <% end %>
+      <span class="user"><span class="error"><%= error %></span></span>
     </td>
   </tr>
 <% end %>

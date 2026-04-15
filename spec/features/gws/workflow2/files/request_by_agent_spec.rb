@@ -97,8 +97,10 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
             choose "item_workflow_agent_type_agent"
             wait_for_cbox_opened { click_on I18n.t("gws/workflow2.search_delegatees.index") }
           end
-          within_cbox do
-            wait_for_cbox_closed { click_on user1.long_name }
+          wait_for_event_fired "turbo:frame-load" do
+            within_cbox do
+              wait_for_cbox_closed { click_on user1.long_name }
+            end
           end
           within ".mod-workflow-request" do
             expect(page).to have_css(".agent-type-agent [data-id='#{user1.id}']", text: user1.long_name)
@@ -300,8 +302,10 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
             choose "item_workflow_agent_type_agent"
             wait_for_cbox_opened { click_on I18n.t("gws/workflow2.search_delegatees.index") }
           end
-          within_cbox do
-            wait_for_cbox_closed { click_on user1.long_name }
+          wait_for_event_fired "turbo:frame-load" do
+            within_cbox do
+              wait_for_cbox_closed { click_on user1.long_name }
+            end
           end
           within ".mod-workflow-request" do
             expect(page).to have_css(".agent-type-agent [data-id='#{user1.id}']", text: user1.long_name)
@@ -387,8 +391,10 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
           choose "item_workflow_agent_type_agent"
           wait_for_cbox_opened { click_on I18n.t("gws/workflow2.search_delegatees.index") }
         end
-        within_cbox do
-          wait_for_cbox_closed { click_on user1.long_name }
+        wait_for_event_fired "turbo:frame-load" do
+          within_cbox do
+            wait_for_cbox_closed { click_on user1.long_name }
+          end
         end
         within ".mod-workflow-request" do
           expect(page).to have_css(".agent-type-agent [data-id='#{user1.id}']", text: user1.long_name)
@@ -536,8 +542,10 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
           choose "item_workflow_agent_type_agent"
           wait_for_cbox_opened { click_on I18n.t("gws/workflow2.search_delegatees.index") }
         end
-        within_cbox do
-          wait_for_cbox_closed { click_on user1.long_name }
+        wait_for_event_fired "turbo:frame-load" do
+          within_cbox do
+            wait_for_cbox_closed { click_on user1.long_name }
+          end
         end
         within ".mod-workflow-request" do
           expect(page).to have_css(".agent-type-agent [data-id='#{user1.id}']", text: user1.long_name)

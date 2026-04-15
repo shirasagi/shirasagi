@@ -153,6 +153,11 @@ class Gws::Workflow2::Frames::ApproversController < ApplicationController
       render template: "edit", status: :ok
       return
     end
+    if params.key?(:reload)
+      @item.attributes = params.require(:item).permit(*%i[workflow_agent_type workflow_user_id workflow_comment])
+      render template: "edit", status: :ok
+      return
+    end
 
     if with_approval?
       service_class = Gws::Workflow2::RequestService

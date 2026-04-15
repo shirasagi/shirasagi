@@ -134,6 +134,7 @@ en:
         user_occupation_is_not_found: The user occupation is not found.
         user_whos_occupation_is_not_found: "The active user who has occupation %{occupation_name} is not found."
         user_is_not_found: The user is not found.
+        workflow_user_is_not_selected: The delegate is not selected.
 
   gws_notification:
     gws/workflow2/file:

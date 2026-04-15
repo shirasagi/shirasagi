@@ -66,18 +66,20 @@ class Gws::Workflow2::ApproverResolver
 
   USER_FIELDS = %i[
     id name uid email organization_uid title_ids title_orders occupation_ids
-    group_ids gws_default_group_ids gws_main_group_ids updated
+    group_ids gws_default_group_ids gws_main_group_ids gws_superior_user_ids updated
   ].freeze
   GROUP_FIELDS = %i[
     id name superior_user_ids
   ].freeze
   PERMIT_PARAMS = [
+    :workflow_agent_type, :workflow_user_id,
     in_approver_alternates: %i[level editable user_type user_id alternate_to].freeze,
     in_selected_approvers: %i[level editable user_type user_id].freeze,
     in_selected_circulations: %i[level user_type user_id].freeze,
   ].freeze
 
   attr_accessor :cur_site, :cur_group, :cur_user, :route, :item,
+    :workflow_agent_type, :workflow_user_id,
     :in_approver_alternates, :in_selected_approvers, :in_selected_circulations
   attr_reader :resolved_approvers, :resolved_circulations
 
@@ -427,7 +429,34 @@ class Gws::Workflow2::ApproverResolver
   # 上位ユーザー at level 1
   # level 1 の場合、ユーザーの上位ユーザーを選択する
   def superior_results_level1(level, editable: nil, alternatable: nil, adds_error: true)
-    if cur_group.superior_user_ids.blank?
+    if workflow_agent_type.to_s == "agent"
+      if workflow_user_id.blank?
+        if adds_error
+          error = I18n.t("gws/workflow2.errors.messages.workflow_user_is_not_selected")
+          return [ Result.new(level: level, user_type: "superior", error: error, alternatable: alternatable) ]
+        else
+          return []
+        end
+      end
+
+      workflow_user = find_user(workflow_user_id)
+      if workflow_user.blank?
+        if adds_error
+          error = I18n.t("gws/workflow2.errors.messages.workflow_user_is_not_selected")
+          return [ Result.new(level: level, user_type: "superior", error: error, alternatable: alternatable) ]
+        else
+          return []
+        end
+      end
+
+      if workflow_user.gws_superior_user_ids
+        superior_user_ids = workflow_user.gws_superior_user_ids[cur_site.id.to_s]
+      end
+    else
+      superior_user_ids = cur_group.superior_user_ids
+    end
+
+    if superior_user_ids.blank?
       if adds_error
         error = I18n.t("gws/workflow2.errors.messages.superior_is_not_found")
         return [ Result.new(level: level, user_type: "superior", error: error, alternatable: alternatable) ]
@@ -436,8 +465,8 @@ class Gws::Workflow2::ApproverResolver
       end
     end
 
-    users = find_users(cur_group.superior_user_ids)
-    if users.blank?
+    superior_users = find_users(superior_user_ids)
+    if superior_users.blank?
       if adds_error
         error = I18n.t("gws/workflow2.errors.messages.superior_is_not_found")
         return [ Result.new(level: level, user_type: "superior", error: error, alternatable: alternatable) ]
@@ -446,7 +475,7 @@ class Gws::Workflow2::ApproverResolver
       end
     end
 
-    users.map do |user|
+    superior_users.map do |user|
       Result.new(level: level, user_type: "superior", user: user, editable: editable, alternatable: alternatable)
     end
   end

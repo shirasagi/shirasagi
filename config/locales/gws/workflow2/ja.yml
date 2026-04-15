@@ -134,6 +134,7 @@ ja:
         user_occupation_is_not_found: 経路上に設定されている職種が見つかりません。
         user_whos_occupation_is_not_found: "職種 %{occupation_name} が設定されている有効なユーザーが見つかりません。"
         user_is_not_found: 経路上に設定されているユーザーが無効です。
+        workflow_user_is_not_selected: 委任者が選択されていません。
 
   gws_notification:
     gws/workflow2/file:

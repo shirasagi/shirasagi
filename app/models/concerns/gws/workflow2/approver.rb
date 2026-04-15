@@ -4,6 +4,8 @@ module Gws::Workflow2::Approver
   include ::Workflow::Approver
 
   included do
+    attr_accessor :workflow_agent_type
+
     field :workflow_user_custom_data, type: Array
     field :workflow_agent_custom_data, type: Array
 
