@@ -68,6 +68,11 @@ describe "cms loop setting propagation to folders (E2E)", type: :feature, dbscop
       node.reload
       expect(node.loop_setting_id).to eq loop_setting.id
 
+      visit edit_node_conf_path(site.id, node)
+      within '#addon-event-agents-addons-page_list' do
+        expect(page).to have_select(loop_setting_select_id, selected: loop_setting_name)
+      end
+
       #
       # 3. 公開ページ(記事フォルダ)を表示 — 初期 <p>新規作成</p> が反映されていること
       #
