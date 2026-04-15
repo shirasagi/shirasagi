@@ -166,12 +166,13 @@ end
 
 # 自由入力の詳細画面テスト
 describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true do
-  let(:site) { cms_site }
+  let!(:site) { cms_site }
+  let!(:user) { cms_user }
   let!(:node) do
     create :article_node_page, cur_site: site, cur_user: user, filename: "docs", name: "article", group_ids: [cms_group.id],
     st_form_ids: [form.id]
   end
-  let!(:item) { create :article_page, cur_node: node, group_ids: [cms_group.id] }
+  let!(:item) { create :article_page, cur_site: site, cur_user: user, cur_node: node, group_ids: [cms_group.id] }
   let!(:edit_path) { edit_article_page_path site.id, node, item }
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry', group_ids: [cms_group.id]) }
   let!(:column2) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 2) }
