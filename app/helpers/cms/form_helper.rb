@@ -92,22 +92,16 @@ module Cms::FormHelper
       end
     end
 
-    html = []
-    html << tag.option(input_direct_label, value: '', selected: selected_str == '')
+    # 先頭の「直接入力」option と、グループに属さない top-level option は
+    # optgroup の外に並べる必要があるため options_for_select で生成する。
+    flat_options = [[input_direct_label, '']] + nogroup
+    # optgroup 部分は Rails 標準の grouped_options_for_select に任せる。
+    grouped = groups.sort.to_h
 
-    nogroup.each do |name, id|
-      html << tag.option(name, value: id, selected: id.to_s == selected_str)
-    end
-
-    groups.keys.sort.each do |group|
-      html << tag.optgroup(label: group, class: 'title') do
-        groups[group].map do |leaf, id|
-          tag.option(leaf, value: id, selected: id.to_s == selected_str)
-        end.join.html_safe
-      end
-    end
-
-    safe_join(html)
+    safe_join([
+      options_for_select(flat_options, selected_str),
+      grouped.any? ? grouped_options_for_select(grouped, selected_str) : ''.html_safe
+    ])
   end
 
   # 指定データ配列(snippet_option_list)を select用optgroup(option)構造へ変換
