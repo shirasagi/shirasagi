@@ -7,14 +7,18 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
   let(:now) { Time.zone.now.change(usec: 0) }
 
   let!(:user1_group) { create(:gws_group, name: "#{site.name}/#{unique_id}") }
-  let!(:user1) { create(:gws_user, :gws_workflow_notice, group_ids: [ user1_group.id ], gws_role_ids: [ minimum_role.id ]) }
+  let!(:user1) do
+    create(:gws_user, :gws_workflow_notice, cur_site: site, group_ids: [ user1_group.id ], gws_role_ids: [ minimum_role.id ])
+  end
   let!(:user1_superior) do
-    create(:gws_user, :gws_workflow_notice, group_ids: [ user1_group.id ], gws_role_ids: [ minimum_role.id ])
+    create(:gws_user, :gws_workflow_notice, cur_site: site, group_ids: [ user1_group.id ], gws_role_ids: [ minimum_role.id ])
   end
   let!(:user2_group) { create(:gws_group, name: "#{site.name}/#{unique_id}") }
-  let!(:user2) { create(:gws_user, :gws_workflow_notice, group_ids: [ user2_group.id ], gws_role_ids: [ minimum_role.id ]) }
+  let!(:user2) do
+    create(:gws_user, :gws_workflow_notice, cur_site: site, group_ids: [ user2_group.id ], gws_role_ids: [ minimum_role.id ])
+  end
   let!(:user2_superior) do
-    create(:gws_user, :gws_workflow_notice, group_ids: [ user2_group.id ], gws_role_ids: [ minimum_role.id ])
+    create(:gws_user, :gws_workflow_notice, cur_site: site, group_ids: [ user2_group.id ], gws_role_ids: [ minimum_role.id ])
   end
 
   before do
@@ -52,8 +56,12 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
   context "request by agent" do
     context "with fixed rout (no superiors)" do
-      let!(:approve_user) { create(:gws_user, :gws_workflow_notice, group_ids: admin.group_ids, gws_role_ids: [ minimum_role.id ]) }
-      let!(:circulation_user) { create(:gws_user, :gws_workflow_notice, group_ids: admin.group_ids, gws_role_ids: [ minimum_role.id ]) }
+      let!(:approve_user) do
+        create(:gws_user, :gws_workflow_notice, cur_site: site, group_ids: admin.group_ids, gws_role_ids: [ minimum_role.id ])
+      end
+      let!(:circulation_user) do
+        create(:gws_user, :gws_workflow_notice, cur_site: site, group_ids: admin.group_ids, gws_role_ids: [ minimum_role.id ])
+      end
       let!(:route) do
         create(
           :gws_workflow2_route, group_ids: admin.group_ids,
@@ -522,7 +530,9 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
     end
 
     context "with route fixed-user and superior" do
-      let!(:approve_user) { create(:gws_user, :gws_workflow_notice, group_ids: admin.group_ids, gws_role_ids: [ minimum_role.id ]) }
+      let!(:approve_user) do
+        create(:gws_user, :gws_workflow_notice, cur_site: site, group_ids: admin.group_ids, gws_role_ids: [ minimum_role.id ])
+      end
       let!(:route) do
         create(
           :gws_workflow2_route, group_ids: admin.group_ids,
@@ -695,7 +705,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
     context "with route alternatable superior" do
       let!(:alternate_user) do
-        create(:gws_user, :gws_workflow_notice, group_ids: [ user2_group.id ], gws_role_ids: [ minimum_role.id ])
+        create(:gws_user, :gws_workflow_notice, cur_site: site, group_ids: [ user2_group.id ], gws_role_ids: [ minimum_role.id ])
       end
       let!(:route) do
         create(
