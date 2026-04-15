@@ -16,7 +16,7 @@ end
 
 # ページ変数 - 基本情報
 save_loop_setting(
-  name: "スニペット/ページ/ページ名",
+  name: "ページ/ページ名",
   description: "ページ名を表示",
   html_format: "liquid",
   state: "public",
@@ -26,7 +26,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/ページ一覧名",
+  name: "ページ/ページ一覧名",
   loop_html_setting_type: "snippet",
   description: "ページの一覧名を表示（index_nameがない場合はname）",
   html_format: "liquid",
@@ -36,7 +36,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/ページURL",
+  name: "ページ/ページURL",
   loop_html_setting_type: "snippet",
   description: "ページのURLを表示",
   html_format: "liquid",
@@ -46,7 +46,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/ページフルURL",
+  name: "ページ/ページフルURL",
   loop_html_setting_type: "snippet",
   description: "ページのフルURLを表示",
   html_format: "liquid",
@@ -56,7 +56,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/ページID",
+  name: "ページ/ページID",
   loop_html_setting_type: "snippet",
   description: "ページのIDを表示",
   html_format: "liquid",
@@ -66,7 +66,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/ページサマリー",
+  name: "ページ/ページサマリー",
   loop_html_setting_type: "snippet",
   description: "ページのサマリーを表示",
   html_format: "liquid",
@@ -76,7 +76,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/ページ概要",
+  name: "ページ/ページ概要",
   loop_html_setting_type: "snippet",
   description: "ページの概要を表示",
   html_format: "liquid",
@@ -86,7 +86,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/ページHTML",
+  name: "ページ/ページHTML",
   loop_html_setting_type: "snippet",
   description: "ページのHTMLを表示",
   html_format: "liquid",
@@ -97,7 +97,7 @@ save_loop_setting(
 
 # ページ変数 - 日付・時刻
 save_loop_setting(
-  name: "スニペット/ページ/ページ日時",
+  name: "ページ/ページ日時",
   loop_html_setting_type: "snippet",
   description: "ページの日時を表示（デフォルトフォーマット）",
   html_format: "liquid",
@@ -107,7 +107,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/ページ日時（長い形式）",
+  name: "ページ/ページ日時（長い形式）",
   loop_html_setting_type: "snippet",
   description: "ページの日時を表示（長い形式：2024年1月1日）",
   html_format: "liquid",
@@ -117,7 +117,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/ページ日時（ISO形式）",
+  name: "ページ/ページ日時（ISO形式）",
   loop_html_setting_type: "snippet",
   description: "ページの日時を表示（ISO形式：2024-01-01）",
   html_format: "liquid",
@@ -127,7 +127,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/ページ日時（短い形式）",
+  name: "ページ/ページ日時（短い形式）",
   loop_html_setting_type: "snippet",
   description: "ページの日時を表示（短い形式：1/1）",
   html_format: "liquid",
@@ -137,7 +137,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/更新日時",
+  name: "ページ/更新日時",
   loop_html_setting_type: "snippet",
   description: "ページの更新日時を表示",
   html_format: "liquid",
@@ -147,7 +147,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/公開日時",
+  name: "ページ/公開日時",
   loop_html_setting_type: "snippet",
   description: "ページの公開日時を表示",
   html_format: "liquid",
@@ -157,7 +157,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/作成日時",
+  name: "ページ/作成日時",
   loop_html_setting_type: "snippet",
   description: "ページの作成日時を表示",
   html_format: "liquid",
@@ -168,7 +168,7 @@ save_loop_setting(
 
 # ページ変数 - リンク
 save_loop_setting(
-  name: "スニペット/ページ/リンク（ページ名）",
+  name: "ページ/リンク（ページ名）",
   loop_html_setting_type: "snippet",
   description: "ページ名をリンクとして表示",
   html_format: "liquid",
@@ -178,7 +178,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/リンク（タイトル）",
+  name: "ページ/リンク（タイトル）",
   loop_html_setting_type: "snippet",
   description: "ページ名をh2タグでリンクとして表示",
   html_format: "liquid",
@@ -189,7 +189,7 @@ save_loop_setting(
 
 # ページ変数 - CSSクラス・状態
 save_loop_setting(
-  name: "スニペット/ページ/CSSクラス",
+  name: "ページ/CSSクラス",
   loop_html_setting_type: "snippet",
   description: "ページのCSSクラスを表示",
   html_format: "liquid",
@@ -199,7 +199,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/新着判定",
+  name: "ページ/新着判定",
   loop_html_setting_type: "snippet",
   description: "ページが新着の場合に表示",
   html_format: "liquid",
@@ -209,7 +209,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/現在ページ判定",
+  name: "ページ/現在ページ判定",
   loop_html_setting_type: "snippet",
   description: "ページが現在のページの場合に表示",
   html_format: "liquid",
@@ -219,7 +219,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/CSSクラス属性（新着・現在）",
+  name: "ページ/CSSクラス属性（新着・現在）",
   loop_html_setting_type: "snippet",
   description: "CSSクラス、新着、現在ページの判定を含むクラス属性",
   html_format: "liquid",
@@ -230,7 +230,7 @@ save_loop_setting(
 
 # ページ変数 - カテゴリー
 save_loop_setting(
-  name: "スニペット/ページ/カテゴリー名（連結）",
+  name: "ページ/カテゴリー名（連結）",
   loop_html_setting_type: "snippet",
   description: "カテゴリー名をカンマ区切りで表示",
   html_format: "liquid",
@@ -240,7 +240,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/カテゴリーリンク",
+  name: "ページ/カテゴリーリンク",
   loop_html_setting_type: "snippet",
   description: "カテゴリーをリンクとして表示",
   html_format: "liquid",
@@ -250,7 +250,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/カテゴリー（spanタグ）",
+  name: "ページ/カテゴリー（spanタグ）",
   loop_html_setting_type: "snippet",
   description: "カテゴリーをspanタグで表示",
   html_format: "liquid",
@@ -262,7 +262,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/カテゴリーCSSクラス",
+  name: "ページ/カテゴリーCSSクラス",
   loop_html_setting_type: "snippet",
   description: "カテゴリーのbasenameにitem-を付けてスペース区切りで表示",
   html_format: "liquid",
@@ -273,7 +273,7 @@ save_loop_setting(
 
 # ページ変数 - タグ
 save_loop_setting(
-  name: "スニペット/ページ/タグ",
+  name: "ページ/タグ",
   loop_html_setting_type: "snippet",
   description: "ページのタグをスペース区切りで表示",
   html_format: "liquid",
@@ -284,7 +284,7 @@ save_loop_setting(
 
 # ページ変数 - グループ
 save_loop_setting(
-  name: "スニペット/ページ/管理グループ",
+  name: "ページ/管理グループ",
   loop_html_setting_type: "snippet",
   description: "ページの管理グループ名をカンマ区切りで表示",
   html_format: "liquid",
@@ -294,7 +294,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/管理グループ（最初）",
+  name: "ページ/管理グループ（最初）",
   loop_html_setting_type: "snippet",
   description: "ページの最初の管理グループ名を表示",
   html_format: "liquid",
@@ -305,7 +305,7 @@ save_loop_setting(
 
 # ページ変数 - 画像
 save_loop_setting(
-  name: "スニペット/ページ/サムネイル画像URL",
+  name: "ページ/サムネイル画像URL",
   loop_html_setting_type: "snippet",
   description: "ページのサムネイル画像URLを表示",
   html_format: "liquid",
@@ -315,7 +315,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/画像src",
+  name: "ページ/画像src",
   loop_html_setting_type: "snippet",
   description: "ページHTMLから最初の画像のsrcを取得（デフォルト画像あり）",
   html_format: "liquid",
@@ -326,7 +326,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/サムネイルsrc",
+  name: "ページ/サムネイルsrc",
   loop_html_setting_type: "snippet",
   description: "サムネイル画像URL（なければHTMLから画像、それもなければデフォルト画像）",
   html_format: "liquid",
@@ -338,7 +338,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/画像タグ（サムネイル）",
+  name: "ページ/画像タグ（サムネイル）",
   loop_html_setting_type: "snippet",
   description: "サムネイル画像をimgタグで表示",
   html_format: "liquid",
@@ -349,7 +349,7 @@ save_loop_setting(
 
 # ページ変数 - イベント
 save_loop_setting(
-  name: "スニペット/ページ/イベント開催日時",
+  name: "ページ/イベント開催日時",
   loop_html_setting_type: "snippet",
   description: "イベントの開催日時を表示",
   html_format: "liquid",
@@ -368,7 +368,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/イベント申込締切",
+  name: "ページ/イベント申込締切",
   loop_html_setting_type: "snippet",
   description: "イベントの申込締切を表示",
   html_format: "liquid",
@@ -378,7 +378,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/イベントタイトル",
+  name: "ページ/イベントタイトル",
   loop_html_setting_type: "snippet",
   description: "イベントタイトルを表示",
   html_format: "liquid",
@@ -389,7 +389,7 @@ save_loop_setting(
 
 # ノード変数
 save_loop_setting(
-  name: "スニペット/ノード/ノード名",
+  name: "ノード/ノード名",
   loop_html_setting_type: "snippet",
   description: "ノード名を表示",
   html_format: "liquid",
@@ -399,7 +399,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ノード/ノードURL",
+  name: "ノード/ノードURL",
   loop_html_setting_type: "snippet",
   description: "ノードのURLを表示",
   html_format: "liquid",
@@ -409,7 +409,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ノード/ノード内ページ数",
+  name: "ノード/ノード内ページ数",
   loop_html_setting_type: "snippet",
   description: "ノード内のページ数を表示",
   html_format: "liquid",
@@ -420,7 +420,7 @@ save_loop_setting(
 
 # フィルター - 日付・時刻
 save_loop_setting(
-  name: "スニペット/フィルター/日付（デフォルト形式）",
+  name: "フィルター/日付（デフォルト形式）",
   loop_html_setting_type: "snippet",
   description: "日付をデフォルトフォーマットで表示（%Y/%1m/%1d）",
   html_format: "liquid",
@@ -430,7 +430,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/フィルター/日付（ISO形式）",
+  name: "フィルター/日付（ISO形式）",
   loop_html_setting_type: "snippet",
   description: "日付をISO形式で表示（%Y-%m-%d）",
   html_format: "liquid",
@@ -440,7 +440,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/フィルター/日付（長い形式）",
+  name: "フィルター/日付（長い形式）",
   loop_html_setting_type: "snippet",
   description: "日付を長い形式で表示（%Y年%1m月%1d日）",
   html_format: "liquid",
@@ -450,7 +450,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/フィルター/日付（短い形式）",
+  name: "フィルター/日付（短い形式）",
   loop_html_setting_type: "snippet",
   description: "日付を短い形式で表示（%1m/%1d）",
   html_format: "liquid",
@@ -460,7 +460,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/フィルター/日時（デフォルト形式）",
+  name: "フィルター/日時（デフォルト形式）",
   loop_html_setting_type: "snippet",
   description: "日時をデフォルトフォーマットで表示（%Y/%1m/%1d %H:%M）",
   html_format: "liquid",
@@ -470,7 +470,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/フィルター/日時（長い形式）",
+  name: "フィルター/日時（長い形式）",
   loop_html_setting_type: "snippet",
   description: "日時を長い形式で表示（%Y年%1m月%1d日 %H時%M分）",
   html_format: "liquid",
@@ -481,7 +481,7 @@ save_loop_setting(
 
 # フィルター - その他
 save_loop_setting(
-  name: "スニペット/定型フォーム/ファイルサイズ（人間可読形式）",
+  name: "定型フォーム/ファイルサイズ（人間可読形式）",
   loop_html_setting_type: "snippet",
   description: "定型フォームのファイル入力のサイズを人が視認しやすい形式で表示",
   html_format: "liquid",
@@ -491,7 +491,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/フィルター/数値（3桁区切り）",
+  name: "フィルター/数値（3桁区切り）",
   loop_html_setting_type: "snippet",
   description: "数値を3桁区切り文字列に変換",
   html_format: "liquid",
@@ -501,7 +501,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/フィルター/HTMLサニタイズ",
+  name: "フィルター/HTMLサニタイズ",
   loop_html_setting_type: "snippet",
   description: "HTMLとして不適切な文字を削除",
   html_format: "liquid",
@@ -512,7 +512,7 @@ save_loop_setting(
 
 # 定型フォーム - value変数
 save_loop_setting(
-  name: "スニペット/定型フォーム/定型フォームHTML",
+  name: "定型フォーム/定型フォームHTML",
   loop_html_setting_type: "snippet",
   description: "定型フォームの入力値をHTML化したもの（既定値）",
   html_format: "liquid",
@@ -522,7 +522,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/定型フォーム/定型フォーム入力値",
+  name: "定型フォーム/定型フォーム入力値",
   loop_html_setting_type: "snippet",
   description: "定型フォームの入力値（一行入力、複数行入力など）",
   html_format: "liquid",
@@ -532,7 +532,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/定型フォーム/定型フォームブロック名",
+  name: "定型フォーム/定型フォームブロック名",
   loop_html_setting_type: "snippet",
   description: "定型フォームのブロック名称",
   html_format: "liquid",
@@ -542,7 +542,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/定型フォーム/定型フォーム日付",
+  name: "定型フォーム/定型フォーム日付",
   loop_html_setting_type: "snippet",
   description: "定型フォームの日付入力値を表示",
   html_format: "liquid",
@@ -552,7 +552,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/定型フォーム/リンク（定型フォーム）",
+  name: "定型フォーム/リンク（定型フォーム）",
   loop_html_setting_type: "snippet",
   description: "定型フォームのURL入力値をリンクとして表示",
   html_format: "liquid",
@@ -563,7 +563,7 @@ save_loop_setting(
 
 # 時間タグ
 save_loop_setting(
-  name: "スニペット/ページ/timeタグ（日付）",
+  name: "ページ/timeタグ（日付）",
   loop_html_setting_type: "snippet",
   description: "日付をtimeタグで表示",
   html_format: "liquid",
@@ -573,7 +573,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/timeタグ（日時）",
+  name: "ページ/timeタグ（日時）",
   loop_html_setting_type: "snippet",
   description: "日時をtimeタグで表示",
   html_format: "liquid",
@@ -584,7 +584,7 @@ save_loop_setting(
 
 # ページ変数 - パス・階層
 save_loop_setting(
-  name: "スニペット/ページ/ベース名",
+  name: "ページ/ベース名",
   loop_html_setting_type: "snippet",
   description: "ページのベース名（パス末尾）を表示",
   html_format: "liquid",
@@ -594,7 +594,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/ファイル名",
+  name: "ページ/ファイル名",
   loop_html_setting_type: "snippet",
   description: "ページのファイル名（パス）を表示",
   html_format: "liquid",
@@ -604,7 +604,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/階層の深さ",
+  name: "ページ/階層の深さ",
   loop_html_setting_type: "snippet",
   description: "ページの階層の深さを表示",
   html_format: "liquid",
@@ -614,7 +614,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/並び順",
+  name: "ページ/並び順",
   loop_html_setting_type: "snippet",
   description: "ページの並び順の値を表示",
   html_format: "liquid",
@@ -625,7 +625,7 @@ save_loop_setting(
 
 # ページ変数 - 親ページ
 save_loop_setting(
-  name: "スニペット/ページ/親ページURL",
+  name: "ページ/親ページURL",
   loop_html_setting_type: "snippet",
   description: "親ページのURLを表示",
   html_format: "liquid",
@@ -635,7 +635,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/ページ/親ページ名",
+  name: "ページ/親ページ名",
   loop_html_setting_type: "snippet",
   description: "親ページの名称を表示",
   html_format: "liquid",
@@ -646,7 +646,7 @@ save_loop_setting(
 
 # パーツ
 save_loop_setting(
-  name: "スニペット/パーツ/パーツHTML",
+  name: "パーツ/パーツHTML",
   loop_html_setting_type: "snippet",
   description: "キーで指定したパーツのHTMLを表示（キー名は適宜変更）",
   html_format: "liquid",
@@ -657,7 +657,7 @@ save_loop_setting(
 
 # コレクションフィルター
 save_loop_setting(
-  name: "スニペット/フィルター/フォルダ内ページ一覧",
+  name: "フィルター/フォルダ内ページ一覧",
   loop_html_setting_type: "snippet",
   description: "ノード配下のページ一覧を取得（第2引数は取得件数）",
   html_format: "liquid",
@@ -667,7 +667,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/フィルター/フォーム値で絞り込み",
+  name: "フィルター/フォーム値で絞り込み",
   loop_html_setting_type: "snippet",
   description: "定型フォームのカラム値でページ一覧を絞り込み（key.valueで指定）",
   html_format: "liquid",
@@ -677,7 +677,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/フィルター/フォーム値でソート",
+  name: "フィルター/フォーム値でソート",
   loop_html_setting_type: "snippet",
   description: "定型フォームのカラム値でページ一覧を並び替え（昇順）",
   html_format: "liquid",
@@ -687,7 +687,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/フィルター/同名ページ取得",
+  name: "フィルター/同名ページ取得",
   loop_html_setting_type: "snippet",
   description: "タイトルが一致する別ノードのページ一覧を取得",
   html_format: "liquid",
@@ -698,7 +698,7 @@ save_loop_setting(
 
 # イベントフィルター
 save_loop_setting(
-  name: "スニペット/フィルター/有効な繰り返しイベント抽出",
+  name: "フィルター/有効な繰り返しイベント抽出",
   loop_html_setting_type: "snippet",
   description: "繰り返しイベントから現在有効なもののみを抽出",
   html_format: "liquid",
@@ -708,7 +708,7 @@ save_loop_setting(
 )
 
 save_loop_setting(
-  name: "スニペット/フィルター/繰り返しイベント要約",
+  name: "フィルター/繰り返しイベント要約",
   loop_html_setting_type: "snippet",
   description: "繰り返しイベントを簡潔な文字列に要約",
   html_format: "liquid",
