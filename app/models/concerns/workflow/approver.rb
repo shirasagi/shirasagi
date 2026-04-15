@@ -202,24 +202,6 @@ module Workflow::Approver
     true
   end
 
-  # 代理申請/上位ユーザー
-  def set_workflow_approver_target
-    return if workflow_agent_id.blank? || workflow_agent.blank? || workflow_user.blank?
-
-    superior_users = workflow_user.gws_superior_users(site)
-    superior_user = Gws::User.order_users_by_title(superior_users, cur_site: site).first
-    return unless superior_user
-
-    copy_approvers = workflow_approvers.to_a
-    copy_approvers.each do |approver|
-      if approver[:user_type] == 'superior'
-        approver[:user_id] = superior_user.id
-        approver[:user] = superior_user if approver.key?(:user)
-      end
-    end
-    self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy_approvers)
-  end
-
   # 所属長承認（代理承認者）
   def set_workflow_approver_alternate
     return unless workflow_approver_alternate

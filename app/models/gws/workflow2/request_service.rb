@@ -91,7 +91,6 @@ class Gws::Workflow2::RequestService
 
   def reset_workflow_approvers(item)
     item.workflow_approver_alternate = workflow_approver_alternate
-    item.set_workflow_approver_target
     item.set_workflow_approver_alternate
     item.workflow_approvers = item.workflow_approvers.map do |approver|
       approver = approver.slice(:level, :user_type, :user_id, :state, :editable, :alternate_to)
