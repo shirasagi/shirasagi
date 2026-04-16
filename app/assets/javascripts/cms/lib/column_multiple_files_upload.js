@@ -2,6 +2,8 @@
   if (document.getElementById("multiple-files-upload-styles")) return;
   var style = document.createElement("style");
   style.id = "multiple-files-upload-styles";
+  // 先頭ファイルのドラッグハンドルアイコンのみ視覚的に隠す。先頭は別ファイルをドラッグして
+  // 入れ替える運用想定だが、ハンドル自体は残しドラッグ操作は維持する。
   style.textContent =
     ".multiple-files-upload .cms-addon-file-selected-files > .file-view:first-child .sortable-handle .material-icons { visibility: hidden; }";
   document.head.appendChild(style);
