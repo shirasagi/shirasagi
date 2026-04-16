@@ -1,41 +1,28 @@
-<% value ||= nil %>
-<% controller ||= false %>
+<%
+  value ||= nil
+  controller ||= false
+  current_files = value.try(:files) || []
+  current_labels = value.try(:file_labels) || {}
+  field_name = "item[column_values][][in_wrap][file_ids][]"
+  cid = @cur_node || "-"
+  setting = { field_name: field_name, show_attach: false }
+  setting = JSON::JWT.new(setting).sign(SS::Crypto.salt).to_s
+  select_api_path = select_cms_frames_temp_files_file_path(site: @cur_site, cid: cid, setting: setting, id: ':id')
+%>
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
-  <div class="images-upload-files">
-    <% if value && value.file_ids.present? %>
-      <% value.files.each do |file| %>
-        <div class="images-upload-item">
-          <span class="sortable-handle"><i class="material-icons">drag_handle</i></span>
-          <span class="images-upload-thumb">
-            <% if file.image? %>
-              <%= image_tag file.thumb_url, alt: file.basename %>
-            <% else %>
-              <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
-            <% end %>
-          </span>
-          <span class="images-upload-name"><%= file.name %></span>
-          <%= hidden_field_tag "#{f.object_name}[][in_wrap][file_ids][]", file.id, id: nil, class: "file-id" %>
-          <%= text_field_tag "#{f.object_name}[][in_wrap][file_labels][#{file.id}]", value.file_labels[file.id.to_s], id: nil, class: "images-upload-label", placeholder: t("cms.column_multiple_files_upload.file_label_placeholder") %>
-          <button type="button" class="images-upload-delete"><i class="material-icons md-14">delete</i></button>
-        </div>
-      <% end %>
-    <% end %>
-  </div>
-
-  <span class="upload-menu-new">
-    <% if @cur_node %>
-      <%= link_to t('ss.links.upload'), cms_apis_node_temp_files_path(cid: @cur_node, owner_item_id: @item.id, owner_item_type: @model.to_s), class: "ajax-box btn btn-file-upload" %>
-    <% else %>
-      <%= link_to t('ss.links.upload'), cms_apis_temp_files_path(owner_item_id: @item.id, owner_item_type: @model.to_s), class: "ajax-box btn btn-file-upload" %>
-    <% end %>
-  </span>
-  <span class="upload-menu-select">
-    <%= link_to t("sns.user_file"), cms_apis_user_files_path(cid: @cur_node || '-'), class: "ajax-box btn btn-file-upload" %>
-    <%= link_to t("cms.file"), cms_apis_files_path(cid: @cur_node || '-'), class: "ajax-box btn btn-file-upload" %>
-  </span>
-
-  <div class="column-value-upload-drop-area">
-    <span class="column-value-upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
+  <div class="multiple-files-upload"
+       data-file-labels="<%= current_labels.to_json %>"
+       data-label-name="item[column_values][][in_wrap][file_labels]"
+       data-label-placeholder="<%= t('cms.column_multiple_files_upload.file_label_placeholder') %>">
+    <%=
+      component = SS::FileSelectBoxComponent.new(
+        ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, page: @page, item: @item,
+        field_name: field_name, selection_type: "append",
+        files: current_files, select_api_path: select_api_path,
+        show_attach: false, show_opendata: false, show_reorder: false
+      )
+      render component
+    %>
   </div>
 
   <%= jquery do %>

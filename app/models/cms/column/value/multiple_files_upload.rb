@@ -50,21 +50,18 @@ class Cms::Column::Value::MultipleFilesUpload < Cms::Column::Value::Base
   def to_default_html
     return '' if file_ids.blank?
 
-    list_items = files.map do |file|
+    items = files.map do |file|
       label = file_label_for(file)
-      if file.image?
-        ApplicationController.helpers.content_tag(:li) do
-          ApplicationController.helpers.image_tag(file.url, alt: label)
-        end
-      else
-        ApplicationController.helpers.content_tag(:li) do
-          text = "#{label} (#{file.extname.upcase} #{file.size.to_fs(:human_size)})"
-          ApplicationController.helpers.link_to(text, file.url)
-        end
-      end
+      content = if file.image?
+                  ApplicationController.helpers.image_tag(file.url, alt: label)
+                else
+                  text = "#{label} (#{file.extname.upcase} #{file.size.to_fs(:human_size)})"
+                  ApplicationController.helpers.link_to(text, file.url)
+                end
+      ApplicationController.helpers.content_tag(:div, content, class: "column-item")
     end
 
-    ApplicationController.helpers.content_tag(:ul, list_items.join.html_safe)
+    ApplicationController.helpers.content_tag(:div, items.join.html_safe, class: "column2")
   end
 
   def search_values(values)
@@ -77,24 +74,24 @@ class Cms::Column::Value::MultipleFilesUpload < Cms::Column::Value::Base
   end
 
   def file_label_for(file)
-    file_labels.present? && file_labels[file.id.to_s].presence || file.humanized_name
+    file_labels.present? && file_labels[file.id.to_s].presence || file.name
   end
 
   class << self
     def form_example_layout
       h = []
       h << %({% if value.files.size > 0 %})
-      h << %(  <ul>)
+      h << %(  <div class="column2">)
       h << %(    {% for file in value.files %})
-      h << %(      <li>)
+      h << %(      <div class="column-item">)
       h << %(        {% if file.image? %})
-      h << %(          <img src="{{ file.url }}" alt="{{ file.humanized_name }}">)
+      h << %(          <img src="{{ file.url }}" alt="{{ value.file_labels[file.id] | default: file.name }}">)
       h << %(        {% else %})
-      h << %(          <a href="{{ file.url }}">{{ file.humanized_name }}</a>)
+      h << %(          <a href="{{ file.url }}">{{ value.file_labels[file.id] | default: file.name }}</a>)
       h << %(        {% endif %})
-      h << %(      </li>)
+      h << %(      </div>)
       h << %(    {% endfor %})
-      h << %(  </ul>)
+      h << %(  </div>)
       h << %({% endif %})
       h.join("\n")
     end
