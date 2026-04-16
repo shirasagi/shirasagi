@@ -1,0 +1,31 @@
+<% value ||= nil %>
+<%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do %>
+  <% if value && value.file_ids.present? %>
+    <div id="selected-files">
+      <% value.files.each do |file| %>
+        <div class="file-view" data-file-id="<%= file.id %>">
+          <%= sanitizer_status(file) %>
+          <%= link_to file.url, class: :thumb, target: "_blank", rel: "noopener" do %>
+            <% if file.image? %>
+              <%= image_tag file.thumb_url, alt: file.name %>
+            <% else %>
+              <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
+            <% end %>
+            <div class="properties">
+              <span><%= I18n.t("sns.filename") %>: <%= file.name %></span><br>
+              <% if file.image? %>
+                <% width, height = file.image_dimension %>
+                <span><%= t("sns.w_h") %>: <%= width %> x <%= height %></span><br>
+              <% end %>
+              <span><%= t("sns.size") %>: <%= number_to_human_size(file.size) %></span><br>
+            </div>
+          <% end %>
+          <div class="name">
+            <label><%= file.name %></label><br />
+            <label><%= t("cms.column_multiple_files_upload.file_label") %>: <%= value.file_label_for(file) %></label>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
