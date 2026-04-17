@@ -45,6 +45,21 @@ layout: "{% for item in items %}{{ item.name }}{% endfor %}")
         expect(column).to be_valid
       end
     end
+
+    describe "loop_setting association" do
+      let!(:loop_setting) { create(:cms_loop_setting, site: site) }
+
+      it "is optional" do
+        column = build(:cms_column_free, cur_site: site, cur_form: form, loop_setting: nil)
+        expect(column).to be_valid
+      end
+
+      it "accepts assigned loop_setting" do
+        column = build(:cms_column_free, cur_site: site, cur_form: form, loop_setting: loop_setting)
+        expect(column).to be_valid
+        expect(column.loop_setting).to eq loop_setting
+      end
+    end
   end
 
   describe "integration with form columns" do

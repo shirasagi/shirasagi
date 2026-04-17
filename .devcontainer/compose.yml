@@ -10,13 +10,18 @@ services:
       dockerfile: .devcontainer/Dockerfile
     volumes:
       - ..:/workspaces/shirasagi:cached
-    command: sleep infinity # 開発コンテナが勝手にダウンしない為に設定する
+    command: sleep infinity
     ports:
       - ${PORT:-3000}:${PORT:-3000}
     depends_on:
       - db
+      - mail
+      - elasticsearch
     links:
       - db:database
+      - mail:mail
+      - elasticsearch:elasticsearch
+
   db:
     image: mongo:7.0
     env_file:
@@ -24,8 +29,24 @@ services:
         required: false
     volumes:
       - db_data:/data/db
-    #ports:
-    #  - 27017:27017
+
+  mail:
+    image: ghcr.io/shirasagi/mail:latest
+    ports:
+      - "10143:143"
+      - "10587:587"
+
+  elasticsearch:
+    image: ghcr.io/shirasagi/elasticsearch:8
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
 
 volumes:
   db_data: {}
+  es_data: {}

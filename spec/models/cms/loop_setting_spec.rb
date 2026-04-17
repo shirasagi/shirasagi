@@ -22,6 +22,22 @@ describe Cms::LoopSetting, dbscope: :example do
       it { expect(subject.selector.to_h).to include("$or" => include("name" => /キーワード1/i)) }
       it { expect(subject.selector.to_h).to include("$and" => include("$or" => include("name" => /キーワード2/i))) }
     end
+
+    context "when html_format is given" do
+      subject { described_class.search(html_format: "liquid") }
+      it { expect(subject.selector.to_h).to include("html_format" => "liquid") }
+    end
+
+    context "when loop_html_setting_type is given" do
+      subject { described_class.search(loop_html_setting_type: "snippet") }
+      it { expect(subject.selector.to_h).to include("loop_html_setting_type" => "snippet") }
+    end
+
+    context "when html_format is shirasagi and loop_html_setting_type is snippet" do
+      subject { described_class.search(html_format: "shirasagi", loop_html_setting_type: "snippet") }
+      it { expect(subject.selector.to_h).to include("html_format" => include("$in" => include(nil, "shirasagi"))) }
+      it { expect(subject.selector.to_h).not_to include("loop_html_setting_type" => "snippet") }
+    end
   end
 
   describe "html_format" do
@@ -32,6 +48,10 @@ describe Cms::LoopSetting, dbscope: :example do
 
       it "has default html_format" do
         expect(subject.html_format).to eq "shirasagi"
+      end
+
+      it "has default loop_html_setting_type" do
+        expect(subject.loop_html_setting_type).to eq "template"
       end
     end
 
@@ -48,6 +68,12 @@ describe Cms::LoopSetting, dbscope: :example do
         options = loop_setting.html_format_options
         expect(options).to include([I18n.t('cms.options.loop_format.shirasagi'), 'shirasagi'])
         expect(options).to include([I18n.t('cms.options.loop_format.liquid'), 'liquid'])
+      end
+
+      it "returns loop_html_setting_type options for label helper" do
+        options = loop_setting.loop_html_setting_type_options
+        expect(options).to include([I18n.t('cms.options.loop_html_setting_type.template'), 'template'])
+        expect(options).to include([I18n.t('cms.options.loop_html_setting_type.snippet'), 'snippet'])
       end
     end
 
@@ -190,6 +216,7 @@ describe Cms::LoopSetting, dbscope: :example do
         name: "loop-setting-#{unique_id}"
       )
       expect(loop_setting.state).to eq "public"
+      expect(loop_setting.loop_html_setting_type).to eq "template"
     end
 
     it "accepts closed" do
@@ -201,6 +228,41 @@ describe Cms::LoopSetting, dbscope: :example do
       loop_setting = build(:cms_loop_setting, site: site, state: "invalid")
       expect(loop_setting).not_to be_valid
       expect(loop_setting.errors[:state]).to include(I18n.t('errors.messages.inclusion'))
+    end
+  end
+
+  describe "loop_html_setting_type" do
+    let(:site) { cms_site }
+
+    it "defaults to template" do
+      loop_setting = Cms::LoopSetting.create!(
+        cur_site: site,
+        name: "loop-setting-#{unique_id}"
+      )
+      expect(loop_setting.loop_html_setting_type).to eq "template"
+    end
+
+    it "accepts snippet" do
+      # snippet は liquid 形式のみ選択可能（shirasagi は template 固定）
+      loop_setting = build(:cms_loop_setting, site: site, html_format: "liquid", loop_html_setting_type: "snippet")
+      expect(loop_setting).to be_valid
+      expect(loop_setting.loop_html_setting_type_snippet?).to be true
+      expect(loop_setting.loop_html_setting_type_template?).to be false
+    end
+
+    it "accepts template" do
+      loop_setting = build(:cms_loop_setting, site: site, loop_html_setting_type: "template")
+      expect(loop_setting).to be_valid
+      expect(loop_setting.loop_html_setting_type_template?).to be true
+      expect(loop_setting.loop_html_setting_type_snippet?).to be false
+    end
+
+    it "rejects invalid values" do
+      # shirasagi だと normalize_loop_html_setting_type により template に補正されるため、
+      # バリデーションを確認するために liquid を指定する
+      loop_setting = build(:cms_loop_setting, site: site, html_format: "liquid", loop_html_setting_type: "invalid")
+      expect(loop_setting).not_to be_valid
+      expect(loop_setting.errors[:loop_html_setting_type]).to include(I18n.t('errors.messages.inclusion'))
     end
   end
 end
