@@ -64,6 +64,7 @@ ja:
     loop_html: ループHTML
     labels:
       snippets: スニペット
+      template: テンプレート
     max_file_size: 最大ファイルサイズ
     max_file_size_setting: 最大ファイルサイズ設定
     image_resize: 画像リサイズ
@@ -362,6 +363,7 @@ ja:
       twitter_post_enabled: X(旧Twitter)投稿が有効になっています。連携しない場合は、設定を解除してください。
       source_clean: "ソースクリーニングを実行してよろしいですか。\nソースクリーニングにより表示が崩れる可能性があります。"
       change_form: 定型フォームを変更してよろしいですか？
+      switch_to_loop_setting_discards_direct_input: テンプレートを適用すると直接入力した内容は破棄されます。よろしいですか？
       line_apply_richmenu: リッチメニューの反映処理を開始してよろしいですか？
       disallow_edit_ignore_syntax_check: アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。
       confirm_move_changes: 移動により影響を受けるコンテンツを確認しました。
@@ -628,6 +630,9 @@ ja:
       loop_format:
         shirasagi: SHIRASAGI
         liquid: Liquid
+      loop_html_setting_type:
+        template: テンプレート
+        snippet: スニペット
       alignment:
         flow: 自動
         left: 左
@@ -1297,6 +1302,7 @@ ja:
         description: 説明
         order: 並び順
         html_format: HTML種別
+        loop_html_setting_type: 種別
       cms/command:
         name: タイトル
         description: 説明
@@ -2149,9 +2155,11 @@ ja:
     cms:
       labels:
         snippets:
-          - サイト設定のループHTMLで作成したHTMLを選択して挿入できます。
-          - 選択したHTMLは、現在のカーソル位置に追加されます。
-          - HTMLはLiquid形式で記述する必要があります。
+          - 良く使うHTML片が一覧に表示されます。
+          - HTML片を選択すると、現在のカーソル位置にHTML片が挿入されます。
+        loop_html:
+          - 事前に登録したテンプレートが一覧表示されます。
+          - 一覧からテンプレートを選択するか、「直接入力する」を選択し任意のHTMLを設定してください。
     cms/addon/readable_setting:
       readable_setting_range:
         - <b>全公開</b> - 誰でも閲覧できます。
@@ -2591,7 +2599,11 @@ ja:
         - ループHTML形式の形式を選択します。
         -
         - "SHIRASAGI: シラサギ形式で上部 HTML, ループ HTML, 下部 HTMLを記述します。"
-        - "Liquid: Liquid 形式でループ HTML を記述します。"
+        - "Liquid: Liquid 形式でループ HTML を記述します。テンプレートまたはスニペットが選択できます。"
+        -
+        - "テンプレートとスニペットの使い分け:"
+        - "テンプレート: サイト設定のループ設定を変更すると、そのテンプレートが設定されているフォルダーにも反映されます。"
+        - "スニペット: サイト設定のループ設定を変更しても、挿入済みのフォルダーには連動しません。"
       upper_html:
         - リスト部分の上部に任意の内容のHTMLを記述することが可能です。
         - |-
@@ -2681,6 +2693,10 @@ ja:
 
     cms/loop_setting:
       html_format: *loop_format
+      loop_html_setting_type:
+        - "Liquid 形式の用途を選択します。"
+        - "テンプレート: ループ HTML 全体をループ単位のテンプレートとして使用します。"
+        - "スニペット: 部品として、ループ HTML 内の任意の場所に挿入して使用します。"
 
     cms/addon/tabs:
       conditions:

@@ -13,11 +13,33 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
     select option_text, from: loop_snippet_select[:id]
   end
 
+  def editor_or_textarea_value(field_id)
+    page.evaluate_script(<<~JS)
+      (function() {
+        var el = document.getElementById("#{field_id}");
+        if (!el) { return null; }
+
+        var editor = $(el).data('editor');
+        if (editor && typeof editor.getValue === 'function') {
+          return editor.getValue();
+        }
+
+        return el.value;
+      })();
+    JS
+  end
+
+  def wait_for_editor_or_textarea_value(field_id, expected_substring, timeout: Capybara.default_max_wait_time)
+    Selenium::WebDriver::Wait.new(timeout: timeout).until do
+      editor_or_textarea_value(field_id).to_s.include?(expected_substring)
+    end
+  end
+
   context 'loop html snippet functionality' do
+
     let!(:liquid_setting) do
-      create(:cms_loop_setting,
+      create(:cms_loop_setting, :liquid, :snippet_type,
         site: site,
-        html_format: "liquid",
         html: "{% for item in items %}<div class='loop-item'>{{ item.name }}</div>{% endfor %}",
         state: "public",
         order: 20,
@@ -26,9 +48,8 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
     end
 
     let!(:shirasagi_setting) do
-      create(:cms_loop_setting,
+      create(:cms_loop_setting, :shirasagi, :snippet_type,
         site: site,
-        html_format: "shirasagi",
         html: "<div class='shirasagi-item'>##{name}##</div>",
         state: "public",
         name: "Test Shirasagi Setting #{unique_id}"
@@ -216,9 +237,8 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
 
   context 'snippet functionality with multiple loop settings' do
     let!(:liquid_setting1) do
-      create(:cms_loop_setting,
+      create(:cms_loop_setting, :liquid, :snippet_type,
         site: site,
-        html_format: "liquid",
         html: "{% for item in items %}<div class='loop-item-1'>{{ item.name }}</div>{% endfor %}",
         state: "public",
         order: 5,
@@ -227,9 +247,8 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
     end
 
     let!(:liquid_setting2) do
-      create(:cms_loop_setting,
+      create(:cms_loop_setting, :liquid, :snippet_type,
         site: site,
-        html_format: "liquid",
         html: "{% for item in items %}<div class='loop-item-2'>{{ item.title }}</div>{% endfor %}",
         state: "public",
         order: 15,
@@ -238,9 +257,8 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
     end
 
     let!(:closed_setting) do
-      create(:cms_loop_setting,
+      create(:cms_loop_setting, :liquid, :snippet_type,
         site: site,
-        html_format: "liquid",
         html: "{% for item in items %}<div class='closed-item'>{{ item.content }}</div>{% endfor %}",
         state: "closed",
         name: "Closed Setting #{unique_id}"
@@ -318,6 +336,43 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       # NOTE: The snippet insertion might not work as expected in tests
       # This test verifies that the form can be saved with multiple operations
       expect(form.html).to include("<div class='footer'>Footer content</div>")
+    end
+  end
+  context 'loop setting selector functionality' do
+    let!(:liquid_loop_setting) do
+      create(:cms_loop_setting,
+        site: site,
+        html_format: 'liquid',
+        html: "{% for item in items %}<section class='loader-target'>{{ item.name }}</section>{% endfor %}",
+        state: 'public',
+        order: 1,
+        name: "Loader Target #{unique_id}")
+    end
+
+    before { login_cms_user }
+
+    def loop_setting_select
+      find('.loop-setting-selector', visible: :all)
+    end
+
+    def select_loop_setting(option_text)
+      select option_text, from: loop_setting_select[:id]
+    end
+
+    it 'loads selected liquid loop setting into html without loading translation message' do
+      visit new_cms_form_path(site)
+
+      within 'form#item-form' do
+        fill_in 'item[name]', with: name
+
+        select_loop_setting(liquid_loop_setting.name)
+        wait_for_editor_or_textarea_value('item_html', 'loader-target')
+
+        expect(editor_or_textarea_value('item_html')).to include("loader-target")
+        expect(loop_snippet_select).to be_disabled
+        expect(page).to have_no_css('.translation_missing[title*="ss.notice.loading"]')
+        expect(page).to have_no_content('translation missing: ja.ss.notice.loading')
+      end
     end
   end
 end

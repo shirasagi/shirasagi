@@ -5,19 +5,233 @@
 <%= jquery do %>
   var $addon = $("<%= "##{addon[:id]}" %>");
   var $loopFormatSelect = $addon.find("select[name='item[loop_format]']");
+
+  var setLoopHtmlValue = function($textarea, value) {
+    if (!$textarea || $textarea.length === 0) {
+      return;
+    }
+    var editor = $textarea.data('editor');
+    if (editor) {
+      editor.setValue(value);
+      editor.save();
+    } else {
+      $textarea.val(value);
+    }
+  };
+
+  var getLoopHtmlValue = function($textarea) {
+    if (!$textarea || $textarea.length === 0) {
+      return '';
+    }
+    var editor = $textarea.data('editor');
+    if (editor) {
+      return editor.getValue() || '';
+    }
+    return $textarea.val() || '';
+  };
+
+  var setLoopHtmlLoadingState = function($textarea, isLoading) {
+    if (!$textarea || $textarea.length === 0) {
+      return;
+    }
+
+    $textarea.prop('disabled', isLoading);
+    var editor = $textarea.data('editor');
+    if (editor) {
+      editor.setOption('readOnly', isLoading ? 'nocursor' : false);
+    }
+  };
+
+  // When loop setting is selected, textarea is preview-only.
+  // Keep it selectable/copyable, but do not submit it (avoid accidental overwrite / validation conflict).
+  var setTextareaSubmittable = function($textarea, submittable) {
+    if (!$textarea || $textarea.length === 0) {
+      return;
+    }
+
+    if (submittable) {
+      var originalName = $textarea.data('original-name');
+      if (originalName) {
+        $textarea.attr('name', originalName);
+      }
+      $textarea.prop('readonly', false);
+      var editorOn = $textarea.data('editor');
+      if (editorOn) {
+        editorOn.setOption('readOnly', false);
+      }
+    } else {
+      if (!$textarea.data('original-name')) {
+        $textarea.data('original-name', $textarea.attr('name'));
+      }
+      $textarea.removeAttr('name');
+      $textarea.prop('readonly', true);
+      var editorOff = $textarea.data('editor');
+      if (editorOff) {
+        editorOff.setOption('readOnly', true);
+      }
+    }
+  };
+
+  var clearLoopHtmlMessage = function($textarea) {
+    if (!$textarea || $textarea.length === 0) {
+      return;
+    }
+    var $msg = $textarea.data('loop-html-message');
+    if ($msg && $msg.length) {
+      $msg.removeClass('is-loading is-error');
+      $msg.text('').hide();
+    }
+  };
+
+
+  var showLoopHtmlError = function($textarea, message) {
+    if (!$textarea || $textarea.length === 0) {
+      return;
+    }
+
+    var $msg = $textarea.data('loop-html-message');
+    if (!$msg || $msg.length === 0) {
+      $msg = $('<p class="loop-html-fetch-message" role="alert" style="margin-top: 4px; display: none;"></p>');
+      $msg.insertAfter($textarea);
+      $textarea.data('loop-html-message', $msg);
+    }
+
+    $msg.removeClass('is-loading').addClass('is-error')
+      .css('color', '#c00')
+      .text(message)
+      .show();
+  };
+
+  // 共通のループHTML設定読み込み（SHIRASAGI/Liquid 両対応）
+  var createLoopHtmlLoader = function(loopSettingSelectId, loopHtmlTextareaId, snippetSelectSelector) {
+    return Cms_LoopSettingLoader.create({
+      addonSelector: "<%= "##{addon[:id]}" %>",
+      loopSettingSelect: loopSettingSelectId,
+      textareaSelector: loopHtmlTextareaId,
+      snippetSelectSelector: snippetSelectSelector,
+      apiPathTemplate: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>',
+      acceptEmptyHtml: true,
+      setTextareaSubmittable: function($textarea, submittable) {
+        setTextareaSubmittable($textarea, submittable);
+      },
+      setLoadingState: function($textarea, isLoading) {
+        setLoopHtmlLoadingState($textarea, isLoading);
+      },
+      setValue: function($textarea, html) {
+        setLoopHtmlValue($textarea, html);
+      },
+      onBeforeUpdate: function($textarea) {
+        clearLoopHtmlMessage($textarea);
+      },
+      onAfterSuccess: function(_data, _loopSettingId, $textarea) {
+        clearLoopHtmlMessage($textarea);
+      },
+      onAfterError: function(xhr, status, error, _loopSettingId, $textarea) {
+        console.error('Loop setting fetch error:', xhr, status, error);
+        showLoopHtmlError($textarea, <%= t("ss.errors.messages.unexpected_error").to_json.html_safe %>);
+      }
+    });
+  };
+
+  var shirasagiLoopHtmlLoader = createLoopHtmlLoader('#item_loop_setting_id', '#item_loop_html');
+  var liquidLoopHtmlLoader = createLoopHtmlLoader('#item_loop_setting_id_liquid', '#item_loop_liquid', '.loop-snippet-selector');
+
+  // SHIRASAGI形式のループHTML設定の読み込み
+  var updateLoopHtmlShirasagi = function() {
+    shirasagiLoopHtmlLoader.update();
+  };
+
+  // Liquid形式のループHTML設定の読み込み
+  var updateLoopHtmlLiquid = function() {
+    liquidLoopHtmlLoader.update();
+  };
+
+  var confirmDiscardDirectInputIfNeeded = function($select, $textarea) {
+    if (!$select || $select.length === 0) {
+      return true;
+    }
+    if ($select.data('suppress-loop-setting-confirm')) {
+      return true;
+    }
+
+    var prev = $select.data('previous-value') || '';
+    var next = $select.val() || '';
+    if (prev !== '' || next === '') {
+      return true;
+    }
+
+    var currentValue = (getLoopHtmlValue($textarea) || '').trim();
+    if (currentValue === '') {
+      return true;
+    }
+
+    return confirm(<%= t("cms.confirm.switch_to_loop_setting_discards_direct_input").to_json.html_safe %>);
+  };
+
+  var revertSelectToPreviousValue = function($select) {
+    if (!$select || $select.length === 0) {
+      return;
+    }
+
+    var prev = $select.data('previous-value') || '';
+    $select.data('suppress-loop-setting-confirm', true);
+    $select.val(prev);
+    $select.trigger('change');
+    $select.data('suppress-loop-setting-confirm', false);
+  };
+
   if ($loopFormatSelect.length) {
     Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
 
+    // SHIRASAGI形式のループHTML設定変更時にHTMLを読み込む
+    var $loopSettingSelectShirasagiOnly = $('#item_loop_setting_id');
+    var $loopHtmlTextareaShirasagi = $('#item_loop_html');
+    $loopSettingSelectShirasagiOnly.data('previous-value', $loopSettingSelectShirasagiOnly.val() || '');
+    $loopSettingSelectShirasagiOnly.on('change', function(_ev) {
+      if (!confirmDiscardDirectInputIfNeeded($loopSettingSelectShirasagiOnly, $loopHtmlTextareaShirasagi)) {
+        revertSelectToPreviousValue($loopSettingSelectShirasagiOnly);
+        return;
+      }
+
+      updateLoopHtmlShirasagi();
+      $loopSettingSelectShirasagiOnly.data('previous-value', $loopSettingSelectShirasagiOnly.val() || '');
+    });
+    // 初期状態で既にloop_setting_idが設定されている場合もHTMLを読み込む
+    if ($('#item_loop_setting_id').val()) {
+      updateLoopHtmlShirasagi();
+    }
+
     <% if @model.use_liquid %>
+    Cms_Editor_CodeMirror.lock('#item_loop_setting_id_liquid', '#item_loop_liquid');
+    var $loopSettingSelectShirasagi = $('#item_loop_setting_id');
+    var $loopSettingSelectLiquid = $('#item_loop_setting_id_liquid');
+    var $loopHtmlTextareaLiquid = $('#item_loop_liquid');
+    $loopSettingSelectLiquid.data('previous-value', $loopSettingSelectLiquid.val() || '');
+
+    // Liquid形式のループHTML設定変更時にHTMLを読み込む
+    $('#item_loop_setting_id_liquid').on('change', function(_ev) {
+      if (!confirmDiscardDirectInputIfNeeded($loopSettingSelectLiquid, $loopHtmlTextareaLiquid)) {
+        revertSelectToPreviousValue($loopSettingSelectLiquid);
+        return;
+      }
+
+      updateLoopHtmlLiquid();
+      $loopSettingSelectLiquid.data('previous-value', $loopSettingSelectLiquid.val() || '');
+    });
+    // 初期状態で既にloop_setting_idが設定されている場合もHTMLを読み込む
+    if ($('#item_loop_setting_id_liquid').val()) {
+      updateLoopHtmlLiquid();
+    }
+
     var changeLoopFormat = function() {
       var format = $loopFormatSelect.val();
-      if (format === "liquid") {
-        $addon.find(".loop-format-shirasagi").addClass("hide");
-        $addon.find(".loop-format-liquid").removeClass("hide");
-      } else {
-        $addon.find(".loop-format-shirasagi").removeClass("hide");
-        $addon.find(".loop-format-liquid").addClass("hide");
-      }
+      var isLiquid = format === "liquid";
+
+      $addon.find(".loop-format-shirasagi").toggleClass("hide", isLiquid);
+      $addon.find(".loop-format-liquid").toggleClass("hide", !isLiquid);
+
+      $loopSettingSelectShirasagi.prop('disabled', isLiquid);
+      $loopSettingSelectLiquid.prop('disabled', !isLiquid);
     };
 
     changeLoopFormat();
@@ -86,8 +300,8 @@
     <% end %>
 
     <% if @model.use_loop_html %>
-      <dt><%= @model.t :loop_html %><%= @model.tt :loop_html %></dt>
-      <dd><%= f.select :loop_setting_id, ancestral_loop_settings, include_blank: t('cms.input_directly') %></dd>
+      <dt><%= t("cms.loop_html") %><%= @model.tt :loop_html %></dt>
+      <dd><%= f.select :loop_setting_id, ancestral_loop_settings, { include_blank: t('cms.input_directly') }, disabled: (@item.loop_format == 'liquid') %></dd>
       <dd><%= f.text_area :loop_html, class: :html, style: "height: 100px;" %></dd>
     <% end %>
 
@@ -109,43 +323,78 @@
 <% end %>
 
 <% if @model.use_loop_settings && @model.use_liquid %>
+  <%
+    liquid_settings = Cms::LoopSetting.site(@cur_site).liquid
+    liquid_snippet_options = liquid_settings.snippet_type.map { [_1.name, _1.id, { "data-snippet" => _1.html.to_s }] }
+    liquid_template_options = liquid_settings.template_type.map { [_1.name, _1.id] }
+  %>
   <dl class="see loop-format-liquid">
-    <dt><%= t("cms.labels.snippets") %><%= tt("cms.labels.snippets") %></dt>
+    <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
+    <% if liquid_template_options.present? %>
     <dd>
-      <% snippet_options = ancestral_html_settings_liquid %>
-      <%= select_tag(
+      <%=
+        liquid_template_options = render SS::OptionsForSelectComponent.new(options: liquid_template_options, selected: @item.loop_setting_id)
+        select_tag(
+          'item[loop_setting_id]',
+          liquid_template_options,
+          include_blank: t('cms.input_directly'),
+          id: 'item_loop_setting_id_liquid',
+          name: 'item[loop_setting_id]',
+          disabled: (@item.loop_format != 'liquid')
+        )
+      %>
+      <%= tt("cms.labels.loop_html") %>
+    </dd>
+    <% end %>
+    <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
+    <% if liquid_snippet_options.present? %>
+      <dd>
+        <%=
+          liquid_snippet_options = render SS::OptionsForSelectComponent.new(options: liquid_snippet_options)
+          select_tag(
             'loop_snippet_selector',
-            options_with_optgroup_for_snippets(snippet_options),
+            liquid_snippet_options,
+            include_blank: t("cms.labels.snippets"),
             id: snippet_select_id,
             class: 'loop-snippet-selector'
-          ) %>
-    </dd>
-    <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
-    <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
+          )
+        %>
+        <%= tt("cms.labels.snippets") %>
+      </dd>
+    <% end %>
   </dl>
-  
+
   <%= jquery do %>
     var $addon = $("<%= "##{addon[:id]}" %>");
+    var $loopSettingSelectLiquid = $('#item_loop_setting_id_liquid');
+
     $addon.find('.loop-snippet-selector').on('change', function() {
       var $select = $(this);
+
+      // ループHTML設定が選択されている場合はスニペットの挿入を無効にする
+      if ($loopSettingSelectLiquid.length && $loopSettingSelectLiquid.val()) {
+        $select.val('');
+        return;
+      }
+
       var $option = $select.find(':selected');
-      
+
       if (!$option.val()) {
         return;
       }
-      
+
       var snippet = $option.data('snippet');
-      
+
       if (!snippet) {
         return;
       }
-      
+
       var $textarea = $select.closest('dl').find('textarea');
-      
+
       if ($textarea.length === 0) {
         return;
       }
-      
+
       var editor = $textarea.data('editor');
       if (editor) {
         var doc = editor.getDoc();
@@ -157,18 +406,18 @@
         var textarea = $textarea[0];
         var start = textarea.selectionStart || textarea.value.length;
         var end = textarea.selectionEnd || start;
-        
+
         textarea.value = textarea.value.substring(0, start) + snippet + textarea.value.substring(end);
-        
+
         var cursor = start + snippet.length;
         if (textarea.setSelectionRange) {
           textarea.setSelectionRange(cursor, cursor);
         }
-        
+
         textarea.dispatchEvent(new Event('input', { bubbles: true }));
         textarea.dispatchEvent(new Event('change', { bubbles: true }));
       }
-      
+
       $select.val('');
     });
   <% end %>

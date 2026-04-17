@@ -203,4 +203,56 @@ describe Cms::LoopSetting, dbscope: :example do
       expect(loop_setting.errors[:state]).to include(I18n.t('errors.messages.inclusion'))
     end
   end
+
+  describe "scopes" do
+    let!(:site) { cms_site }
+    let!(:shirasagi_setting1) { create(:cms_loop_setting, site: site, html_format: "shirasagi", state: "public") }
+    let!(:shirasagi_setting2) { create(:cms_loop_setting, site: site, html_format: "shirasagi", state: "closed") }
+    let!(:snippet_setting1) do
+      create(:cms_loop_setting, site: site, html_format: "liquid", loop_html_setting_type: "snippet", state: "public")
+    end
+    let!(:snippet_setting2) do
+      create(:cms_loop_setting, site: site, html_format: "liquid", loop_html_setting_type: "snippet", state: "closed")
+    end
+    let!(:template_setting1) { create(:cms_loop_setting, site: site, html_format: "liquid", state: "public") }
+    let!(:template_setting2) { create(:cms_loop_setting, site: site, html_format: "liquid", state: "closed") }
+
+    before do
+      # for backward compatibilities: unset means "shirasagi" and "public"
+      shirasagi_setting1.unset(:html_format, :state)
+    end
+
+    describe ".public_state" do
+      it do
+        settings = Cms::LoopSetting.site(site).public_state.to_a
+        expect(settings.count).to eq 3
+        expect(settings.map { _1.id }).to include(shirasagi_setting1.id, snippet_setting1.id, template_setting1.id)
+      end
+    end
+
+    describe ".liquid and .snippet_type" do
+      it do
+        settings = Cms::LoopSetting.site(site).liquid.snippet_type.to_a
+        expect(settings.count).to eq 1
+        expect(settings[0].id).to eq snippet_setting1.id
+      end
+    end
+
+    describe ".liquid and .template_type" do
+      it do
+        settings = Cms::LoopSetting.site(site).liquid.template_type.to_a
+        expect(settings.count).to eq 1
+        expect(settings[0].id).to eq template_setting1.id
+      end
+    end
+
+    describe ".shirasagi" do
+      it do
+        settings = Cms::LoopSetting.site(site).shirasagi.to_a
+        expect(settings.count).to eq 1
+        expect(settings[0].id).to eq shirasagi_setting1.id
+      end
+    end
+  end
+
 end

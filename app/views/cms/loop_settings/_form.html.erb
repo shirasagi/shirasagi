@@ -12,5 +12,30 @@
   <dd><%= f.select :state, @item.state_options %></dd>
 
   <dt><%= @model.t :html_format %><%= @model.tt :html_format %></dt>
-  <dd><%= f.select :html_format, @item.html_format_options %></dd>
+  <dd>
+    <%= f.select :html_format, @item.html_format_options, {}, id: 'item_html_format' %>
+    <span class="loop-html-setting-type-field">
+      <%= f.label :loop_html_setting_type, class: 'sr-only' %>
+      <%= f.select :loop_html_setting_type, @item.loop_html_setting_type_options, {}, id: 'item_loop_html_setting_type' %>
+    </span>
+  </dd>
 </dl>
+
+<%= jquery do %>
+  var $htmlFormat = $('#item_html_format');
+  var $loopHtmlSettingTypeField = $('.loop-html-setting-type-field');
+  var $loopHtmlSettingType = $('#item_loop_html_setting_type');
+
+  var toggleLoopHtmlSettingTypeField = function() {
+    if ($htmlFormat.val() === 'liquid') {
+      $loopHtmlSettingTypeField.show();
+      $loopHtmlSettingType.prop('disabled', false);
+    } else {
+      $loopHtmlSettingTypeField.hide();
+      $loopHtmlSettingType.prop('disabled', true);
+    }
+  };
+
+  toggleLoopHtmlSettingTypeField();
+  $htmlFormat.on('change', toggleLoopHtmlSettingTypeField);
+<% end %>
