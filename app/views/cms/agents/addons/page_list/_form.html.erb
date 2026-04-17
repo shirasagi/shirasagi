@@ -301,18 +301,7 @@
 
     <% if @model.use_loop_html %>
       <dt><%= t("cms.loop_html") %><%= @model.tt :loop_html %></dt>
-      <dd>
-        <%= ss_stimulus_tag "ss/select_with_description" do %>
-          <%= select_tag(
-                'item[loop_setting_id]',
-                options_with_optgroup_for_loop_settings(ancestral_loop_settings, selected: @item.loop_setting_id),
-                id: 'item_loop_setting_id',
-                name: 'item[loop_setting_id]',
-                disabled: (@item.loop_format == 'liquid')
-              ) %>
-          <span class="description hide"></span>
-        <% end %>
-      </dd>
+      <dd><%= f.select :loop_setting_id, ancestral_loop_settings, { include_blank: t('cms.input_directly') }, disabled: (@item.loop_format == 'liquid') %></dd>
       <dd><%= f.text_area :loop_html, class: :html, style: "height: 100px;" %></dd>
     <% end %>
 
@@ -334,37 +323,45 @@
 <% end %>
 
 <% if @model.use_loop_settings && @model.use_liquid %>
+  <%
+    liquid_settings = Cms::LoopSetting.site(@cur_site).liquid
+    liquid_snippet_options = liquid_settings.snippet_type.map { [_1.name, _1.id, { "data-snippet" => _1.html.to_s }] }
+    liquid_template_options = liquid_settings.template_type.map { [_1.name, _1.id] }
+  %>
   <dl class="see loop-format-liquid">
-    <% if @model.use_loop_html %>
-      <dt><%= t("cms.labels.template") %><%= tt("cms.labels.loop_html") %></dt>
+    <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
+    <% if liquid_template_options.present? %>
+    <dd>
+      <%=
+        liquid_template_options = render SS::OptionsForSelectComponent.new(options: liquid_template_options, selected: @item.loop_setting_id)
+        select_tag(
+          'item[loop_setting_id]',
+          liquid_template_options,
+          include_blank: t('cms.input_directly'),
+          id: 'item_loop_setting_id_liquid',
+          name: 'item[loop_setting_id]',
+          disabled: (@item.loop_format != 'liquid')
+        )
+      %>
+      <%= tt("cms.labels.loop_html") %>
+    </dd>
+    <% end %>
+    <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
+    <% if liquid_snippet_options.present? %>
       <dd>
-        <%= ss_stimulus_tag "ss/select_with_description" do %>
-          <%= select_tag(
-                'item[loop_setting_id]',
-                options_with_optgroup_for_loop_settings(ancestral_loop_settings("liquid"), selected: @item.loop_setting_id),
-                id: 'item_loop_setting_id_liquid',
-                name: 'item[loop_setting_id]',
-                disabled: (@item.loop_format != 'liquid')
-              ) %>
-          <span class="description hide"></span>
-        <% end %>
+        <%=
+          liquid_snippet_options = render SS::OptionsForSelectComponent.new(options: liquid_snippet_options)
+          select_tag(
+            'loop_snippet_selector',
+            liquid_snippet_options,
+            include_blank: t("cms.labels.snippets"),
+            id: snippet_select_id,
+            class: 'loop-snippet-selector'
+          )
+        %>
+        <%= tt("cms.labels.snippets") %>
       </dd>
     <% end %>
-    <dt><%= t("cms.labels.snippets") %><%= tt("cms.labels.snippets") %></dt>
-    <dd>
-      <%= ss_stimulus_tag "ss/select_with_description" do %>
-        <% snippet_options = ancestral_html_settings_liquid %>
-        <%= select_tag(
-              'loop_snippet_selector',
-              options_with_optgroup_for_snippets(snippet_options),
-              id: snippet_select_id,
-              class: 'loop-snippet-selector'
-            ) %>
-        <span class="description hide"></span>
-      <% end %>
-    </dd>
-    <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
-    <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
   </dl>
 
   <%= jquery do %>

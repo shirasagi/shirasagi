@@ -1,48 +1,36 @@
 <%
   addon ||= local_assigns.fetch(:addon, {})
-  snippet_select_id = "#{addon[:id]}_loop_snippet_selector"
   loop_setting_select_id = "#{addon[:id]}_loop_setting_id"
+
+  liquid_settings = Cms::LoopSetting.site(@cur_site).liquid
+  snippet_options = liquid_settings.snippet_type.map { [_1.name, _1.id, { "data-snippet" => _1.html.to_s }] }
+  template_options = liquid_settings.template_type.map { [_1.name, _1.id] }
 %>
 <%= code_editor "##{addon[:id]} .html", mode: :html %>
 
 <dl class="see">
-  <dt class="wide"><%= t("cms.loop_html") %><%= tt("cms.labels.loop_html") %></dt>
-  <dd class="wide">
-    <%= ss_stimulus_tag "ss/select_with_description" do %>
-      <% loop_setting_options = ancestral_loop_settings("liquid") %>
-      <%= f.select :loop_setting_id,
-            options_with_optgroup_for_loop_settings(loop_setting_options, selected: f.object.try(:loop_setting_id)),
-            {},
-            id: loop_setting_select_id,
-            class: 'loop-setting-selector'
-          %>
-      <span class="description hide"></span>
-    <% end %>
-  </dd>
-  <dt class="wide"><%= t("cms.labels.snippets") %><%= tt("cms.labels.snippets") %></dt>
-  <dd class="wide">
-    <%= ss_stimulus_tag "ss/select_with_description" do %>
-      <% snippet_options = ancestral_html_settings_liquid %>
-      <%= select_tag(
-            'loop_snippet_selector',
-            options_with_optgroup_for_snippets(snippet_options),
-            id: snippet_select_id,
-            class: 'loop-snippet-selector'
-          ) %>
-      <span class="description hide"></span>
-    <% end %>
-  </dd>
   <dt class="wide">HTML<%= @model.tt :layout %></dt>
+  <% if template_options.present? %>
+    <dd class="wide">
+      <%=
+        template_options = render SS::OptionsForSelectComponent.new(options: template_options, selected: @item.loop_setting_id)
+        f.select :loop_setting_id, template_options, { include_blank: t('cms.input_directly') }, id: loop_setting_select_id, class: 'loop-setting-selector'
+      %>
+      <%= tt("cms.labels.loop_html") %>
+    </dd>
+  <% end %>
   <dd class="wide">
     <%= f.text_area :layout, style: "height: 400px", class: "html" %>
-
-    <% if example = @model.value_type.form_example_layout %>
-      <div class="form-example">
-        <div class="form-example-head example-layout-html"><%= t 'ss.input_example' %></div>
-        <div class="form-example-body example-layout-html"><%= example %></div>
-      </div>
-    <% end %>
   </dd>
+  <% if snippet_options.present? %>
+    <dd class="wide">
+      <%=
+        snippet_options = render SS::OptionsForSelectComponent.new(options: snippet_options)
+        select_tag('tmp[loop_snippet_selector]', snippet_options, include_blank: t("cms.labels.snippets"), id: nil, class: 'loop-snippet-selector')
+      %>
+      <%= tt("cms.labels.snippets") %>
+    </dd>
+  <% end %>
 </dl>
 
 <%= jquery do %>
@@ -70,21 +58,21 @@
       clearLoopHtmlError();
 
       // エラーメッセージコンテナを作成（シラサギの標準的なエラー表示構造に従う）
-      var $errorDiv = $('<div>', {
+      var $errorDiv = $('<div/>', {
         class: 'loop-html-error errorExplanation',
         role: 'alert',
         'aria-live': 'polite'
       });
 
       // ヘッダー（シラサギの標準キーを使用）
-      var $errorHeader = $('<h2>').text(<%= I18n.t("errors.template.header.one").to_json.html_safe %>);
+      var $errorHeader = $('<h2/>').text(<%= I18n.t("errors.template.header.one").to_json.html_safe %>);
 
       // 本文（シラサギの標準キーを使用）
-      var $errorBody = $('<p>').text(<%= I18n.t("errors.template.body").to_json.html_safe %>);
+      var $errorBody = $('<p/>').text(<%= I18n.t("errors.template.body").to_json.html_safe %>);
 
       // エラーメッセージリスト
-      var $errorList = $('<ul>');
-      var $errorItem = $('<li>').text(message);
+      var $errorList = $('<ul/>');
+      var $errorItem = $('<li/>').text(message);
       $errorList.append($errorItem);
 
       $errorDiv.append($errorHeader);
@@ -93,7 +81,7 @@
 
       // リトライボタンを追加（エラー表示の後に配置）
       if (retryCallback) {
-        var $retryButton = $('<button>', {
+        var $retryButton = $('<button/>', {
           type: 'button',
           class: 'btn btn-retry',
           text: <%= I18n.t("ss.buttons.reload").to_json.html_safe %>
@@ -101,7 +89,7 @@
           clearLoopHtmlError();
           retryCallback();
         });
-        $errorDiv.append($('<div>', { class: 'error-actions' }).append($retryButton));
+        $errorDiv.append($('<div/>', { class: 'error-actions' }).append($retryButton));
       }
 
       // テキストエリアの前に挿入
@@ -178,62 +166,35 @@
     // 選択変更時にHTMLを更新
     $loopSettingSelect.on('change', updateLoopHtml);
 
-  // スニペットセレクターの初期値を「直接入力」に設定
-  if ($snippetSelect.length && !$snippetSelect.val()) {
-    $snippetSelect.val('');
-  }
-
   // スニペットの選択処理
-  $addon.find('.loop-snippet-selector').on('change', function() {
-    var $select = $(this);
-
+  $snippetSelect.on('change', function() {
     // ループHTML設定が選択されている場合はスニペットの挿入を無効にする
     if ($loopSettingSelect.length && $loopSettingSelect.val()) {
-      $select.val('');
+      $snippetSelect.val('');
       return;
     }
 
-    var $option = $select.find(':selected');
-
-    if (!$option.val()) {
-      return;
-    }
-
+    var $option = $snippetSelect.find(':selected');
     var snippet = $option.data('snippet');
-
+    $snippetSelect.val('');
     if (!snippet) {
       return;
     }
 
-    var $textarea = $select.closest('dl').find('textarea');
-
-    if ($textarea.length === 0) {
+    if ($layoutTextarea.length === 0) {
       return;
     }
 
-    var editor = $textarea.data('editor');
-    if (editor) {
-      var doc = editor.getDoc();
-      var cursor = doc.getCursor();
-      doc.replaceRange(snippet, cursor);
-      editor.focus();
-      editor.save();
-    } else {
-      var textarea = $textarea[0];
-      var start = textarea.selectionStart || textarea.value.length;
-      var end = textarea.selectionEnd || start;
-
-      textarea.value = textarea.value.substring(0, start) + snippet + textarea.value.substring(end);
-
-      var cursor = start + snippet.length;
-      if (textarea.setSelectionRange) {
-        textarea.setSelectionRange(cursor, cursor);
-      }
-
-      textarea.dispatchEvent(new Event('input', { bubbles: true }));
-      textarea.dispatchEvent(new Event('change', { bubbles: true }));
+    var editor = $layoutTextarea.data('editor');
+    if (!editor) {
+      // CodeMirror isn't activated
+      return;
     }
 
-    $select.val('');
+    var doc = editor.getDoc();
+    var cursor = doc.getCursor();
+    doc.replaceRange(snippet + "\n", cursor);
+    editor.focus();
+    editor.save();
   });
 <% end %>
