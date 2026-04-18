@@ -1,0 +1,7 @@
+<%
+  return unless @cur_site.elasticsearch_enabled?
+%>
+<dl class="see mod-cms-elasticsearch-group">
+  <dt><%= @model.t :elasticsearch_state %><%= @model.tt :elasticsearch_state %></dt>
+  <dd><%= f.select :elasticsearch_state, @item.elasticsearch_state_options, include_blank: '' %></dd>
+</dl>

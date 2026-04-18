@@ -101,6 +101,8 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
         options = []
         if @cur_node.st_categories.present?
           options = @cur_node.st_categories.map { |c| [c.name, c.name] }
+        elsif @cur_site.elasticsearch_site_ids.present?
+          options = []
         elsif categories = (@aggregation.search_categories || {}).dig('aggregations', 'categories', 'buckets')
           options = categories.map { |c| [c['key'], c['key']] }
         end

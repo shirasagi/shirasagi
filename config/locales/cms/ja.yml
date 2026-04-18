@@ -821,6 +821,7 @@ ja:
       cms/print: 印刷
       cms/clipboard_copy: クリップボードへコピー
       cms/form_search: 定型フォーム絞込検索
+      cms/elasticsearch/group: サイト内検索設定
     columns:
       cms/text_field: 一行入力
       cms/date_field: 日付入力
@@ -1974,6 +1975,8 @@ ja:
         search_node_id: 検索フォルダー
         column_name: 検索項目名
         column_kind: 検索パターン
+      cms/addon/elasticsearch/group:
+        elasticsearch_state: 検索インデックス
 
   activemodel:
     attributes:
@@ -3627,6 +3630,11 @@ ja:
         検索項目名を入力します。
       column_kind: |-
         検索パターンを設定します。
+
+    cms/addon/elasticsearch/group:
+      elasticsearch_state:
+        - グループ名を検索結果として表示するかを設定します。
+        - デフォルトは有効です。
 
   all_content:
     page_id: ページID

@@ -3,6 +3,7 @@ class Cms::Group
   include Cms::SitePermission
   include Contact::Addon::Group
   include Lsorg::Addon::Group
+  include Cms::Addon::Elasticsearch::Group
 
   set_permission_name "cms_groups", :edit
 
