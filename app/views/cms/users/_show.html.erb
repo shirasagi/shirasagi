@@ -63,5 +63,9 @@
 
   <% group_ids = Cms::Group.unscoped.site(@cur_site).pluck(:id) %>
   <dt><%= @model.t :group_ids %></dt>
-  <dd><%= br @item.groups.order_by(name: 1).select{ |c| group_ids.include?(c.id) }.map{|c| c.name} %></dd>
+  <dd>
+    <% @item.groups.order_by(name: 1).to_a.sort_by { |c| group_ids.include?(c.id) ? 0 : 1 }.map do |c| %>
+      <%= "(#{t('cms.other_site')}) " unless group_ids.include?(c.id) %><%= c.name %><br>
+    <% end %>
+  </dd>
 </dl>
