@@ -64,7 +64,6 @@ Rails.application.routes.draw do
       get "delegatees" => "delegatees#index"
       get "form_categories" => "form_categories#index"
       get "form_purposes" => "form_purposes#index"
-      resources :user_superiors, only: %i[show]
     end
     namespace :frames do
       resources :approvers, only: %i[show update] do
