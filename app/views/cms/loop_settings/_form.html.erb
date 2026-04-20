@@ -25,17 +25,26 @@
   var $htmlFormat = $('#item_html_format');
   var $loopHtmlSettingTypeField = $('.loop-html-setting-type-field');
   var $loopHtmlSettingType = $('#item_loop_html_setting_type');
+  var $ttShirasagi = $('.html-format-tt-shirasagi');
+  var $ttLiquidTemplate = $('.html-format-tt-liquid-template');
+  var $ttLiquidSnippet = $('.html-format-tt-liquid-snippet');
 
   var toggleLoopHtmlSettingTypeField = function() {
-    if ($htmlFormat.val() === 'liquid') {
+    var isLiquid = $htmlFormat.val() === 'liquid';
+    if (isLiquid) {
       $loopHtmlSettingTypeField.show();
       $loopHtmlSettingType.prop('disabled', false);
     } else {
       $loopHtmlSettingTypeField.hide();
       $loopHtmlSettingType.prop('disabled', true);
     }
+
+    $ttShirasagi.toggle(!isLiquid);
+    $ttLiquidTemplate.toggle(isLiquid && $loopHtmlSettingType.val() !== 'snippet');
+    $ttLiquidSnippet.toggle(isLiquid && $loopHtmlSettingType.val() === 'snippet');
   };
 
   toggleLoopHtmlSettingTypeField();
   $htmlFormat.on('change', toggleLoopHtmlSettingTypeField);
+  $loopHtmlSettingType.on('change', toggleLoopHtmlSettingTypeField);
 <% end %>

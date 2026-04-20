@@ -2693,6 +2693,28 @@ ja:
         - "Liquid 形式の用途を選択します。"
         - "テンプレート: ループ HTML 全体をループ単位のテンプレートとして使用します。"
         - "スニペット: 部品として、ループ HTML 内の任意の場所に挿入して使用します。"
+      html_shirasagi: *loop_html
+      html_liquid_template: *loop_liquid
+      html_liquid_snippet:
+        - Liquid 形式のスニペットとして記述します。
+        - スニペットは部品として、他のテンプレートの任意の場所に挿入して使用します。
+        - |-
+          利用可能な変数（代表例）:
+          {{ page.name }}           ページ名
+          {{ page.url }}            ページ URL
+          {{ page.index_name | default: page.name }}  一覧用タイトル（未設定時はタイトル）
+          {{ page.date | ss_date: "long" }}           日付（長い形式）
+          {{ page.summary }}        サマリー
+          {{ page.thumb.url }}      サムネイル URL
+          {{ node.name }}           フォルダー名
+          {{ value.html }}          定型フォーム入力値
+          {{ parts["key_name"].html }}  指定キーのパーツ HTML
+
+          使用例（短いコード片）:
+          {{ page.name }}
+          {% if page.new? %}new{% endif %}
+          &lt;a href="{{ page.url }}">{{ page.index_name | default: page.name }}&lt;/a>
+          &lt;time datetime="{{ page.date }}">{{ page.date | ss_date: "long" }}&lt;/time>
 
     cms/addon/tabs:
       conditions:
