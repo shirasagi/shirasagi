@@ -120,7 +120,12 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
     end
   end
 
-  it 'loads selected liquid loop setting into column layout without loading translation message' do
+  #
+  # フォームの「レイアウトHTML」(Cms::Form) と同じく、カラムの「レイアウト」欄も
+  # テンプレート選択中は CodeMirror を readOnly に切り替える (内容は保持)。
+  # 実際のレンダリング時に Cms::Column::Value::Base#_to_html が loop_setting.html を適用する。
+  #
+  it 'toggles column layout editor readOnly when a template is selected or cleared' do
     visit cms_form_path(site, form)
 
     click_on I18n.t('cms.buttons.manage_columns')
@@ -131,22 +136,38 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
     wait_for_notice I18n.t('ss.notice.saved')
 
     within '.gws-column-form' do
-      fill_in 'item[name]', with: 'Test Column With Loop Setting'
+      fill_in 'item[name]', with: 'Readonly Toggle Column'
       click_on I18n.t('ss.buttons.save')
     end
     wait_for_notice I18n.t('ss.notice.saved')
 
     wait_for_cbox_opened { find('.btn-gws-column-item-detail').click }
 
+    layout_editor_readonly = ->do
+      page.evaluate_script(<<~JS)
+        (function() {
+          var ta = document.getElementById('item_layout');
+          var wrapper = ta && $(ta).next('.CodeMirror')[0];
+          return !!(wrapper && wrapper.CodeMirror && wrapper.CodeMirror.getOption('readOnly'));
+        })();
+      JS
+    end
+
     within_dialog do
       expect(page).to have_css('.loop-setting-selector', wait: 10)
-
       loop_setting_select = find('.loop-setting-selector', visible: :all)
-      select liquid_template_primary.name, from: loop_setting_select[:id]
-      wait_for_editor_or_textarea_value('item_layout', 'column-snippet-primary')
 
-      expect(editor_or_textarea_value('item_layout')).to include('column-snippet-primary')
-      expect(find('.loop-snippet-selector', visible: :all)).to be_disabled
+      expect(layout_editor_readonly.call).to eq false
+
+      select liquid_template_primary.name, from: loop_setting_select[:id]
+      Selenium::WebDriver::Wait.new(timeout: Capybara.default_max_wait_time).until { layout_editor_readonly.call }
+      expect(layout_editor_readonly.call).to eq true
+
+      select I18n.t('cms.input_directly'), from: loop_setting_select[:id]
+      Selenium::WebDriver::Wait.new(timeout: Capybara.default_max_wait_time).until { !layout_editor_readonly.call }
+      expect(layout_editor_readonly.call).to eq false
+
+      # i18n 未定義プレースホルダは出ない (回帰防止)
       expect(page).to have_no_css('.translation_missing[title*="ss.notice.loading"]')
       expect(page).to have_no_content('translation missing: ja.ss.notice.loading')
     end

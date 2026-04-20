@@ -31,4 +31,79 @@ describe Cms::Column::Value::Free, type: :model, dbscope: :example do
       expect(subject.files).to be_blank
     end
   end
+
+  #
+  # Cms::Column::Value::Base#_to_html の layout 選択ロジック:
+  #   column.loop_setting.present? ? column.loop_setting.html : column.layout
+  # （loop_setting / layout がともに空なら to_default_html）
+  #
+  describe "#to_html layout source selection" do
+    let!(:site) { cms_site }
+    let!(:node) { create :article_node_page, cur_site: site }
+    let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
+    let!(:page) do
+      create(:article_page, cur_site: site, cur_node: node, form: form,
+             column_values: [column.value_type.new(column: column, value: "column-body")])
+    end
+    subject(:rendered) { page.column_values.first.to_html }
+
+    context "column.loop_setting.html が設定されている場合" do
+      let!(:loop_setting) do
+        create(:cms_loop_setting, :liquid, :template_type, cur_site: site,
+               html: '<section data-source="loop-setting">{{ value.value }}</section>')
+      end
+      let!(:column) do
+        create(:cms_column_free, cur_form: form, order: 1,
+               layout: '<section data-source="column-layout">{{ value.value }}</section>',
+               loop_setting_id: loop_setting.id)
+      end
+
+      it "loop_setting.html を最優先で使う" do
+        expect(rendered).to include('data-source="loop-setting"')
+        expect(rendered).not_to include('data-source="column-layout"')
+        expect(rendered).to include("column-body")
+      end
+    end
+
+    context "column.loop_setting は紐付いているが html が空の場合" do
+      let!(:loop_setting) do
+        create(:cms_loop_setting, :liquid, :template_type, cur_site: site, html: "")
+      end
+      let!(:column) do
+        create(:cms_column_free, cur_form: form, order: 1,
+               layout: '<section data-source="column-layout">{{ value.value }}</section>',
+               loop_setting_id: loop_setting.id)
+      end
+
+      it "layout が空と判定されて to_default_html にフォールバックする" do
+        # loop_setting.html が空のとき layout.blank? が true になるため、
+        # column.layout は読まれず to_default_html の value がそのまま返る。
+        expect(rendered).to include("column-body")
+        expect(rendered).not_to include('data-source="column-layout"')
+      end
+    end
+
+    context "column.loop_setting が未設定で column.layout のみ設定されている場合" do
+      let!(:column) do
+        create(:cms_column_free, cur_form: form, order: 1,
+               layout: '<section data-source="column-layout">{{ value.value }}</section>')
+      end
+
+      it "column.layout を使う" do
+        expect(column.loop_setting).to be_nil
+        expect(rendered).to include('data-source="column-layout"')
+        expect(rendered).to include("column-body")
+      end
+    end
+
+    context "column.loop_setting も column.layout も未設定の場合" do
+      let!(:column) { create(:cms_column_free, cur_form: form, order: 1) }
+
+      it "to_default_html の結果 (value) を返す" do
+        expect(column.layout).to be_blank
+        expect(column.loop_setting).to be_nil
+        expect(rendered).to include("column-body")
+      end
+    end
+  end
 end

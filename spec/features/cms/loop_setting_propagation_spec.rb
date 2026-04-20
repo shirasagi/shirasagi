@@ -213,4 +213,124 @@ describe "cms loop setting propagation to folders (E2E)", type: :feature, dbscop
       expect(page).to have_no_css('.propagation-form .propagation-status', text: '新規作成')
     end
   end
+
+  #
+  # 仕様: ループHTMLの「公開ステータス」は **選択UIの絞り込みのみ** で使用する。
+  # 描画側 (Cms::Form#render_html / Cms::ListHelper#liquid_loop_source 等) は state を見ない。
+  #
+  # 理由:
+  #   紐付け後に state を closed に変更すると、紐付いているすべてのフォルダ/フォーム/カラムで
+  #   「記事ページが突然見えなくなる」事故につながる。state 変更だけで大量のページ表示が壊れる
+  #   副作用を避けるため、描画側ではステータスを参照しない。
+  #
+  # このコンテキストはその仕様を回帰防止のために E2E で固定する。
+  #
+  context "loop_setting の公開ステータス運用 (E2E)" do
+    let(:marker) { "closed-state-#{unique_id}" }
+    let(:closed_loop_html) do
+      <<~HTML.strip
+        {% for page in pages %}
+        <p class="closed-status">#{marker}</p>
+        <article class="closed-item"><a href="{{ page.url }}">{{ page.name }}</a></article>
+        {% endfor %}
+      HTML
+    end
+
+    describe "紐付け後に loop_setting を closed に変更しても既存ページは壊れない" do
+      let!(:loop_setting) do
+        create(:cms_loop_setting, :liquid, :template_type,
+               cur_site: site, state: 'public',
+               name: "live-setting-#{unique_id}",
+               html: closed_loop_html)
+      end
+
+      before do
+        node.update!(loop_format: 'liquid', loop_setting_id: loop_setting.id)
+      end
+
+      it "state を closed に変更しても記事フォルダの公開ページは loop_setting.html で描画し続ける" do
+        # 1. 初期状態: 公開ステータスで公開ページに反映されている
+        Capybara.app_host = "http://#{site.domain}"
+        visit node.url
+        expect(page).to have_css('.closed-status', text: marker)
+
+        # 2. 管理画面でループHTMLのステータスを closed に変更
+        Capybara.app_host = nil
+        visit edit_cms_loop_setting_path(site.id, loop_setting)
+        within "form#item-form" do
+          select I18n.t('ss.options.state.closed'), from: 'item[state]'
+          click_button I18n.t('ss.buttons.save')
+        end
+        wait_for_notice I18n.t('ss.notice.saved')
+        expect(loop_setting.reload.state).to eq 'closed'
+
+        # 3. 再書き出し + 公開ページを再訪問 → まだ loop_setting.html で描画される
+        #    (state=closed でもレンダリングが維持されるのが仕様)
+        Cms::Node::GenerateJob.bind(site_id: site.id).perform_now
+        Capybara.app_host = "http://#{site.domain}"
+        visit "#{node.url}?_=#{Time.now.to_i}"
+        expect(page).to have_css('.closed-status', text: marker)
+      end
+    end
+
+    describe "セレクト UI では公開ステータスのもののみ選択肢に出る" do
+      let!(:public_template) do
+        create(:cms_loop_setting, :liquid, :template_type,
+               cur_site: site, state: 'public',
+               name: "ui-public-template-#{unique_id}")
+      end
+      let!(:closed_template) do
+        create(:cms_loop_setting, :liquid, :template_type,
+               cur_site: site, state: 'closed',
+               name: "ui-closed-template-#{unique_id}")
+      end
+      let!(:public_shirasagi) do
+        create(:cms_loop_setting,
+               cur_site: site, state: 'public', html_format: 'shirasagi',
+               name: "ui-public-shirasagi-#{unique_id}")
+      end
+      let!(:closed_shirasagi) do
+        create(:cms_loop_setting,
+               cur_site: site, state: 'closed', html_format: 'shirasagi',
+               name: "ui-closed-shirasagi-#{unique_id}")
+      end
+
+      def options_of(select_id)
+        find("##{select_id}", visible: :all).all('option', visible: :all).map(&:text)
+      end
+
+      it "記事フォルダ編集画面では Liquid/SHIRASAGI どちらのセレクタからも closed は除外される" do
+        visit edit_node_conf_path(site.id, node)
+        ensure_addon_opened('#addon-event-agents-addons-page_list')
+
+        within '#addon-event-agents-addons-page_list' do
+          # SHIRASAGI 側セレクタ
+          select 'SHIRASAGI', from: 'item[loop_format]'
+          wait_for_js_ready
+          shirasagi_options = options_of('item_loop_setting_id')
+          expect(shirasagi_options).to include(public_shirasagi.name)
+          expect(shirasagi_options).not_to include(closed_shirasagi.name)
+
+          # Liquid 側セレクタ
+          select 'Liquid', from: 'item[loop_format]'
+          wait_for_js_ready
+          liquid_options = options_of('item_loop_setting_id_liquid')
+          expect(liquid_options).to include(public_template.name)
+          expect(liquid_options).not_to include(closed_template.name)
+        end
+      end
+
+      it "定型フォームのレイアウトHTML編集画面でも closed は除外される" do
+        form = create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry')
+        visit edit_cms_form_path(site.id, form)
+
+        # レイアウトHTMLアドオンの template セレクタは Cms::Form でのみ表示される
+        options = all(".loop-setting-selector option", visible: :all).map(&:text)
+        expect(options).to include(public_template.name)
+        expect(options).not_to include(closed_template.name)
+        # SHIRASAGI は Cms::Form のレイアウトHTMLアドオンでは使わない
+        expect(options).not_to include(public_shirasagi.name)
+      end
+    end
+  end
 end

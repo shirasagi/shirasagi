@@ -245,4 +245,52 @@ describe Cms::ListHelper, type: :helper, dbscope: :example do
       expect(html.css(".item-#{node6.basename} .tags").text).to eq ""
     end
   end
+
+  #
+  # liquid_loop_source の優先順位:
+  #   1) cur_item.loop_setting.html が presence を持てば採用
+  #   2) そうでなければ cur_item.loop_liquid が presence を持てば採用
+  #   3) どちらも無ければ default_source
+  #
+  describe "#liquid_loop_source" do
+    let(:default_source) { "{% for page in pages %}<default>{{ page.name }}</default>{% endfor %}" }
+    let(:cur_item) { node2 }
+
+    context "loop_setting.html が設定されている場合" do
+      let!(:loop_setting) do
+        create(:cms_loop_setting, :liquid, :template_type, cur_site: site,
+               html: "{% for page in pages %}<loop>{{ page.name }}</loop>{% endfor %}")
+      end
+
+      before { cur_item.update!(loop_setting_id: loop_setting.id) }
+
+      it "loop_setting.html を返す" do
+        expect(helper.liquid_loop_source(cur_item.reload, default_source))
+          .to include("<loop>")
+      end
+    end
+
+    context "loop_setting が未設定で loop_liquid のみ設定されている場合" do
+      before do
+        cur_item.update!(
+          loop_format: "liquid",
+          loop_liquid: "{% for page in pages %}<liquid-only>{{ page.name }}</liquid-only>{% endfor %}"
+        )
+      end
+
+      it "loop_liquid を返す" do
+        expect(cur_item.loop_setting).to be_nil
+        expect(helper.liquid_loop_source(cur_item.reload, default_source))
+          .to include("<liquid-only>")
+      end
+    end
+
+    context "loop_setting も loop_liquid も空の場合" do
+      it "default_source を返す" do
+        expect(cur_item.loop_setting).to be_nil
+        expect(cur_item.loop_liquid).to be_blank
+        expect(helper.liquid_loop_source(cur_item, default_source)).to eq default_source
+      end
+    end
+  end
 end
