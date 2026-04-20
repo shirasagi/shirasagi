@@ -13,28 +13,6 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
     select option_text, from: loop_snippet_select[:id]
   end
 
-  def editor_or_textarea_value(field_id)
-    page.evaluate_script(<<~JS)
-      (function() {
-        var el = document.getElementById("#{field_id}");
-        if (!el) { return null; }
-
-        var editor = $(el).data('editor');
-        if (editor && typeof editor.getValue === 'function') {
-          return editor.getValue();
-        }
-
-        return el.value;
-      })();
-    JS
-  end
-
-  def wait_for_editor_or_textarea_value(field_id, expected_substring, timeout: Capybara.default_max_wait_time)
-    Selenium::WebDriver::Wait.new(timeout: timeout).until do
-      editor_or_textarea_value(field_id).to_s.include?(expected_substring)
-    end
-  end
-
   context 'loop html snippet functionality' do
 
     let!(:liquid_setting) do
