@@ -18,9 +18,9 @@
 <%= code_editor "##{addon[:id]} textarea", mode: :html %>
 
 <dl class="see">
-  <dt class="wide"><%= @model.t :html %><%= @model.tt :html %></dt>
+  <dt><%= @model.t :html %><%= @model.tt :html %></dt>
   <% if template_options.present? %>
-    <dd class="wide">
+    <dd>
       <%=
         template_options = render SS::OptionsForSelectComponent.new(options: template_options, selected: @item.loop_setting_id)
         f.select :loop_setting_id,
@@ -32,7 +32,7 @@
       <%= tt("cms.labels.loop_html") %>
     </dd>
   <% end %>
-  <dd class="wide">
+  <dd>
     <%= f.text_area :html, style: "height: 400px" %>
 
     <% if example = @item.try(:form_example_layout_html) %>
@@ -43,7 +43,7 @@
     <% end %>
   </dd>
   <% if snippet_options.present? %>
-    <dd class="wide">
+    <dd>
       <%=
         snippet_options = render SS::OptionsForSelectComponent.new(options: snippet_options)
         select_tag(
@@ -64,7 +64,7 @@
     )
     syntax_checker_form = render(component)
     if syntax_checker_form.present?
-      tag.dd syntax_checker_form, class: "wide"
+      tag.dd syntax_checker_form
     end
   %>
 </dl>

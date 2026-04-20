@@ -10,9 +10,9 @@
 <%= code_editor "##{addon[:id]} .html", mode: :html %>
 
 <dl class="see">
-  <dt class="wide">HTML<%= @model.tt :layout %></dt>
+  <dt>HTML<%= @model.tt :layout %></dt>
   <% if template_options.present? %>
-    <dd class="wide">
+    <dd>
       <%=
         template_options = render SS::OptionsForSelectComponent.new(options: template_options, selected: @item.loop_setting_id)
         f.select :loop_setting_id, template_options, { include_blank: t('cms.input_directly') }, id: loop_setting_select_id, class: 'loop-setting-selector'
@@ -20,11 +20,11 @@
       <%= tt("cms.labels.loop_html") %>
     </dd>
   <% end %>
-  <dd class="wide">
+  <dd>
     <%= f.text_area :layout, style: "height: 400px", class: "html" %>
   </dd>
   <% if snippet_options.present? %>
-    <dd class="wide">
+    <dd>
       <%=
         snippet_options = render SS::OptionsForSelectComponent.new(options: snippet_options)
         select_tag('tmp[loop_snippet_selector]', snippet_options, include_blank: t("cms.labels.snippets"), id: snippet_select_id, class: 'loop-snippet-selector')
