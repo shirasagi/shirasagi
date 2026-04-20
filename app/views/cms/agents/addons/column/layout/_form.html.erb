@@ -39,6 +39,14 @@
   var $snippetSelect = $addon.find('.loop-snippet-selector');
   var $layoutTextarea = $addon.find('textarea[name*="[layout]"]');
 
+  // テンプレート選択時に textarea を readonly にする (内容は保持)
+  if ($addon.find('#<%= loop_setting_select_id %>').length) {
+    Cms_Editor_CodeMirror.lock(
+      '#<%= loop_setting_select_id %>',
+      '#<%= addon[:id] %> textarea[name*="[layout]"]'
+    );
+  }
+
   // スニペットセレクターの初期値を「直接入力」に設定
   if ($snippetSelect.length && !$snippetSelect.val()) {
     $snippetSelect.val('');
