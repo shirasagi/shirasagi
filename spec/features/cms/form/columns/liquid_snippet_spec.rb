@@ -143,7 +143,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
 
     wait_for_cbox_opened { find('.btn-gws-column-item-detail').click }
 
-    layout_editor_readonly = ->do
+    layout_editor_readonly = -> do
       page.evaluate_script(<<~JS)
         (function() {
           var ta = document.getElementById('item_layout');

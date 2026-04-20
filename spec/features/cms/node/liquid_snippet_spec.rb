@@ -184,7 +184,7 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
 
     ensure_addon_opened('#addon-event-agents-addons-page_list')
 
-    loop_liquid_readonly = ->do
+    loop_liquid_readonly = -> do
       page.evaluate_script(<<~JS)
         (function() {
           var ta = document.getElementById('item_loop_liquid');
