@@ -15,6 +15,17 @@ describe "cms loop setting propagation to folders (E2E)", type: :feature, dbscop
     login_cms_user
   end
 
+  # Capybara.app_host はグローバル状態。テスト中にサイトドメインへ切り替えるため、
+  # 例外時も含めて確実に元へ戻す (他のテストへの汚染防止)。
+  around do |example|
+    original_app_host = Capybara.app_host
+    begin
+      example.run
+    ensure
+      Capybara.app_host = original_app_host
+    end
+  end
+
   # 初期 / 更新済み の対比がひと目で分かるよう、初期 = <p>新規作成</p>、更新後 = <p>更新済み</p> を必ず含める
   def shirasagi_html(marker)
     %(<p class="propagation-status">#{marker}</p><article class="propagation-item"><a href="\#{url}">\#{name}</a></article>)
