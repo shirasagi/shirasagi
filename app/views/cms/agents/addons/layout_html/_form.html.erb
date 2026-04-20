@@ -3,9 +3,16 @@
   snippet_select_id = "#{addon[:id]}_loop_snippet_selector"
   loop_setting_select_id = "#{addon[:id]}_loop_setting_id"
 
-  liquid_settings = Cms::LoopSetting.site(@cur_site).liquid
-  template_options = liquid_settings.template_type.map { [_1.name, _1.id] }
-  snippet_options = liquid_settings.snippet_type.map { [_1.name, _1.id, { "data-snippet" => _1.html.to_s }] }
+  # Liquid のスニペット/テンプレート選択は Cms::Form でのみ意味がある (Cms::Form#render_html が loop_setting.html を参照)。
+  # Cms::Layout は html を直接レンダリングするため、これらの UI は表示しない。
+  if @item.is_a?(Cms::Form)
+    liquid_settings = Cms::LoopSetting.site(@cur_site).liquid
+    template_options = liquid_settings.template_type.map { [_1.name, _1.id] }
+    snippet_options = liquid_settings.snippet_type.map { [_1.name, _1.id, { "data-snippet" => _1.html.to_s }] }
+  else
+    template_options = []
+    snippet_options = []
+  end
 %>
 
 <%= code_editor "##{addon[:id]} textarea", mode: :html %>
