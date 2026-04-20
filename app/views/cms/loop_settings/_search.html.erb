@@ -7,7 +7,7 @@
     <%= f.select :loop_html_setting_type, @model.new.loop_html_setting_type_options,
           { include_blank: @model.t(:loop_html_setting_type) },
           { "aria-label": @model.t(:loop_html_setting_type), data: { controller: "ss--submit-on-change" } } %>
-    <%= f.text_field :keyword, "aria-label": t("ss.buttons.search"), id: nil %>
+    <%= f.text_field :keyword, "aria-label": t("ss.buttons.search"), style: "width: 300px;", id: nil %>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
   <% end %>
 </div>
