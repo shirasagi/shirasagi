@@ -340,9 +340,8 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
   end
   context 'loop setting selector functionality' do
     let!(:liquid_loop_setting) do
-      create(:cms_loop_setting,
+      create(:cms_loop_setting, :liquid, :template_type,
         site: site,
-        html_format: 'liquid',
         html: "{% for item in items %}<section class='loader-target'>{{ item.name }}</section>{% endfor %}",
         state: 'public',
         order: 1,
@@ -359,19 +358,37 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       select option_text, from: loop_setting_select[:id]
     end
 
-    it 'loads selected liquid loop setting into html without loading translation message' do
+    def html_editor_readonly?
+      page.evaluate_script(<<~JS)
+        (function() {
+          var ta = document.getElementById('item_html');
+          var wrapper = ta && $(ta).next('.CodeMirror')[0];
+          return !!(wrapper && wrapper.CodeMirror && wrapper.CodeMirror.getOption('readOnly'));
+        })();
+      JS
+    end
+
+    # 旧仕様 (AJAX で template 内容をエディタに流し込む) は撤去済み。
+    # 現在は lock 方式: テンプレート選択でエディタを readOnly にし、
+    # 実際のレンダリング時に Cms::Form#render_html が loop_setting.html を適用する。
+    it 'toggles html editor readOnly when a template is selected or cleared' do
       visit new_cms_form_path(site)
 
       within 'form#item-form' do
         fill_in 'item[name]', with: name
 
-        select_loop_setting(liquid_loop_setting.name)
-        wait_for_editor_or_textarea_value('item_html', 'loader-target')
+        # 初期状態は編集可能
+        expect(html_editor_readonly?).to eq false
 
-        expect(editor_or_textarea_value('item_html')).to include("loader-target")
-        expect(loop_snippet_select).to be_disabled
-        expect(page).to have_no_css('.translation_missing[title*="ss.notice.loading"]')
-        expect(page).to have_no_content('translation missing: ja.ss.notice.loading')
+        # テンプレートを選択すると readOnly になる
+        select_loop_setting(liquid_loop_setting.name)
+        Selenium::WebDriver::Wait.new(timeout: Capybara.default_max_wait_time).until { html_editor_readonly? }
+        expect(html_editor_readonly?).to eq true
+
+        # 直接入力に戻すと readOnly が解除される
+        select_loop_setting(I18n.t('cms.input_directly'))
+        Selenium::WebDriver::Wait.new(timeout: Capybara.default_max_wait_time).until { !html_editor_readonly? }
+        expect(html_editor_readonly?).to eq false
       end
     end
   end
