@@ -215,4 +215,230 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
       expect(page).to have_no_content('translation missing: ja.ss.notice.loading')
     end
   end
+
+  #
+  # 管理画面で編集したループHTML設定が、記事フォルダの公開ページに反映されることを
+  # SHIRASAGI / Liquid 両形式で End-to-End で検証する。
+  #
+  context "loop setting html propagation to folder page (E2E)" do
+    let(:propagation_layout) { create_cms_layout }
+    let!(:propagation_node) do
+      create :article_node_page, cur_site: site, layout_id: propagation_layout.id, filename: "propagation-node"
+    end
+    let!(:propagation_item) do
+      create :article_page, cur_site: site, layout_id: propagation_layout.id,
+             filename: "propagation-node/item", name: "propagation-article-#{unique_id}"
+    end
+    let(:loop_setting_name) { "propagation-setting-#{unique_id}" }
+
+    before do
+      # 他テストが書き出した静的HTMLが残ると x_sendfile でそれが優先されるため、毎回掃除する
+      FileUtils.rm_rf site.path
+      FileUtils.mkdir_p site.path
+    end
+
+    # Capybara.app_host はグローバル状態。テスト中にサイトドメインへ切り替えるため、
+    # 例外時も含めて確実に元へ戻す (他のテストへの汚染防止)。
+    around do |example|
+      original_app_host = Capybara.app_host
+      begin
+        example.run
+      ensure
+        Capybara.app_host = original_app_host
+      end
+    end
+
+    # 初期 / 更新済み の対比がひと目で分かるよう、初期 = <p>新規作成</p>、更新後 = <p>更新済み</p> を必ず含める
+    def shirasagi_html(marker)
+      %(<p class="propagation-status">#{marker}</p><article class="propagation-item"><a href="\#{url}">\#{name}</a></article>)
+    end
+
+    def liquid_html(marker)
+      <<~HTML.strip
+        {% for page in pages %}
+        <p class="propagation-status">#{marker}</p>
+        <article class="propagation-item"><a href="{{ page.url }}">{{ page.name }}</a></article>
+        {% endfor %}
+      HTML
+    end
+
+    shared_examples "loop setting html update propagates to folder page" do
+      it "reflects the edited loop HTML ('新規作成' → '更新済み') on the folder's public page" do
+        # 1. 管理画面でループHTMLを新規作成 — 初期: <p>新規作成</p>
+        visit new_cms_loop_setting_path(site.id)
+        within "form#item-form" do
+          fill_in "item[name]", with: loop_setting_name
+          select format_label, from: "item[html_format]"
+          fill_in_code_mirror "item[html]", with: body_html.call("新規作成")
+          click_button I18n.t('ss.buttons.save')
+        end
+        wait_for_notice I18n.t('ss.notice.saved')
+
+        loop_setting = Cms::LoopSetting.where(name: loop_setting_name).first
+        expect(loop_setting).to be_present
+        expect(loop_setting.html).to include("<p class=\"propagation-status\">新規作成</p>")
+        expect(loop_setting.html).not_to include("更新済み")
+
+        # 2. 記事フォルダを編集してループ設定を紐付け
+        visit edit_node_conf_path(site.id, propagation_node)
+        ensure_addon_opened('#addon-event-agents-addons-page_list')
+
+        within '#addon-event-agents-addons-page_list' do
+          select loop_format_label, from: 'item[loop_format]'
+          wait_for_js_ready
+          select loop_setting_name, from: loop_setting_select_id
+          wait_for_js_ready
+        end
+        within 'footer.send' do
+          click_on I18n.t('ss.buttons.save')
+        end
+        wait_for_notice I18n.t('ss.notice.saved')
+
+        propagation_node.reload
+        expect(propagation_node.loop_setting_id).to eq loop_setting.id
+
+        visit edit_node_conf_path(site.id, propagation_node)
+        within '#addon-event-agents-addons-page_list' do
+          expect(page).to have_select(loop_setting_select_id, selected: loop_setting_name)
+        end
+
+        # 3. 公開ページ(記事フォルダ)を表示 — 初期 <p>新規作成</p> が反映されていること
+        Capybara.app_host = "http://#{site.domain}"
+        visit propagation_node.url
+        expect(page).to have_css('.propagation-status', text: '新規作成')
+        expect(page).to have_no_css('.propagation-status', text: '更新済み')
+
+        # 4. 管理画面に戻り、同じループHTMLを編集 — <p>更新済み</p> に書き換えて保存
+        Capybara.app_host = nil
+        visit edit_cms_loop_setting_path(site.id, loop_setting)
+        within "form#item-form" do
+          fill_in_code_mirror "item[html]", with: body_html.call("更新済み")
+          click_button I18n.t('ss.buttons.save')
+        end
+        wait_for_notice I18n.t('ss.notice.saved')
+
+        loop_setting.reload
+        expect(loop_setting.html).to include("<p class=\"propagation-status\">更新済み</p>")
+        expect(loop_setting.html).not_to include("新規作成")
+
+        # 5. 公開ページを再表示 — <p>更新済み</p> に変化していること
+        Capybara.app_host = "http://#{site.domain}"
+        visit propagation_node.url
+        expect(page).to have_css('.propagation-status', text: '更新済み')
+        expect(page).to have_no_css('.propagation-status', text: '新規作成')
+      end
+    end
+
+    context "SHIRASAGI format template" do
+      let(:format_label) { "SHIRASAGI" }
+      let(:loop_format_label) { "SHIRASAGI" }
+      let(:loop_setting_select_id) { 'item_loop_setting_id' }
+      let(:body_html) { method(:shirasagi_html) }
+
+      include_examples "loop setting html update propagates to folder page"
+    end
+
+    context "Liquid format template" do
+      let(:format_label) { "Liquid" }
+      let(:loop_format_label) { "Liquid" }
+      let(:loop_setting_select_id) { 'item_loop_setting_id_liquid' }
+      let(:body_html) { method(:liquid_html) }
+
+      include_examples "loop setting html update propagates to folder page"
+    end
+
+    #
+    # 仕様: 描画側は state を見ない。紐付け後に closed に変更しても既存ページは壊れない。
+    # (state 変更だけで大量のページ表示が壊れる副作用を避けるため)
+    #
+    context "loop_setting state changed to closed after assignment" do
+      let(:marker) { "closed-state-#{unique_id}" }
+      let(:live_loop_html) do
+        <<~HTML.strip
+          {% for page in pages %}
+          <p class="closed-status">#{marker}</p>
+          <article class="closed-item"><a href="{{ page.url }}">{{ page.name }}</a></article>
+          {% endfor %}
+        HTML
+      end
+      let!(:live_loop_setting) do
+        create(:cms_loop_setting, :liquid, :template_type,
+               cur_site: site, state: 'public',
+               name: "live-setting-#{unique_id}",
+               html: live_loop_html)
+      end
+
+      before do
+        propagation_node.update!(loop_format: 'liquid', loop_setting_id: live_loop_setting.id)
+      end
+
+      it "still renders with loop_setting.html after state is flipped to closed" do
+        Capybara.app_host = "http://#{site.domain}"
+        visit propagation_node.url
+        expect(page).to have_css('.closed-status', text: marker)
+
+        Capybara.app_host = nil
+        visit edit_cms_loop_setting_path(site.id, live_loop_setting)
+        within "form#item-form" do
+          select I18n.t('ss.options.state.closed'), from: 'item[state]'
+          click_button I18n.t('ss.buttons.save')
+        end
+        wait_for_notice I18n.t('ss.notice.saved')
+        expect(live_loop_setting.reload.state).to eq 'closed'
+
+        Cms::Node::GenerateJob.bind(site_id: site.id).perform_now
+        Capybara.app_host = "http://#{site.domain}"
+        visit "#{propagation_node.url}?_=#{Time.now.to_i}"
+        expect(page).to have_css('.closed-status', text: marker)
+      end
+    end
+  end
+
+  #
+  # セレクト UI (template 側) では公開ステータスの loop_setting のみ選択肢に出る。
+  # (スニペット側の同仕様は "inserts public liquid snippets ..." で既に検証済)
+  #
+  context "template selector UI filters out closed loop_settings" do
+    let!(:public_template) do
+      create(:cms_loop_setting, :liquid, :template_type,
+             cur_site: site, state: 'public', name: "ui-public-template-#{unique_id}")
+    end
+    let!(:closed_template) do
+      create(:cms_loop_setting, :liquid, :template_type,
+             cur_site: site, state: 'closed', name: "ui-closed-template-#{unique_id}")
+    end
+    let!(:public_shirasagi) do
+      create(:cms_loop_setting, cur_site: site, state: 'public', html_format: 'shirasagi',
+             name: "ui-public-shirasagi-#{unique_id}")
+    end
+    let!(:closed_shirasagi) do
+      create(:cms_loop_setting, cur_site: site, state: 'closed', html_format: 'shirasagi',
+             name: "ui-closed-shirasagi-#{unique_id}")
+    end
+
+    def options_of(select_id)
+      find("##{select_id}", visible: :all).all('option', visible: :all).map(&:text)
+    end
+
+    it "excludes closed loop_settings from the Liquid and SHIRASAGI selectors on node edit" do
+      visit edit_node_conf_path(site.id, node)
+      ensure_addon_opened('#addon-event-agents-addons-page_list')
+
+      within '#addon-event-agents-addons-page_list' do
+        # SHIRASAGI 側セレクタ
+        select 'SHIRASAGI', from: 'item[loop_format]'
+        wait_for_js_ready
+        shirasagi_options = options_of('item_loop_setting_id')
+        expect(shirasagi_options).to include(public_shirasagi.name)
+        expect(shirasagi_options).not_to include(closed_shirasagi.name)
+
+        # Liquid 側セレクタ
+        select 'Liquid', from: 'item[loop_format]'
+        wait_for_js_ready
+        liquid_options = options_of('item_loop_setting_id_liquid')
+        expect(liquid_options).to include(public_template.name)
+        expect(liquid_options).not_to include(closed_template.name)
+      end
+    end
+  end
 end

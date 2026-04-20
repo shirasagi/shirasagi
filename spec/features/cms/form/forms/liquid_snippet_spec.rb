@@ -392,4 +392,133 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       end
     end
   end
+
+  #
+  # Cms::Form の LayoutHtml アドオンが loop_setting を参照しているケース
+  # (Cms::Form#render_html が loop_setting.html を優先して使うことの E2E 検証)
+  #
+  context "layout html propagation via Cms::LoopSetting (E2E)" do
+    let(:propagation_layout) { create_cms_layout }
+    let(:form_loop_setting_name) { "form-propagation-setting-#{unique_id}" }
+    let(:form_html_template) do
+      lambda do |marker|
+        <<~HTML.strip
+          <section class="propagation-form">
+            <p class="propagation-status">#{marker}</p>
+            {% for value in values %}<div class="propagation-value">{{ value }}</div>{% endfor %}
+          </section>
+        HTML
+      end
+    end
+    let!(:loop_setting) do
+      create(:cms_loop_setting, :liquid, :template_type,
+             cur_site: site,
+             name: form_loop_setting_name,
+             html: form_html_template.call("新規作成"))
+    end
+    let!(:form) do
+      create(:cms_form,
+             cur_site: site, state: "public", sub_type: "entry",
+             html: "<!-- direct html should be ignored when loop_setting is present -->",
+             loop_setting_id: loop_setting.id)
+    end
+    let!(:column) do
+      create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 1)
+    end
+    let!(:article_node) do
+      create(:article_node_page, cur_site: site, layout_id: propagation_layout.id,
+             filename: "form-node", st_form_ids: [form.id])
+    end
+    let!(:article_page) do
+      create(:article_page,
+             cur_site: site, cur_node: article_node, layout_id: propagation_layout.id,
+             form: form, filename: "form-node/form-page", state: "public",
+             name: "form-article-#{unique_id}",
+             column_values: [
+               column.value_type.new(column_id: column.id, order: 0, value: "<em>column-body</em>")
+             ])
+    end
+
+    before do
+      # 他テストが書き出した静的HTMLが残ると x_sendfile でそれが優先されるため、毎回掃除する
+      FileUtils.rm_rf site.path
+      FileUtils.mkdir_p site.path
+      login_cms_user
+    end
+
+    # Capybara.app_host はグローバル状態。テスト中にサイトドメインへ切り替えるため、
+    # 例外時も含めて確実に元へ戻す (他のテストへの汚染防止)。
+    around do |example|
+      original_app_host = Capybara.app_host
+      begin
+        example.run
+      ensure
+        Capybara.app_host = original_app_host
+      end
+    end
+
+    it "reflects the edited Cms::LoopSetting html ('新規作成' → '更新済み') on a form-backed page" do
+      # 1. 初期状態: ループHTMLの「新規作成」が公開ページに反映されていること
+      Capybara.app_host = "http://#{site.domain}"
+      visit article_page.full_url
+      expect(page).to have_css('.propagation-form .propagation-status', text: '新規作成')
+      expect(page).to have_no_css('.propagation-form .propagation-status', text: '更新済み')
+
+      # 2. 管理画面からループHTMLを編集
+      Capybara.app_host = nil
+      visit edit_cms_loop_setting_path(site.id, loop_setting)
+      within "form#item-form" do
+        fill_in_code_mirror "item[html]", with: form_html_template.call("更新済み")
+        click_button I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      loop_setting.reload
+      expect(loop_setting.html).to include('<p class="propagation-status">更新済み</p>')
+
+      # 3. ループHTMLを参照しているノード・ページを再書き出し
+      #    (管理画面の「フォルダーの書き出し」「ページの書き出し」相当のジョブを実行)
+      Cms::Node::GenerateJob.bind(site_id: site.id).perform_now
+      Cms::Page::GenerateJob.bind(site_id: site.id).perform_now
+
+      # 4. 公開ページを再表示すると、更新済みの内容に差し替わっている
+      #    (Chrome は同一 URL の HTML レスポンスをキャッシュするため、クエリで確実に revalidate させる)
+      Capybara.app_host = "http://#{site.domain}"
+      visit "#{article_page.full_url}?_=#{Time.now.to_i}"
+      expect(page).to have_css('.propagation-form .propagation-status', text: '更新済み')
+      expect(page).to have_no_css('.propagation-form .propagation-status', text: '新規作成')
+    end
+  end
+
+  #
+  # 定型フォームのレイアウトHTML編集画面でも、セレクタには公開ステータスのみ表示される。
+  # またレイアウトHTMLアドオンの template セレクタは Cms::Form でのみ表示される点も確認。
+  #
+  context "layout html template selector filters out closed loop_settings" do
+    let!(:public_template) do
+      create(:cms_loop_setting, :liquid, :template_type,
+             cur_site: site, state: 'public', name: "form-ui-public-template-#{unique_id}")
+    end
+    let!(:closed_template) do
+      create(:cms_loop_setting, :liquid, :template_type,
+             cur_site: site, state: 'closed', name: "form-ui-closed-template-#{unique_id}")
+    end
+    let!(:public_shirasagi) do
+      create(:cms_loop_setting, cur_site: site, state: 'public', html_format: 'shirasagi',
+             name: "form-ui-public-shirasagi-#{unique_id}")
+    end
+
+    before { login_cms_user }
+
+    it "excludes closed entries and only shows liquid-format templates" do
+      form = create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry')
+      visit edit_cms_form_path(site.id, form)
+
+      options = all(".loop-setting-selector option", visible: :all).map(&:text)
+      expect(options).to include(public_template.name)
+      expect(options).not_to include(closed_template.name)
+      # SHIRASAGI は Cms::Form のレイアウトHTMLアドオンでは使わない
+      expect(options).not_to include(public_shirasagi.name)
+    end
+  end
 end
