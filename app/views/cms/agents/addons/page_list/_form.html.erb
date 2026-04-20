@@ -134,16 +134,10 @@
   };
 
   var shirasagiLoopHtmlLoader = createLoopHtmlLoader('#item_loop_setting_id', '#item_loop_html');
-  var liquidLoopHtmlLoader = createLoopHtmlLoader('#item_loop_setting_id_liquid', '#item_loop_liquid', '.loop-snippet-selector');
 
   // SHIRASAGI形式のループHTML設定の読み込み
   var updateLoopHtmlShirasagi = function() {
     shirasagiLoopHtmlLoader.update();
-  };
-
-  // Liquid形式のループHTML設定の読み込み
-  var updateLoopHtmlLiquid = function() {
-    liquidLoopHtmlLoader.update();
   };
 
   var confirmDiscardDirectInputIfNeeded = function($select, $textarea) {
@@ -202,26 +196,8 @@
     }
 
     <% if @model.use_liquid %>
-    Cms_Editor_CodeMirror.lock('#item_loop_setting_id_liquid', '#item_loop_liquid');
     var $loopSettingSelectShirasagi = $('#item_loop_setting_id');
     var $loopSettingSelectLiquid = $('#item_loop_setting_id_liquid');
-    var $loopHtmlTextareaLiquid = $('#item_loop_liquid');
-    $loopSettingSelectLiquid.data('previous-value', $loopSettingSelectLiquid.val() || '');
-
-    // Liquid形式のループHTML設定変更時にHTMLを読み込む
-    $('#item_loop_setting_id_liquid').on('change', function(_ev) {
-      if (!confirmDiscardDirectInputIfNeeded($loopSettingSelectLiquid, $loopHtmlTextareaLiquid)) {
-        revertSelectToPreviousValue($loopSettingSelectLiquid);
-        return;
-      }
-
-      updateLoopHtmlLiquid();
-      $loopSettingSelectLiquid.data('previous-value', $loopSettingSelectLiquid.val() || '');
-    });
-    // 初期状態で既にloop_setting_idが設定されている場合もHTMLを読み込む
-    if ($('#item_loop_setting_id_liquid').val()) {
-      updateLoopHtmlLiquid();
-    }
 
     var changeLoopFormat = function() {
       var format = $loopFormatSelect.val();
@@ -366,59 +342,32 @@
 
   <%= jquery do %>
     var $addon = $("<%= "##{addon[:id]}" %>");
-    var $loopSettingSelectLiquid = $('#item_loop_setting_id_liquid');
+    var $snippetSelect = $addon.find('.loop-snippet-selector');
+    var $liquidTextarea = $addon.find('#item_loop_liquid');
 
-    $addon.find('.loop-snippet-selector').on('change', function() {
-      var $select = $(this);
+    // スニペットセレクターの初期値を「直接入力」に設定
+    if ($snippetSelect.length && !$snippetSelect.val()) {
+      $snippetSelect.val('');
+    }
 
-      // ループHTML設定が選択されている場合はスニペットの挿入を無効にする
-      if ($loopSettingSelectLiquid.length && $loopSettingSelectLiquid.val()) {
-        $select.val('');
-        return;
-      }
-
-      var $option = $select.find(':selected');
-
-      if (!$option.val()) {
-        return;
-      }
-
+    // スニペットの選択処理: CodeMirror のカーソル位置/選択範囲に挿入
+    $snippetSelect.on('change', function() {
+      var $option = $snippetSelect.find(':selected');
       var snippet = $option.data('snippet');
-
+      $snippetSelect.val('');
       if (!snippet) {
         return;
       }
-
-      var $textarea = $select.closest('dl').find('textarea');
-
-      if ($textarea.length === 0) {
+      if ($liquidTextarea.length === 0) {
         return;
       }
-
-      var editor = $textarea.data('editor');
-      if (editor) {
-        var doc = editor.getDoc();
-        var cursor = doc.getCursor();
-        doc.replaceRange(snippet, cursor);
-        editor.focus();
-        editor.save();
-      } else {
-        var textarea = $textarea[0];
-        var start = textarea.selectionStart || textarea.value.length;
-        var end = textarea.selectionEnd || start;
-
-        textarea.value = textarea.value.substring(0, start) + snippet + textarea.value.substring(end);
-
-        var cursor = start + snippet.length;
-        if (textarea.setSelectionRange) {
-          textarea.setSelectionRange(cursor, cursor);
-        }
-
-        textarea.dispatchEvent(new Event('input', { bubbles: true }));
-        textarea.dispatchEvent(new Event('change', { bubbles: true }));
+      var editor = $liquidTextarea.data('editor');
+      if (!editor) {
+        return;
       }
-
-      $select.val('');
+      editor.getDoc().replaceSelection(snippet + "\n");
+      editor.focus();
+      editor.save();
     });
   <% end %>
 <% end %>
