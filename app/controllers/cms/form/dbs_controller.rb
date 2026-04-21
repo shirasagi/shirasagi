@@ -8,7 +8,6 @@ class Cms::Form::DbsController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [Cms::Form.model_name.human, cms_forms_path]
     @crumbs << [Cms::FormDb.model_name.human, action: :index]
   end
 
