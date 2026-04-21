@@ -834,6 +834,7 @@ ja:
       cms/radio_button: ラジオボタン
       cms/check_box: チェックボックス
       cms/file_upload: ファイルアップロード
+      cms/multiple_files_upload: 複数ファイルアップロード
       cms/headline: 見出し入力
       cms/list: リスト入力
       cms/youtube: YouTube埋め込み

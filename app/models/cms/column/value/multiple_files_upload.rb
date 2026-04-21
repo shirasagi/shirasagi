@@ -10,6 +10,9 @@ class Cms::Column::Value::MultipleFilesUpload < Cms::Column::Value::Base
   liquidize do
     export :files
     export :file_labels
+    export as: :items do
+      files.map { |f| { "file" => f, "label" => file_label_for(f) } }
+    end
   end
 
   def value
@@ -80,14 +83,14 @@ class Cms::Column::Value::MultipleFilesUpload < Cms::Column::Value::Base
   class << self
     def form_example_layout
       h = []
-      h << %({% if value.files.size > 0 %})
+      h << %({% if value.items.size > 0 %})
       h << %(  <div class="column2">)
-      h << %(    {% for file in value.files %})
+      h << %(    {% for item in value.items %})
       h << %(      <div class="column-item">)
-      h << %(        {% if file.image? %})
-      h << %(          <img src="{{ file.url }}" alt="{{ value.file_labels[file.id] | default: file.name }}">)
+      h << %(        {% if item.file.image? %})
+      h << %(          <img src="{{ item.file.url }}" alt="{{ item.label }}">)
       h << %(        {% else %})
-      h << %(          <a href="{{ file.url }}">{{ value.file_labels[file.id] | default: file.name }}</a>)
+      h << %(          <a href="{{ item.file.url }}">{{ item.label }}</a>)
       h << %(        {% endif %})
       h << %(      </div>)
       h << %(    {% endfor %})
