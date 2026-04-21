@@ -43,4 +43,22 @@ describe Cms::Form::DbsController, type: :feature, dbscope: :example, js: true d
       expect(Cms::FormDb.count).to eq 0
     end
   end
+
+  #
+  # 定型フォーム-DB のパンくずリストには、定型フォーム-DB の直上に「定型フォーム」が
+  # 表示される (set_crumbs で親階層を追加する挙動: dbs_controller.rb)。
+  #
+  context 'breadcrumb' do
+    before { login_cms_user }
+
+    it "includes Cms::Form as a parent crumb with link to cms_forms_path" do
+      visit cms_form_dbs_path(site)
+
+      within '#crumbs' do
+        form_crumb = find_link(Cms::Form.model_name.human)
+        expect(form_crumb[:href]).to end_with(cms_forms_path(site: site.id))
+        expect(page).to have_content(Cms::FormDb.model_name.human)
+      end
+    end
+  end
 end
