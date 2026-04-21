@@ -1,9 +1,9 @@
 <% addon ||= local_assigns.fetch(:addon, {})%>
 <%
-  tt_klass = @item&.class
-  html_tt_shirasagi = tt_klass.respond_to?(:tt) ? tt_klass.tt(:html_shirasagi) : "".html_safe
-  html_tt_liquid_template = tt_klass.respond_to?(:tt) ? tt_klass.tt(:html_liquid_template) : "".html_safe
-  html_tt_liquid_snippet = tt_klass.respond_to?(:tt) ? tt_klass.tt(:html_liquid_snippet) : "".html_safe
+  tt_klass = @item.class
+  html_tt_shirasagi = tt_klass.tt(:html_shirasagi)
+  html_tt_liquid_template = tt_klass.tt(:html_liquid_template)
+  html_tt_liquid_snippet = tt_klass.tt(:html_liquid_snippet)
   has_html_format_tt = [html_tt_shirasagi, html_tt_liquid_template, html_tt_liquid_snippet].any?(&:present?)
 %>
 
