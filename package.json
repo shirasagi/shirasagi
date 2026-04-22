@@ -24,7 +24,7 @@
     "fullcalendar-scheduler": "1.2.1",
     "gmaps-marker-clusterer": "^1.2.2",
     "i18next": "^25.2.1",
-    "i18next-http-backend": "^3.0.2",
+    "i18next-http-backend": "^3.0.5",
     "i18next-multiload-backend-adapter": "^2.3.0",
     "jplayer": "^2.9.2",
     "jquery-colorbox": "^1.6.4",
