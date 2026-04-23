@@ -247,10 +247,10 @@ describe Cms::ListHelper, type: :helper, dbscope: :example do
   end
 
   #
-  # liquid_loop_source の優先順位:
+  # liquid_loop_source の優先順位（Cms::Form#render_html, Cms::Column::Value::Base#_to_html と同じ 3 段フォールバック）:
   #   1) cur_item.loop_setting.html が presence を持てば採用
   #   2) そうでなければ cur_item.loop_liquid が presence を持てば採用
-  #   3) どちらも無ければ default_source
+  #   3) どちらも空なら default_source
   #
   describe "#liquid_loop_source" do
     let(:default_source) { "{% for page in pages %}<default>{{ page.name }}</default>{% endfor %}" }
@@ -267,6 +267,28 @@ describe Cms::ListHelper, type: :helper, dbscope: :example do
       it "loop_setting.html を返す" do
         expect(helper.liquid_loop_source(cur_item.reload, default_source))
           .to include("<loop>")
+      end
+    end
+
+    context "loop_setting は紐付いているが html が空で loop_liquid が設定されている場合" do
+      let!(:loop_setting) do
+        create(:cms_loop_setting, :liquid, :template_type, cur_site: site, html: "")
+      end
+
+      before do
+        cur_item.update!(
+          loop_setting_id: loop_setting.id,
+          loop_format: "liquid",
+          loop_liquid: "{% for page in pages %}<liquid-only>{{ page.name }}</liquid-only>{% endfor %}"
+        )
+      end
+
+      it "loop_liquid にフォールバックする" do
+        expect(cur_item.reload.loop_setting).to be_present
+        expect(cur_item.loop_setting.html).to be_blank
+        expect(cur_item.loop_liquid).to be_present
+        expect(helper.liquid_loop_source(cur_item, default_source))
+          .to include("<liquid-only>")
       end
     end
 

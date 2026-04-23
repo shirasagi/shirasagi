@@ -33,9 +33,10 @@ describe Cms::Column::Value::Free, type: :model, dbscope: :example do
   end
 
   #
-  # Cms::Column::Value::Base#_to_html の layout 選択ロジック:
-  #   column.loop_setting.present? ? column.loop_setting.html : column.layout
-  # （loop_setting / layout がともに空なら to_default_html）
+  # Cms::Column::Value::Base#_to_html の layout 優先順位（3 段フォールバック）:
+  #   1) column.loop_setting.html が presence を持てば採用
+  #   2) そうでなければ column.layout が presence を持てば採用
+  #   3) どちらも空なら to_default_html
   #
   describe "#to_html layout source selection" do
     let!(:site) { cms_site }
@@ -65,7 +66,7 @@ describe Cms::Column::Value::Free, type: :model, dbscope: :example do
       end
     end
 
-    context "column.loop_setting は紐付いているが html が空の場合" do
+    context "column.loop_setting は紐付いているが html が空で column.layout が設定されている場合" do
       let!(:loop_setting) do
         create(:cms_loop_setting, :liquid, :template_type, cur_site: site, html: "")
       end
@@ -75,11 +76,9 @@ describe Cms::Column::Value::Free, type: :model, dbscope: :example do
                loop_setting_id: loop_setting.id)
       end
 
-      it "layout が空と判定されて to_default_html にフォールバックする" do
-        # loop_setting.html が空のとき layout.blank? が true になるため、
-        # column.layout は読まれず to_default_html の value がそのまま返る。
+      it "column.layout にフォールバックする" do
+        expect(rendered).to include('data-source="column-layout"')
         expect(rendered).to include("column-body")
-        expect(rendered).not_to include('data-source="column-layout"')
       end
     end
 

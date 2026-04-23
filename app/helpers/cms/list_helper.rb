@@ -78,13 +78,7 @@ module Cms::ListHelper
   end
 
   def liquid_loop_source(cur_item, default_source)
-    if cur_item.try(:loop_setting).present?
-      cur_item.loop_setting.html
-    elsif cur_item.loop_liquid.present?
-      cur_item.loop_liquid
-    else
-      default_source
-    end
+    cur_item.try(:loop_setting)&.html.presence || cur_item.loop_liquid.presence || default_source
   end
 
   private

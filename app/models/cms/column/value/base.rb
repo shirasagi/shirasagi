@@ -155,7 +155,7 @@ class Cms::Column::Value::Base
   end
 
   def _to_html(options = {})
-    layout = column.try(:loop_setting).present? ? column.loop_setting.html : column.layout
+    layout = column.try(:loop_setting)&.html.presence || column.layout
     if layout.blank?
       return to_default_html
     end

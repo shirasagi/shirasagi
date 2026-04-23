@@ -30,7 +30,7 @@ describe Cms::Form, dbscope: :example do
       end
     end
 
-    context "loop_setting は紐付いているが html が空の場合" do
+    context "loop_setting は紐付いているが html が空で form.html が設定されている場合" do
       let!(:loop_setting) do
         create(:cms_loop_setting, :liquid, :template_type, cur_site: site, html: "")
       end
@@ -40,11 +40,9 @@ describe Cms::Form, dbscope: :example do
                           loop_setting_id: loop_setting.id)
       end
 
-      # loop_setting が紐付いている限り form.html へはフォールバックせず、
-      # 空なら DEFAULT_TEMPLATE が使われる（他のループ処理と同じ設計）。
-      it "form.html へはフォールバックせず DEFAULT_TEMPLATE を適用する" do
+      it "form.html にフォールバックする" do
         rendered = form.render_html(page, registers)
-        expect(rendered).not_to include('data-source="form"')
+        expect(rendered).to include('data-source="form"')
       end
     end
 
