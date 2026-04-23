@@ -61,7 +61,15 @@ module Inquiry::ListHelper
     if cur_item.loop_format_shirasagi?
       render_list_with_shirasagi(cur_item, default_table_html, &block)
     else
-      source = cur_item.loop_liquid.presence || default_table_html
+      loop_setting_html = cur_item.loop_setting&.html
+      source = if cur_item.loop_setting.present? && cur_item.loop_setting.html_format_liquid? && loop_setting_html.present?
+                 loop_setting_html
+               elsif cur_item.loop_liquid.presence
+                 cur_item.loop_liquid
+               else
+                 default_table_html
+               end
+      source = source.presence || default_table_html
       assigns = { "nodes" => @items.to_a }
       render_list_with_liquid(source, assigns)
     end
