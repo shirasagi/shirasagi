@@ -48,6 +48,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
           fill_in "item[text]", with: "text"
           click_button I18n.t('ss.buttons.save')
         end
+        wait_for_notice I18n.t("ss.notice.saved")
         expect(current_path).not_to eq new_path
 
         item = Gws::Qna::Topic.site(site).first
@@ -98,6 +99,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "modify"
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).not_to eq sns_login_path
 
       item.reload

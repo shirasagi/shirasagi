@@ -26,6 +26,7 @@ describe "gws_faq_topics", type: :feature, dbscope: :example do
           fill_in "item[text]", with: text
           click_button I18n.t('ss.buttons.save')
         end
+        wait_for_notice I18n.t("ss.notice.saved")
 
         expect(page).to have_css("aside.comment h2", text: name)
         expect(page).to have_css("aside.comment .body", text: text)
@@ -56,6 +57,7 @@ describe "gws_faq_topics", type: :feature, dbscope: :example do
           fill_in "item[text]", with: text
           click_button I18n.t('ss.buttons.save')
         end
+        wait_for_notice I18n.t("ss.notice.saved")
 
         expect(page).to have_css("aside.comment h2", text: name)
         expect(page).to have_css("aside.comment .body", text: text)
@@ -74,6 +76,7 @@ describe "gws_faq_topics", type: :feature, dbscope: :example do
           fill_in "item[text]", with: text2
           click_button I18n.t('ss.buttons.save')
         end
+        wait_for_notice I18n.t("ss.notice.saved")
 
         expect(page).to have_css("aside.comment h2", text: name)
         expect(page).to have_css("aside.comment .body", text: text)

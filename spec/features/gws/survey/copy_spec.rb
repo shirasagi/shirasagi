@@ -140,6 +140,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on(I18n.t("ss.buttons.save"))
       end
+      wait_for_notice I18n.t("ss.notice.published")
 
       expect(Gws::Survey::Form.all.count).to eq 2
 
