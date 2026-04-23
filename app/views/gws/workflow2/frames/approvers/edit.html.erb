@@ -45,9 +45,47 @@
             <%= f.button t("workflow.buttons.restart"), name: "restart", class: "btn-primary" %>
           <% else %>
             <%= f.button t("workflow.buttons.request"), name: "request", class: "btn-primary" %>
+            <%= f.button t("ss.buttons.reload"), name: "reload", class: "btn-default hide" %>
           <% end %>
         </div>
       </dd>
     </dl>
   </section>
+
+  <%= jquery do %>
+    const form = document.getElementById("workflow-request");
+    const sumibReload = function() {
+      const submitter = form.querySelector(`[name="reload"]`);
+      form.disabled = true;
+      form.requestSubmit(submitter);
+    };
+    const ajaxSelected = form.querySelector(".agent-type-agent .ajax-selected");
+    const agentRadioButton = document.getElementById("item_workflow_agent_type_agent");
+    if (ajaxSelected) {
+      // ajax-selected の change イベントは jQuery イベントのため、jQuery の on を用いてイベントハンドラーを登録する
+      $(ajaxSelected).on("change", (ev) => {
+        if (ajaxSelected.querySelector("[data-id]")) {
+          if (agentRadioButton && (! agentRadioButton.checked)) {
+            agentRadioButton.checked = true;
+          }
+          sumibReload();
+        }
+      });
+    }
+
+    if (agentRadioButton) {
+      agentRadioButton.addEventListener("click", (ev) => {
+        if (ajaxSelected && ajaxSelected.querySelector("[data-id]")) {
+          sumibReload();
+        }
+      });
+    }
+
+    const myselfRadioButton = document.getElementById("item_workflow_agent_type_myself");
+    if (myselfRadioButton) {
+      myselfRadioButton.addEventListener("click", (ev) => {
+        sumibReload();
+      });
+    }
+  <% end %>
 <% end %>
