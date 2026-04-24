@@ -12,5 +12,10 @@
   <dd><%= @item.label(:state) %></dd>
 
   <dt><%= @model.t :html_format %></dt>
-  <dd><%= @item.label(:html_format) %></dd>
+  <dd>
+    <%= @item.label(:html_format) %>
+    <% if @item.html_format_liquid? %>
+      <%= @item.label(:loop_html_setting_type) %>
+    <% end %>
+  </dd>
 </dl>
