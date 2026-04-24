@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { dispatchEvent } from "../../ss/tool";
 
 export default class extends Controller {
   checkAll() {
@@ -12,7 +13,10 @@ export default class extends Controller {
   #modifyCheckBoxAll(state) {
     var checkboxes = this.element.querySelectorAll('input[type=checkbox]');
     checkboxes.forEach((checkBox) => {
-      checkBox.checked = state;
+      if (checkBox.checked !== state) {
+        checkBox.checked = state;
+        dispatchEvent(checkBox, "change");
+      }
     });
   }
 }
