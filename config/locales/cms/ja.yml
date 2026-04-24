@@ -197,6 +197,9 @@ ja:
         link_url: URL
         file_label_place_holder: 代替テキストを入力してください。
         link_url_place_holder: URLを入力してください。
+    column_multiple_files_upload:
+      file_label: ラベル・代替テキスト
+      file_label_placeholder: 代替テキストを入力してください。
     column_table:
       width: 列数
       height: 行数
@@ -832,6 +835,7 @@ ja:
       cms/radio_button: ラジオボタン
       cms/check_box: チェックボックス
       cms/file_upload: ファイルアップロード
+      cms/multiple_files_upload: 複数ファイルアップロード
       cms/headline: 見出し入力
       cms/list: リスト入力
       cms/youtube: YouTube埋め込み
@@ -1161,6 +1165,7 @@ ja:
       cms/column/radio_button: ラジオボタン
       cms/column/check_box: チェックボックス
       cms/column/file_upload: ファイルアップロード
+      cms/column/multiple_files_upload: 複数ファイルアップロード
       cms/column/headline: 見出し入力
       cms/column/list: リスト入力
       cms/column/youtube: YouTube埋め込み
@@ -1631,6 +1636,9 @@ ja:
         image_html_type: 貼付方法
         text: 動画の内容説明
         link_url: URL
+      cms/column/value/multiple_files_upload:
+        file_ids: ファイル
+        file_labels: ラベル・代替テキスト
       cms/column/value/radio_button:
         value: 選択肢
       cms/column/value/select:

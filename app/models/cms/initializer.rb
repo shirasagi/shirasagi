@@ -32,6 +32,7 @@ module Cms
     Cms::Column.plugin 'cms/radio_button'
     Cms::Column.plugin 'cms/check_box'
     Cms::Column.plugin 'cms/file_upload'
+    Cms::Column.plugin 'cms/multiple_files_upload'
     Cms::Column.plugin 'cms/headline'
     Cms::Column.plugin 'cms/list'
     Cms::Column.plugin 'cms/youtube'
