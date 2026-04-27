@@ -46,7 +46,7 @@ $(".message-type.page .img-warp img").load(function (){
         <% end %>
       </div>
     <% else %>
-      <div>テンプレートが設定されていません。</div>
+      <div><%= t("cms.line_empty_template") %></div>
     <% end %>
 
     <% if @item.templates.size >= @model.max_templates %>

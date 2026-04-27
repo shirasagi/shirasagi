@@ -1,0 +1,4 @@
+<dl class="see">
+  <dt><%= @model.t :template_types %></dt>
+  <dd><%= @item.template_types.map { |k| t("cms.options.line_template_type.#{k}") }.join(", ") %></dd>
+</dl>

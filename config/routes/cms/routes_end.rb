@@ -302,6 +302,7 @@ Rails.application.routes.draw do
         end
       end
       resources :event_sessions, only: [:index, :show, :destroy], concerns: :deletion
+      resource :setting, only: %i[show edit update]
     end
 
     get "generate_nodes" => "generate_nodes#index"

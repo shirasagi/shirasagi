@@ -35,7 +35,7 @@ $('.mod-cms-line-template a.ajax-box').data('on-select', function($item) {
   </dd>
 
   <dt><%= @model.t :title %><%= @model.tt :title %></dt>
-  <dd><%= f.text_field :title, class: "js-emoji js-inline" %></dd>
+  <dd><%= f.text_field :title, class: "js-emoji js-inline", style: "width: 80%;" %></dd>
 
   <dt><%= @model.t :summary %><%= @model.tt :summary %></dt>
   <dd><%= f.text_area :summary, class: "js-emoji" %></dd>

@@ -1,0 +1,17 @@
+<dl class="see">
+  <dt><%= @model.t :template_types %><%= @model.tt :template_types %></dt>
+  <dd>
+    <%= hidden_field_tag "#{f.object_name}[template_types][]", '', id: nil %>
+    <% @item.template_type_options.each do |v, k| %>
+      <label>
+        <% if k.to_s == "text" %>
+          <%= check_box_tag "#{f.object_name}[template_types][]", k, true, disabled: true %>
+          <%= hidden_field_tag "#{f.object_name}[template_types][]", "text", id: "item_template_types_#{k}" %>
+        <% else %>
+          <%= check_box_tag "#{f.object_name}[template_types][]", k, @item.template_types.include?(k.to_s), id: "item_template_types_#{k}" %>
+        <% end %>
+        <%= v %>
+      </label>
+    <% end %>
+  </dd>
+</dl>
