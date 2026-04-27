@@ -1,6 +1,5 @@
 class Cms::Line::Setting
   include SS::Document
-  include SS::Reference::User
   include SS::Reference::Site
   include Cms::SitePermission
 
