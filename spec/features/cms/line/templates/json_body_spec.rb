@@ -16,7 +16,7 @@ describe "cms/line/templates json_body", type: :feature, dbscope: :example, js: 
       # add template
       within "#addon-cms-agents-addons-line-message-body" do
         expect(page).to have_css("h2", text: I18n.t("modules.addons.cms/line/message/body"))
-        expect(page).to have_css("div", text: "テンプレートが設定されていません。")
+        expect(page).to have_css("div", text: I18n.t("cms.line_empty_template"))
         click_on I18n.t("cms.buttons.add_template")
       end
       within ".line-select-message-type" do
@@ -46,7 +46,7 @@ describe "cms/line/templates json_body", type: :feature, dbscope: :example, js: 
       # check talk-balloon
       within "#addon-cms-agents-addons-line-message-body" do
         expect(page).to have_css("h2", text: I18n.t("modules.addons.cms/line/message/body"))
-        expect(page).to have_no_css("div", text: "テンプレートが設定されていません。")
+        expect(page).to have_no_css("div", text: I18n.t("cms.line_empty_template"))
         within ".line-talk-view" do
           expect(page).to have_css(".talk-balloon", text: "{JSONテンプレート;}")
           first(".actions .edit-template").click
@@ -79,7 +79,7 @@ describe "cms/line/templates json_body", type: :feature, dbscope: :example, js: 
 
       within "#addon-cms-agents-addons-line-message-body" do
         expect(page).to have_css("h2", text: I18n.t("modules.addons.cms/line/message/body"))
-        expect(page).to have_css("div", text: "テンプレートが設定されていません。")
+        expect(page).to have_css("div", text: I18n.t("cms.line_empty_template"))
       end
     end
   end

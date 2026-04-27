@@ -5,6 +5,7 @@ class Cms::Line::TemplatesController < ApplicationController
   navi_view "cms/line/main/navi"
 
   before_action :set_message
+  before_action :set_model
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
   before_action :redirect_to_select_type, only: [:new]
 
@@ -27,10 +28,11 @@ class Cms::Line::TemplatesController < ApplicationController
   end
 
   def set_model
-    @type = %w(text image page json_body -).find do |type|
+    @line_setting = Cms::Line::Setting.with_site(@cur_site)
+    @type = (@line_setting.template_types + %w(-)).find do |type|
       type == params[:type].presence
     end
-    raise "400" if @type.nil?
+    raise "404" if @type.nil?
 
     @type = nil if @type == "-"
     @model = @type ? "#{Cms::Line::Template}::#{@type.classify}".constantize : Cms::Line::Template::Base

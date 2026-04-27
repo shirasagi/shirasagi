@@ -40,6 +40,21 @@ ja:
     line_facility_search_category: 施設カテゴリー
     line_message: メッセージ
     line_template: テンプレート
+    line_template_type:
+      text:
+        title: テキスト
+        summary: 通常のテキストメッセージです。
+      image:
+        title: 画像
+        summary: 画像を送信します。
+      page:
+        title: 記事ページ
+        summary: 記事ページへのリンクとサマリーを送信します。
+      json_body:
+        title: JSON
+        summary: JSONテンプレートを直接入力します。
+    line_select_template: 作成するテンプレートを選択してください。
+    line_empty_template: テンプレートが設定されていません。
     line_statistics: 統計情報
     line_mail_handlers: メール連携
     line_deliver_log: 配信ログ
@@ -49,6 +64,7 @@ ja:
     line_deliver_age_setting: 年齢設定
     line_test_member: テストメンバー
     line_event_session: セッション
+    line_setting: 設定
     form_check: 制約チェック
     list_view: リスト表示
     row_error: 'error %{row_num}行目'
@@ -409,9 +425,9 @@ ja:
           - LINEの友達登録者全員に配信されます。
           - 「LINEメッセージを受信する/しない」に関わらず送信されます。
       line_statistics:
-         - 統計情報は日毎に自動更新され、メッセージの送信時刻（統計情報の作成日時）から14日間のみ更新されます。
-         - 統計情報の数値は、APIの仕様上、多少の誤差を含むことがあります。
-         - 統計情報の人数はおよそ20人未満の場合、プライバシー保護の為、非表示（情報なし）となります。
+        - 統計情報は日毎に自動更新され、メッセージの送信時刻（統計情報の作成日時）から14日間のみ更新されます。
+        - 統計情報の数値は、APIの仕様上、多少の誤差を含むことがあります。
+        - 統計情報の人数はおよそ20人未満の場合、プライバシー保護の為、非表示（情報なし）となります。
       line_statistics_exceeded_units_by_month: 月内に発行したユニット名が1000を超えている為、統計情報を取得できませんでした。
       page_expiration_header: ページの公開期限が切れています。
       page_expiration_body:
@@ -662,6 +678,7 @@ ja:
         text: テキスト
         image: 画像
         page: 記事ページ
+        json_body: JSON
       line_template_thumb_state:
         none: 表示しない
         thumb_carousel: 記事のサムネイル画像
@@ -1007,6 +1024,7 @@ ja:
     use_private_cms_line_mail_handlers: LINEメール連携の管理（所有）
     use_other_cms_line_statistics: LINE統計情報の利用（全て）
     use_private_cms_line_statistics: LINE統計情報の利用（所有）
+    use_cms_line_settings: LINE設定の管理
     edit_cms_ignore_syntax_check: アクセシビリティチェックを無視して保存する
     edit_cms_user_profile: プロフィールの編集
     edit_password_cms_user_profile: プロフィールのパスワード変更
@@ -1906,6 +1924,8 @@ ja:
         overview_unique_click: URLをタップした人数
         update_statistics: 統計情報の更新
         null_label: 情報なし
+      cms/line/setting:
+        template_types: 使用するテンプレート
       cms/addon/clipboard_copy:
         clipboard_copy_target: コピー対象
         clipboard_copy_selector: CSSセレクター
@@ -2490,6 +2510,10 @@ ja:
         - メールのシグネチャを削除する為に利用できます。
       auto_link_state:
         - メール本文をHTMLに変換する際にリンクとメールアドレスをaタグに置換するか設定します。
+
+    cms/line/setting:
+      template_types:
+        - メッセージを作成する際に表示するテンプレートを選択します。
 
     cms/site:
       name:
@@ -3303,9 +3327,9 @@ ja:
         - 種類を選択します。
 
     cms/column/select_page:
-       node_ids:
-         - 記事フォルダーを設定します。
-         - 設定した記事フォルダー配下のページを選択可能です。
+      node_ids:
+        - 記事フォルダーを設定します。
+        - 設定した記事フォルダー配下のページを選択可能です。
 
     cms/addon/form_db/import:
       import_url: |-
@@ -3512,9 +3536,9 @@ ja:
 
     cms/line/message:
       name:
-       - タイトルを入力します。
+        - タイトルを入力します。
       title:
-       - タイトルを入力します。
+        - タイトルを入力します。
       statistic_state:
         - 有効にするとメッセージ送信時に統計情報を保存します。
 
