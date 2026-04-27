@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms/line/test_members", type: :feature, dbscope: :example, js: true do
+describe "cms/line/settings", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:item) { create :cms_line_setting }
   let(:default_template_types) { %w(text image page json_body) }

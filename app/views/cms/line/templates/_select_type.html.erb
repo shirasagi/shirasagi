@@ -4,7 +4,7 @@
     <% @line_setting.template_types.each do |type| %>
       <div class="message-type-wrap">
         <%= link_to({ action: :new, type: type }, { class: "message-type #{type} #{(@type == type) ? "current" : ""}" }) do %>
-          <%= image_tag("/assets/img/line/templates/#{type}.jpg", alt: "text") %>
+          <%= image_tag("/assets/img/line/templates/#{type}.jpg", alt: t("cms.line_template_type.#{type}.title")) %>
           <div class="description">
             <h2 class="title"><%= t("cms.line_template_type.#{type}.title") %></h2>
             <div class="summary"><%= t("cms.line_template_type.#{type}.summary") %></div>

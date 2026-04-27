@@ -6,6 +6,8 @@ class Cms::Line::Setting
 
   TEMPLATE_TYPES = %w(text image page json_body).freeze
 
+  index({ site_id: 1 }, unique: true)
+
   set_permission_name "cms_line_settings", :use
 
   seqid :id
