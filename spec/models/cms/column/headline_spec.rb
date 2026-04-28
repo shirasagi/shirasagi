@@ -176,6 +176,21 @@ describe Cms::Column::Headline, type: :model, dbscope: :example do
         column.max_headline_level = 'h6'
         expect(column).to be_valid
       end
+
+      # min が legacy フォールバック (h1) より大きい値で、max だけ blank だと、
+      # effective_max が h4 にフォールバックして実効レンジが反転する。
+      it 'rejects when only max is blank and min is greater than legacy max (h4)' do
+        column.min_headline_level = 'h5'
+        column.max_headline_level = nil
+        expect(column).not_to be_valid
+        expect(column.errors[:max_headline_level]).not_to be_empty
+      end
+
+      it 'accepts when only max is blank and min is within legacy range' do
+        column.min_headline_level = 'h2'
+        column.max_headline_level = nil
+        expect(column).to be_valid
+      end
     end
   end
 end

@@ -62,10 +62,10 @@ class Cms::Column::Headline < Cms::Column::Base
   end
 
   def validate_headline_range
-    return if min_headline_level.blank? || max_headline_level.blank?
-    min_idx = HEADLINE_LEVELS.index(min_headline_level)
-    max_idx = HEADLINE_LEVELS.index(max_headline_level)
-    return unless min_idx && max_idx
+    return if min_headline_level.blank? && max_headline_level.blank?
+    min_idx = HEADLINE_LEVELS.index(effective_min_headline_level)
+    max_idx = HEADLINE_LEVELS.index(effective_max_headline_level)
+    return if min_idx.nil? || max_idx.nil?
     errors.add(:max_headline_level, :less_than_min_headline_level) if min_idx > max_idx
   end
 end
