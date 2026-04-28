@@ -1,0 +1,9 @@
+<dl class="see mod-cms-column-headline">
+  <dt><%= @model.t :min_headline_level %><%= @model.tt :min_headline_level %></dt>
+  <dd><%= f.select :min_headline_level, @item.headline_level_options,
+                   { selected: @item.effective_min_headline_level } %></dd>
+
+  <dt><%= @model.t :max_headline_level %><%= @model.tt :max_headline_level %></dt>
+  <dd><%= f.select :max_headline_level, @item.headline_level_options,
+                   { selected: @item.effective_max_headline_level } %></dd>
+</dl>
