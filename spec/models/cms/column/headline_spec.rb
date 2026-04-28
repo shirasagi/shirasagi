@@ -29,10 +29,10 @@ describe Cms::Column::Headline, type: :model, dbscope: :example do
     end
 
     context 'when instantiated with explicit values' do
-      subject { described_class.new(min_headline_level: 'h3', max_headline_level: 'h5') }
+      subject { described_class.new(min_headline_level: 'h2', max_headline_level: 'h5') }
 
       it 'preserves explicit values' do
-        expect(subject.min_headline_level).to eq 'h3'
+        expect(subject.min_headline_level).to eq 'h2'
         expect(subject.max_headline_level).to eq 'h5'
       end
     end
@@ -74,24 +74,32 @@ describe Cms::Column::Headline, type: :model, dbscope: :example do
       end
     end
 
-    context 'with extended range h3-h6' do
-      subject { described_class.new(min_headline_level: 'h3', max_headline_level: 'h6').headline_list }
+    context 'with min=h1 max=h6 (full)' do
+      subject { described_class.new(min_headline_level: 'h1', max_headline_level: 'h6').headline_list }
 
-      it { is_expected.to eq(h3: 'h3', h4: 'h4', h5: 'h5', h6: 'h6') }
+      it { is_expected.to eq(h1: 'h1', h2: 'h2', h3: 'h3', h4: 'h4', h5: 'h5', h6: 'h6') }
     end
 
-    context 'with full selectable range h2-h6' do
+    context 'with min=h2 max=h6' do
       subject { described_class.new(min_headline_level: 'h2', max_headline_level: 'h6').headline_list }
 
       it { is_expected.to eq(h2: 'h2', h3: 'h3', h4: 'h4', h5: 'h5', h6: 'h6') }
     end
   end
 
-  describe '#headline_level_options' do
-    subject { described_class.new.headline_level_options.map(&:last) }
+  describe '#min_headline_level_options' do
+    subject { described_class.new.min_headline_level_options.map(&:last) }
 
-    it 'excludes h1 and returns h2 through h6' do
-      is_expected.to eq %w(h2 h3 h4 h5 h6)
+    it 'returns h1 and h2' do
+      is_expected.to eq %w(h1 h2)
+    end
+  end
+
+  describe '#max_headline_level_options' do
+    subject { described_class.new.max_headline_level_options.map(&:last) }
+
+    it 'returns h3 through h6' do
+      is_expected.to eq %w(h3 h4 h5 h6)
     end
   end
 
@@ -114,9 +122,9 @@ describe Cms::Column::Headline, type: :model, dbscope: :example do
     end
 
     context 'when set' do
-      let(:column) { described_class.new(min_headline_level: 'h3', max_headline_level: 'h5') }
+      let(:column) { described_class.new(min_headline_level: 'h2', max_headline_level: 'h5') }
 
-      it { expect(column.effective_min_headline_level).to eq 'h3' }
+      it { expect(column.effective_min_headline_level).to eq 'h2' }
       it { expect(column.effective_max_headline_level).to eq 'h5' }
     end
   end
@@ -129,19 +137,21 @@ describe Cms::Column::Headline, type: :model, dbscope: :example do
       )
     end
 
-    describe 'inclusion of min_headline_level / max_headline_level' do
-      it 'rejects h1 because h1 is not a selectable boundary' do
-        column.min_headline_level = 'h1'
-        column.max_headline_level = 'h4'
-        expect(column).not_to be_valid
-        expect(column.errors[:min_headline_level]).not_to be_empty
+    describe 'inclusion of min_headline_level' do
+      it 'accepts h1 and h2' do
+        %w(h1 h2).each do |level|
+          column.min_headline_level = level
+          column.max_headline_level = 'h4'
+          expect(column).to be_valid, "expected min=#{level} to be valid but got: #{column.errors.full_messages}"
+        end
       end
 
-      it 'accepts h2 through h6 for min' do
-        %w(h2 h3 h4 h5 h6).each do |level|
+      it 'rejects h3..h6 (only h1, h2 are selectable for min)' do
+        %w(h3 h4 h5 h6).each do |level|
           column.min_headline_level = level
-          column.max_headline_level = 'h6'
-          expect(column).to be_valid, "expected min=#{level} to be valid but got: #{column.errors.full_messages}"
+          column.max_headline_level = 'h4'
+          expect(column).not_to be_valid
+          expect(column.errors[:min_headline_level]).not_to be_empty
         end
       end
 
@@ -157,37 +167,26 @@ describe Cms::Column::Headline, type: :model, dbscope: :example do
       end
     end
 
-    describe 'range validation (min <= max)' do
-      it 'rejects min > max' do
-        column.min_headline_level = 'h5'
-        column.max_headline_level = 'h3'
-        expect(column).not_to be_valid
-        expect(column.errors[:max_headline_level]).not_to be_empty
+    describe 'inclusion of max_headline_level' do
+      it 'accepts h3 through h6' do
+        %w(h3 h4 h5 h6).each do |level|
+          column.min_headline_level = 'h2'
+          column.max_headline_level = level
+          expect(column).to be_valid, "expected max=#{level} to be valid but got: #{column.errors.full_messages}"
+        end
       end
 
-      it 'accepts min == max' do
-        column.min_headline_level = 'h3'
-        column.max_headline_level = 'h3'
-        expect(column).to be_valid
+      it 'rejects h1, h2 (only h3..h6 are selectable for max)' do
+        %w(h1 h2).each do |level|
+          column.min_headline_level = 'h2'
+          column.max_headline_level = level
+          expect(column).not_to be_valid
+          expect(column.errors[:max_headline_level]).not_to be_empty
+        end
       end
 
-      it 'accepts min < max' do
-        column.min_headline_level = 'h2'
-        column.max_headline_level = 'h6'
-        expect(column).to be_valid
-      end
-
-      # min が legacy フォールバック (h1) より大きい値で、max だけ blank だと、
-      # effective_max が h4 にフォールバックして実効レンジが反転する。
-      it 'rejects when only max is blank and min is greater than legacy max (h4)' do
-        column.min_headline_level = 'h5'
-        column.max_headline_level = nil
-        expect(column).not_to be_valid
-        expect(column.errors[:max_headline_level]).not_to be_empty
-      end
-
-      it 'accepts when only max is blank and min is within legacy range' do
-        column.min_headline_level = 'h2'
+      it 'accepts nil for legacy columns' do
+        column.min_headline_level = nil
         column.max_headline_level = nil
         expect(column).to be_valid
       end
