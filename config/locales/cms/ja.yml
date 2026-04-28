@@ -3283,6 +3283,13 @@ ja:
       label_place_holder:
         - リンクテキストのプレースホルダーを入力します。
 
+    cms/column/headline:
+      min_headline_level:
+        - 見出し入力で選択できる最小（最も浅い）見出しレベルを設定します。
+      max_headline_level:
+        - 見出し入力で選択できる最大（最も深い）見出しレベルを設定します。
+        - 設定した深さまでの見出しが選択肢に表示されます。
+
     cms/addon/column/text_like:
       max_length:
         - 入力文字数の最大長を入力します。
