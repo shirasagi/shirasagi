@@ -11,32 +11,32 @@ describe "headline block pulldown", type: :feature, dbscope: :example, js: true 
 
   before { login_cms_user }
 
-  context "with a new-default column (min=h3, max=h6)" do
+  context "with a new-default column (min=h2, max=h6)" do
     let!(:column) do
       create(
         :cms_column_headline,
         cur_site: site, cur_form: form, order: 1, required: "optional",
-        min_headline_level: 'h3', max_headline_level: 'h6'
+        min_headline_level: 'h2', max_headline_level: 'h6'
       )
     end
     let!(:item) do
       create(
         :article_page, cur_node: node, form: form,
         column_values: [
-          column.value_type.new(column: column, head: 'h4', text: 'existing heading')
+          column.value_type.new(column: column, head: 'h3', text: 'existing heading')
         ]
       )
     end
 
-    it "offers only h3..h6 in the pulldown with the stored value preselected" do
+    it "offers only h2..h6 in the pulldown with the stored value preselected" do
       visit edit_article_page_path(site.id, node, item)
       wait_for_all_ckeditors_ready
       wait_for_all_turbo_frames
 
       within ".column-value-cms-column-headline" do
         options = all('select[name="item[column_values][][in_wrap][head]"] option').map(&:value)
-        expect(options).to eq %w(h3 h4 h5 h6)
-        expect(page).to have_select('item[column_values][][in_wrap][head]', selected: 'h4')
+        expect(options).to eq %w(h2 h3 h4 h5 h6)
+        expect(page).to have_select('item[column_values][][in_wrap][head]', selected: 'h3')
       end
     end
   end
