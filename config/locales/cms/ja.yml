@@ -199,6 +199,11 @@ ja:
     column_multiple_images_upload:
       file_label: 代替テキスト
       file_label_placeholder: 代替テキストを入力してください。
+    column_multiple_attachments_upload:
+      header: 説明文
+      header_placeholder: 添付ファイルリストの先頭に表示する説明文（例：詳細については下記をご覧ください。）
+      file_label: リンクテキスト
+      file_label_placeholder: リンクテキストを入力してください。未入力の場合はファイル名が表示されます。
     column_table:
       width: 列数
       height: 行数
@@ -835,6 +840,7 @@ ja:
       cms/check_box: チェックボックス
       cms/file_upload: ファイルアップロード
       cms/multiple_images_upload: 複数画像アップロード
+      cms/multiple_attachments_upload: 複数添付ファイルアップロード
       cms/headline: 見出し入力
       cms/list: リスト入力
       cms/youtube: YouTube埋め込み
@@ -1165,6 +1171,7 @@ ja:
       cms/column/check_box: チェックボックス
       cms/column/file_upload: ファイルアップロード
       cms/column/multiple_images_upload: 複数画像アップロード
+      cms/column/multiple_attachments_upload: 複数添付ファイルアップロード
       cms/column/headline: 見出し入力
       cms/column/list: リスト入力
       cms/column/youtube: YouTube埋め込み
@@ -1638,6 +1645,10 @@ ja:
       cms/column/value/multiple_images_upload:
         file_ids: 画像
         file_labels: 代替テキスト
+      cms/column/value/multiple_attachments_upload:
+        file_ids: 添付ファイル
+        file_labels: リンクテキスト
+        header: 説明文
       cms/column/value/radio_button:
         value: 選択肢
       cms/column/value/select:
