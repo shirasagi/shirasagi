@@ -1,6 +1,6 @@
-class Cms::Column::Value::MultipleFilesUpload < Cms::Column::Value::Base
+class Cms::Column::Value::MultipleImagesUpload < Cms::Column::Value::Base
   field :file_ids, type: Array, default: []
-  field :file_labels, type: Hash, default: {}
+  field :file_labels, type: Hash, default: {}, metadata: { syntax_check: { files_alt_presence: true } }
 
   permit_values file_ids: [], file_labels: {}
 
@@ -11,7 +11,13 @@ class Cms::Column::Value::MultipleFilesUpload < Cms::Column::Value::Base
     export :files
     export :file_labels
     export as: :items do
-      files.map { |f| { "file" => f, "label" => file_label_for(f) } }
+      files.map do |f|
+        {
+          "file" => f,
+          "label" => file_label_for(f),
+          "image_text" => file_labels[f.id.to_s].to_s
+        }
+      end
     end
   end
 
@@ -54,13 +60,8 @@ class Cms::Column::Value::MultipleFilesUpload < Cms::Column::Value::Base
     return '' if file_ids.blank?
 
     items = files.map do |file|
-      label = file_label_for(file)
-      content = if file.image?
-                  ApplicationController.helpers.image_tag(file.url, alt: label)
-                else
-                  text = "#{label} (#{file.extname.upcase} #{file.size.to_fs(:human_size)})"
-                  ApplicationController.helpers.link_to(text, file.url)
-                end
+      alt = file_labels[file.id.to_s].to_s
+      content = ApplicationController.helpers.image_tag(file.url, alt: alt)
       ApplicationController.helpers.content_tag(:div, content, class: "column-item")
     end
 
@@ -76,6 +77,7 @@ class Cms::Column::Value::MultipleFilesUpload < Cms::Column::Value::Base
     values.intersect?(file_label_values + file_names + file_urls)
   end
 
+  # 表示用ラベル。未入力時はファイル名にフォールバックする。alt 用途には items[].image_text を使うこと
   def file_label_for(file)
     file_labels.present? && file_labels[file.id.to_s].presence || file.name
   end
@@ -87,11 +89,7 @@ class Cms::Column::Value::MultipleFilesUpload < Cms::Column::Value::Base
       h << %(  <div class="column2">)
       h << %(    {% for item in value.items %})
       h << %(      <div class="column-item">)
-      h << %(        {% if item.file.image? %})
-      h << %(          <img src="{{ item.file.url }}" alt="{{ item.label }}">)
-      h << %(        {% else %})
-      h << %(          <a href="{{ item.file.url }}">{{ item.label }}</a>)
-      h << %(        {% endif %})
+      h << %(        <img src="{{ item.file.url }}" alt="{{ item.image_text }}">)
       h << %(      </div>)
       h << %(    {% endfor %})
       h << %(  </div>)
@@ -107,6 +105,10 @@ class Cms::Column::Value::MultipleFilesUpload < Cms::Column::Value::Base
 
     if column.required? && file_ids.blank?
       self.errors.add(:file_ids, :blank) unless skip_required?
+    end
+
+    files.reject(&:image?).each do |non_image|
+      self.errors.add(:file_ids, :only_image_file, filename: non_image.name)
     end
   end
 

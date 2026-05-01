@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :cms_column_multiple_files_upload, class: Cms::Column::MultipleFilesUpload do
+  factory :cms_column_multiple_images_upload, class: Cms::Column::MultipleImagesUpload do
     cur_site { cms_site }
 
     name { "name-#{unique_id}" }

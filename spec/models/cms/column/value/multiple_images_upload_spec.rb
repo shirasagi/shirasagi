@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe Cms::Column::Value::MultipleFilesUpload, type: :model, dbscope: :example do
+describe Cms::Column::Value::MultipleImagesUpload, type: :model, dbscope: :example do
   let!(:site) { cms_site }
   let!(:node) { create :article_node_page }
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
-  let!(:column) { create(:cms_column_multiple_files_upload, cur_form: form, order: 1) }
+  let!(:column) { create(:cms_column_multiple_images_upload, cur_form: form, order: 1) }
 
   describe "#before_save_files" do
     context "with an unowned cms/file (clone required)" do

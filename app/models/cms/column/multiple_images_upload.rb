@@ -1,4 +1,4 @@
-class Cms::Column::MultipleFilesUpload < Cms::Column::Base
+class Cms::Column::MultipleImagesUpload < Cms::Column::Base
   def alignment_options
     %w(flow).map { |v| [ I18n.t("cms.options.alignment.#{v}"), v ] }
   end

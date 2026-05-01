@@ -13,7 +13,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       click_on I18n.t('cms.buttons.manage_columns')
 
       within '.gws-column-list-toolbar[data-placement="top"]' do
-        wait_for_event_fired("gws:column:added") { click_on I18n.t('cms.columns.cms/multiple_files_upload') }
+        wait_for_event_fired("gws:column:added") { click_on I18n.t('cms.columns.cms/multiple_images_upload') }
       end
       wait_for_notice I18n.t('ss.notice.saved')
 
@@ -23,7 +23,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       end
       wait_for_notice I18n.t('ss.notice.saved')
       Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
-        expect(item).to be_a(Cms::Column::MultipleFilesUpload)
+        expect(item).to be_a(Cms::Column::MultipleImagesUpload)
         expect(item.name).to eq name
         expect(item.required).to eq 'required'
       end
@@ -46,7 +46,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
     let(:layout) { create_cms_layout }
     let!(:node) { create :article_node_page, cur_site: site, layout_id: layout.id }
     let!(:public_form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
-    let!(:column) { create(:cms_column_multiple_files_upload, cur_form: public_form, order: 1) }
+    let!(:column) { create(:cms_column_multiple_images_upload, cur_form: public_form, order: 1) }
     let!(:image1) do
       tmp_ss_file(
         Cms::File,
@@ -106,7 +106,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
     let(:layout) { create_cms_layout }
     let!(:node) { create :article_node_page, cur_site: site, layout_id: layout.id }
     let!(:public_form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
-    let!(:column) { create(:cms_column_multiple_files_upload, cur_form: public_form, order: 1) }
+    let!(:column) { create(:cms_column_multiple_images_upload, cur_form: public_form, order: 1) }
     let!(:image_before) do
       tmp_ss_file(
         Cms::File,
@@ -179,67 +179,10 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
     end
   end
 
-  context 'public page rendering with multiple PDFs' do
-    let(:layout) { create_cms_layout }
-    let!(:node) { create :article_node_page, cur_site: site, layout_id: layout.id }
-    let!(:pdf_form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
-    let!(:pdf_column) { create(:cms_column_multiple_files_upload, cur_form: pdf_form, order: 1) }
-    let!(:pdf1) do
-      tmp_ss_file(
-        Cms::File,
-        contents: "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf",
-        site: site, user: cms_user, model: Cms::File::FILE_MODEL
-      )
-    end
-    let!(:pdf2) do
-      tmp_ss_file(
-        Cms::File,
-        contents: "#{Rails.root}/spec/fixtures/opendata/resource.pdf",
-        site: site, user: cms_user, model: Cms::File::FILE_MODEL
-      )
-    end
-    let!(:article_page) do
-      create(
-        :article_page, cur_site: site, cur_node: node, layout_id: layout.id, form: pdf_form,
-        state: 'public',
-        column_values: [
-          pdf_column.value_type.new(
-            column: pdf_column,
-            file_ids: [pdf1.id.to_s, pdf2.id.to_s],
-            file_labels: {
-              pdf1.id.to_s => "first-pdf-label",
-              pdf2.id.to_s => "second-pdf-label"
-            }
-          )
-        ]
-      )
-    end
-
-    before do
-      Capybara.app_host = "http://#{site.domain}"
-    end
-
-    it "clones both PDFs and renders them as links in the specified order" do
-      article_page.reload
-      cloned_ids = article_page.column_values.first.file_ids
-      expect(cloned_ids.length).to eq 2
-      expect(cloned_ids).not_to include(pdf1.id.to_s, pdf2.id.to_s)
-
-      visit article_page.full_url
-      expect(page).to have_css("a", text: "first-pdf-label")
-      expect(page).to have_css("a", text: "second-pdf-label")
-      cloned_ids.each do |cid|
-        expect(page).to have_css("a[href*='/fs/#{cid.to_s.chars.join('/')}/']")
-      end
-      # 指定順が公開画面 HTML でも維持されること
-      expect(page.body.index("first-pdf-label")).to be < page.body.index("second-pdf-label")
-    end
-  end
-
   context 'validation errors' do
     let!(:required_form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
     let!(:required_column) do
-      create(:cms_column_multiple_files_upload, cur_form: required_form, order: 1, required: 'required')
+      create(:cms_column_multiple_images_upload, cur_form: required_form, order: 1, required: 'required')
     end
     let!(:node) { create :article_node_page, cur_site: site }
 
@@ -272,6 +215,24 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       saved_ids = article_page.column_values.first.file_ids
       expect(saved_ids).not_to include(fake_id)
       expect(saved_ids.length).to eq 1
+    end
+
+    it "is invalid when a non-image file is attached" do
+      pdf = tmp_ss_file(
+        Cms::File,
+        contents: "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf",
+        site: site, user: cms_user, model: Cms::File::FILE_MODEL
+      )
+      article_page = build(
+        :article_page, cur_site: site, cur_node: node, form: required_form,
+        column_values: [
+          required_column.value_type.new(column: required_column, file_ids: [pdf.id.to_s])
+        ]
+      )
+      expect(article_page).not_to be_valid
+      expect(article_page.column_values.first.errors[:file_ids]).to include(
+        I18n.t("errors.messages.only_image_file", filename: pdf.name)
+      )
     end
   end
 end
