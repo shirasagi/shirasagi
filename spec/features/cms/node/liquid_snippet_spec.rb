@@ -217,6 +217,32 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
   end
 
   #
+  # テンプレート選択時、textarea は readOnly になるが editor.replaceSelection で
+  # スニペットが挿入できてしまっていた (利用者には反映されないテンプレート内容に
+  # 上書きされ、混乱を招いた)。回帰防止のため、テンプレート選択中はスニペット
+  # セレクターが disabled になることを検証する。
+  #
+  it "disables the snippet selector while a liquid template is selected" do
+    visit edit_node_conf_path(site.id, node)
+    ensure_addon_opened('#addon-event-agents-addons-page_list')
+
+    within '#addon-event-agents-addons-page_list' do
+      select('Liquid', from: 'item[loop_format]') if page.has_select?('item[loop_format]')
+      wait_for_js_ready
+
+      expect(loop_snippet_select).not_to be_disabled
+
+      select_loop_setting('item_loop_setting_id_liquid', liquid_template_low.name)
+      Selenium::WebDriver::Wait.new(timeout: Capybara.default_max_wait_time).until { loop_snippet_select.disabled? }
+      expect(loop_snippet_select).to be_disabled
+
+      select_loop_setting('item_loop_setting_id_liquid', I18n.t('cms.input_directly'))
+      Selenium::WebDriver::Wait.new(timeout: Capybara.default_max_wait_time).until { !loop_snippet_select.disabled? }
+      expect(loop_snippet_select).not_to be_disabled
+    end
+  end
+
+  #
   # 管理画面で編集したループHTML設定が、記事フォルダの公開ページに反映されることを
   # SHIRASAGI / Liquid 両形式で End-to-End で検証する。
   #

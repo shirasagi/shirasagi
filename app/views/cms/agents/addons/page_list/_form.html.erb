@@ -160,11 +160,23 @@
     var $addon = $("<%= "##{addon[:id]}" %>");
     var $snippetSelect = $addon.find('.loop-snippet-selector');
     var $liquidTextarea = $addon.find('#item_loop_liquid');
+    var $liquidTemplateSelect = $('#item_loop_setting_id_liquid');
 
     // スニペットセレクターの初期値を「直接入力」に設定
     if ($snippetSelect.length && !$snippetSelect.val()) {
       $snippetSelect.val('');
     }
+
+    // テンプレート選択中はスニペットを挿入しても editor が readOnly のため反映されない。
+    // 操作不能であることを明示するためセレクター自体を disabled にする。
+    var syncSnippetSelectorDisabled = function() {
+      if (!$snippetSelect.length) {
+        return;
+      }
+      $snippetSelect.prop('disabled', !!$liquidTemplateSelect.val());
+    };
+    syncSnippetSelectorDisabled();
+    $liquidTemplateSelect.on('change', syncSnippetSelectorDisabled);
 
     // スニペットの選択処理: CodeMirror のカーソル位置/選択範囲に挿入
     $snippetSelect.on('change', function() {

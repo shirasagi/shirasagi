@@ -38,9 +38,10 @@
   var $addon = $("<%= "##{addon[:id]}" %>");
   var $snippetSelect = $addon.find('.loop-snippet-selector');
   var $layoutTextarea = $addon.find('textarea[name*="[layout]"]');
+  var $templateSelect = $addon.find('#<%= loop_setting_select_id %>');
 
   // テンプレート選択時に textarea を readonly にする (内容は保持)
-  if ($addon.find('#<%= loop_setting_select_id %>').length) {
+  if ($templateSelect.length) {
     Cms_Editor_CodeMirror.lock(
       '#<%= loop_setting_select_id %>',
       '#<%= addon[:id] %> textarea[name*="[layout]"]'
@@ -51,6 +52,17 @@
   if ($snippetSelect.length && !$snippetSelect.val()) {
     $snippetSelect.val('');
   }
+
+  // テンプレート選択中はスニペットを挿入しても editor が readOnly のため反映されない。
+  // 操作不能であることを明示するためセレクター自体を disabled にする。
+  var syncSnippetSelectorDisabled = function() {
+    if (!$snippetSelect.length) {
+      return;
+    }
+    $snippetSelect.prop('disabled', !!$templateSelect.val());
+  };
+  syncSnippetSelectorDisabled();
+  $templateSelect.on('change', syncSnippetSelectorDisabled);
 
   // スニペットの選択処理: CodeMirror のカーソル位置/選択範囲に挿入
   $snippetSelect.on('change', function() {
