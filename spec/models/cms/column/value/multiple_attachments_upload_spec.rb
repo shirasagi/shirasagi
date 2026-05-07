@@ -96,7 +96,7 @@ describe Cms::Column::Value::MultipleAttachmentsUpload, type: :model, dbscope: :
       end
     end
 
-    context "with a file already owned by the page (no clone)" do
+    context "re-saving a page after the initial clone" do
       let!(:file) do
         tmp_ss_file(
           Cms::File,
@@ -114,7 +114,7 @@ describe Cms::Column::Value::MultipleAttachmentsUpload, type: :model, dbscope: :
         )
       end
 
-      it "keeps file_ids stable on re-save" do
+      it "keeps file_ids stable" do
         page.reload
         value = page.column_values.first
         first_save_ids = value.file_ids.dup
