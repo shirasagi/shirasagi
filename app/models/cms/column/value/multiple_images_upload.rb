@@ -14,7 +14,7 @@ class Cms::Column::Value::MultipleImagesUpload < Cms::Column::Value::Base
       files.map do |f|
         {
           "file" => f,
-          "label" => file_label_for(f),
+          "label" => file_labels[f.id.to_s],
           "image_text" => file_labels[f.id.to_s].to_s
         }
       end
@@ -77,9 +77,8 @@ class Cms::Column::Value::MultipleImagesUpload < Cms::Column::Value::Base
     values.intersect?(file_label_values + file_names + file_urls)
   end
 
-  # 表示用ラベル。未入力時はファイル名にフォールバックする。alt 用途には items[].image_text を使うこと
   def file_label_for(file)
-    file_labels.present? && file_labels[file.id.to_s].presence || file.name
+    file_labels[file.id.to_s] if file_labels.present?
   end
 
   class << self
