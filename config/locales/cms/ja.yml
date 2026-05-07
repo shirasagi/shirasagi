@@ -202,8 +202,8 @@ ja:
     column_multiple_attachments_upload:
       header: 説明文
       header_placeholder: 添付ファイルリストの先頭に表示する説明文（例：詳細については下記をご覧ください。）
-      file_label: リンクテキスト
-      file_label_placeholder: リンクテキストを入力してください。未入力の場合はファイル名が表示されます。
+      file_label: ファイル名
+      file_label_placeholder: リンクテキストとして表示するファイル名を入力してください。
     column_table:
       width: 列数
       height: 行数
@@ -2084,6 +2084,7 @@ ja:
       replace_word_validation: に使用が好ましくない単語が含まれています。
       alt_is_included_in_filename: 代替テキストがファイル名に含まれています。
       blank_file_label: "「%{filename}」の代替テキストを入力してください。"
+      blank_file_link_text: "「%{filename}」のファイル名を入力してください。"
       only_image_file: "「%{filename}」は画像ファイルではありません。"
       cms_form_db_required_node: データの登録には記事フォルダーの設定が必要です。
       richmenu_target_taken: は既にリッチメニューグループ内に登録されています。

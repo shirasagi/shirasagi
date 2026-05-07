@@ -1,6 +1,7 @@
 class Cms::Column::Value::MultipleAttachmentsUpload < Cms::Column::Value::Base
   field :file_ids, type: Array, default: []
-  field :file_labels, type: Hash, default: {}
+  field :file_labels, type: Hash, default: {},
+    metadata: { syntax_check: { files_alt_presence: { message: :blank_file_link_text } } }
   field :header, type: String
 
   permit_values :header, file_ids: [], file_labels: {}
@@ -16,7 +17,7 @@ class Cms::Column::Value::MultipleAttachmentsUpload < Cms::Column::Value::Base
       files.map do |f|
         {
           "file" => f,
-          "label" => file_label_for(f)
+          "label" => file_labels[f.id.to_s]
         }
       end
     end
@@ -70,8 +71,10 @@ class Cms::Column::Value::MultipleAttachmentsUpload < Cms::Column::Value::Base
 
     if file_ids.present?
       items = files.map do |file|
-        link = helpers.link_to(file_label_for(file), file.url)
-        helpers.content_tag(:li, link)
+        label = file_labels[file.id.to_s].presence.try { |l| helpers.sanitize(l) }
+        label ||= file.name.sub(/\.[^.]+$/, '')
+        label = "#{label} (#{file.extname.upcase} #{file.size.to_fs(:human_size)})"
+        helpers.content_tag(:li, helpers.link_to(label, file.url))
       end
       parts << helpers.content_tag(:ul, items.join.html_safe, class: "attachment-list")
     end
@@ -88,9 +91,8 @@ class Cms::Column::Value::MultipleAttachmentsUpload < Cms::Column::Value::Base
     values.intersect?(file_label_values + file_names + file_urls + [header.to_s])
   end
 
-  # 表示用ラベル。未入力時はファイル名にフォールバックする。
   def file_label_for(file)
-    file_labels.present? && file_labels[file.id.to_s].presence || file.name
+    file_labels[file.id.to_s] if file_labels.present?
   end
 
   class << self
@@ -102,7 +104,7 @@ class Cms::Column::Value::MultipleAttachmentsUpload < Cms::Column::Value::Base
       h << %({% if value.items.size > 0 %})
       h << %(  <ul class="attachment-list">)
       h << %(    {% for item in value.items %})
-      h << %(      <li><a href="{{ item.file.url }}">{{ item.label }}</a></li>)
+      h << %(      <li><a href="{{ item.file.url }}">{{ item.label | default: item.file.humanized_name }}</a></li>)
       h << %(    {% endfor %})
       h << %(  </ul>)
       h << %({% endif %})
