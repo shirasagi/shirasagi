@@ -1,4 +1,7 @@
-<% addon ||= local_assigns.fetch(:addon, {}) %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  route_name_map = Hash[Cms::Node.new.route_options.map { _1.reverse }]
+%>
 <%= render "cms/agents/addons/page_list/show", addon: addon %>
 
 <% if @model.use_node_routes %>
@@ -7,8 +10,7 @@
     <dd>
       <%=
         br @item.node_routes.select(&:present?).
-          map { |path| Cms::Node.new.route_options.find { |route_option| route_option[1] == path } }.
-          map { |name, _path| name }
+          map { |path| route_name_map[path] || path }
       %>
     </dd>
 
