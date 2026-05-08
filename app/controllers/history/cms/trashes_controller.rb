@@ -8,6 +8,10 @@ class History::Cms::TrashesController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [History::Trash.model_name.human, action: :index]
+  end
+
   def cms_content_params
     params.require(:item).permit(*%i[name index_name basename parent children]).merge(fix_params)
   end

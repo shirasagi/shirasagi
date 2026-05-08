@@ -8,6 +8,11 @@ class Cms::CheckLinks::IgnoreUrlsController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [t("modules.cms/check_links"), cms_check_links_path]
+    @crumbs << [t("cms/check_links.ignore_urls"), action: :index]
+  end
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
   end

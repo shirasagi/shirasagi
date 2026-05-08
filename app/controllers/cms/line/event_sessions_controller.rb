@@ -13,6 +13,7 @@ class Cms::Line::EventSessionsController < ApplicationController
   end
 
   def set_crumbs
-    #@crumbs << [t("cms.sns_post"), cms_sns_post_logs_path]
+    @crumbs << [t("cms.line"), cms_line_messages_path]
+    @crumbs << [t("cms.line_event_session"), cms_line_event_sessions_path]
   end
 end

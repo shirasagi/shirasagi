@@ -9,6 +9,7 @@ class Cms::Line::Service::GroupsController < ApplicationController
   private
 
   def set_crumbs
+    @crumbs << [t("cms.line"), cms_line_messages_path]
     @crumbs << [t("cms.line_service"), cms_line_service_groups_path]
   end
 

@@ -10,7 +10,16 @@ class Cms::NodesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("cms.node"), action: :index]
+    case params[:action]
+    when 'download'
+      @crumbs << [t("cms.etc"), nil]
+      @crumbs << [t("cms.csv_export_node"), action: :download]
+    when 'import'
+      @crumbs << [t("cms.etc"), nil]
+      @crumbs << [t("cms.csv_import_node"), action: :import]
+    else
+      @crumbs << [t("cms.node"), action: :index]
+    end
   end
 
   def fix_params
