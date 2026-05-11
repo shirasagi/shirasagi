@@ -22,10 +22,9 @@
     <%= f.label :description_setting, t("cms.options.description_setting.description_setting_auto"), value: "auto" %>
   </dd>
 
-  <dt class="depth-2"><%= @model.t :description_body %><%= @model.tt :description_body %></dt>
-  <dd class="depth-2">
+  <dt class="depth-2 js-description-body"<%= " hidden".html_safe if @item.description_setting_auto? %>><%= @model.t :description_body %><%= @model.tt :description_body %></dt>
+  <dd class="depth-2 js-description-body"<%= " hidden".html_safe if @item.description_setting_auto? %>>
     <% opts = @cur_site.auto_description_enabled? ? {} : { class: "presence" } %>
-    <% opts[:readonly] = @item.description_setting_auto? %>
     <%= f.text_area :description, opts %>
   </dd>
 
@@ -35,19 +34,9 @@
 
 <%= javascript_tag do %>
   $(function() {
-  const descriptionField = $('#item_description');
-
-  // 初期状態のクラス設定
-  if (descriptionField.prop('readonly')) {
-    descriptionField.addClass('readonly');
-  }
-
-  $('input[name="item[description_setting]"]').on('change', function() {
-    const currentSetting = $(this).val();
-
-    // 読み取り専用状態とクラスの切り替え
-    descriptionField.prop('readonly', currentSetting === 'auto');
-    descriptionField.toggleClass('readonly', currentSetting === 'auto');
+    $('input[name="item[description_setting]"]').on('change', function() {
+      const isAuto = $(this).val() === 'auto';
+      $('.js-description-body').prop('hidden', isAuto);
+    });
   });
-});
 <% end %>

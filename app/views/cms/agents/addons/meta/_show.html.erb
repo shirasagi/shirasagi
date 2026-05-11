@@ -10,7 +10,16 @@
   <dd><%= @item.send :keywords %></dd>
 
   <dt><%= @model.t :description %></dt>
-  <dd><%= @item.send :description %></dd>
+  <dd></dd>
+
+  <dt class="depth-2"><%= @model.t :description_setting %></dt>
+  <dd class="depth-2">
+    <% setting_key = @item.description_setting_manual? ? "description_setting_manual" : "description_setting_auto" %>
+    <%= t("cms.options.description_setting.#{setting_key}") %>
+  </dd>
+
+  <dt class="depth-2"><%= @model.t :description_body %></dt>
+  <dd class="depth-2"><%= @item.template_variable_handler_description %></dd>
 
   <dt><%= @model.t :summary_html %></dt>
   <dd><%= @item.send :summary_html %></dd>
