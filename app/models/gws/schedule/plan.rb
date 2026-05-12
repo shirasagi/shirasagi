@@ -78,13 +78,7 @@ class Gws::Schedule::Plan
 
   def subscribed_users
     return Gws::User.none if new_record?
-
-    user_ids = overall_member_ids
-    if respond_to?(:facility_approver_ids)
-      facility_approver_ids.try { |ids| user_ids += ids }
-    end
-
-    Gws::User.in(id: user_ids)
+    Gws::User.in(id: overall_member_ids)
   end
 
   def readable?(user, opts = {})
