@@ -31,32 +31,24 @@ class Gws::StaffRecord::CopySituationJob < Gws::ApplicationJob
       groups = groups.active.to_a
 
       @grouped_items = {}
-      names = groups.map(&:trailing_name).tally
-      counter = {}
+      trailing_name_counts = groups.map(&:trailing_name).tally
+      next_suffixes = Hash.new(1)
       groups.each do |group|
-        name = group.trailing_name
-
-        if names[name] == 1
-          @grouped_items[name] = group
-          next
+        base_name = trailing_name_counts[group.trailing_name] == 1 ? group.trailing_name : format_name(group)
+        name = base_name
+        while @grouped_items.key?(name)
+          next_suffixes[base_name] += 1
+          name = "#{base_name}.#{next_suffixes[base_name]}"
         end
-
-        name = format_name(group)
-        if @grouped_items[name].nil?
-          @grouped_items[name] = group
-          next
-        end
-
-        counter[name] ||= 1
-        counter[name] += 1
-        name = "#{name}.#{counter[name]}"
         @grouped_items[name] = group
       end
     end
 
     def format_name(group)
-      r, l = group.name.split("/")[(group.depth - 1)..-1]
-      name = I18n.t("gws/staff_record.formatted_group_name", name: l, parent: r)
+      parts = group.name.split("/")
+      name = parts.pop
+      parent = parts.last
+      I18n.t("gws/staff_record.formatted_group_name", name: name, parent: parent)
     end
 
     class << self
