@@ -104,4 +104,21 @@ describe Cms::Column::Value::Youtube, type: :model, dbscope: :example do
       expect(iframe_html).to include("title=\"#{I18n.t('mongoid.attributes.cms/column/value/youtube.generic_title')}\"")
     end
   end
+
+  describe ".get_youtube_id" do
+    let(:youtube_id) { unique_id }
+
+    it do
+      # supported
+      expect(described_class.get_youtube_id("https://www.youtube.com/watch?v=#{youtube_id}&list=#{unique_id}")).to eq youtube_id
+      expect(described_class.get_youtube_id("https://youtu.be/#{youtube_id}?si=#{unique_id}")).to eq youtube_id
+      expect(described_class.get_youtube_id("https://www.youtube.com/embed/#{youtube_id}")).to eq youtube_id
+
+      # not supported
+      expect(described_class.get_youtube_id(unique_url)).to be_blank
+      expect(described_class.get_youtube_id("https://youtube.com/channel/#{youtube_id}")).to be_blank
+      expect(described_class.get_youtube_id("https://www.youtube.com/shorts/#{youtube_id}")).to be_blank
+      expect(described_class.get_youtube_id("https://img.youtube.com/vi/#{youtube_id}/0.jpg")).to be_blank
+    end
+  end
 end
