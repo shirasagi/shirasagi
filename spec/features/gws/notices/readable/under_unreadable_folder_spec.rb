@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
+  let(:now) { Time.zone.now.change(usec: 0) }
   let!(:site) { gws_site }
   let!(:admin) { gws_user }
   let!(:role) do
@@ -24,7 +25,7 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
     # admin しか閲覧権限のないフォルダー配下の全公開のお知らせ（バックナンバー）
     create(
       :gws_notice_post, cur_site: site, cur_user: admin, folder: folder, readable_setting_range: "public",
-      state: "public", close_date: Time.zone.now - 1.hours)
+      state: "public", close_date: now - 1.hour)
   end
 
   let!(:user_portal) { create :gws_portal_user_setting, cur_user: user, portal_user: user }
