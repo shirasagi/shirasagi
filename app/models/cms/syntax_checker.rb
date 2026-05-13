@@ -16,6 +16,7 @@ module Cms::SyntaxChecker
     list: Cms::SyntaxChecker::Column::ListChecker,
     table: Cms::SyntaxChecker::Column::TableChecker,
     presence: Cms::SyntaxChecker::Column::PresenceChecker,
+    files_alt_presence: Cms::SyntaxChecker::Column::FilesAltPresenceChecker,
   }.freeze
 
   COLUMN_CORRECTOR_MAP = {
