@@ -1,4 +1,7 @@
-<% addon ||= local_assigns.fetch(:addon, {}) %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  route_name_map = Hash[Cms::Node.new.route_options.map { _1.reverse }]
+%>
 <%= render "cms/agents/addons/page_list/form", f: f, addon: addon %>
 
 <% if @model.use_node_routes %>
@@ -20,7 +23,10 @@
         <% @item.node_routes.each do |item| %>
           <% next if item.blank? %>
           <tr data-id="<%= item %>">
-            <td><%= hidden_field_tag "#{f.object_name}[node_routes][]", item, id: nil %> <%= item %></td>
+            <td>
+              <%= hidden_field_tag "#{f.object_name}[node_routes][]", item, id: nil %>
+              <%= route_name_map[item] || item %>
+            </td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>

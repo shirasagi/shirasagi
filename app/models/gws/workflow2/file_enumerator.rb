@@ -278,11 +278,7 @@ class Gws::Workflow2::FileEnumerator < Enumerator
     user = SS::User.where(id: user_id).first
 
     if user
-      if type == :approver && wf_file.route_my_group_alternate? && step_info == wf_file.workflow_approvers[1]
-        I18n.t('gws/workflow.labels.approver_alternator') + "#{user.long_name}(#{user.email})"
-      else
-        "#{user.long_name}(#{user.email})"
-      end
+      "#{user.long_name}(#{user.email})"
     else
       I18n.t("workflow.user_deleted")
     end

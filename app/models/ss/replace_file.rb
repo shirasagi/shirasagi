@@ -90,6 +90,10 @@ class SS::ReplaceFile
     end
 
     item.save!
+    # Free 以外のカラム（FileUpload / MultipleImagesUpload など）から参照されている
+    # ファイルが差し替えられた場合、上の処理ではページに変更が出ず after_save :generate_file が
+    # 走らないため、公開ファイルと静的 HTML が古いままになる。明示的に再生成する。
+    item.generate_file if item.respond_to?(:generate_file)
   end
 
   def replace_html(html)

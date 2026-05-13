@@ -10,7 +10,7 @@ describe 'gws_schedule_plans', type: :feature, dbscope: :example, js: true do
 
   describe "#4043" do
     it do
-      visit gws_schedule_plans_path(site: site)
+      visit gws_schedule_plans_path(site: site, calendar: { date: now.strftime("%Y-%m-%d") })
 
       within "#calendar" do
         expect(page).to have_css('.fc-toolbar h2', text: title)

@@ -9,6 +9,7 @@ ja:
     divide_duties: 電子事務分掌表
     user_histories: 異動履歴
     no_charge_name: '（なし）'
+    formatted_group_name: "%{name}（%{parent}）"
     links:
       copy_situation: 現況から所属と職員を作成する
     confirm:

@@ -32,6 +32,7 @@ module Cms
     Cms::Column.plugin 'cms/radio_button'
     Cms::Column.plugin 'cms/check_box'
     Cms::Column.plugin 'cms/file_upload'
+    Cms::Column.plugin 'cms/multiple_images_upload'
     Cms::Column.plugin 'cms/headline'
     Cms::Column.plugin 'cms/list'
     Cms::Column.plugin 'cms/youtube'
@@ -149,6 +150,7 @@ module Cms
     Cms::Role.permission :use_private_cms_line_mail_handlers, module_name: 'cms/line'
     Cms::Role.permission :use_other_cms_line_statistics, module_name: 'cms/line'
     Cms::Role.permission :use_private_cms_line_statistics, module_name: 'cms/line'
+    Cms::Role.permission :use_cms_line_settings, module_name: 'cms/line'
 
     Cms::Role.permission :use_cms_check_links, module_name: 'cms/check_links'
     Cms::Role.permission :run_cms_check_links, module_name: 'cms/check_links'

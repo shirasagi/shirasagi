@@ -269,10 +269,6 @@ class Gws::Workflow2::File
     created > Time.zone.now - site.workflow_new_days.day
   end
 
-  def route_my_group_alternate?
-    form.try(:default_route_id) == "my_group_alternate"
-  end
-
   private
 
   def validate_soft_delete

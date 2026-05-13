@@ -88,6 +88,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
 
       user.find_portal_setting(cur_user: user, cur_site: site).tap do |portal|
         expect(portal).to be_a(Gws::Portal::UserSetting)
+        expect(portal.persisted?).to be_falsey
         expect(portal.site_id).to eq site.id
         expect(portal.user_id).to be_blank
         expect(portal.name).to include(user.name)
@@ -103,6 +104,8 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
         expect(portal.readable_member_ids).to eq [ user.id ]
         expect(portal.group_ids).to be_blank
         expect(portal.user_ids).to eq [ user.id ]
+
+        expect(portal.histories.count).to eq 0
       end
 
       click_on I18n.t('gws/portal.links.arrange_portlets')
@@ -111,6 +114,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
 
       user.find_portal_setting(cur_user: user, cur_site: site).tap do |portal|
         expect(portal).to be_a(Gws::Portal::UserSetting)
+        expect(portal.persisted?).to be_truthy
         expect(portal.site_id).to eq site.id
         expect(portal.user_id).to eq user.id
         expect(portal.name).to include(user.name)
@@ -126,6 +130,8 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
         expect(portal.readable_member_ids).to eq [ user.id ]
         expect(portal.group_ids).to be_blank
         expect(portal.user_ids).to eq [ user.id ]
+
+        expect(portal.histories.count).to eq 1
       end
 
       click_on I18n.t('gws/portal.links.manage_portlets')
@@ -138,6 +144,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
 
       user.find_portal_setting(cur_user: user, cur_site: site).tap do |portal|
         expect(portal).to be_a(Gws::Portal::UserSetting)
+        expect(portal.persisted?).to be_truthy
         expect(portal.site_id).to eq site.id
         expect(portal.user_id).to eq user.id
         expect(portal.name).to include(user.name)
@@ -153,6 +160,8 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
         expect(portal.readable_member_ids).to eq [ user.id ]
         expect(portal.group_ids).to be_blank
         expect(portal.user_ids).to eq [ user.id ]
+
+        expect(portal.histories.count).to eq 1
       end
 
       click_on I18n.t('gws/portal.links.settings')
@@ -177,6 +186,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
 
       user.find_portal_setting(cur_user: user, cur_site: site).tap do |portal|
         expect(portal).to be_a(Gws::Portal::UserSetting)
+        expect(portal.persisted?).to be_truthy
         expect(portal.site_id).to eq site.id
         expect(portal.user_id).to eq user.id
         expect(portal.name).to include(user.name)
@@ -192,6 +202,8 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
         expect(portal.readable_member_ids).to eq [ user.id ]
         expect(portal.group_ids).to be_blank
         expect(portal.user_ids).to eq [ user.id ]
+
+        expect(portal.histories.count).to eq 2
       end
     end
   end

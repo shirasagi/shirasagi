@@ -33,10 +33,6 @@ module Gws::Workflow2::ApplicationSetting
     !approval_state_without_approval?
   end
 
-  def route_my_group_alternate?
-    default_route_id == "my_group_alternate"
-  end
-
   def agent_enabled?
     agent_state == 'enabled'
   end

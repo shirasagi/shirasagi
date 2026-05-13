@@ -116,6 +116,13 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
         expect(description_elements[0]['content']).to match(auto_generated_description)
+
+        # 詳細画面でも同じ概要が表示されていることを確認
+        visit cms_page_path(site.id, item.id)
+        ensure_addon_opened('#addon-cms-agents-addons-meta')
+        within '#addon-cms-agents-addons-meta' do
+          expect(page).to have_content(auto_generated_description)
+        end
       end
 
       it "keeps manual description in manual mode" do
@@ -144,6 +151,13 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
         expect(description_elements[0]['content']).to eq manual_description
+
+        # 詳細画面でも同じ概要が表示されていることを確認
+        visit cms_page_path(site.id, item.id)
+        ensure_addon_opened('#addon-cms-agents-addons-meta')
+        within '#addon-cms-agents-addons-meta' do
+          expect(page).to have_content(manual_description)
+        end
       end
     end
 
@@ -191,6 +205,13 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
         expect(description_elements[0]['content']).to eq updated_description
+
+        # 詳細画面でも同じ概要が表示されていることを確認
+        visit cms_page_path(site.id, item.id)
+        ensure_addon_opened('#addon-cms-agents-addons-meta')
+        within '#addon-cms-agents-addons-meta' do
+          expect(page).to have_content(updated_description)
+        end
       end
     end
 
@@ -252,6 +273,13 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         expect(description_elements).not_to be_empty
         expect(description_elements[0]['content']).to eq updated_description
 
+        # 詳細画面でも同じ概要が表示されていることを確認
+        visit cms_page_path(site.id, duplicated_item.id)
+        ensure_addon_opened('#addon-cms-agents-addons-meta')
+        within '#addon-cms-agents-addons-meta' do
+          expect(page).to have_content(updated_description)
+        end
+
         # オリジナルページを確認
         original_item.reload
 
@@ -265,6 +293,13 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
         expect(description_elements[0]['content']).to eq original_description
+
+        # 詳細画面でも同じ概要が表示されていることを確認
+        visit cms_page_path(site.id, original_item.id)
+        ensure_addon_opened('#addon-cms-agents-addons-meta')
+        within '#addon-cms-agents-addons-meta' do
+          expect(page).to have_content(original_description)
+        end
       end
     end
 
@@ -324,6 +359,13 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
         expect(description_elements[0]['content']).to eq updated_description
+
+        # 詳細画面でも同じ概要が表示されていることを確認
+        visit cms_page_path(site.id, published_item.id)
+        ensure_addon_opened('#addon-cms-agents-addons-meta')
+        within '#addon-cms-agents-addons-meta' do
+          expect(page).to have_content(updated_description)
+        end
       end
     end
 
@@ -362,6 +404,13 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
         expect(description_elements[0]['content']).to eq auto_generated_description
+
+        # 詳細画面でも同じ概要が表示されていることを確認
+        visit cms_page_path(site.id, item.id)
+        ensure_addon_opened('#addon-cms-agents-addons-meta')
+        within '#addon-cms-agents-addons-meta' do
+          expect(page).to have_content(auto_generated_description)
+        end
       end
 
       it "updates description when body is updated after save" do
@@ -402,6 +451,13 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
         expect(description_elements[0]['content']).to eq updated_description
+
+        # 詳細画面でも同じ概要が表示されていることを確認
+        visit cms_page_path(site.id, item.id)
+        ensure_addon_opened('#addon-cms-agents-addons-meta')
+        within '#addon-cms-agents-addons-meta' do
+          expect(page).to have_content(updated_description)
+        end
       end
 
       it "manual mode: description is set and reflected in meta tag" do
@@ -425,6 +481,13 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
         expect(description_elements[0]['content']).to eq "Manual description"
+
+        # 詳細画面でも同じ概要が表示されていることを確認
+        visit cms_page_path(site.id, item.id)
+        ensure_addon_opened('#addon-cms-agents-addons-meta')
+        within '#addon-cms-agents-addons-meta' do
+          expect(page).to have_content("Manual description")
+        end
       end
 
       it "auto mode: description is blank but meta tag is from body" do
@@ -447,6 +510,13 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
         expect(description_elements[0]['content']).to eq "Auto mode test"
+
+        # 詳細画面でも同じ概要が表示されていることを確認
+        visit cms_page_path(site.id, item.id)
+        ensure_addon_opened('#addon-cms-agents-addons-meta')
+        within '#addon-cms-agents-addons-meta' do
+          expect(page).to have_content("Auto mode test")
+        end
       end
 
       it "switch manual→auto: description remains, meta tag from body" do
@@ -480,6 +550,13 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
         expect(description_elements[0]['content']).to eq "Switch test"
+
+        # 詳細画面でも同じ概要が表示されていることを確認
+        visit cms_page_path(site.id, item.id)
+        ensure_addon_opened('#addon-cms-agents-addons-meta')
+        within '#addon-cms-agents-addons-meta' do
+          expect(page).to have_content("Switch test")
+        end
       end
 
       it "auto mode: empty body results in empty meta tag" do
@@ -534,6 +611,13 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         doc = Nokogiri::HTML.parse(html)
         description_elements = doc.css("meta[name='description']")
         expect(description_elements[0]['content']).to eq "Second body"
+
+        # 詳細画面でも同じ概要が表示されていることを確認
+        visit cms_page_path(site.id, item.id)
+        ensure_addon_opened('#addon-cms-agents-addons-meta')
+        within '#addon-cms-agents-addons-meta' do
+          expect(page).to have_content("Second body")
+        end
       end
 
       it "updates description when html is changed in duplicated page with auto mode" do
@@ -591,6 +675,13 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         expect(description_elements).not_to be_empty
         expect(description_elements[0]['content']).to eq duplicated_description
 
+        # 詳細画面でも同じ概要が表示されていることを確認
+        visit cms_page_path(site.id, duplicated_item.id)
+        ensure_addon_opened('#addon-cms-agents-addons-meta')
+        within '#addon-cms-agents-addons-meta' do
+          expect(page).to have_content(duplicated_description)
+        end
+
         # オリジナルページを確認
         original_item.reload
 
@@ -604,6 +695,13 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
         expect(description_elements[0]['content']).to eq original_description
+
+        # 詳細画面でも同じ概要が表示されていることを確認
+        visit cms_page_path(site.id, original_item.id)
+        ensure_addon_opened('#addon-cms-agents-addons-meta')
+        within '#addon-cms-agents-addons-meta' do
+          expect(page).to have_content(original_description)
+        end
       end
 
       it "updates description in the replacement page with auto mode" do
@@ -666,6 +764,13 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
         expect(description_elements[0]['content']).to eq updated_description
+
+        # 詳細画面でも同じ概要が表示されていることを確認
+        visit cms_page_path(site.id, published_item.id)
+        ensure_addon_opened('#addon-cms-agents-addons-meta')
+        within '#addon-cms-agents-addons-meta' do
+          expect(page).to have_content(updated_description)
+        end
       end
     end
   end

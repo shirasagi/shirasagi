@@ -25,7 +25,7 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
   before { login_gws_user }
 
   it do
-    visit gws_schedule_plans_path(site: site)
+    visit gws_schedule_plans_path(site: site, calendar: { date: current.strftime("%Y-%m-%d") })
     within ".fc-toolbar" do
       click_on I18n.t("gws/schedule.calendar.buttonText.listMonth")
     end

@@ -38,7 +38,7 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
       # add template
       within "#addon-cms-agents-addons-line-message-body" do
         expect(page).to have_css("h2", text: I18n.t("modules.addons.cms/line/message/body"))
-        expect(page).to have_css("div", text: "テンプレートが設定されていません。")
+        expect(page).to have_css("div", text: I18n.t("cms.line_empty_template"))
         click_on I18n.t("cms.buttons.add_template")
       end
       wait_for_js_ready
@@ -69,7 +69,7 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
       # check talk-balloon
       within "#addon-cms-agents-addons-line-message-body" do
         expect(page).to have_css("h2", text: I18n.t("modules.addons.cms/line/message/body"))
-        expect(page).to have_no_css("div", text: "テンプレートが設定されていません。")
+        expect(page).to have_no_css("div", text: I18n.t("cms.line_empty_template"))
         within ".line-talk-view" do
           expect(page).to have_css(".talk-balloon .title", text: page1.name)
           expect(page).to have_css(".talk-balloon .summary", text: summary1)
@@ -103,7 +103,7 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
       # delete talk-balloon
       within "#addon-cms-agents-addons-line-message-body" do
         expect(page).to have_css("h2", text: I18n.t("modules.addons.cms/line/message/body"))
-        expect(page).to have_no_css("div", text: "テンプレートが設定されていません。")
+        expect(page).to have_no_css("div", text: I18n.t("cms.line_empty_template"))
         within ".line-talk-view" do
           expect(page).to have_css(".talk-balloon .title", text: page2.name)
           expect(page).to have_css(".talk-balloon .summary", text: summary2)
@@ -119,7 +119,7 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
 
       within "#addon-cms-agents-addons-line-message-body" do
         expect(page).to have_css("h2", text: I18n.t("modules.addons.cms/line/message/body"))
-        expect(page).to have_css("div", text: "テンプレートが設定されていません。")
+        expect(page).to have_css("div", text: I18n.t("cms.line_empty_template"))
       end
     end
   end

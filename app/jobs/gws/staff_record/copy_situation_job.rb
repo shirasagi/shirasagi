@@ -10,20 +10,66 @@ class Gws::StaffRecord::CopySituationJob < Gws::ApplicationJob
     copy_users
   end
 
-  private
+  class Groups
+    include Enumerable
 
-  def copy_groups
-    groups = Gws::Group.site(site)
-    groups = groups.active
-    groups.each do |group|
-      copy_group(group)
+    attr_reader :site, :grouped_items
+
+    def initialize(site)
+      @site = site
+    end
+
+    def each(&block)
+      build
+      grouped_items.each(&block)
+    end
+
+    private
+
+    def build
+      groups = Gws::Group.site(site)
+      groups = groups.active.to_a
+
+      @grouped_items = {}
+      trailing_name_counts = groups.map(&:trailing_name).tally
+      next_suffixes = Hash.new(1)
+      groups.each do |group|
+        base_name = trailing_name_counts[group.trailing_name] == 1 ? group.trailing_name : format_name(group)
+        name = base_name
+        while @grouped_items.key?(name)
+          next_suffixes[base_name] += 1
+          name = "#{base_name}.#{next_suffixes[base_name]}"
+        end
+        @grouped_items[name] = group
+      end
+    end
+
+    def format_name(group)
+      parts = group.name.split("/")
+      name = parts.pop
+      parent = parts.last
+      I18n.t("gws/staff_record.formatted_group_name", name: name, parent: parent)
+    end
+
+    class << self
+      def site(site)
+        self.new(site)
+      end
     end
   end
 
-  def copy_group(group)
+  private
+
+  def copy_groups
+    Groups.site(site).each do |name, group|
+      copy_group(name, group)
+    end
+  end
+
+  def copy_group(name, group)
     sr_group = Gws::StaffRecord::Group.new(
       cur_site: site, cur_user: user,
-      year_id: @cur_year.id, name: group.trailing_name, order: group.order,
+      year_id: @cur_year.id, name: name, order: group.order,
       readable_setting_range: @cur_year.readable_setting_range, readable_group_ids: @cur_year.readable_group_ids,
       readable_custom_group_ids: @cur_year.readable_custom_group_ids, readable_member_ids: @cur_year.readable_member_ids,
       group_ids: @cur_year.group_ids, custom_group_ids: @cur_year.custom_group_ids, user_ids: @cur_year.user_ids

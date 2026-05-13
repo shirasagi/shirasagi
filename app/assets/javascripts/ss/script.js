@@ -63,7 +63,6 @@
 //= require ss/lib/button_to
 //= require ss/lib/open_in_new_window
 //= require ss/lib/emoji
-//= require ss/lib/role
 //= require ss/lib/date_time_picker
 //= require ss/lib/pdfjs
 //= require chat/lib/chart
@@ -73,6 +72,7 @@
 //= require cms/lib/source_cleaner
 //= require cms/lib/template_form
 //= require cms/lib/column_file_upload
+//= require cms/lib/column_multiple_images_upload
 //= require cms/lib/column_free
 //= require cms/lib/column_list
 //= require cms/lib/column_table
