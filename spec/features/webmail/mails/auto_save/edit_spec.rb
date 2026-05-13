@@ -1,12 +1,13 @@
 require 'spec_helper'
 
 describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: true do
-  let(:user) { webmail_imap }
-  let(:draft_path) { webmail_mails_path(account: 0, mailbox: "INBOX.Draft") }
-  let(:sent_path) { webmail_mails_path(account: 0, mailbox: "INBOX.Sent") }
+  let!(:user) { webmail_imap }
+  let!(:draft_path) { webmail_mails_path(account: 0, mailbox: "INBOX.Draft") }
+  let!(:sent_path) { webmail_mails_path(account: 0, mailbox: "INBOX.Sent") }
 
-  let(:draft_subject) { "subject-#{unique_id}" }
-  let(:item_subject) { "subject-#{unique_id}" }
+  let!(:draft_subject) { "subject-#{unique_id}" }
+  let!(:item_subject) { "subject-#{unique_id}" }
+  let!(:item_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: user) }
 
   before do
     @save_webmail_auto_save = SS.config.webmail.auto_save
@@ -202,6 +203,17 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           within "form#item-form" do
             fill_in "item[subject]", with: draft_subject
           end
+          within "form#item-form" do
+            within "#addon-webmail-agents-addons-mail_file" do
+              wait_cbox_open { click_on I18n.t("ss.buttons.upload") }
+            end
+          end
+          wait_cbox_close { click_on item_file.name }
+          within "form#item-form" do
+            within "#addon-webmail-agents-addons-mail_file" do
+              expect(page).to have_css(".file-view[data-file-id='#{item_file.id}']", text: item_file.name)
+            end
+          end
           click_on I18n.t('ss.buttons.draft_save')
         end
         wait_for_notice I18n.t('ss.notice.saved')
@@ -215,6 +227,10 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         within_window new_window do
           wait_for_document_loading
           wait_for_js_ready
+
+          within "#addon-webmail-agents-addons-mail_file" do
+            expect(page).to have_css('[name="item[ref_file_ids][]"]')
+          end
 
           click_on I18n.t("webmail.links.show_cc_bcc")
           expect(page).to have_css("#cc")
@@ -261,11 +277,103 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         expect(page).to have_link(item_subject)
         click_on item_subject
         expect(page).to have_text(user.email)
+        within "#mail-attachments" do
+          expect(page).to have_link(item_file.name)
+        end
 
         visit sent_path
         expect(page).to have_selector(".list-item", count: 0)
         expect(page).to have_no_css(".icon-auto-save")
         expect(page).to have_no_link(item_subject)
+      end
+    end
+
+    context "close window (when deleted origin draft mail)" do
+      it do
+        # save draft
+        visit draft_path
+
+        wait_for_js_ready
+        new_window = window_opened_by { click_on I18n.t('ss.links.new') }
+        within_window new_window do
+          wait_for_document_loading
+          wait_for_js_ready
+          within "form#item-form" do
+            fill_in "item[subject]", with: draft_subject
+          end
+          within "form#item-form" do
+            within "#addon-webmail-agents-addons-mail_file" do
+              wait_cbox_open { click_on I18n.t("ss.buttons.upload") }
+            end
+          end
+          wait_cbox_close { click_on item_file.name }
+          within "form#item-form" do
+            within "#addon-webmail-agents-addons-mail_file" do
+              expect(page).to have_css(".file-view[data-file-id='#{item_file.id}']", text: item_file.name)
+            end
+          end
+          click_on I18n.t('ss.buttons.draft_save')
+        end
+        wait_for_notice I18n.t('ss.notice.saved')
+
+        # edit
+        visit draft_path
+        click_on draft_subject
+
+        wait_for_js_ready
+        new_window = window_opened_by { click_on I18n.t('ss.links.edit') }
+        within_window new_window do
+          wait_for_document_loading
+          wait_for_js_ready
+
+          within "#addon-webmail-agents-addons-mail_file" do
+            expect(page).to have_css('[name="item[ref_file_ids][]"]')
+          end
+
+          click_on I18n.t("webmail.links.show_cc_bcc")
+          expect(page).to have_css("#cc")
+          expect(page).to have_css("#bcc")
+
+          expect(Webmail::AutoSave.count).to eq 1
+          auto_save = Webmail::AutoSave.first
+          expect(auto_save.state).to eq "temporary"
+
+          within "form#item-form" do
+            fill_in "to", with: user.email
+            fill_in "item[subject]", with: ""
+          end
+          page.execute_script("window.WEBMAIL_AutoSave();")
+          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"0\"]")
+
+          expect(Webmail::AutoSave.count).to eq 1
+          auto_save = Webmail::AutoSave.first
+          expect(auto_save.state).to eq "ready"
+
+          within "form#item-form" do
+            fill_in "item[subject]", with: item_subject
+          end
+          page.execute_script("window.WEBMAIL_AutoSave();")
+          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"1\"]")
+
+          expect(Webmail::AutoSave.count).to eq 1
+          auto_save = Webmail::AutoSave.first
+          expect(auto_save.state).to eq "ready"
+
+          page.driver.browser.close
+        end
+
+        # delete immediately
+        within ".nav-menu" do
+          click_on I18n.t('ss.links.delete')
+        end
+        click_button I18n.t('ss.buttons.delete')
+        wait_for_notice I18n.t('ss.notice.deleted')
+
+        expect(Webmail::AutoSave.count).to eq 0
+
+        visit draft_path
+        expect(Webmail::AutoSave.count).to eq 0
+        expect(page).to have_no_selector(".list-item")
       end
     end
   end
