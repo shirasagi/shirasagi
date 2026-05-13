@@ -9,6 +9,7 @@ en:
     divide_duties: Electronic Table of Office Duties
     user_histories: Transfer history
     no_charge_name: '(None)'
+    formatted_group_name: "%{name} (%{parent})"
     links:
       copy_situation: Create affiliations and staff from the current situation
     confirm:
