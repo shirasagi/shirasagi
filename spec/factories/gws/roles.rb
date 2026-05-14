@@ -130,6 +130,14 @@ FactoryBot.define do
     end
   end
 
+  trait :gws_role_portal_group_use do
+    after(:build) do |item|
+      item.permissions += %w(
+        use_gws_portal_group_settings
+      )
+    end
+  end
+
   trait :gws_role_portal_organization_use do
     after(:build) do |item|
       item.permissions += %w(
