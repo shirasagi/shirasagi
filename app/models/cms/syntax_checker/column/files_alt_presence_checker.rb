@@ -7,7 +7,7 @@ class Cms::SyntaxChecker::Column::FilesAltPresenceChecker
   def check
     return unless parsed_params
 
-    message_key = parsed_params[:message] || :blank_file_label
+    message_key = parsed_params[:message].presence || :blank_file_label
     labels = column_value[attribute] || {}
     column_value.files.each do |file|
       next if labels[file.id.to_s].present?
