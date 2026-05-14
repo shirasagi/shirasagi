@@ -2,7 +2,6 @@
 
 class SS::FileViewComponent < ApplicationComponent
   include ActiveModel::Model
-  include ViewComponent::SlotableDefault
   include ApplicationHelper
 
   attr_accessor :cur_site, :cur_user, :cur_node, :file, :item
