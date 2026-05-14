@@ -40,6 +40,21 @@ ja:
     line_facility_search_category: 施設カテゴリー
     line_message: メッセージ
     line_template: テンプレート
+    line_template_type:
+      text:
+        title: テキスト
+        summary: 通常のテキストメッセージです。
+      image:
+        title: 画像
+        summary: 画像を送信します。
+      page:
+        title: 記事ページ
+        summary: 記事ページへのリンクとサマリーを送信します。
+      json_body:
+        title: JSON
+        summary: JSONテンプレートを直接入力します。
+    line_select_template: 作成するテンプレートを選択してください。
+    line_empty_template: テンプレートが設定されていません。
     line_statistics: 統計情報
     line_mail_handlers: メール連携
     line_deliver_log: 配信ログ
@@ -49,6 +64,7 @@ ja:
     line_deliver_age_setting: 年齢設定
     line_test_member: テストメンバー
     line_event_session: セッション
+    line_setting: 設定
     form_check: 制約チェック
     list_view: リスト表示
     row_error: 'error %{row_num}行目'
@@ -64,6 +80,7 @@ ja:
     loop_html: ループHTML
     labels:
       snippets: スニペット
+      template: テンプレート
     max_file_size: 最大ファイルサイズ
     max_file_size_setting: 最大ファイルサイズ設定
     image_resize: 画像リサイズ
@@ -74,6 +91,7 @@ ja:
     node: フォルダー
     node_config: フォルダー設定
     notice: お知らせ
+    other_site: 他サイト
     page: 固定ページ
     page_search: ページ検索
     part: パーツ
@@ -415,9 +433,9 @@ ja:
           - LINEの友達登録者全員に配信されます。
           - 「LINEメッセージを受信する/しない」に関わらず送信されます。
       line_statistics:
-         - 統計情報は日毎に自動更新され、メッセージの送信時刻（統計情報の作成日時）から14日間のみ更新されます。
-         - 統計情報の数値は、APIの仕様上、多少の誤差を含むことがあります。
-         - 統計情報の人数はおよそ20人未満の場合、プライバシー保護の為、非表示（情報なし）となります。
+        - 統計情報は日毎に自動更新され、メッセージの送信時刻（統計情報の作成日時）から14日間のみ更新されます。
+        - 統計情報の数値は、APIの仕様上、多少の誤差を含むことがあります。
+        - 統計情報の人数はおよそ20人未満の場合、プライバシー保護の為、非表示（情報なし）となります。
       line_statistics_exceeded_units_by_month: 月内に発行したユニット名が1000を超えている為、統計情報を取得できませんでした。
       page_expiration_header: ページの公開期限が切れています。
       page_expiration_body:
@@ -636,6 +654,9 @@ ja:
       loop_format:
         shirasagi: SHIRASAGI
         liquid: Liquid
+      loop_html_setting_type:
+        template: テンプレート
+        snippet: スニペット
       alignment:
         flow: 自動
         left: 左
@@ -665,6 +686,7 @@ ja:
         text: テキスト
         image: 画像
         page: 記事ページ
+        json_body: JSON
       line_template_thumb_state:
         none: 表示しない
         thumb_carousel: 記事のサムネイル画像
@@ -1012,6 +1034,7 @@ ja:
     use_private_cms_line_mail_handlers: LINEメール連携の管理（所有）
     use_other_cms_line_statistics: LINE統計情報の利用（全て）
     use_private_cms_line_statistics: LINE統計情報の利用（所有）
+    use_cms_line_settings: LINE設定の管理
     edit_cms_ignore_syntax_check: アクセシビリティチェックを無視して保存する
     edit_cms_user_profile: プロフィールの編集
     edit_password_cms_user_profile: プロフィールのパスワード変更
@@ -1309,6 +1332,7 @@ ja:
         description: 説明
         order: 並び順
         html_format: HTML種別
+        loop_html_setting_type: 種別
       cms/command:
         name: タイトル
         description: 説明
@@ -1321,7 +1345,7 @@ ja:
         keywords: キーワード
         description: 概要
         description_setting: 概要の連動設定
-        description_body: 概要の本文(手動)
+        description_body: 概要の本文
         summary_html: サマリー
       cms/addon/html:
         html: HTML
@@ -1919,6 +1943,8 @@ ja:
         overview_unique_click: URLをタップした人数
         update_statistics: 統計情報の更新
         null_label: 情報なし
+      cms/line/setting:
+        template_types: 使用するテンプレート
       cms/addon/clipboard_copy:
         clipboard_copy_target: コピー対象
         clipboard_copy_selector: CSSセレクター
@@ -2171,9 +2197,11 @@ ja:
     cms:
       labels:
         snippets:
-          - サイト設定のループHTMLで作成したHTMLを選択して挿入できます。
-          - 選択したHTMLは、現在のカーソル位置に追加されます。
-          - HTMLはLiquid形式で記述する必要があります。
+          - 良く使うHTML片が一覧に表示されます。
+          - HTML片を選択すると、現在のカーソル位置にHTML片が挿入されます。
+        loop_html:
+          - 事前に登録したテンプレートが一覧表示されます。
+          - 一覧からテンプレートを選択するか、「直接入力する」を選択し任意のHTMLを設定してください。
     cms/addon/readable_setting:
       readable_setting_range:
         - <b>全公開</b> - 誰でも閲覧できます。
@@ -2505,6 +2533,10 @@ ja:
       auto_link_state:
         - メール本文をHTMLに変換する際にリンクとメールアドレスをaタグに置換するか設定します。
 
+    cms/line/setting:
+      template_types:
+        - メッセージを作成する際に表示するテンプレートを選択します。
+
     cms/site:
       name:
         - サイト名を入力します。
@@ -2613,7 +2645,11 @@ ja:
         - ループHTML形式の形式を選択します。
         -
         - "SHIRASAGI: シラサギ形式で上部 HTML, ループ HTML, 下部 HTMLを記述します。"
-        - "Liquid: Liquid 形式でループ HTML を記述します。"
+        - "Liquid: Liquid 形式でループ HTML を記述します。テンプレートまたはスニペットが選択できます。"
+        -
+        - "テンプレートとスニペットの使い分け:"
+        - "テンプレート: サイト設定のループ設定を変更すると、そのテンプレートが設定されているフォルダーにも反映されます。"
+        - "スニペット: サイト設定のループ設定を変更しても、挿入済みのフォルダーには連動しません。"
       upper_html:
         - リスト部分の上部に任意の内容のHTMLを記述することが可能です。
         - |-
@@ -2703,6 +2739,32 @@ ja:
 
     cms/loop_setting:
       html_format: *loop_format
+      loop_html_setting_type:
+        - "Liquid 形式の用途を選択します。"
+        - "テンプレート: ループ HTML 全体をループ単位のテンプレートとして使用します。"
+        - "スニペット: 部品として、ループ HTML 内の任意の場所に挿入して使用します。"
+      html_shirasagi: *loop_html
+      html_liquid_template: *loop_liquid
+      html_liquid_snippet:
+        - Liquid 形式のスニペットとして記述します。
+        - スニペットは部品として、他のテンプレートの任意の場所に挿入して使用します。
+        - |-
+          利用可能な変数（代表例）:
+          {{ page.name }}           ページ名
+          {{ page.url }}            ページ URL
+          {{ page.index_name | default: page.name }}  一覧用タイトル（未設定時はタイトル）
+          {{ page.date | ss_date: "long" }}           日付（長い形式）
+          {{ page.summary }}        サマリー
+          {{ page.thumb.url }}      サムネイル URL
+          {{ node.name }}           フォルダー名
+          {{ value.html }}          定型フォーム入力値
+          {{ parts["key_name"].html }}  指定キーのパーツ HTML
+
+          使用例（短いコード片）:
+          {{ page.name }}
+          {% if page.new? %}new{% endif %}
+          &lt;a href="{{ page.url }}">{{ page.index_name | default: page.name }}&lt;/a>
+          &lt;time datetime="{{ page.date }}">{{ page.date | ss_date: "long" }}&lt;/time>
 
     cms/addon/tabs:
       conditions:
@@ -3287,9 +3349,9 @@ ja:
         - 種類を選択します。
 
     cms/column/select_page:
-       node_ids:
-         - 記事フォルダーを設定します。
-         - 設定した記事フォルダー配下のページを選択可能です。
+      node_ids:
+        - 記事フォルダーを設定します。
+        - 設定した記事フォルダー配下のページを選択可能です。
 
     cms/addon/form_db/import:
       import_url: |-
@@ -3496,9 +3558,9 @@ ja:
 
     cms/line/message:
       name:
-       - タイトルを入力します。
+        - タイトルを入力します。
       title:
-       - タイトルを入力します。
+        - タイトルを入力します。
       statistic_state:
         - 有効にするとメッセージ送信時に統計情報を保存します。
 

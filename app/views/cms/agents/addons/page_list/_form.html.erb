@@ -5,19 +5,25 @@
 <%= jquery do %>
   var $addon = $("<%= "##{addon[:id]}" %>");
   var $loopFormatSelect = $addon.find("select[name='item[loop_format]']");
+
   if ($loopFormatSelect.length) {
     Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
 
     <% if @model.use_liquid %>
+    Cms_Editor_CodeMirror.lock('#item_loop_setting_id_liquid', '#item_loop_liquid');
+
+    var $loopSettingSelectShirasagi = $('#item_loop_setting_id');
+    var $loopSettingSelectLiquid = $('#item_loop_setting_id_liquid');
+
     var changeLoopFormat = function() {
       var format = $loopFormatSelect.val();
-      if (format === "liquid") {
-        $addon.find(".loop-format-shirasagi").addClass("hide");
-        $addon.find(".loop-format-liquid").removeClass("hide");
-      } else {
-        $addon.find(".loop-format-shirasagi").removeClass("hide");
-        $addon.find(".loop-format-liquid").addClass("hide");
-      }
+      var isLiquid = format === "liquid";
+
+      $addon.find(".loop-format-shirasagi").toggleClass("hide", isLiquid);
+      $addon.find(".loop-format-liquid").toggleClass("hide", !isLiquid);
+
+      $loopSettingSelectShirasagi.prop('disabled', isLiquid);
+      $loopSettingSelectLiquid.prop('disabled', !isLiquid);
     };
 
     changeLoopFormat();
@@ -86,8 +92,8 @@
     <% end %>
 
     <% if @model.use_loop_html %>
-      <dt><%= @model.t :loop_html %><%= @model.tt :loop_html %></dt>
-      <dd><%= f.select :loop_setting_id, ancestral_loop_settings, include_blank: t('cms.input_directly') %></dd>
+      <dt><%= t("cms.loop_html") %><%= @model.tt :loop_html %></dt>
+      <dd><%= f.select :loop_setting_id, ancestral_loop_settings, { include_blank: t('cms.input_directly') }, disabled: (@item.loop_format == 'liquid') %></dd>
       <dd><%= f.text_area :loop_html, class: :html, style: "height: 100px;" %></dd>
     <% end %>
 
@@ -109,67 +115,75 @@
 <% end %>
 
 <% if @model.use_loop_settings && @model.use_liquid %>
+  <%
+    liquid_settings = Cms::LoopSetting.site(@cur_site).liquid
+    liquid_snippet_options = liquid_settings.snippet_type.map { [_1.name, _1.id, { "data-snippet" => _1.html.to_s }] }
+    liquid_template_options = liquid_settings.template_type.map { [_1.name, _1.id] }
+  %>
   <dl class="see loop-format-liquid">
-    <dt><%= t("cms.labels.snippets") %><%= tt("cms.labels.snippets") %></dt>
+    <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
+    <% if liquid_template_options.present? %>
     <dd>
-      <% snippet_options = ancestral_html_settings_liquid %>
-      <%= select_tag(
+      <%=
+        liquid_template_options = render SS::OptionsForSelectComponent.new(options: liquid_template_options, selected: @item.loop_setting_id)
+        select_tag(
+          'item[loop_setting_id]',
+          liquid_template_options,
+          include_blank: t('cms.input_directly'),
+          id: 'item_loop_setting_id_liquid',
+          name: 'item[loop_setting_id]',
+          disabled: (@item.loop_format != 'liquid')
+        )
+      %>
+      <%= tt("cms.labels.loop_html") %>
+    </dd>
+    <% end %>
+    <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
+    <% if liquid_snippet_options.present? %>
+      <dd>
+        <%=
+          liquid_snippet_options = render SS::OptionsForSelectComponent.new(options: liquid_snippet_options)
+          select_tag(
             'loop_snippet_selector',
-            options_with_optgroup_for_snippets(snippet_options),
+            liquid_snippet_options,
+            include_blank: t("cms.labels.snippets"),
             id: snippet_select_id,
             class: 'loop-snippet-selector'
-          ) %>
-    </dd>
-    <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
-    <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
+          )
+        %>
+        <%= tt("cms.labels.snippets") %>
+      </dd>
+    <% end %>
   </dl>
-  
+
   <%= jquery do %>
     var $addon = $("<%= "##{addon[:id]}" %>");
-    $addon.find('.loop-snippet-selector').on('change', function() {
-      var $select = $(this);
-      var $option = $select.find(':selected');
-      
-      if (!$option.val()) {
-        return;
-      }
-      
+    var $snippetSelect = $addon.find('.loop-snippet-selector');
+    var $liquidTextarea = $addon.find('#item_loop_liquid');
+
+    // スニペットセレクターの初期値を「直接入力」に設定
+    if ($snippetSelect.length && !$snippetSelect.val()) {
+      $snippetSelect.val('');
+    }
+
+    // スニペットの選択処理: CodeMirror のカーソル位置/選択範囲に挿入
+    $snippetSelect.on('change', function() {
+      var $option = $snippetSelect.find(':selected');
       var snippet = $option.data('snippet');
-      
+      $snippetSelect.val('');
       if (!snippet) {
         return;
       }
-      
-      var $textarea = $select.closest('dl').find('textarea');
-      
-      if ($textarea.length === 0) {
+      if ($liquidTextarea.length === 0) {
         return;
       }
-      
-      var editor = $textarea.data('editor');
-      if (editor) {
-        var doc = editor.getDoc();
-        var cursor = doc.getCursor();
-        doc.replaceRange(snippet, cursor);
-        editor.focus();
-        editor.save();
-      } else {
-        var textarea = $textarea[0];
-        var start = textarea.selectionStart || textarea.value.length;
-        var end = textarea.selectionEnd || start;
-        
-        textarea.value = textarea.value.substring(0, start) + snippet + textarea.value.substring(end);
-        
-        var cursor = start + snippet.length;
-        if (textarea.setSelectionRange) {
-          textarea.setSelectionRange(cursor, cursor);
-        }
-        
-        textarea.dispatchEvent(new Event('input', { bubbles: true }));
-        textarea.dispatchEvent(new Event('change', { bubbles: true }));
+      var editor = $liquidTextarea.data('editor');
+      if (!editor) {
+        return;
       }
-      
-      $select.val('');
+      editor.getDoc().replaceSelection(snippet + "\n");
+      editor.focus();
+      editor.save();
     });
   <% end %>
 <% end %>

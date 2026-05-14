@@ -7,15 +7,14 @@
     <div id="selected-files">
       <% value.files.each do |file| %>
         <%
-          css_class = if value.respond_to?(:contains_urls)
-                          value.contains_urls&.include?(file.url) ? "file-view" : "file-view unused"
-                      else
-                        "file-view"
-                      end
+          css_classes = %w(file-view)
+          unless Cms.file_used?(value, file)
+            css_classes << "unused"
+          end
         %>
-        <div id="file-<%= file.id %>" class="<%= css_class %>" data-file-id="<%= file.id %>">
+        <div id="file-<%= file.id %>" class="<%= css_classes.join(" ") %>" data-file-id="<%= file.id %>">
           <%= sanitizer_status(file) %>
-          <% if css_class.include?("unused") %>
+          <% if css_classes.include?("unused") %>
             <span class="unused-message"><%= t("ss.unused_file") %></span>
           <% end %>
           <%= link_to file.url, class: :thumb, target: "_blank", rel: "noopener" do %>
@@ -51,7 +50,7 @@
               <% else %>
                 <%= link_to t('ss.buttons.replace_file'), params[:cid].blank? ? edit_cms_apis_replace_file_path(owner_item_id: @item, id: file) : edit_cms_apis_node_replace_file_path(owner_item_id: @item, id: file), class: "ajax-box" %>
               <% end %>
-              <% if css_class.include?("unused") %>
+              <% if css_classes.include?("unused") %>
                 <%= link_to t('ss.buttons.delete'), delete_cms_apis_delete_unused_file_path(owner_item_id: @item, id: file), class: "ajax-box" %>
               <% end %>
             </div>

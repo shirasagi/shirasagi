@@ -151,6 +151,7 @@ module Cms
     Cms::Role.permission :use_private_cms_line_mail_handlers, module_name: 'cms/line'
     Cms::Role.permission :use_other_cms_line_statistics, module_name: 'cms/line'
     Cms::Role.permission :use_private_cms_line_statistics, module_name: 'cms/line'
+    Cms::Role.permission :use_cms_line_settings, module_name: 'cms/line'
 
     Cms::Role.permission :use_cms_check_links, module_name: 'cms/check_links'
     Cms::Role.permission :run_cms_check_links, module_name: 'cms/check_links'

@@ -32,6 +32,10 @@ class Cms::SitesController < ApplicationController
 
   public
 
+  def show
+    @addons = [] unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+  end
+
   def edit
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render

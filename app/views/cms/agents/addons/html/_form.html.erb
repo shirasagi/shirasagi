@@ -1,4 +1,19 @@
 <% addon ||= local_assigns.fetch(:addon, {})%>
+<%
+  tt_klass = @item.class
+  html_tt_shirasagi = tt_klass.tt(:html_shirasagi)
+  html_tt_liquid_template = tt_klass.tt(:html_liquid_template)
+  html_tt_liquid_snippet = tt_klass.tt(:html_liquid_snippet)
+  has_html_format_tt = [html_tt_shirasagi, html_tt_liquid_template, html_tt_liquid_snippet].any?(&:present?)
+%>
+
+<% if has_html_format_tt %>
+  <div class="html-format-tooltips">
+    <div class="html-format-tt html-format-tt-shirasagi"><%= html_tt_shirasagi %></div>
+    <div class="html-format-tt html-format-tt-liquid-template"><%= html_tt_liquid_template %></div>
+    <div class="html-format-tt html-format-tt-liquid-snippet"><%= html_tt_liquid_snippet %></div>
+  </div>
+<% end %>
 
 <dl class="see">
   <dd class="wide"><%= f.text_area :html, style: "height: 400px" %></dd>

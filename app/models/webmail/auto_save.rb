@@ -66,7 +66,25 @@ class Webmail::AutoSave
   def save_draft
     item = Webmail::Mail.new
     item.attributes = mail_attributes
-    self.destroy if item.save_draft(updated, [AUTO_SAVE_KEYWORD])
+
+    if draft_uid.present?
+      default_mail = imap.mails.find(draft_uid) rescue nil
+      if default_mail.nil?
+        Rails.logger.error("Webmail::AutoSave #save_draft : draft mail not exists! (#{draft_uid})")
+        self.destroy
+        return false
+      end
+    end
+
+    begin
+      item.save_draft(updated, [AUTO_SAVE_KEYWORD])
+      self.destroy
+      return true
+    rescue => e
+      Rails.logger.error("Webmail::AutoSave #save_draft : #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      self.destroy
+      return false
+    end
   end
 
   # 以下は、下書きの自動保存を復元した際に、元の下書きを上書きするパターン

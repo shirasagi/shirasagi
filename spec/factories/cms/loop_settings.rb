@@ -10,6 +10,23 @@ FactoryBot.define do
     order { rand(10..20) }
     html { "html-#{unique_id}" }
     html_format { "shirasagi" }
+    loop_html_setting_type { "template" }
     state { "public" }
+
+    trait :liquid do
+      html_format { "liquid" }
+    end
+
+    trait :shirasagi do
+      html_format { "shirasagi" }
+    end
+
+    trait :template_type do
+      loop_html_setting_type { "template" }
+    end
+
+    trait :snippet_type do
+      loop_html_setting_type { "snippet" }
+    end
   end
 end

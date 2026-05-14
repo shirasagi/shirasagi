@@ -28,6 +28,9 @@
     <h3><%= link_to t("cms.line_service"), cms_line_service_groups_path %></h3>
     <h3><%= link_to t("cms.line_event_session"), cms_line_event_sessions_path %></h3>
   <% end %>
+  <% if Cms::Line::Setting.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("cms.line_setting"), cms_line_setting_path %></h3>
+  <% end %>
 </nav>
 
 <%= render partial: "cms/main/navi" %>

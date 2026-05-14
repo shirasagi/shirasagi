@@ -24,6 +24,7 @@ describe "gws_discussion_forums", type: :feature, dbscope: :example, js: true do
       fill_in "item[name]", with: name
       click_button I18n.t('ss.buttons.save')
     end
+    wait_for_notice I18n.t("ss.notice.saved")
     expect(page).to have_css('#addon-basic', text: name)
   end
 
@@ -40,6 +41,7 @@ describe "gws_discussion_forums", type: :feature, dbscope: :example, js: true do
       fill_in "item[name]", with: name
       click_button I18n.t('ss.buttons.save')
     end
+    wait_for_notice I18n.t("ss.notice.saved")
     expect(page).to have_css('#addon-basic', text: name)
   end
 

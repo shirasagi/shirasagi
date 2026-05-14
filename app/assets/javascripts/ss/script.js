@@ -63,7 +63,6 @@
 //= require ss/lib/button_to
 //= require ss/lib/open_in_new_window
 //= require ss/lib/emoji
-//= require ss/lib/role
 //= require ss/lib/date_time_picker
 //= require ss/lib/pdfjs
 //= require chat/lib/chart

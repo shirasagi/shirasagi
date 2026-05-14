@@ -1,9 +1,9 @@
 <% prefix = model.collection_name.to_s.singularize %>
 <% model.module_permission_names(separator: true).each do |mod, names| %>
-  <div class="module">
+  <div class="module" data-controller="ss--check-all">
     <p class="buttons">
-      <%= button_tag t('ss.buttons.select_all'), type: 'button', class: %w(btn select-all) %>
-      <%= button_tag t('ss.buttons.deselect_all'), type: 'button', class: %w(btn deselect-all) %>
+      <%= button_tag t('ss.buttons.select_all'), type: 'button', class: %w(btn select-all), data: { action: "ss--check-all#checkAll"} %>
+      <%= button_tag t('ss.buttons.deselect_all'), type: 'button', class: %w(btn deselect-all), data: { action: "ss--check-all#uncheckAll"} %>
     </p>
     <p class="module-name">
       <%= model.mod_name(mod) %>
@@ -18,8 +18,4 @@
       <% end %>
     </div>
   </div>
-<% end %>
-
-<%= jquery do %>
-  SS_Role();
 <% end %>

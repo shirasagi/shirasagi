@@ -93,5 +93,41 @@ describe "cms_layouts", type: :feature, dbscope: :example, js: true do
         expect(current_path).to eq node_layout_path(site: site.id, cid: node.id, id: item.id)
       end
     end
+
+  end
+
+  #
+  # Cms::Addon::LayoutHtml は Cms::Form と Cms::Layout の両方に include されるが、
+  # テンプレート/スニペット セレクタは Cms::Form#render_html が loop_setting.html を
+  # 参照するケースでのみ意味をもつ。Cms::Layout は html を直接レンダリングするため、
+  # 配下では表示してはいけない (layout_html/_form.html.erb の `@item.is_a?(Cms::Form)` 分岐)。
+  #
+  context "loop_setting selector visibility" do
+    before { login_cms_user }
+
+    let!(:liquid_template) do
+      create(:cms_loop_setting, :liquid, :template_type,
+             cur_site: site, state: 'public', name: "Template-#{unique_id}")
+    end
+    let!(:liquid_snippet) do
+      create(:cms_loop_setting, :liquid, :snippet_type,
+             cur_site: site, state: 'public', name: "Snippet-#{unique_id}")
+    end
+
+    it "does not render loop_setting template/snippet selectors on Cms::Layout edit form" do
+      visit new_cms_layout_path(site: site)
+
+      expect(page).to have_css("textarea[name='item[html]']", visible: :all)
+      expect(page).to have_no_css('.loop-setting-selector')
+      expect(page).to have_no_css('.loop-snippet-selector')
+    end
+
+    it "renders loop_setting template/snippet selectors on Cms::Form edit form" do
+      # 比較対象: Cms::Form の編集画面では同じアドオンがセレクタを描画する
+      visit new_cms_form_path(site)
+
+      expect(page).to have_css('.loop-setting-selector', visible: :all)
+      expect(page).to have_css('.loop-snippet-selector', visible: :all)
+    end
   end
 end

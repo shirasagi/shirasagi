@@ -30,6 +30,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             fill_in "item[basename]", with: "sample"
             ensure_addon_opened('#addon-cms-agents-addons-meta')
             fill_in "item[keywords]", with: "sample"
+            choose "item_description_setting_manual"
             fill_in "item[description]", with: "sample"
             click_button I18n.t("ss.buttons.publish_save")
           end
@@ -66,6 +67,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             fill_in "item[basename]", with: "sample"
             ensure_addon_opened('#addon-cms-agents-addons-meta')
             fill_in "item[keywords]", with: "sample"
+            choose "item_description_setting_manual"
             fill_in "item[description]", with: "sample"
             click_button I18n.t("ss.buttons.draft_save")
           end
@@ -104,6 +106,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             fill_in "item[basename]", with: "sample"
             ensure_addon_opened('#addon-cms-agents-addons-meta')
             fill_in "item[keywords]", with: "sample"
+            choose "item_description_setting_manual"
             fill_in "item[description]", with: "sample"
             click_button I18n.t("ss.buttons.publish_save")
           end
@@ -147,6 +150,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             fill_in "item[basename]", with: "sample"
             ensure_addon_opened('#addon-cms-agents-addons-meta')
             fill_in "item[keywords]", with: "sample"
+            choose "item_description_setting_manual"
             fill_in "item[description]", with: "sample"
             click_button I18n.t("ss.buttons.publish_save")
           end

@@ -30,6 +30,7 @@ describe 'gws_portal_group_portal', type: :feature, dbscope: :example do
       expect(current_path).to eq edit_gws_portal_group_settings_path(site: site, group: group)
 
       click_button I18n.t('ss.buttons.save')
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).to eq gws_portal_group_settings_path(site: site, group: group)
 
       # layout
@@ -44,6 +45,7 @@ describe 'gws_portal_group_portal', type: :feature, dbscope: :example do
       first('.list-items a', text: default_portlets.first['name']).click
       first('#menu a', text: I18n.t('ss.links.edit')).click
       click_button I18n.t('ss.buttons.save')
+      wait_for_notice I18n.t("ss.notice.saved")
 
       first('#menu a', text: I18n.t('ss.links.delete')).click
       click_button I18n.t('ss.buttons.delete')

@@ -438,4 +438,13 @@ module Cms
     return SS::EMPTY_ARRAY if values.blank?
     values.filter_map { _1.present? ? I18n.t("cms.options.shortcut.#{_1}") : nil }
   end
+
+  def self.file_used?(containable, file)
+    contains_urls = containable.try(:contains_urls)
+    return false if contains_urls.blank?
+
+    contains_urls.include?(file.url) ||
+      contains_urls.include?(file.url_with_name) ||
+      contains_urls.include?(file.url_with_filename)
+  end
 end
