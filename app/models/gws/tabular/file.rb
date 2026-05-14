@@ -140,10 +140,6 @@ module Gws::Tabular::File
     form.try(:agent_enabled?)
   end
 
-  def route_my_group_alternate?
-    form.try(:route_my_group_alternate?)
-  end
-
   private
 
   def validate_column_values
