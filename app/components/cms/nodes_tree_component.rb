@@ -55,7 +55,7 @@ class Cms::NodesTreeComponent < ApplicationComponent
         next
       end
 
-      parent_filename = File.dirname(node.filename)
+      parent_filename = ::File.dirname(node.filename)
       parent_depth = node.depth - 1
       loop do
         parent_wrap = parent_map[parent_filename]
@@ -71,7 +71,7 @@ class Cms::NodesTreeComponent < ApplicationComponent
             id: parent_node.id, name: parent_node.name, depth: parent_node.depth, updated: parent_node.updated,
             url: url, opens: false, children: [])
         else
-          name = File.basename(parent_filename)
+          name = ::File.basename(parent_filename)
           parent_wrap = SS::TreeBaseComponent::NodeItem.new(
             id: :not_found, name: name, depth: parent_depth, updated: ::SS::EPOCH_TIME,
             url: nil, opens: false, children: [])
@@ -83,7 +83,7 @@ class Cms::NodesTreeComponent < ApplicationComponent
           break
         end
 
-        parent_filename = File.dirname(parent_filename)
+        parent_filename = ::File.dirname(parent_filename)
         parent_depth -= 1
       end
     end
