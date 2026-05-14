@@ -202,19 +202,14 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           wait_for_js_ready
           within "form#item-form" do
             fill_in "item[subject]", with: draft_subject
-          end
-          within "form#item-form" do
-            within "#addon-webmail-agents-addons-mail_file" do
-              wait_cbox_open { click_on I18n.t("ss.buttons.upload") }
-            end
-          end
-          wait_cbox_close { click_on item_file.name }
-          within "form#item-form" do
+
+            ss_select_file item_file, addon: "#addon-webmail-agents-addons-mail_file"
             within "#addon-webmail-agents-addons-mail_file" do
               expect(page).to have_css(".file-view[data-file-id='#{item_file.id}']", text: item_file.name)
             end
+
+            click_on I18n.t('ss.buttons.draft_save')
           end
-          click_on I18n.t('ss.buttons.draft_save')
         end
         wait_for_notice I18n.t('ss.notice.saved')
 
@@ -300,19 +295,14 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           wait_for_js_ready
           within "form#item-form" do
             fill_in "item[subject]", with: draft_subject
-          end
-          within "form#item-form" do
-            within "#addon-webmail-agents-addons-mail_file" do
-              wait_cbox_open { click_on I18n.t("ss.buttons.upload") }
-            end
-          end
-          wait_cbox_close { click_on item_file.name }
-          within "form#item-form" do
+
+            ss_select_file item_file, addon: "#addon-webmail-agents-addons-mail_file"
             within "#addon-webmail-agents-addons-mail_file" do
               expect(page).to have_css(".file-view[data-file-id='#{item_file.id}']", text: item_file.name)
             end
+
+            click_on I18n.t('ss.buttons.draft_save')
           end
-          click_on I18n.t('ss.buttons.draft_save')
         end
         wait_for_notice I18n.t('ss.notice.saved')
 
