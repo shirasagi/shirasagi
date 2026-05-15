@@ -79,4 +79,80 @@ describe Cms::SyntaxChecker::Column::FilesAltPresenceChecker, type: :model, dbsc
       end
     end
   end
+
+  describe "#check via Cms::SyntaxChecker.check_page (multiple attachments upload)" do
+    let!(:attachment_column) { create(:cms_column_multiple_attachments_upload, cur_form: form, order: 2) }
+    let!(:attachment1) do
+      tmp_ss_file(
+        Cms::File,
+        contents: "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf",
+        site: site, user: cms_user, model: Cms::File::FILE_MODEL
+      )
+    end
+    let!(:attachment2) do
+      tmp_ss_file(
+        Cms::File,
+        contents: "#{Rails.root}/spec/fixtures/ss/logo.png",
+        site: site, user: cms_user, model: Cms::File::FILE_MODEL
+      )
+    end
+
+    context "when every attached file has a link text" do
+      let!(:page_obj) do
+        create(
+          :article_page, cur_site: site, cur_node: node, form: form, state: 'public',
+          column_values: [
+            attachment_column.value_type.new(
+              column: attachment_column,
+              file_ids: [attachment1.id.to_s, attachment2.id.to_s],
+              file_labels: { attachment1.id.to_s => "資料PDF", attachment2.id.to_s => "ロゴ画像" }
+            )
+          ]
+        )
+      end
+
+      it "does not add a missing-link-text error for any file" do
+        page_obj.reload
+        context = Cms::SyntaxChecker.check_page(cur_site: site, cur_user: cms_user, page: page_obj)
+        messages = context.errors.map(&:error)
+
+        page_obj.column_values.first.files.each do |file|
+          expected = I18n.t("errors.messages.blank_file_link_text", filename: file.name)
+          expect(messages).not_to include(expected)
+        end
+      end
+    end
+
+    context "when an attached file has no link text" do
+      let!(:page_obj) do
+        create(
+          :article_page, cur_site: site, cur_node: node, form: form, state: 'public',
+          column_values: [
+            attachment_column.value_type.new(
+              column: attachment_column,
+              file_ids: [attachment1.id.to_s, attachment2.id.to_s],
+              file_labels: { attachment1.id.to_s => "資料PDF" }
+            )
+          ]
+        )
+      end
+
+      it "adds a missing-link-text error for only the file without a link text" do
+        page_obj.reload
+        value = page_obj.column_values.first
+        labelled_file = value.files.find { |f| f.id.to_s == value.file_labels.keys.first }
+        unlabelled_file = value.files.find { |f| f.id.to_s != value.file_labels.keys.first }
+
+        context = Cms::SyntaxChecker.check_page(cur_site: site, cur_user: cms_user, page: page_obj)
+        messages = context.errors.map(&:error)
+
+        expect(messages).to include(
+          I18n.t("errors.messages.blank_file_link_text", filename: unlabelled_file.name)
+        )
+        expect(messages).not_to include(
+          I18n.t("errors.messages.blank_file_link_text", filename: labelled_file.name)
+        )
+      end
+    end
+  end
 end

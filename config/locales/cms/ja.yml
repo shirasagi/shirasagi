@@ -217,6 +217,11 @@ ja:
     column_multiple_images_upload:
       file_label: 代替テキスト
       file_label_placeholder: 代替テキストを入力してください。
+    column_multiple_attachments_upload:
+      header: 説明文
+      header_placeholder: 添付ファイルリストの先頭に表示する説明文（例：詳細については下記をご覧ください。）
+      file_label: ファイル名
+      file_label_placeholder: リンクテキストとして表示するファイル名を入力してください。
     column_table:
       width: 列数
       height: 行数
@@ -857,6 +862,7 @@ ja:
       cms/check_box: チェックボックス
       cms/file_upload: ファイルアップロード
       cms/multiple_images_upload: 複数画像アップロード
+      cms/multiple_attachments_upload: 複数添付ファイルアップロード
       cms/headline: 見出し入力
       cms/list: リスト入力
       cms/youtube: YouTube埋め込み
@@ -1188,6 +1194,7 @@ ja:
       cms/column/check_box: チェックボックス
       cms/column/file_upload: ファイルアップロード
       cms/column/multiple_images_upload: 複数画像アップロード
+      cms/column/multiple_attachments_upload: 複数添付ファイルアップロード
       cms/column/headline: 見出し入力
       cms/column/list: リスト入力
       cms/column/youtube: YouTube埋め込み
@@ -1662,6 +1669,10 @@ ja:
       cms/column/value/multiple_images_upload:
         file_ids: 画像
         file_labels: 代替テキスト
+      cms/column/value/multiple_attachments_upload:
+        file_ids: 添付ファイル
+        file_labels: リンクテキスト
+        header: 説明文
       cms/column/value/radio_button:
         value: 選択肢
       cms/column/value/select:
@@ -2099,6 +2110,7 @@ ja:
       replace_word_validation: に使用が好ましくない単語が含まれています。
       alt_is_included_in_filename: 代替テキストがファイル名に含まれています。
       blank_file_label: "「%{filename}」の代替テキストを入力してください。"
+      blank_file_link_text: "「%{filename}」のファイル名を入力してください。"
       only_image_file: "「%{filename}」は画像ファイルではありません。"
       cms_form_db_required_node: データの登録には記事フォルダーの設定が必要です。
       richmenu_target_taken: は既にリッチメニューグループ内に登録されています。

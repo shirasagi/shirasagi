@@ -1,0 +1,47 @@
+<% value ||= nil %>
+<%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do %>
+  <% if value && value.header.present? %>
+    <div class="attachment-header"><%= simple_format(value.header) %></div>
+  <% end %>
+  <% if value && value.file_ids.present? %>
+    <div id="selected-files">
+      <% value.files.each do |file| %>
+        <div class="file-view" data-file-id="<%= file.id %>">
+          <%= sanitizer_status(file) %>
+          <%= link_to file.url, class: :thumb, target: "_blank", rel: "noopener" do %>
+            <% if file.image? %>
+              <%= image_tag file.thumb_url, alt: file.name %>
+            <% else %>
+              <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
+            <% end %>
+            <div class="properties">
+              <span><%= I18n.t("sns.filename") %>: <%= file.name %></span><br>
+              <span><%= t("sns.size") %>: <%= number_to_human_size(file.size) %></span><br>
+            </div>
+          <% end %>
+          <div class="name">
+            <label><%= file.name %></label><br />
+            <label><%= t("cms.column_multiple_attachments_upload.file_label") %>: <%= value.file_label_for(file) %></label>
+          </div>
+          <% if SS::ReplaceFile.replaceable?(@item, user: @cur_user, site: @cur_site, node: @cur_node) %>
+            <div class="replace-file">
+              <% if params[:replace_temp_file].present? %>
+                <%= link_to t('ss.buttons.replace_file'),
+                  params[:cid].blank? ?
+                    confirm_cms_apis_replace_file_path(owner_item_id: @item, id: file) :
+                    confirm_cms_apis_node_replace_file_path(owner_item_id: @item, id: file),
+                  class: "ajax-box" %>
+              <% else %>
+                <%= link_to t('ss.buttons.replace_file'),
+                  params[:cid].blank? ?
+                    edit_cms_apis_replace_file_path(owner_item_id: @item, id: file) :
+                    edit_cms_apis_node_replace_file_path(owner_item_id: @item, id: file),
+                  class: "ajax-box" %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
