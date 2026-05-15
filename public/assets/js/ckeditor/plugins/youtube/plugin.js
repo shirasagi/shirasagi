@@ -6,17 +6,21 @@
 */
 (function () {
 	var fetchTitle = async function(video) {
-		var params = new URLSearchParams();
-		params.append("url", "https://www.youtube.com/watch?v=" + video);
-		params.append("format", "json");
+		try {
+			var params = new URLSearchParams();
+			params.append("url", "https://www.youtube.com/watch?v=" + video);
+			params.append("format", "json");
 
-		var response = await fetch("https://www.youtube.com/oembed" + "?" + params.toString());
-		if (!response.ok) {
-			return;
+			var response = await fetch("https://www.youtube.com/oembed" + "?" + params.toString());
+			if (!response.ok) {
+				return;
+			}
+
+			var data = await response.json();
+			return data["title"];
+		} catch (ex) {
+			return undefined;
 		}
-
-		var data = await response.json();
-		return data["title"];
 	};
 
   CKEDITOR.plugins.add('youtube', {
