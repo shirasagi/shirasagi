@@ -47,7 +47,7 @@ class Cms::Column::Value::Headline < Cms::Column::Value::Base
 
   def import_csv_cell(value)
     self.text = value.presence
-    self.head ||= 'h1'
+    self.head ||= column&.effective_min_headline_level || 'h1'
   end
 
   def export_csv_cell
@@ -70,6 +70,10 @@ class Cms::Column::Value::Headline < Cms::Column::Value::Base
 
     if column.required? && text.blank?
       self.errors.add(:text, :blank) unless skip_required?
+    end
+
+    if head.present? && column.headline_list.values.exclude?(head)
+      self.errors.add(:head, :inclusion, value: head)
     end
 
     return if text.blank?
