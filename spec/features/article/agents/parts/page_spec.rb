@@ -97,8 +97,8 @@ describe "article_agents_parts_page", type: :feature, dbscope: :example do
     end
   end
 
-  context "request_dir in root part" do
-    context "ajax_view enabled", js: true do
+  context "request_dir in root part", mecab: true, js: true do
+    context "ajax_view enabled" do
       let(:part) { create :article_part_page, filename: "part" }
       let!(:item) { create :article_page, cur_node: node }
       let(:node2) { create :article_node_page, layout_id: layout.id }
@@ -154,8 +154,8 @@ describe "article_agents_parts_page", type: :feature, dbscope: :example do
       end
     end
 
-    context "with kana", mecab: true do
-      context "ajax_view enabled", js: true do
+    context "with kana" do
+      context "ajax_view enabled" do
         let(:part) { create :article_part_page, filename: "part" }
         let!(:item) { create :article_page, cur_node: node }
         let(:node2) { create :article_node_page, layout_id: layout.id }
