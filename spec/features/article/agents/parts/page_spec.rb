@@ -171,13 +171,13 @@ describe "article_agents_parts_page", type: :feature, dbscope: :example do
         end
 
         it do
-          visit node.url.sub(node.url, SS.config.kana.location + node.url)
+          visit node.full_url.sub(node.url, SS.config.kana.location + node.url)
           wait_for_ajax
 
           expect(page).to have_css(".parts", text: item.name)
           expect(page).to have_no_css(".parts", text: item2.name)
 
-          visit node2.url.sub(node2.url, SS.config.kana.location + node2.url)
+          visit node2.full_url.sub(node2.url, SS.config.kana.location + node2.url)
           wait_for_ajax
 
           expect(page).to have_no_css(".parts", text: item.name)
@@ -201,11 +201,11 @@ describe "article_agents_parts_page", type: :feature, dbscope: :example do
         end
 
         it do
-          visit node.url.sub(node.url, SS.config.kana.location + node.url)
+          visit node.full_url.sub(node.url, SS.config.kana.location + node.url)
           expect(page).to have_css(".parts", text: item.name)
           expect(page).to have_no_css(".parts", text: item2.name)
 
-          visit node2.url.sub(node2.url, SS.config.kana.location + node2.url)
+          visit node2.full_url.sub(node2.url, SS.config.kana.location + node2.url)
           expect(page).to have_no_css(".parts", text: item.name)
           expect(page).to have_css(".parts", text: item2.name)
         end
