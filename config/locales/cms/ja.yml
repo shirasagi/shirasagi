@@ -2096,6 +2096,8 @@ ja:
       not_found_parent_group: 親グループが存在しません。
       plz_check_targets_to_change_state: 公開ステータス変更対象が選択されておりません。対象のチェックボックスにチェックを入れてください。
       invalid_order_of_h: 見出し(H)の順番が不正です。
+      invalid_first_heading_level: 先頭の見出しは h1 または h2 にしてください。
+      invalid_heading_level_skip: 見出しレベルが 1 段を超えて深くなっています。
       invalid_multibyte_character: 英数字は半角文字を入力してください。
       invalid_kana_character: 半角カナ文字が含まれています。
       invalid_date_format: 日付の表記は○年○月○日としてください。
@@ -2140,6 +2142,12 @@ ja:
           - 列方向であればscope="row"を設定してください。
         invalid_order_of_h:
           - 適切な順に配置してください。
+        invalid_first_heading_level:
+          - ページ先頭の見出しは h1 または h2 から開始してください。
+          - 該当の見出しを h1 または h2 に変更してください。
+        invalid_heading_level_skip:
+          - 直前の見出しの次に来る見出しは、同じレベルまたは 1 段深いレベル（例：h2 の次は h3）にしてください。
+          - h2 の直後に h4 を置くなど、レベルを 2 段以上スキップしないでください。
         invalid_multibyte_character:
           - 本文に全角英数が含まれています。
           - 半角英数に置き換えるか削除してください。

@@ -958,7 +958,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
 
               # confirm syntax check header is shown to wait for ajax completion
               expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
-              expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('errors.messages.invalid_order_of_h'))
+              expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('errors.messages.invalid_first_heading_level'))
             end
           end
         end
@@ -1036,7 +1036,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
 
               # confirm syntax check header is shown to wait for ajax completion
               expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
-              expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('errors.messages.invalid_order_of_h'))
+              expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('errors.messages.invalid_heading_level_skip'))
             end
           end
         end

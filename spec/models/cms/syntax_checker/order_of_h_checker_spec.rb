@@ -44,8 +44,8 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
           expect(error.id).to eq id
           expect(error.idx).to eq idx
           expect(error.code).to eq "h3"
-          expect(error.full_message).to eq I18n.t('errors.messages.invalid_order_of_h')
-          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+          expect(error.full_message).to eq I18n.t('errors.messages.invalid_heading_level_skip')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_heading_level_skip')
           expect(error.corrector).to eq described_class.name
           expect(error.corrector_params).to be_blank
         end
@@ -66,8 +66,8 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
           expect(error.id).to eq id
           expect(error.idx).to eq idx
           expect(error.code).to eq "h4"
-          expect(error.full_message).to eq I18n.t('errors.messages.invalid_order_of_h')
-          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+          expect(error.full_message).to eq I18n.t('errors.messages.invalid_heading_level_skip')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_heading_level_skip')
           expect(error.corrector).to eq described_class.name
           expect(error.corrector_params).to be_blank
         end
@@ -88,8 +88,8 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
           expect(error.id).to eq id
           expect(error.idx).to eq idx
           expect(error.code).to eq "h5"
-          expect(error.full_message).to eq I18n.t('errors.messages.invalid_order_of_h')
-          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+          expect(error.full_message).to eq I18n.t('errors.messages.invalid_heading_level_skip')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_heading_level_skip')
           expect(error.corrector).to eq described_class.name
           expect(error.corrector_params).to be_blank
         end
@@ -120,8 +120,8 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
             expect(error.id).to eq id
             expect(error.idx).to eq idx
             expect(error.code).to eq "h#{level}"
-            expect(error.full_message).to eq I18n.t('errors.messages.invalid_order_of_h')
-            expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+            expect(error.full_message).to eq I18n.t('errors.messages.invalid_first_heading_level')
+            expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_first_heading_level')
             expect(error.corrector).to eq described_class.name
             expect(error.corrector_params).to be_blank
           end
@@ -144,8 +144,8 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
           expect(error.id).to eq id
           expect(error.idx).to eq idx
           expect(error.code).to eq "h4 h5"
-          expect(error.full_message).to eq I18n.t('errors.messages.invalid_order_of_h')
-          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+          expect(error.full_message).to eq I18n.t('errors.messages.invalid_heading_level_skip')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_heading_level_skip')
           expect(error.corrector).to eq described_class.name
           expect(error.corrector_params).to be_blank
         end
@@ -188,8 +188,8 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
           expect(error.id).to eq id
           expect(error.idx).to eq idx
           expect(error.code).to eq "h#{level}"
-          expect(error.full_message).to eq I18n.t('errors.messages.invalid_order_of_h')
-          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+          expect(error.full_message).to eq I18n.t('errors.messages.invalid_first_heading_level')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_first_heading_level')
           expect(error.corrector).to eq described_class.name
           expect(error.corrector_params).to be_blank
         end
@@ -231,8 +231,8 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
         context.errors.first.tap do |error|
           expect(error.id).to eq id
           expect(error.idx).to eq idx
-          expect(error.full_message).to eq I18n.t('errors.messages.invalid_order_of_h')
-          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+          expect(error.full_message).to eq I18n.t('errors.messages.invalid_heading_level_skip')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_heading_level_skip')
           expect(error.corrector).to eq described_class.name
           expect(error.corrector_params).to be_blank
         end
