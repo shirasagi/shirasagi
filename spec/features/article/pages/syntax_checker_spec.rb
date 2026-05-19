@@ -1084,7 +1084,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           it do
             visit edit_path
 
-            [ "h2", "h3", "h4", "h2" ].each_with_index do |head, i|
+            %w[h2 h3 h4 h2].each_with_index do |head, i|
               within ".column-value-palette" do
                 wait_for_event_fired("ss:columnAdded") do
                   click_on column1.name
@@ -1122,7 +1122,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           it do
             visit edit_path
 
-            [ "h6", "h3", "h2", "h3", "h4", "h6" ].each_with_index do |head, i|
+            %w[h6 h3 h2 h3 h4 h6].each_with_index do |head, i|
               within ".column-value-palette" do
                 wait_for_event_fired("ss:columnAdded") do
                   click_on column1.name
