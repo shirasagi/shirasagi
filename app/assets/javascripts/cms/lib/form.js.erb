@@ -106,21 +106,22 @@ this.Cms_Form = (function () {
 
     // orderOfH
     var errorEntries = [];
+    var levelOf = function (name) {
+      var m = /h([1-6])/i.exec(name);
+      return m ? parseInt(m[1], 10) : 0;
+    };
     if (h.length) {
       for (i = j = 0, ref = h.length - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+        var currentLevel = levelOf(h[i]);
+        if (currentLevel === 0) continue;
         if (i === 0) {
-          if (!/h[12]/i.test(h[i])) {
+          if (currentLevel > 2) {
             errorEntries.push({ idx: i, key: "invalidFirstHeadingLevel" });
           }
-        } else {
-          if (/h3/i.test(h[i])) {
-            if (!/h[234]/i.test(h[i - 1])) {
-              errorEntries.push({ idx: i, key: "invalidHeadingLevelSkip" });
-            }
-          } else if (/h4/i.test(h[i])) {
-            if (!/h[34]/i.test(h[i - 1])) {
-              errorEntries.push({ idx: i, key: "invalidHeadingLevelSkip" });
-            }
+        } else if (currentLevel > 2) {
+          var prevLevel = levelOf(h[i - 1]);
+          if (prevLevel < currentLevel - 1) {
+            errorEntries.push({ idx: i, key: "invalidHeadingLevelSkip" });
           }
         }
       }
