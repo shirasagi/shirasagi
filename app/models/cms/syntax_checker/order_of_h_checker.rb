@@ -4,7 +4,8 @@ class Cms::SyntaxChecker::OrderOfHChecker
   H_TAGS = %w(h1 h2 h3 h4 h5 h6).freeze
 
   def check(context, content)
-    code = ''
+    code_first = ''
+    code_skip = ''
     h_level_check = context.h_level_check
     header_check = context.header_check
     h_nodes = context.fragment.css(H_TAGS.join(","))
@@ -19,8 +20,10 @@ class Cms::SyntaxChecker::OrderOfHChecker
         if current_level <= 2 && !header_check
           h_level_check = current_level
           header_check = true
-        elsif (current_level > 2 && !header_check) || (h_level_check < current_level - 1)
-          code += current_node.name + " "
+        elsif current_level > 2 && !header_check
+          code_first += current_node.name + " "
+        elsif h_level_check < current_level - 1
+          code_skip += current_node.name + " "
         else
           h_level_check = current_level
         end
@@ -28,14 +31,20 @@ class Cms::SyntaxChecker::OrderOfHChecker
         # 2 個目以降にある h1, h2 は無チェック
         next
       elsif prev_level < current_level - 1
-        code += current_node.name + " "
+        code_skip += current_node.name + " "
       end
     end
-    return if code.blank?
 
-    context.errors << Cms::SyntaxChecker::CheckerError.new(
-      context: context, content: content, code: code.strip, checker: self, error: :invalid_order_of_h,
-      corrector: self.class.name)
+    if code_first.present?
+      context.errors << Cms::SyntaxChecker::CheckerError.new(
+        context: context, content: content, code: code_first.strip, checker: self,
+        error: :invalid_first_heading_level, corrector: self.class.name)
+    end
+    if code_skip.present?
+      context.errors << Cms::SyntaxChecker::CheckerError.new(
+        context: context, content: content, code: code_skip.strip, checker: self,
+        error: :invalid_heading_level_skip, corrector: self.class.name)
+    end
   end
 
   def correct(context)

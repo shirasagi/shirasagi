@@ -519,11 +519,13 @@ this.Syntax_Checker = (function () {
   // javascript syntax check
 
   Syntax_Checker.message = {
-    invalidOrderOfH: "<%= I18n.t('errors.messages.invalid_order_of_h') %>",
+    invalidFirstHeadingLevel: "<%= I18n.t('errors.messages.invalid_first_heading_level') %>",
+    invalidHeadingLevelSkip: "<%= I18n.t('errors.messages.invalid_heading_level_skip') %>",
     checkLinkText: "<%= I18n.t('errors.messages.check_link_text') %>",
   };
   Syntax_Checker.detail = {
-    invalidOrderOfH: <%= I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h').to_json %>,
+    invalidFirstHeadingLevel: <%= I18n.t('errors.messages.syntax_check_detail.invalid_first_heading_level').to_json %>,
+    invalidHeadingLevelSkip: <%= I18n.t('errors.messages.syntax_check_detail.invalid_heading_level_skip').to_json %>,
     checkLinkText: <%= I18n.t('errors.messages.syntax_check_detail.check_link_text').to_json %>,
   };
 

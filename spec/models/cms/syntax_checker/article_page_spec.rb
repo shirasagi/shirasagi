@@ -336,8 +336,8 @@ describe Cms::SyntaxChecker, type: :model, dbscope: :example do
               expect(error.name).to eq column1.name
               expect(error.idx).to be_blank
               expect(error.code).to eq "h3"
-              expect(error.full_message).to eq I18n.t('errors.messages.invalid_order_of_h')
-              expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+              expect(error.full_message).to eq I18n.t('errors.messages.invalid_first_heading_level')
+              expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_first_heading_level')
               expect(error.corrector).to be_blank
               expect(error.corrector_params).to be_blank
             end
@@ -381,8 +381,8 @@ describe Cms::SyntaxChecker, type: :model, dbscope: :example do
               expect(error.name).to eq column1.name
               expect(error.idx).to be_blank
               expect(error.code).to eq "h3"
-              expect(error.full_message).to eq I18n.t('errors.messages.invalid_order_of_h')
-              expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+              expect(error.full_message).to eq I18n.t('errors.messages.invalid_heading_level_skip')
+              expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_heading_level_skip')
               expect(error.corrector).to be_blank
               expect(error.corrector_params).to be_blank
             end
