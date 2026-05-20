@@ -61,6 +61,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
         site: site, user: cms_user, model: Cms::File::FILE_MODEL
       )
     end
+    let(:header_text) { "詳細については下記の画像をご覧ください。" }
     let!(:article_page) do
       create(
         :article_page, cur_site: site, cur_node: node, layout_id: layout.id, form: public_form,
@@ -68,6 +69,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
         column_values: [
           column.value_type.new(
             column: column,
+            header: header_text,
             file_ids: [image1.id.to_s, image2.id.to_s],
             file_labels: {
               image1.id.to_s => "first-image-alt",
@@ -82,13 +84,14 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       Capybara.app_host = "http://#{site.domain}"
     end
 
-    it "clones both images and renders them in the specified order" do
+    it "clones both images and renders them in the specified order with header" do
       article_page.reload
       cloned_ids = article_page.column_values.first.file_ids
       expect(cloned_ids.length).to eq 2
       expect(cloned_ids).not_to include(image1.id.to_s, image2.id.to_s)
 
       visit article_page.full_url
+      expect(page).to have_css(".images-header", text: header_text)
       expect(page).to have_css("img[alt='first-image-alt']")
       expect(page).to have_css("img[alt='second-image-alt']")
       cloned_ids.each do |cid|

@@ -1,8 +1,9 @@
 class Cms::Column::Value::MultipleImagesUpload < Cms::Column::Value::Base
   field :file_ids, type: Array, default: []
   field :file_labels, type: Hash, default: {}, metadata: { syntax_check: { files_alt_presence: true } }
+  field :header, type: String
 
-  permit_values file_ids: [], file_labels: {}
+  permit_values :header, file_ids: [], file_labels: {}
 
   before_parent_save :before_save_files
   after_parent_destroy :destroy_files
@@ -10,12 +11,13 @@ class Cms::Column::Value::MultipleImagesUpload < Cms::Column::Value::Base
   liquidize do
     export :files
     export :file_labels
+    export :header
     export as: :items do
       files.map do |f|
         {
           "file" => f,
           "label" => file_labels[f.id.to_s],
-          "image_text" => file_labels[f.id.to_s].to_s
+          "file_label" => file_labels[f.id.to_s].to_s
         }
       end
     end
@@ -51,21 +53,32 @@ class Cms::Column::Value::MultipleImagesUpload < Cms::Column::Value::Base
 
   def history_summary
     h = []
+    h << "#{t("header")}: #{header}" if header.present?
     h << "#{t("file_ids")}: #{files.map(&:name).join(", ")}" if file_ids.present?
     h.join(",")
   end
 
   # override Cms::Column::Value::Base#to_default_html
   def to_default_html
-    return '' if file_ids.blank?
+    return '' if file_ids.blank? && header.blank?
 
-    items = files.map do |file|
-      alt = file_labels[file.id.to_s].to_s
-      content = ApplicationController.helpers.image_tag(file.url, alt: alt)
-      ApplicationController.helpers.content_tag(:div, content, class: "column-item")
+    helpers = ApplicationController.helpers
+    parts = []
+
+    if header.present?
+      parts << helpers.content_tag(:div, helpers.simple_format(header), class: "images-header")
     end
 
-    ApplicationController.helpers.content_tag(:div, items.join.html_safe, class: "column2")
+    if file_ids.present?
+      items = files.map do |file|
+        alt = file_labels[file.id.to_s].to_s
+        content = helpers.image_tag(file.url, alt: alt)
+        helpers.content_tag(:div, content, class: "column-item")
+      end
+      parts << helpers.content_tag(:div, items.join.html_safe, class: "column2")
+    end
+
+    helpers.content_tag(:div, parts.join.html_safe, class: "images")
   end
 
   def search_values(values)
@@ -74,7 +87,7 @@ class Cms::Column::Value::MultipleImagesUpload < Cms::Column::Value::Base
     file_label_values = file_labels.present? ? file_labels.values : []
     file_names = files.map(&:name)
     file_urls = files.map(&:full_url)
-    values.intersect?(file_label_values + file_names + file_urls)
+    values.intersect?(file_label_values + file_names + file_urls + [header.to_s])
   end
 
   def file_label_for(file)
@@ -84,11 +97,14 @@ class Cms::Column::Value::MultipleImagesUpload < Cms::Column::Value::Base
   class << self
     def form_example_layout
       h = []
+      h << %({% if value.header.size > 0 %})
+      h << %(  <div class="images-header">{{ value.header | newline_to_br }}</div>)
+      h << %({% endif %})
       h << %({% if value.items.size > 0 %})
       h << %(  <div class="column2">)
       h << %(    {% for item in value.items %})
       h << %(      <div class="column-item">)
-      h << %(        <img src="{{ item.file.url }}" alt="{{ item.image_text }}">)
+      h << %(        <img src="{{ item.file.url }}" alt="{{ item.file_label }}">)
       h << %(      </div>)
       h << %(    {% endfor %})
       h << %(  </div>)

@@ -6,6 +6,48 @@ describe Cms::Column::Value::MultipleImagesUpload, type: :model, dbscope: :examp
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
   let!(:column) { create(:cms_column_multiple_images_upload, cur_form: form, order: 1) }
 
+  describe "#header field" do
+    let!(:file) do
+      tmp_ss_file(
+        Cms::File,
+        contents: "#{Rails.root}/spec/fixtures/ss/logo.png",
+        site: site, user: cms_user, model: Cms::File::FILE_MODEL
+      )
+    end
+
+    let(:page) do
+      create(
+        :article_page, cur_node: node, form: form,
+        column_values: [
+          column.value_type.new(
+            column: column,
+            file_ids: [file.id.to_s],
+            header: "詳細については下記の画像をご覧ください。"
+          )
+        ]
+      )
+    end
+
+    it "persists the header text alongside file_ids" do
+      page.reload
+      value = page.column_values.first
+      expect(value.header).to eq "詳細については下記の画像をご覧ください。"
+      expect(value.file_ids.length).to eq 1
+    end
+
+    it "includes the header in history_summary" do
+      page.reload
+      value = page.column_values.first
+      expect(value.history_summary).to include("詳細については下記の画像をご覧ください。")
+    end
+
+    it "matches header in search_values" do
+      page.reload
+      value = page.column_values.first
+      expect(value.search_values(["詳細については下記の画像をご覧ください。"])).to be_truthy
+    end
+  end
+
   describe "#before_save_files" do
     context "with an unowned cms/file (clone required)" do
       let!(:file) do

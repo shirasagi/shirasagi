@@ -214,7 +214,11 @@ ja:
         link_url: URL
         file_label_place_holder: 代替テキストを入力してください。
         link_url_place_holder: URLを入力してください。
+    column_multiple_files_upload:
+      order_aria_label: 表示順
     column_multiple_images_upload:
+      header: 説明文
+      header_placeholder: 画像リストの先頭に表示する説明文（例：詳細については下記の画像をご覧ください。）
       file_label: 代替テキスト
       file_label_placeholder: 代替テキストを入力してください。
     column_multiple_attachments_upload:
