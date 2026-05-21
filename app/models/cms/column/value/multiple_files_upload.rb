@@ -1,7 +1,7 @@
 class Cms::Column::Value::MultipleFilesUpload < Cms::Column::Value::Base
   field :file_ids, type: Array, default: []
   field :file_labels, type: Hash, default: {},
-    metadata: { syntax_check: { files_alt_presence: ->{ image_type? ? true : { message: :blank_file_link_text } } } }
+    metadata: { syntax_check: { files_alt_presence: ->{ image_type? || { message: :blank_file_link_text } } } }
   field :header, type: String
 
   permit_values :header, file_ids: [], file_labels: {}
@@ -96,7 +96,11 @@ class Cms::Column::Value::MultipleFilesUpload < Cms::Column::Value::Base
     def form_example_layout
       h = []
       h << %({% if value.header.size > 0 %})
-      h << %(  <div class="{% if column.file_type == 'image' %}images-header{% else %}attachment-header{% endif %}">{{ value.header | newline_to_br }}</div>)
+      h << %(  {% if column.file_type == 'image' %})
+      h << %(    <div class="images-header">{{ value.header | newline_to_br }}</div>)
+      h << %(  {% else %})
+      h << %(    <div class="attachment-header">{{ value.header | newline_to_br }}</div>)
+      h << %(  {% endif %})
       h << %({% endif %})
       h << %({% if value.items.size > 0 %})
       h << %(  {% if column.file_type == 'image' %})

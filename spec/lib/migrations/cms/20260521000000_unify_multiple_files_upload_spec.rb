@@ -138,8 +138,17 @@ RSpec.describe SS::Migration20260521000000, dbscope: :example do
           {
             "$set" => {
               "column_values" => [
-                { "_id" => BSON::ObjectId.new, "_type" => "Cms::Column::Value::MultipleImagesUpload", "column_id" => column_id },
-                { "_id" => BSON::ObjectId.new, "_type" => "Cms::Column::Value::TextField", "column_id" => column_id, "value" => "keep me" }
+                {
+                  "_id" => BSON::ObjectId.new,
+                  "_type" => "Cms::Column::Value::MultipleImagesUpload",
+                  "column_id" => column_id
+                },
+                {
+                  "_id" => BSON::ObjectId.new,
+                  "_type" => "Cms::Column::Value::TextField",
+                  "column_id" => column_id,
+                  "value" => "keep me"
+                }
               ]
             }
           }

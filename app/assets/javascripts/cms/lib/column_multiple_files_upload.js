@@ -84,7 +84,8 @@ Cms_Column_MultipleFilesUpload.prototype.refreshOrderSelects = function($contain
     if (!$select.data("ss-order-bound")) {
       $select.data("ss-order-bound", true);
       $select.on("change", function() {
-        self.moveByOrder($container, $fileView, parseInt($(this).val(), 10));
+        var $currentFileView = $(this).closest(".file-view");
+        self.moveByOrder($container, $currentFileView, parseInt($(this).val(), 10));
       });
     }
   });
