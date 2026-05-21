@@ -1,6 +1,7 @@
-class Cms::Column::Value::MultipleImagesUpload < Cms::Column::Value::Base
+class Cms::Column::Value::MultipleFilesUpload < Cms::Column::Value::Base
   field :file_ids, type: Array, default: []
-  field :file_labels, type: Hash, default: {}, metadata: { syntax_check: { files_alt_presence: true } }
+  field :file_labels, type: Hash, default: {},
+    metadata: { syntax_check: { files_alt_presence: ->{ image_type? ? true : { message: :blank_file_link_text } } } }
   field :header, type: String
 
   permit_values :header, file_ids: [], file_labels: {}
@@ -21,6 +22,14 @@ class Cms::Column::Value::MultipleImagesUpload < Cms::Column::Value::Base
         }
       end
     end
+  end
+
+  def file_type
+    column.try(:file_type).presence || "image"
+  end
+
+  def image_type?
+    file_type == "image"
   end
 
   def value
@@ -64,21 +73,10 @@ class Cms::Column::Value::MultipleImagesUpload < Cms::Column::Value::Base
 
     helpers = ApplicationController.helpers
     parts = []
+    parts << render_header(helpers) if header.present?
+    parts << render_files(helpers) if file_ids.present?
 
-    if header.present?
-      parts << helpers.content_tag(:div, helpers.simple_format(header), class: "images-header")
-    end
-
-    if file_ids.present?
-      items = files.map do |file|
-        alt = file_labels[file.id.to_s].to_s
-        content = helpers.image_tag(file.url, alt: alt)
-        helpers.content_tag(:div, content, class: "column-item")
-      end
-      parts << helpers.content_tag(:div, items.join.html_safe, class: "column2")
-    end
-
-    helpers.content_tag(:div, parts.join.html_safe, class: "images")
+    helpers.content_tag(:div, parts.join.html_safe, class: image_type? ? "images" : "attachments")
   end
 
   def search_values(values)
@@ -98,22 +96,54 @@ class Cms::Column::Value::MultipleImagesUpload < Cms::Column::Value::Base
     def form_example_layout
       h = []
       h << %({% if value.header.size > 0 %})
-      h << %(  <div class="images-header">{{ value.header | newline_to_br }}</div>)
+      h << %(  <div class="{% if column.file_type == 'image' %}images-header{% else %}attachment-header{% endif %}">{{ value.header | newline_to_br }}</div>)
       h << %({% endif %})
       h << %({% if value.items.size > 0 %})
-      h << %(  <div class="column2">)
-      h << %(    {% for item in value.items %})
-      h << %(      <div class="column-item">)
-      h << %(        <img src="{{ item.file.url }}" alt="{{ item.file_label }}">)
-      h << %(      </div>)
-      h << %(    {% endfor %})
-      h << %(  </div>)
+      h << %(  {% if column.file_type == 'image' %})
+      h << %(    <div class="column2">)
+      h << %(      {% for item in value.items %})
+      h << %(        <div class="column-item">)
+      h << %(          <img src="{{ item.file.url }}" alt="{{ item.file_label }}">)
+      h << %(        </div>)
+      h << %(      {% endfor %})
+      h << %(    </div>)
+      h << %(  {% else %})
+      h << %(    <ul class="attachment-list">)
+      h << %(      {% for item in value.items %})
+      h << %(        <li><a href="{{ item.file.url }}">{{ item.label | default: item.file.humanized_name }}</a></li>)
+      h << %(      {% endfor %})
+      h << %(    </ul>)
+      h << %(  {% endif %})
       h << %({% endif %})
       h.join("\n")
     end
   end
 
   private
+
+  def render_header(helpers)
+    helpers.content_tag(:div, helpers.simple_format(header),
+                        class: image_type? ? "images-header" : "attachment-header")
+  end
+
+  def render_files(helpers)
+    if image_type?
+      items = files.map do |file|
+        alt = file_labels[file.id.to_s].to_s
+        content = helpers.image_tag(file.url, alt: alt)
+        helpers.content_tag(:div, content, class: "column-item")
+      end
+      helpers.content_tag(:div, items.join.html_safe, class: "column2")
+    else
+      items = files.map do |file|
+        label = file_labels[file.id.to_s].presence.try { |l| helpers.sanitize(l) }
+        label ||= file.name.sub(/\.[^.]+$/, '')
+        label = "#{label} (#{file.extname.upcase} #{file.size.to_fs(:human_size)})"
+        helpers.content_tag(:li, helpers.link_to(label, file.url))
+      end
+      helpers.content_tag(:ul, items.join.html_safe, class: "attachment-list")
+    end
+  end
 
   def validate_value
     return if column.blank?
@@ -122,8 +152,10 @@ class Cms::Column::Value::MultipleImagesUpload < Cms::Column::Value::Base
       self.errors.add(:file_ids, :blank) unless skip_required?
     end
 
-    files.reject(&:image?).each do |non_image|
-      self.errors.add(:file_ids, :only_image_file, filename: non_image.name)
+    if image_type?
+      files.reject(&:image?).each do |non_image|
+        self.errors.add(:file_ids, :only_image_file, filename: non_image.name)
+      end
     end
   end
 

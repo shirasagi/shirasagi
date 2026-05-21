@@ -1,9 +1,3 @@
-<%#
-  共通パーシャル: 画像／添付ファイル両方の複数アップロード column_form。
-  呼び出し側で次のローカル変数を渡す:
-    - locale_scope: ロケールのプレフィックス (例: "cms.column_multiple_images_upload")
-    - column, value, f, controller
-%>
 <%
   value ||= nil
   controller ||= false
@@ -16,17 +10,18 @@
   setting = { field_name: field_name, show_attach: false }
   setting = JSON::JWT.new(setting).sign(SS::Crypto.salt).to_s
   select_api_path = select_cms_frames_temp_files_file_path(site: @cur_site, cid: cid, setting: setting, id: ':id')
+  file_type = column.try(:file_type).presence || "image"
 %>
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
   <div class="multiple-files-upload"
        data-file-labels="<%= current_labels.to_json %>"
        data-label-name="item[column_values][][in_wrap][file_labels]"
-       data-label-placeholder="<%= t("#{locale_scope}.file_label_placeholder") %>"
+       data-label-placeholder="<%= t("cms.column_multiple_files_upload.#{file_type}.file_label_placeholder") %>"
        data-order-aria-label="<%= t("cms.column_multiple_files_upload.order_aria_label") %>">
     <div class="multiple-files-upload-header">
-      <label for="<%= "#{id}-header" %>"><%= t("#{locale_scope}.header") %></label>
+      <label for="<%= "#{id}-header" %>"><%= t("cms.column_multiple_files_upload.#{file_type}.header") %></label>
       <%= text_area_tag header_field_name, current_header, id: "#{id}-header", rows: 3,
-            placeholder: t("#{locale_scope}.header_placeholder") %>
+            placeholder: t("cms.column_multiple_files_upload.#{file_type}.header_placeholder") %>
     </div>
 
     <%=

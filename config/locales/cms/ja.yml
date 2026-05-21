@@ -216,16 +216,16 @@ ja:
         link_url_place_holder: URLを入力してください。
     column_multiple_files_upload:
       order_aria_label: 表示順
-    column_multiple_images_upload:
-      header: 説明文
-      header_placeholder: 画像リストの先頭に表示する説明文（例：詳細については下記の画像をご覧ください。）
-      file_label: 代替テキスト
-      file_label_placeholder: 代替テキストを入力してください。
-    column_multiple_attachments_upload:
-      header: 説明文
-      header_placeholder: 添付ファイルリストの先頭に表示する説明文（例：詳細については下記をご覧ください。）
-      file_label: ファイル名
-      file_label_placeholder: リンクテキストとして表示するファイル名を入力してください。
+      image:
+        header: 説明文
+        header_placeholder: 画像リストの先頭に表示する説明文（例：詳細については下記の画像をご覧ください。）
+        file_label: 代替テキスト
+        file_label_placeholder: 代替テキストを入力してください。
+      attachment:
+        header: 説明文
+        header_placeholder: 添付ファイルリストの先頭に表示する説明文（例：詳細については下記をご覧ください。）
+        file_label: ファイル名
+        file_label_placeholder: リンクテキストとして表示するファイル名を入力してください。
     column_table:
       width: 列数
       height: 行数
@@ -641,6 +641,9 @@ ja:
         video: 動画
         attachment: 添付ファイル
         banner: バナー
+      multiple_files_upload_file_type:
+        image: 画像
+        attachment: 添付ファイル
       column_image_html_type:
         thumb: サムネイル
         image: 画像貼付
@@ -865,8 +868,7 @@ ja:
       cms/radio_button: ラジオボタン
       cms/check_box: チェックボックス
       cms/file_upload: ファイルアップロード
-      cms/multiple_images_upload: 複数画像アップロード
-      cms/multiple_attachments_upload: 複数添付ファイルアップロード
+      cms/multiple_files_upload: 複数ファイルアップロード
       cms/headline: 見出し入力
       cms/list: リスト入力
       cms/youtube: YouTube埋め込み
@@ -1197,8 +1199,7 @@ ja:
       cms/column/radio_button: ラジオボタン
       cms/column/check_box: チェックボックス
       cms/column/file_upload: ファイルアップロード
-      cms/column/multiple_images_upload: 複数画像アップロード
-      cms/column/multiple_attachments_upload: 複数添付ファイルアップロード
+      cms/column/multiple_files_upload: 複数ファイルアップロード
       cms/column/headline: 見出し入力
       cms/column/list: リスト入力
       cms/column/youtube: YouTube埋め込み
@@ -1651,6 +1652,8 @@ ja:
         max_length: 最大長
         place_holder: プレースホルダー
         file_type: ファイルタイプ
+      cms/column/multiple_files_upload:
+        file_type: ファイルタイプ
       cms/column/list:
         list_type: 種類
       cms/column/select_page:
@@ -1673,12 +1676,9 @@ ja:
         image_html_type: 貼付方法
         text: 動画の内容説明
         link_url: URL
-      cms/column/value/multiple_images_upload:
-        file_ids: 画像
-        file_labels: 代替テキスト
-      cms/column/value/multiple_attachments_upload:
-        file_ids: 添付ファイル
-        file_labels: リンクテキスト
+      cms/column/value/multiple_files_upload:
+        file_ids: ファイル
+        file_labels: リンクテキスト・代替テキスト
         header: 説明文
       cms/column/value/radio_button:
         value: 選択肢
@@ -3313,6 +3313,10 @@ ja:
         - リンクテキストの最大長を入力します。
       label_place_holder:
         - リンクテキストのプレースホルダーを入力します。
+
+    cms/column/multiple_files_upload:
+      file_type:
+        - 複数アップロードするファイルの種別を選択します。
 
     cms/column/headline:
       min_headline_level:

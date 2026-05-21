@@ -1,10 +1,7 @@
-<%#
-  共通パーシャル: 画像／添付ファイル両方の column_show（管理画面プレビュー）。
-  呼び出し側で次のローカル変数を渡す:
-    - locale_scope: ロケールのプレフィックス
-    - column, value
+<%
+  value ||= nil
+  file_type = column.try(:file_type).presence || "image"
 %>
-<% value ||= nil %>
 <%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do %>
   <% if value && value.header.present? %>
     <div class="multiple-files-upload-header"><%= simple_format(value.header) %></div>
@@ -33,7 +30,7 @@
           <% end %>
           <div class="name">
             <label><%= file.name %></label><br />
-            <label><%= t("#{locale_scope}.file_label") %>: <%= value.file_label_for(file) %></label>
+            <label><%= t("cms.column_multiple_files_upload.#{file_type}.file_label") %>: <%= value.file_label_for(file) %></label>
           </div>
           <% if SS::ReplaceFile.replaceable?(@item, user: @cur_user, site: @cur_site, node: @cur_node) %>
             <div class="replace-file">
