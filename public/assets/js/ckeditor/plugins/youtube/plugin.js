@@ -10,7 +10,11 @@
 		params.append("url", "https://www.youtube.com/watch?v=" + video);
 		params.append("format", "json");
 
-		var response = await fetch("https://www.youtube.com/oembed" + "?" + params.toString());
+		try {
+			var response = await fetch("https://www.youtube.com/oembed" + "?" + params.toString());
+		} catch (_err) {
+			return;
+		}
 		if (!response.ok) {
 			return;
 		}
@@ -184,6 +188,11 @@
 									]
 								},
 								{
+									id : 'txtTitle',
+									type : 'text',
+									label : editor.lang.youtube.txtTitle
+								},
+								{
 									type : 'hbox',
 									widths : [ '55%', '45%' ],
 									children :
@@ -350,7 +359,8 @@
 								content += '<a href="' + url + '" ><img width="' + width + '" height="' + height + '" src="' + imgSrc + '" '  + responsiveStyle + '/></a>';
 							}
 							else {
-								var title = await fetchTitle(video);
+								var title = this.getValueOf('youtubePlugin', 'txtTitle');
+								title ||= await fetchTitle(video);
 								content += '<iframe ' + (paramAutoplay ? 'allow="' + paramAutoplay + ';" ' : '') + 'width="' + width + '" height="' + height + '" src="' + url + '" ' + responsiveStyle;
 								if (title) {
 									content += ' title="' + title + '"';

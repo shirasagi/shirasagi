@@ -21,5 +21,6 @@ CKEDITOR.plugins.setLang('youtube', 'en', {
 	invalidHeight : 'Inform a valid height',
 	invalidTime : 'Inform a valid start time',
 	txtResponsive : 'Make Responsive (ignore width and height, fit to width)',
-	txtNoEmbed : 'Video image and link only'
+	txtNoEmbed : 'Video image and link only',
+	txtTitle : 'Title'
 });
