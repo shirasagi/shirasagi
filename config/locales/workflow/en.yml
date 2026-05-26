@@ -126,6 +126,14 @@ en:
         body:
           - More than %{duration} have passed since the approval request was received.
           - Please check the article content and exectue "Approve" or "Revert".
+    ss_notification:
+      request:
+        subject: "An approval request for “%{name}” has arrived."
+        text: "%{path}"
+        mail_text: |
+          %{subject}
+
+          %{text}
     dialogue:
       edit_branch_html: |-
         A replacement page has been created. Go to <a href="%{show_path}">Replacement page</a> and edit it.
