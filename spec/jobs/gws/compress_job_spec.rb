@@ -9,7 +9,7 @@ describe Gws::CompressJob, dbscope: :example do
   describe '#perform' do
     context 'normal notify' do
       it do
-        zip = Gws::Compressor.new(user, items: files)
+        zip = Gws::Compressor.new(user, model: Gws::Share::File, items: files)
         zip.url = sns_download_job_files_url(host: 'localhost', user: zip.user, filename: zip.filename)
 
         job = Gws::CompressJob.bind(site_id: site.id, user_id: user.id)

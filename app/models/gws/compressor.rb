@@ -1,19 +1,65 @@
 class Gws::Compressor
   attr_accessor :user, :model, :items, :filename, :name, :root, :path, :url
 
-  def initialize(user, attr = {})
+  DEFAULT_MIN_FILESIZE = 100 * 1_024 * 1_024
+  DEFAULT_MIN_COUNT = 100
+
+  def initialize(user, model:, items:, **kwargs)
+    model = model.to_s.constantize unless model.is_a?(Class)
+    items = model.in(id: items) if items.is_a?(Array)
+
     self.user     = user
-    self.model    = attr[:model] || Gws::Share::File
-    self.model    = model.to_s.constantize if !model.is_a?(Class)
-    self.items    = attr[:items]
-    self.items    = model.in(id: items) if items.is_a?(Array)
-    self.filename = attr[:filename] || "share_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip"
-    self.name     = attr[:name]
+    self.model    = model
+    self.items    = items
+    self.filename = kwargs[:filename] || "share_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip"
+    self.name     = kwargs[:name]
 
     file = SS::DownloadJobFile.new(user, filename)
     self.root = file.class.root
     self.path = file.path
-    self.url  = attr[:url] || file.url(name: name)
+    self.url  = kwargs[:url] || file.url(name: name)
+  end
+
+  class << self
+    def default_min_filesize
+      deley_download = SS.config.env.deley_download
+      return DEFAULT_MIN_FILESIZE if deley_download.blank?
+      return DEFAULT_MIN_FILESIZE unless deley_download.key?('min_filesize')
+
+      ret = deley_download['min_filesize'].to_i
+      ret >= 0 ? ret : DEFAULT_MIN_FILESIZE
+    end
+
+    def default_min_count
+      deley_download = SS.config.env.deley_download
+      return DEFAULT_MIN_COUNT if deley_download.blank?
+      return DEFAULT_MIN_COUNT unless deley_download.key?('min_count')
+
+      ret = deley_download['min_count'].to_i
+      ret >= 0 ? ret : DEFAULT_MIN_COUNT
+    end
+
+    def min_filesize
+      return @min_filesize if instance_variable_defined?(:@min_filesize)
+      @min_filesize = default_min_filesize
+    end
+
+    def min_count
+      return @min_count if instance_variable_defined?(:@min_count)
+      @min_count = default_min_count
+    end
+
+    if Rails.env.test?
+      def min_filesize=(value)
+        raise ArgumentError if !value.numeric? || value < 0
+        @min_filesize = value
+      end
+
+      def min_count=(value)
+        raise ArgumentError if !value.numeric? || value < 0
+        @min_count = value
+      end
+    end
   end
 
   def serialize
@@ -26,8 +72,8 @@ class Gws::Compressor
 
   def deley_download?
     sizes = items.map(&:size)
-    return true if sizes.sum >= SS.config.env.deley_download['min_filesize'].to_i
-    return true if sizes.size >= SS.config.env.deley_download['min_count'].to_i
+    return true if sizes.sum >= self.class.min_filesize
+    return true if sizes.size >= self.class.min_count
 
     false
   end

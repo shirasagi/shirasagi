@@ -14,10 +14,9 @@ class Gws::Tabular::File::ZipExportJob < Gws::ApplicationJob
 
     filename = "gws_tabular_files.zip"
     @zip = Gws::Compressor.new(
-      user, {
-        model: @model, items: @model.none, filename: filename,
-        name: "#{@cur_form.i18n_name}_#{Time.zone.now.to_i}.zip"
-      }
+      user,
+      model: @model, items: @model.none, filename: filename,
+      name: "#{@cur_form.i18n_name}_#{Time.zone.now.to_i}.zip"
     )
     @zip.url = download_file_url(filename)
 

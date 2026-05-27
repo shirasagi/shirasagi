@@ -5,7 +5,7 @@ describe Gws::Compressor, type: :model, dbscope: :example do
   let(:files) { SS::File.in(id: [ file1.id, file2.id ]).order_by(id: 1) }
   let(:filename) { "#{unique_id}.zip" }
   let(:compressor) do
-    compressor = Gws::Compressor.new(user, items: files, filename: filename)
+    compressor = Gws::Compressor.new(user, model: SS::File.name, items: files, filename: filename)
     compressor.url = "http://#{unique_id}.example.jp/"
     compressor
   end
