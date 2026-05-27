@@ -36,7 +36,7 @@ class Gws::Compressor
       return DEFAULT_MIN_COUNT unless deley_download.key?('min_count')
 
       ret = deley_download['min_count'].to_i
-      ret >= 0 ? ret : DEFAULT_MIN_FILESIZE
+      ret >= 0 ? ret : DEFAULT_MIN_COUNT
     end
 
     def min_filesize
