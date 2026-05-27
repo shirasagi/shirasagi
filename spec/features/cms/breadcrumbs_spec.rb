@@ -27,6 +27,7 @@ describe "cms breadcrumbs", type: :feature, dbscope: :example do
 
       within "#crumbs" do
         expect(page).to have_content(parent_label)
+        expect(page).to have_no_link(parent_label)
         expect(page).to have_content(leaf_label)
       end
     end
@@ -89,28 +90,33 @@ describe "cms breadcrumbs", type: :feature, dbscope: :example do
   context "リンクチェック" do
     context "レポート" do
       let(:visit_path) { cms_check_links_reports_path(site) }
-      include_examples "linked parent and leaf", I18n.t("modules.cms/check_links"), :cms_check_links_path, I18n.t("cms/check_links.reports")
+      include_examples "linked parent and leaf",
+        I18n.t("modules.cms/check_links"), :cms_check_links_path, I18n.t("cms/check_links.reports")
     end
 
     context "除外URL" do
       let(:visit_path) { cms_check_links_ignore_urls_path(site) }
-      include_examples "linked parent and leaf", I18n.t("modules.cms/check_links"), :cms_check_links_path, I18n.t("cms/check_links.ignore_urls")
+      include_examples "linked parent and leaf",
+        I18n.t("modules.cms/check_links"), :cms_check_links_path, I18n.t("cms/check_links.ignore_urls")
     end
 
     context "実行" do
       let(:visit_path) { cms_check_links_run_path(site) }
-      include_examples "linked parent and leaf", I18n.t("modules.cms/check_links"), :cms_check_links_path, I18n.t("cms/check_links.run")
+      include_examples "linked parent and leaf",
+        I18n.t("modules.cms/check_links"), :cms_check_links_path, I18n.t("cms/check_links.run")
     end
 
     context "設定" do
       let(:visit_path) { cms_check_links_site_setting_path(site) }
-      include_examples "linked parent and leaf", I18n.t("modules.cms/check_links"), :cms_check_links_path, I18n.t("cms/check_links.site_setting")
+      include_examples "linked parent and leaf",
+        I18n.t("modules.cms/check_links"), :cms_check_links_path, I18n.t("cms/check_links.site_setting")
     end
   end
 
   context "全コンテンツ 無作為抽出" do
     let(:visit_path) { cms_all_contents_sampling_path(site) }
-    include_examples "linked parent and leaf", I18n.t("cms.all_contents"), :cms_all_contents_path, I18n.t("cms.all_content.sampling_tab")
+    include_examples "linked parent and leaf",
+      I18n.t("cms.all_contents"), :cms_all_contents_path, I18n.t("cms.all_content.sampling_tab")
   end
 
   context "ゴミ箱" do
