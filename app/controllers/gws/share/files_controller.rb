@@ -310,7 +310,7 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   def download_all
-    zip = Gws::Compressor.new(@cur_user, items: @items)
+    zip = Gws::Compressor.new(@cur_user, model: Gws::Share::File, items: @items)
     zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename)
 
     if zip.deley_download?

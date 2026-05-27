@@ -4,19 +4,20 @@ class Gws::Compressor
   DEFAULT_MIN_FILESIZE = 100 * 1_024 * 1_024
   DEFAULT_MIN_COUNT = 100
 
-  def initialize(user, attr = {})
+  def initialize(user, model:, items:, **kwargs)
+    model = model.to_s.constantize unless model.is_a?(Class)
+    items = model.in(id: items) if items.is_a?(Array)
+
     self.user     = user
-    self.model    = attr[:model] || Gws::Share::File
-    self.model    = model.to_s.constantize if !model.is_a?(Class)
-    self.items    = attr[:items]
-    self.items    = model.in(id: items) if items.is_a?(Array)
-    self.filename = attr[:filename] || "share_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip"
-    self.name     = attr[:name]
+    self.model    = model
+    self.items    = items
+    self.filename = kwargs[:filename] || "share_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip"
+    self.name     = kwargs[:name]
 
     file = SS::DownloadJobFile.new(user, filename)
     self.root = file.class.root
     self.path = file.path
-    self.url  = attr[:url] || file.url(name: name)
+    self.url  = kwargs[:url] || file.url(name: name)
   end
 
   class << self
