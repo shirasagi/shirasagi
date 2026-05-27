@@ -178,7 +178,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       end
     end
 
-    context "all files download" do
+    context "all files download by generating a zip on the fly" do
       it do
         visit gws_workflow2_files_path(site: site, state: "all")
         wait_for_event_fired("ss:checked-all-list-items") { find(".gws-workflow .list-head input[type=checkbox]").click }
@@ -190,6 +190,66 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         wait_for_download
 
         entry_names = ::Zip::File.open(downloads.first) do |entries|
+          entries.map { |entry| entry.name }
+        end
+        expect(entry_names).to have(2).items
+        expect(entry_names).to include(file1.download_filename, file2.download_filename)
+      end
+    end
+
+    context "all files download by generating a zip by job" do
+      before do
+        @save_min_filesize = Gws::Compressor.min_filesize
+        @save_min_count = Gws::Compressor.min_count
+
+        Gws::Compressor.min_filesize = 0
+        Gws::Compressor.min_count = 0
+      end
+
+      after do
+        Gws::Compressor.min_filesize = @save_min_filesize
+        Gws::Compressor.min_count = @save_min_count
+      end
+
+      around do |example|
+        perform_enqueued_jobs do
+          example.run
+        end
+      end
+
+      it do
+        visit gws_workflow2_files_path(site: site, state: "all")
+        wait_for_event_fired("ss:checked-all-list-items") { find(".gws-workflow .list-head input[type=checkbox]").click }
+
+        accept_confirm(I18n.t("ss.confirm.download")) do
+          click_on I18n.t("gws/survey.buttons.zip_all_files")
+        end
+        wait_for_notice I18n.t('gws.notice.delay_download_with_message').split(/\R/).first
+
+        expect(Job::Log.all.count).to eq 1
+        Job::Log.all.each do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        zip_file_path = nil
+        expect(SS::Notification.all.count).to eq 1
+        SS::Notification.all.first.tap do |notification|
+          expect(notification.member_ids).to include(gws_user.id)
+          expect(notification.subject).to eq I18n.t("gws/share.mailers.compressed.subject", locale: :ja)
+          expect(notification.format).to eq 'text'
+          expect(notification.text).to include("ダウンロードの準備が完了しました。")
+
+          match_data = notification.text.match(/^https?:\/\/\w+.+$/mi)
+          if match_data
+            zip_file_path = match_data.to_s
+            zip_file_path = Addressable::URI.parse(zip_file_path).path
+            zip_file_path = File.basename(zip_file_path)
+          end
+        end
+
+        zip_file = SS::DownloadJobFile.find(gws_user, zip_file_path)
+        entry_names = ::Zip::File.open(zip_file.path) do |entries|
           entries.map { |entry| entry.name }
         end
         expect(entry_names).to have(2).items
