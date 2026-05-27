@@ -161,7 +161,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
     end
 
     context "too match files to download" do
-      let(:file_count) { SS.config.env.deley_download['min_count'].to_i }
+      let(:file_count) { Gws::Compressor.min_count }
 
       before do
         file_ids = []
