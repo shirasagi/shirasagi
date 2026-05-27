@@ -107,6 +107,9 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
       textarea_value = find('#item_loop_liquid', visible: false).value
       expect(textarea_value).to include("existing-liquid-content")
       expect(textarea_value).to include(snippet_html_high)
+      # スニペットはカーソル位置 (fill_in_code_mirror 後は先頭) にそのまま挿入され、
+      # 前後に余分な改行が付かないこと (回帰防止)
+      expect(textarea_value).to eq(snippet_html_high + "existing-liquid-content")
     end
   end
 
