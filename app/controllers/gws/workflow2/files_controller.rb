@@ -382,7 +382,7 @@ class Gws::Workflow2::FilesController < ApplicationController
     end
 
     filename = "workflow_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip"
-    zip = Gws::Compressor.new(@cur_user, items: files, filename: filename)
+    zip = Gws::Compressor.new(@cur_user, model: SS::File, items: files, filename: filename)
     zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename)
 
     if zip.deley_download?
