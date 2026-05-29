@@ -11,6 +11,7 @@ class History::Cms::LogsController < ApplicationController
   private
 
   def set_crumbs
+    @crumbs << [t("history.log"), history_cms_logs_path]
     @crumbs << [t("history.log"), action: :index]
   end
 

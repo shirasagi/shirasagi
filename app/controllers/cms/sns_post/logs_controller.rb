@@ -10,5 +10,6 @@ class Cms::SnsPost::LogsController < ApplicationController
 
   def set_crumbs
     @crumbs << [t("cms.sns_post"), cms_sns_post_logs_path]
+    @crumbs << [t("cms.sns_post_log"), action: :index]
   end
 end

@@ -7,6 +7,11 @@ class Cms::Translate::LangsController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [t("translate.main"), cms_translate_main_path]
+    @crumbs << [t("translate.lang"), action: :index]
+  end
+
   def fix_params
     { cur_site: @cur_site }
   end

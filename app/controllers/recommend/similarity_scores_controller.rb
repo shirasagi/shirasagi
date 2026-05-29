@@ -6,6 +6,15 @@ class Recommend::SimilarityScoresController < ApplicationController
 
   navi_view "recommend/main/navi"
 
+  private
+
+  def set_crumbs
+    @crumbs << [t("recommend.main"), recommend_history_logs_tokens_path]
+    @crumbs << [t("recommend.scores"), action: :index]
+  end
+
+  public
+
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 
