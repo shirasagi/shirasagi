@@ -161,4 +161,15 @@ describe "cms breadcrumbs", type: :feature, dbscope: :example do
       include_examples "non-linked parent and leaf", I18n.t("cms.etc"), I18n.t("cms.csv_import_node")
     end
   end
+
+  #
+  # トップ > 操作履歴 > アーカイブ。アーカイブ一覧ページのパンくずに
+  # 親階層「操作履歴」と leaf「アーカイブ」が表示されることを保証する。
+  #
+  context "操作履歴アーカイブ" do
+    let(:visit_path) { history_cms_history_archives_path(site) }
+    include_examples "linked parent and leaf",
+                     I18n.t("mongoid.models.gws/history"), :history_cms_logs_path,
+                     I18n.t("mongoid.models.gws/history_archive_file")
+  end
 end
