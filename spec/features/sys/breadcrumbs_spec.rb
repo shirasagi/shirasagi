@@ -37,7 +37,8 @@ describe "sys breadcrumbs", type: :feature, dbscope: :example do
 
     context "OAuthアプリ" do
       let(:visit_path) { sys_auth_oauth2_applications_path }
-      include_examples "has parent and leaf crumbs", I18n.t("sys.auth"), :sys_auth_path, SS::OAuth2::Application::Base.model_name.human
+      include_examples "has parent and leaf crumbs",
+                       I18n.t("sys.auth"), :sys_auth_path, SS::OAuth2::Application::Base.model_name.human
     end
 
     context "設定" do
@@ -87,7 +88,8 @@ describe "sys breadcrumbs", type: :feature, dbscope: :example do
 
     context "miChecker結果" do
       let(:visit_path) { job_sys_michecker_results_path }
-      include_examples "has parent and leaf crumbs", I18n.t("job.main"), :job_sys_main_path, Cms::Michecker::Result.model_name.human
+      include_examples "has parent and leaf crumbs",
+                       I18n.t("job.main"), :job_sys_main_path, Cms::Michecker::Result.model_name.human
     end
 
     context "状態" do
