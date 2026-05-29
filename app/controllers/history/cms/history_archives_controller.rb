@@ -9,8 +9,7 @@ class History::Cms::HistoryArchivesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/history"), history_cms_logs_path]
-    @crumbs << [t("mongoid.models.gws/history_archive_file"), action: :index]
+    @crumbs << [t("mongoid.models.gws/history"), action: :index]
   end
 
   public
