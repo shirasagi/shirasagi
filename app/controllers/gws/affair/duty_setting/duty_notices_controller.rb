@@ -17,6 +17,7 @@ class Gws::Affair::DutySetting::DutyNoticesController < ApplicationController
 
   def set_crumbs
     @crumbs << [ @cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path ]
+    @crumbs << [ t("modules.gws/affair/duty_calendar"), gws_affair_duty_setting_duty_calendars_path ]
     @crumbs << [ t("modules.gws/affair/duty_notice"), gws_affair_duty_setting_duty_notices_path ]
   end
 end

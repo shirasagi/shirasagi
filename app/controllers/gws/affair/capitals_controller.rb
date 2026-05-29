@@ -14,6 +14,7 @@ class Gws::Affair::CapitalsController < ApplicationController
   def set_crumbs
     set_year
     @crumbs << [@cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path]
+    @crumbs << [t('modules.gws/affair/leave'), gws_affair_leave_main_path]
     @crumbs << [@cur_year.name, gws_affair_capital_years_path]
     @crumbs << [t('modules.gws/affair/capital'), gws_affair_capitals_path]
   end

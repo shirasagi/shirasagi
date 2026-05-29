@@ -16,7 +16,14 @@ class Gws::Workflow2::FilesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [@cur_site.menu_workflow2_label || t("modules.gws/workflow2"), action: :index]
+    @crumbs << [@cur_site.menu_workflow2_label || t("modules.gws/workflow2"), gws_workflow2_files_main_path]
+    if params[:state] == "destination"
+      @crumbs << [t("gws/workflow2.navi.destination"), action: :index, state: "destination"]
+    else
+      @crumbs << [t("gws/workflow2.navi.readable"), action: :index, state: "all"]
+      sub_state = %w(approve request circulation).find { |s| params[:state] == s }
+      @crumbs << [t("gws/workflow2.navi.#{sub_state}"), action: :index, state: sub_state] if sub_state
+    end
   end
 
   def set_forms

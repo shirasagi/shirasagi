@@ -13,6 +13,7 @@ class Gws::StaffRecord::UserOccupationsController < ApplicationController
 
   def set_crumbs
     set_year
+    @crumbs << [t("gws/staff_record.staff_records"), gws_staff_record_years_path]
     @crumbs << [
       "#{@cur_year.name} " + t("mongoid.models.gws/staff_record/user_occupation"),
       gws_staff_record_user_occupations_path

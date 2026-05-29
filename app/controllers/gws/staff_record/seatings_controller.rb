@@ -13,6 +13,7 @@ class Gws::StaffRecord::SeatingsController < ApplicationController
 
   def set_crumbs
     set_year
+    @crumbs << [t("gws/staff_record.staff_records"), gws_staff_record_years_path]
     @crumbs << ["#{@cur_year.name} " + t("mongoid.models.gws/staff_record/seating"), gws_staff_record_seatings_path]
   end
 
