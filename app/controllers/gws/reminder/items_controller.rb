@@ -16,6 +16,7 @@ class Gws::Reminder::ItemsController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_reminder_label || t("mongoid.models.gws/reminder"), action: :index]
+    @crumbs << [t("gws/portal.options.reminder_filter.#{@mode}"), action: :index, mode: @mode]
   end
 
   public
