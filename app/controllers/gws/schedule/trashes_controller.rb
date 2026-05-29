@@ -13,6 +13,11 @@ class Gws::Schedule::TrashesController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [@cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path]
+    @crumbs << [t('gws/schedule.navi.trash'), action: :index]
+  end
+
   def set_items
     @items ||= begin
       Gws::Schedule::Plan.site(@cur_site).only_deleted.
