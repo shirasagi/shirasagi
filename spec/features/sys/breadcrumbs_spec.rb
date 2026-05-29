@@ -99,17 +99,13 @@ describe "sys breadcrumbs", type: :feature, dbscope: :example do
   end
 
   #
-  # システム設定 > 操作履歴 > アーカイブ。現状は leaf が「操作履歴」になっていたが、
-  # 本ページは履歴のアーカイブ一覧であるため leaf を「アーカイブ」へ修正する。
+  # システム設定 > 操作履歴 > アーカイブ。アーカイブ一覧ページのパンくずに
+  # 親階層「操作履歴」と leaf「アーカイブ」が表示されることを保証する。
   #
   context "操作履歴アーカイブ" do
-    it "shows 'アーカイブ' as the leaf crumb" do
-      visit sys_history_archives_path
-
-      within "#crumbs" do
-        archive_label = I18n.t("mongoid.models.gws/history_archive_file")
-        expect(page).to have_content(archive_label)
-      end
-    end
+    let(:visit_path) { sys_history_archives_path }
+    include_examples "has parent and leaf crumbs",
+                     I18n.t("mongoid.models.gws/history"), :history_sys_logs_path,
+                     I18n.t("mongoid.models.gws/history_archive_file")
   end
 end
