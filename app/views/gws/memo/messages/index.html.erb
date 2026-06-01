@@ -3,12 +3,12 @@
   <ul class="list-items ss-messages gws-memos">
     <li class="list-item-head">
       <div class="head">
+        <span class="field title"><%= @model.t :subject %><%== @cur_user.memo_message_sort_icon(@sort_hash, "subject") %></span>
         <% if @cur_folder.sent_box? || @cur_folder.draft_box? %>
           <span class="field to"><%= @model.t :to %><%== @cur_user.memo_message_sort_icon(@sort_hash, "to_member_name") %></span>
         <% else %>
           <span class="field from"><%= @model.t :from %><%== @cur_user.memo_message_sort_icon(@sort_hash, "from_member_name") %></span>
         <% end %>
-        <span class="field title"><%= @model.t :subject %><%== @cur_user.memo_message_sort_icon(@sort_hash, "subject") %></span>
         <span class="field priority"><%= @model.t :priority %><%== @cur_user.memo_message_sort_icon(@sort_hash, "priority") %></span>
         <span class="field datetime"><%= @model.t :display_send_date %><%== @cur_user.memo_message_sort_icon(@sort_hash, "send_date") %></span>
         <span class="field size"><%= @model.t :size %><%== @cur_user.memo_message_sort_icon(@sort_hash, "size") %></span>
@@ -37,6 +37,7 @@
         </div>
 
         <div class="info">
+          <%= link_to item.display_subject, { action: :show, id: item.id }, class: 'field title', title: item.display_subject %>
           <% if @cur_folder.sent_box? || @cur_folder.draft_box? %>
             <% addr = item.to_members? ? gws_public_user_long_name(item.display_to.first) : nil %>
             <% if item.display_to.first.present? %>
@@ -55,7 +56,6 @@
               <span class="field from" title="<%= t('gws/memo.no_senders') %>"></span>
             <% end %>
           <% end %>
-          <%= link_to item.display_subject, { action: :show, id: item.id }, class: 'field title', title: item.display_subject %>
           <span class="field priority"><%= item.label :priority %></span>
           <span class="field datetime"><%= item.display_send_date %></span>
           <span class="field size"><%= item.display_size %></span>

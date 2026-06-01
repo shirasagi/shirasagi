@@ -173,12 +173,12 @@
         display: inline-block;
         cursor: pointer;
       }
-      .from,
-      .to {
+      .title {
         width: calc(50% - 100px);
         text-indent: 79.84px;
       }
-      .title {
+      .from,
+      .to {
         width: calc(50% - 130px);
       }
       .priority {
@@ -213,19 +213,19 @@
         display: inline-block;
       }
     }
-    .from,
-    .to {
+    .title {
       width: calc(50% - 132.84px);
       padding-right: 5px;
+      font-size: 100%;
       @include init.mb {
         width: 100%;
         padding-right: 0;
       }
     }
-    .title {
+    .from,
+    .to {
       width: calc(50% - 75px);
       padding-right: 5px;
-      font-size: 100%;
       @include init.mb {
         width: 100%;
         padding-right: 0;
