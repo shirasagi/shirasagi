@@ -11,6 +11,11 @@ class Sys::Auth::OAuth2ApplicationsController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [t("sys.auth"), sys_auth_path]
+    @crumbs << [SS::OAuth2::Application::Base.model_name.human, action: :index]
+  end
+
   def preload_constants
     SS::OAuth2::Application::Confidential
     SS::OAuth2::Application::Service
