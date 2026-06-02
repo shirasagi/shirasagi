@@ -108,4 +108,86 @@ describe Cms::Column::Value::Headline, type: :model, dbscope: :example do
       end
     end
   end
+
+  describe '#resolved_anchor and to_default_html (anchor feature)' do
+    let!(:node) { create :article_node_page }
+    let!(:form) { create(:cms_form, cur_site: cms_site, state: 'public', sub_type: 'static') }
+
+    context 'when anchor feature is disabled (default)' do
+      let!(:column) do
+        create(:cms_column_headline, cur_form: form, order: 1,
+               min_headline_level: 'h2', max_headline_level: 'h4')
+      end
+      let!(:page) do
+        create(:article_page, cur_node: node, form: form,
+               column_values: [ column.value_type.new(column: column, head: 'h2', text: 'Section') ])
+      end
+
+      it 'does not emit an id attribute' do
+        value = page.column_values.first
+        expect(value.to_html).not_to include('id=')
+      end
+    end
+
+    context 'when anchor feature is enabled' do
+      let!(:column) do
+        create(:cms_column_headline, cur_form: form, order: 1,
+               min_headline_level: 'h2', max_headline_level: 'h4',
+               enable_anchor: 'enabled')
+      end
+
+      context 'with an explicit anchor' do
+        let!(:page) do
+          create(:article_page, cur_node: node, form: form,
+                 column_values: [ column.value_type.new(column: column, head: 'h2', text: 'Section', anchor: 'intro') ])
+        end
+
+        it 'uses the given anchor as the resolved id' do
+          value = page.column_values.first
+          expect(value.resolved_anchor).to eq 'intro'
+          expect(value.to_html).to include('id="intro"')
+        end
+      end
+
+      context 'without an explicit anchor' do
+        let!(:page) do
+          create(:article_page, cur_node: node, form: form,
+                 column_values: [
+                   column.value_type.new(column: column, head: 'h2', text: 'First', order: 1),
+                   column.value_type.new(column: column, head: 'h3', text: 'Second', order: 2)
+                 ])
+        end
+
+        it 'falls back to deterministic headline-N ids' do
+          values = page.column_values.sort_by(&:order)
+          expect(values[0].resolved_anchor).to eq 'headline-1'
+          expect(values[1].resolved_anchor).to eq 'headline-2'
+        end
+      end
+
+      context 'with an anchor containing invalid characters' do
+        it 'is invalid' do
+          value = column.value_type.new(column: column, head: 'h2', text: 'Section', anchor: '見出し')
+          expect(value).not_to be_valid
+          expect(value.errors[:anchor]).not_to be_empty
+        end
+      end
+
+      context 'with a duplicate anchor within the page' do
+        let!(:page) do
+          create(:article_page, cur_node: node, form: form,
+                 column_values: [
+                   column.value_type.new(column: column, head: 'h2', text: 'First', anchor: 'dup', order: 1)
+                 ])
+        end
+
+        it 'rejects a second value reusing the same anchor' do
+          page.column_values << column.value_type.new(column: column, head: 'h3', text: 'Second', anchor: 'dup', order: 2)
+          dup_value = page.column_values.last
+          expect(dup_value).not_to be_valid
+          expect(dup_value.errors[:anchor]).not_to be_empty
+        end
+      end
+    end
+  end
 end

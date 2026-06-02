@@ -35,6 +35,7 @@ module Cms
     Cms::Column.plugin 'cms/multiple_images_upload'
     Cms::Column.plugin 'cms/multiple_attachments_upload'
     Cms::Column.plugin 'cms/headline'
+    Cms::Column.plugin 'cms/toc'
     Cms::Column.plugin 'cms/list'
     Cms::Column.plugin 'cms/youtube'
     Cms::Column.plugin 'cms/free'
