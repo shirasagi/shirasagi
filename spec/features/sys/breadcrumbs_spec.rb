@@ -13,13 +13,16 @@ describe "sys breadcrumbs", type: :feature, dbscope: :example do
   before { login_sys_user }
 
   shared_examples "has parent and leaf crumbs" do |parent_path_name|
+    # leaf を最後・親をその直前のクラムとして位置で検証する。操作履歴のように
+    # 親と leaf のラベル (とリンク先) が一致するケースでも find_link の
+    # Capybara::Ambiguous を避け、かつ親クラムが挿入されていることを厳密に確認できる。
     it "shows the parent and leaf crumbs under システム設定" do
       visit visit_path
 
       within "#crumbs" do
-        parent_crumb = find_link(instance_exec(&parent_label))
-        expect(parent_crumb[:href]).to end_with(send(parent_path_name))
-        expect(page).to have_content(instance_exec(&leaf_label))
+        items = all("li.breadcrumb-item")
+        expect(items.last).to have_text(instance_exec(&leaf_label))
+        expect(items[-2]).to have_link(instance_exec(&parent_label), href: send(parent_path_name))
       end
     end
   end
