@@ -99,6 +99,17 @@ describe "sys breadcrumbs", type: :feature, dbscope: :example do
   end
 
   #
+  # システム設定 > 操作履歴 > 操作履歴。操作履歴一覧ページのパンくずに
+  # 親階層「操作履歴」と leaf「操作履歴」が表示されることを保証する。
+  #
+  context "操作履歴" do
+    let(:visit_path) { history_sys_logs_path }
+    include_examples "has parent and leaf crumbs",
+                     I18n.t("mongoid.models.gws/history"), :history_sys_logs_path,
+                     I18n.t("history.log")
+  end
+
+  #
   # システム設定 > 操作履歴 > アーカイブ。アーカイブ一覧ページのパンくずに
   # 親階層「操作履歴」と leaf「アーカイブ」が表示されることを保証する。
   #
