@@ -69,6 +69,7 @@
 //= require chat/lib/chart
 //= require cms/lib/base
 //= require cms/lib/editor
+//= require cms/lib/loop_snippet
 //= require cms/lib/form
 //= require cms/lib/source_cleaner
 //= require cms/lib/template_form
