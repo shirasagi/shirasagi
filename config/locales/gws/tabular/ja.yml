@@ -239,6 +239,9 @@ ja:
         _id: ID
         id: ID
         migration_errors: マイグレーションエラー
+      gws/tabular/file/download_param:
+        format: ファイル形式
+        encoding: 文字コード
       gws/tabular/form:
         name: タイトル
         i18n_name: タイトル

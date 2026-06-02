@@ -239,6 +239,9 @@ en:
         _id: ID
         id: ID
         migration_errors: Migration Errors
+      gws/tabular/file/download_param:
+        format: File Format
+        encoding: Character Encoding
       gws/tabular/form:
         name: Title
         i18n_name: Title
