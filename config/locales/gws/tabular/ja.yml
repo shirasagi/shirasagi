@@ -149,6 +149,8 @@ ja:
       remand: "[%{form}]「%{name}」の承認申請が差し戻されました。"
       circular: "[%{form}]「%{name}」が届きました。"
       comment: "[%{form}]「%{name}」にコメントがありました。"
+      import_succeeded: "[%{form}] インポートが完了しました。"
+      import_failed: "[%{form}] インポートに失敗しました。"
 
   modules:
     gws/tabular: 汎用DB

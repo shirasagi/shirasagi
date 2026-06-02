@@ -17,7 +17,7 @@ module Gws::Tabular::File::ImportNotification
     fake_item.space = @cur_space
     fake_item.form_id = @cur_release.form_id
 
-    subject = Gws::Tabular::File::NotificationSubjectService.new(site, fake_item, type)
+    subject = Gws::Tabular::File::NotificationSubjectService.new(site, fake_item, type).call
     url_helpers = Rails.application.routes.url_helpers
     path = url_helpers.gws_job_user_log_path(site: site, id: cur_jog_log)
     Gws::Memo::Notifier.deliver_workflow!(
