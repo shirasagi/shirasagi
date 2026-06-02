@@ -155,12 +155,6 @@ class Cms::Column::Value::MultipleFilesUpload < Cms::Column::Value::Base
     if column.required? && file_ids.blank?
       self.errors.add(:file_ids, :blank) unless skip_required?
     end
-
-    if image_type?
-      files.reject(&:image?).each do |non_image|
-        self.errors.add(:file_ids, :only_image_file, filename: non_image.name)
-      end
-    end
   end
 
   def before_save_files

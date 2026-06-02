@@ -51,7 +51,7 @@ describe Cms::Column::Value::MultipleFilesUpload, type: :model, dbscope: :exampl
 
     include_examples "header persistence", "詳細については下記の画像をご覧ください。"
 
-    it "validates non-image files for image file_type" do
+    it "accepts non-image files for image file_type" do
       pdf = tmp_ss_file(
         Cms::File,
         contents: "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf",
@@ -63,10 +63,7 @@ describe Cms::Column::Value::MultipleFilesUpload, type: :model, dbscope: :exampl
           column.value_type.new(column: column, file_ids: [pdf.id.to_s])
         ]
       )
-      expect(article_page).not_to be_valid
-      expect(article_page.column_values.first.errors[:file_ids]).to include(
-        I18n.t("errors.messages.only_image_file", filename: pdf.name)
-      )
+      expect(article_page).to be_valid
     end
 
     it "renders images-header and column2 in to_default_html" do

@@ -131,7 +131,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
     end
     let!(:node) { create :article_node_page, cur_site: site }
 
-    it "rejects non-image files when file_type=image" do
+    it "accepts non-image files when file_type=image" do
       pdf = tmp_ss_file(
         Cms::File,
         contents: "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf",
@@ -143,10 +143,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
           image_column.value_type.new(column: image_column, file_ids: [pdf.id.to_s])
         ]
       )
-      expect(article_page).not_to be_valid
-      expect(article_page.column_values.first.errors[:file_ids]).to include(
-        I18n.t("errors.messages.only_image_file", filename: pdf.name)
-      )
+      expect(article_page).to be_valid
     end
 
     it "accepts non-image files when file_type=attachment" do
