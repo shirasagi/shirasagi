@@ -169,17 +169,18 @@
       display: flex;
       position: relative;
       height: 20px;
+      padding: 0 8px 0 79.84px;
       .field {
         display: inline-block;
         cursor: pointer;
       }
       .title {
-        width: calc(50% - 100px);
-        text-indent: 79.84px;
+        flex: 1 1 auto;
+        min-width: 0;
       }
       .from,
       .to {
-        width: calc(50% - 130px);
+        flex: 0 0 200px;
       }
       .priority {
         width: 50px;
@@ -214,7 +215,8 @@
       }
     }
     .title {
-      width: calc(50% - 132.84px);
+      flex: 1 1 auto;
+      min-width: 0;
       padding-right: 5px;
       font-size: 100%;
       @include init.mb {
@@ -224,7 +226,7 @@
     }
     .from,
     .to {
-      width: calc(50% - 75px);
+      flex: 0 0 200px;
       padding-right: 5px;
       @include init.mb {
         width: 100%;
