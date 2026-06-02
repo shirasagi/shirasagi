@@ -32,6 +32,7 @@ class Gws::Tabular::Column::EnumField < Gws::Column::Base
     field_name = store_as_in_file
     file_model.field field_name, type: SS::Extensions::Words
     file_model.permit_params field_name => []
+    file_model.keyword_fields << field_name
     file_model.before_validation do
       values = send(field_name)
       if values

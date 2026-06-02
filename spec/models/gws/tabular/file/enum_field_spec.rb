@@ -123,6 +123,26 @@ describe Gws::Tabular::File, type: :model, dbscope: :example do
       end
     end
 
+    context "keyword search" do
+      let(:input_type) { "radio" }
+      let(:column1_value) { select_options.sample }
+
+      let!(:item) do
+        item = file_model.new(cur_site: site, cur_space: space, cur_form: form)
+        item.send("col_#{column1.id}=", Array(column1_value))
+        item.save!
+        item
+      end
+
+      it "finds the item by its enum value" do
+        expect(file_model.search(keyword: column1_value).pluck(:id)).to include(item.id)
+      end
+
+      it "does not find the item by an unrelated keyword" do
+        expect(file_model.search(keyword: "not-#{unique_id}").pluck(:id)).not_to include(item.id)
+      end
+    end
+
     context "#to_liquid" do
       let(:item) do
         item = file_model.new(cur_site: site, cur_space: space, cur_form: form)
