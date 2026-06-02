@@ -5,14 +5,14 @@
 
 <% from_site_options = capture do %>
   <% if cms_sites.present? %>
-    <optgroup label=<%= t "cms.site" %>>
+    <optgroup label="<%= t "cms.site" %>">
       <% cms_sites.each do |cms_site| %>
         <option value="cms:<%= cms_site.id %>" data-description="<%= cms_site.sender_address %>"><%= cms_site.name %></option>
       <% end %>
     </optgroup>
   <% end %>
   <% if gws_sites.present? %>
-    <optgroup label=<%= t "gws.group" %>>
+    <optgroup label="<%= t "gws.group" %>">
       <% gws_sites.each do |gws_site| %>
         <option value="gws:<%= gws_site.id %>" data-description="<%= gws_site.sender_address %>"><%= gws_site.name %></option>
       <% end %>
