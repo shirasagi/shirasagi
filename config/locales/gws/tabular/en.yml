@@ -149,6 +149,8 @@ en:
       remand: "[%{form}] The approval request for “%{name}” has been referred back."
       circular: "[%{form}] “%{name}” has arrived."
       comment: "[%{form}] There is a comment in “%{name}”."
+      import_succeeded: "[%{form}] The import has been completed."
+      import_failed: "[%{form}] The import has failed."
 
   modules:
     gws/tabular: Tabular
@@ -239,6 +241,9 @@ en:
         _id: ID
         id: ID
         migration_errors: Migration Errors
+      gws/tabular/file/download_param:
+        format: File Format
+        encoding: Character Encoding
       gws/tabular/form:
         name: Title
         i18n_name: Title
