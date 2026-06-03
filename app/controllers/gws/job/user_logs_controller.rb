@@ -12,7 +12,7 @@ class Gws::Job::UserLogsController < ApplicationController
 
   def set_crumbs
     @crumbs << [t("modules.gws/job"), gws_job_user_main_path]
-    @crumbs << [t("mongoid.models.gws/job/log"), action: :index]
+    @crumbs << [t("gws/job.log"), action: :index]
   end
 
   def append_view_paths

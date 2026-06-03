@@ -316,7 +316,7 @@ describe "gws breadcrumbs", type: :feature, dbscope: :example do
     context "実行履歴" do
       let(:visit_path) { gws_job_user_logs_path(site: site) }
       include_examples "crumbs contain",
-                       -> { [I18n.t("modules.gws/job"), I18n.t("mongoid.models.gws/job/log")] }
+                       -> { [I18n.t("modules.gws/job"), I18n.t("gws/job.log")] }
     end
 
     context "実行予約" do

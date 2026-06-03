@@ -1,5 +1,6 @@
 en:
   gws/job:
+    log: Execution history
     reservation: Run reservations
 
   modules:
