@@ -1027,6 +1027,11 @@ _:future,
       background: url(/assets/img/ic-trash.png) no-repeat 35px center;
     }
 
+    &.search {
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%23888888'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E") no-repeat 33px center;
+      background-size: 16px 16px;
+    }
+
     &:hover {
       background: init.$gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 35px
         center;
@@ -1042,6 +1047,11 @@ _:future,
 
     &.trash:hover {
       background: init.$gray1 url(/assets/img/ic-trash.png) no-repeat 35px center;
+    }
+
+    &.search:hover {
+      background: init.$gray1 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%23f25a38'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E") no-repeat 33px center;
+      background-size: 16px 16px;
     }
   }
   h3 a {
@@ -1161,6 +1171,16 @@ _:future,
       &.management:hover {
         background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
       }
+
+      &.search {
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%23888888'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E") no-repeat 58px center;
+        background-size: 16px 16px;
+      }
+
+      &.search:hover {
+        background: init.$gray1 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%23f25a38'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E") no-repeat 58px center;
+        background-size: 16px 16px;
+      }
     }
   }
   .navi-link:hover {
@@ -1176,6 +1196,8 @@ _:future,
       a:hover.management,
       a.trash,
       a:hover.trash,
+      a.search,
+      a:hover.search,
       span {
         padding: 5px 15px 5px 35px;
         background-position: 15px center;

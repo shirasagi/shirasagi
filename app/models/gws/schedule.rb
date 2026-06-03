@@ -125,7 +125,7 @@ module Gws::Schedule
 
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_schedule_search_path(*args, site: cur_site, **kwargs) }
-    SS::MenuItem.new(label: I18n.t('gws/schedule.tabs.search'), path_proc: path_proc)
+    SS::MenuItem.new(label: I18n.t('gws/schedule.tabs.search'), path_proc: path_proc, css_classes: %w(search))
   end
 
   def menu_item_gws_schedule_csv(cur_site, cur_user)
