@@ -16,6 +16,7 @@ class Contact::ContactsController < ApplicationController
   private
 
   def set_crumbs
+    @crumbs << [ t("cms.group"), cms_groups_path ]
     @crumbs << [ t("modules.contact"), url_for(action: :index) ]
   end
 
