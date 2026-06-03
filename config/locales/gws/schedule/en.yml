@@ -422,6 +422,10 @@ en:
         - Enter an end date.
       repeat_base:
         - Select the repetition criteria.
+        -
+        - 'e.g.) April 1, 2024 (the first Monday)'
+        - 'Date: the 1st of every month'
+        - 'Day of the week: the first Monday of every month'
       wdays:
         - Select the day of the week.
     gws/addon/schedule/repeat:
