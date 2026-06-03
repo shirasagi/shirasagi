@@ -298,6 +298,22 @@ describe "gws breadcrumbs", type: :feature, dbscope: :example do
       include_examples "crumbs contain", -> { [I18n.t("gws/staff_record.staff_records")] }
     end
 
+    context "電子事務分掌表 (公開)" do
+      let(:visit_path) { gws_staff_record_public_duties_path(site: site) }
+      include_examples "crumbs contain",
+                       -> {
+                         [I18n.t("gws/staff_record.staff_records"), I18n.t("gws/staff_record.divide_duties")]
+                       }
+    end
+
+    context "座席表 (公開)" do
+      let(:visit_path) { gws_staff_record_public_seatings_path(site: site) }
+      include_examples "crumbs contain",
+                       -> {
+                         [I18n.t("gws/staff_record.staff_records"), I18n.t("mongoid.models.gws/staff_record/seating")]
+                       }
+    end
+
     context "年度" do
       let(:visit_path) { gws_staff_record_years_path(site: site) }
       include_examples "crumbs contain",
