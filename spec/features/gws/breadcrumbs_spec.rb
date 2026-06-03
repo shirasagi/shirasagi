@@ -155,18 +155,26 @@ describe "gws breadcrumbs", type: :feature, dbscope: :example do
     end
   end
 
-  context "業務見える化" do
+  context "照会・回答" do
     context "ゴミ箱" do
       let(:visit_path) { gws_monitor_management_trashes_path(site: site) }
       include_examples "crumbs contain",
                        -> { [I18n.t("modules.gws/monitor"), I18n.t("ss.navi.trash")] }
+    end
+  end
+
+  context "業務見える化" do
+    context "ゴミ箱" do
+      let(:visit_path) { gws_workload_trashes_path(site: site) }
+      include_examples "crumbs contain",
+                       -> { [I18n.t("modules.gws/workload"), I18n.t("gws/workload.tabs.trash")] }
 
       it "does not show a category crumb between 業務見える化 and ゴミ箱" do
         visit visit_path
 
         within "#crumbs" do
           # 「全業務」のようなカテゴリ名がパンくずに混ざらないこと
-          expect(page).to have_no_content("全業務")
+          expect(page).to have_no_content(I18n.t("gws/workload.tabs.admin"))
         end
       end
     end
