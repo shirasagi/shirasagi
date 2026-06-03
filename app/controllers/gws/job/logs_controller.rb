@@ -9,6 +9,11 @@ class Gws::Job::LogsController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [t("modules.gws/job"), gws_job_main_path]
+    @crumbs << [t("gws/job.log"), action: :index]
+  end
+
   def filter_permission
     raise "403" unless Gws::Job::Log.allowed?(:read, @cur_user, site: @cur_site)
   end

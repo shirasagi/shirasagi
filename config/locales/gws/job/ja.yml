@@ -1,5 +1,6 @@
 ja:
   gws/job:
+    log: 実行履歴
     reservation: 実行予約
 
   modules:

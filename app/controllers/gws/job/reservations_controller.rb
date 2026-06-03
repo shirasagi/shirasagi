@@ -8,6 +8,11 @@ class Gws::Job::ReservationsController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [t("modules.gws/job"), gws_job_main_path]
+    @crumbs << [t("gws/job.reservation"), action: :index]
+  end
+
   def set_deletable
     @deletable ||= Gws::Job::Log.allowed?(:read, @cur_user, site: @cur_site)
   end

@@ -15,11 +15,7 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
   end
 
   def set_crumbs
-    set_category
     @crumbs << [@cur_site.menu_monitor_label || t("modules.gws/monitor"), gws_monitor_topics_path]
-    if @category.present?
-      @crumbs << [@category.name, gws_monitor_topics_path]
-    end
     @crumbs << [t('ss.navi.trash'), action: :index]
   end
 

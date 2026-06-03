@@ -10,7 +10,7 @@ class Gws::PersonalAddress::Management::GroupsController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_personal_address_label || t("modules.gws/personal_address"), gws_personal_address_addresses_path]
-    @crumbs << [t("mongoid.models.gws/personal_address/group"), action: :index]
+    @crumbs << [t("gws/personal_address.navi.group"), action: :index]
   end
 
   def fix_params

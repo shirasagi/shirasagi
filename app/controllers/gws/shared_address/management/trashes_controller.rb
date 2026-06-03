@@ -12,7 +12,10 @@ class Gws::SharedAddress::Management::TrashesController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_shared_address_label || t("modules.gws/shared_address"), gws_shared_address_addresses_path]
-    @crumbs << [t("ss.links.trash"), gws_shared_address_management_trashes_path]
+    @crumbs << [
+      "#{t('ss.links.trash')}(#{t('gws/shared_address.navi.address')})",
+      gws_shared_address_management_trashes_path
+    ]
   end
 
   def fix_params
