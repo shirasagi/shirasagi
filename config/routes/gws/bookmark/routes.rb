@@ -15,7 +15,9 @@ Rails.application.routes.draw do
     end
 
     scope(path: ':folder_id', defaults: { folder_id: '-' }) do
-      resources :items, concerns: [:deletion]
+      resources :items, concerns: [:deletion] do
+        post :move_all, on: :collection
+      end
     end
     resources :folders, concerns: [:deletion] do
       match :move, on: :member, via: [:get, :post]

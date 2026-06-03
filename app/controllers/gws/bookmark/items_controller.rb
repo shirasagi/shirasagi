@@ -6,6 +6,7 @@ class Gws::Bookmark::ItemsController < ApplicationController
   model Gws::Bookmark::Item
 
   before_action :set_tree_navi, only: [:index]
+  before_action :set_selected_items, only: [:move_all]
 
   navi_view "gws/bookmark/main/navi"
 
@@ -42,5 +43,33 @@ class Gws::Bookmark::ItemsController < ApplicationController
     @items = @items.and_folder(@folder) if @folder
     @items = @items.search(params[:s]).
       page(params[:page]).per(50)
+  end
+
+  def move_all
+    raise "400" if @selected_items.blank?
+
+    set_folders
+    folder = @folders.find(params[:dst_folder_id])
+
+    entries = @selected_items.entries
+    failed = []
+    entries.each do |item|
+      if item.user_id == @cur_user.id && item.allowed?(:edit, @cur_user, site: @cur_site)
+        item.attributes = fix_params
+        item.folder = folder
+        next if item.save
+      else
+        item.errors.add :base, :auth_error
+      end
+      failed << item
+    end
+
+    location = { action: :index, folder_id: @folder.try(:id) || '-' }
+    if failed.blank?
+      notice = t("gws/bookmark.notice.moved")
+    else
+      notice = t("gws/bookmark.notice.unable_to_move", items: failed.map(&:name).join("、"))
+    end
+    redirect_to location, notice: notice
   end
 end

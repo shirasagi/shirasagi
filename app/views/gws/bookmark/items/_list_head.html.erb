@@ -1,0 +1,57 @@
+<% move_folders = @folders.to_a.sort_by { |f| [f.depth, f.order, f.name.to_s] } %>
+<%= jquery do %>
+  $(".bookmark-move-menu .dropdown-menu a").on("click", function() {
+    var ids = $(".list-items input[name='ids[]']:checked").map(function() {
+      return this.value;
+    }).get();
+    if (ids.length === 0) {
+      alert("<%= j t('gws/bookmark.confirm.move_select') %>");
+      return false;
+    }
+    if (!confirm("<%= j t('gws/bookmark.confirm.move') %>")) {
+      return false;
+    }
+
+    var folderId = $(this).attr("data-folder-id");
+    var token = $('meta[name="csrf-token"]').attr('content');
+    var form = $("<form/>", { action: "<%= move_all_gws_bookmark_items_path(folder_id: @folder.try(:id) || '-') %>", method: "post" });
+    form.append($("<input/>", { type: "hidden", name: "authenticity_token", value: token }));
+    form.append($("<input/>", { type: "hidden", name: "dst_folder_id", value: folderId }));
+    $.each(ids, function(i, id) {
+      form.append($("<input/>", { type: "hidden", name: "ids[]", value: id }));
+    });
+    form.appendTo(document.body)[0].requestSubmit();
+    return false;
+  });
+<% end %>
+
+<div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action">
+    <% if move_folders.present? %>
+      <div class="dropdown dropdown-toggle bookmark-move-menu">
+        <button class="btn btn-list-head-action" type="button">
+          <%= t('gws/bookmark.links.move') %> <i class="material-icons md-13">keyboard_arrow_down</i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu--white">
+          <% move_folders.each do |folder| %>
+            <li>
+              <a href="#" data-folder-id="<%= folder.id %>" title="<%= folder.name %>">
+                <%= ss_truncate(folder.name, length: 40) %>
+              </a>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <% if @deletable %>
+      <div class="list-head-action-destroy">
+        <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
+      </div>
+    <% end %>
+  </div>
+
+  <%= render template: "_search" %>
+</div>

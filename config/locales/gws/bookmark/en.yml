@@ -1,9 +1,16 @@
 en:
   gws/bookmark:
     all: All bookmarks
+    links:
+      move: Move
+    confirm:
+      move: Move the selected bookmarks?
+      move_select: Please select bookmarks to move.
     notice:
       save: Saved in Favorites
       edit: Edit the favorite
+      moved: The bookmarks have been moved
+      unable_to_move: "Unable to move the following bookmarks: %{items}"
     options:
       bookmark_model:
         external_link: External link
