@@ -54,6 +54,7 @@ class Sys::Diag::MailsController < ApplicationController
   private
 
   def set_crumbs
+    @crumbs << [t("sys.diag"), sys_diag_main_path]
     @crumbs << ["MAIL Test", action: :index]
   end
 

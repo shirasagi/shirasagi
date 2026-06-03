@@ -26,6 +26,7 @@ class Sys::Diag::AppLogsController < ApplicationController
   end
 
   def set_crumbs
+    @crumbs << [t("sys.diag"), sys_diag_main_path]
     @crumbs << [ relative_log_file_path, url_for(action: :show) ]
   end
 

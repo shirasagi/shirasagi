@@ -13,6 +13,7 @@ class Job::Sys::StatusesController < ApplicationController
   private
 
   def set_crumbs
+    @crumbs << [t("job.main"), job_sys_main_path]
     @crumbs << [t("job.status"), action: :show]
   end
 
