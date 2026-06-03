@@ -9,6 +9,11 @@ class Job::Cms::MicheckerResultsController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [t("job.main"), job_cms_main_path]
+    @crumbs << [Cms::Michecker::Result.model_name.human, action: :index]
+  end
+
   def filter_permission
     raise "404" if SS.config.michecker.blank? || SS.config.michecker['disable']
     raise "403" unless Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site)

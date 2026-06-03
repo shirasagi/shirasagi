@@ -9,13 +9,14 @@ class History::Cms::HistoryArchivesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/history"), action: :index]
+    @crumbs << [t("history.log"), history_cms_logs_path]
+    @crumbs << [t("mongoid.models.gws/history_archive_file"), action: :index]
   end
 
   public
 
   def index
-    raise "403" unless SS::User.allowed?(:read, @cur_user)
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 
     @items = @model.site(@cur_site).
       search(params[:s]).

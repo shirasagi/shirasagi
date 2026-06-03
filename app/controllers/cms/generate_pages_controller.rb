@@ -7,6 +7,11 @@ class Cms::GeneratePagesController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [t("cms.etc"), nil]
+    @crumbs << [t("cms.generate_page"), action: :index]
+  end
+
   def job_class
     Cms::Page::GenerateJob
   end

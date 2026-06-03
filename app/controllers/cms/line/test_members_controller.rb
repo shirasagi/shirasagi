@@ -9,6 +9,7 @@ class Cms::Line::TestMembersController < ApplicationController
   private
 
   def set_crumbs
+    @crumbs << [t("cms.line"), cms_line_messages_path]
     @crumbs << [t("cms.line_test_member"), cms_line_test_members_path]
   end
 
