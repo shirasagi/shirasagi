@@ -324,6 +324,20 @@ describe "gws breadcrumbs", type: :feature, dbscope: :example do
   end
 
   context "操作履歴" do
+    context "操作履歴" do
+      let(:visit_path) { gws_daily_histories_path(site: site, ymd: "-") }
+      include_examples "crumbs contain", -> { [I18n.t("mongoid.models.gws/history")] }
+
+      it "shows 操作履歴 as both the parent and the leaf crumb" do
+        visit visit_path
+
+        within "#crumbs" do
+          labels = all("li.breadcrumb-item").map { |li| li.text.strip }
+          expect(labels.count { |label| label == I18n.t("mongoid.models.gws/history") }).to eq 2
+        end
+      end
+    end
+
     context "アーカイブ" do
       let(:visit_path) { gws_history_archives_path(site: site) }
       include_examples "crumbs contain",
