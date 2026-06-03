@@ -10,7 +10,7 @@ class Cms::SourceCleaner::SiteSettingsController < ApplicationController
 
   def set_crumbs
     @crumbs << [t("cms.source_cleaner"), cms_source_cleaner_main_path]
-    @crumbs << [t("cms.site_setting"), action: :show]
+    @crumbs << [t("translate.site_setting"), action: :show]
   end
 
   public

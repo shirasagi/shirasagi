@@ -63,6 +63,10 @@ describe Contact::ContactsController, type: :feature, dbscope: :example, js: tru
   context "confirm page usage" do
     it do
       visit contact_contacts_path(site: site)
+      within "#crumbs" do
+        expect(page).to have_link(I18n.t("cms.group"), href: cms_groups_path(site: site))
+        expect(page).to have_text(I18n.t("modules.contact"))
+      end
       within "[data-id='#{main_contact.id}']" do
         expect(page).to have_css(".name", text: main_contact.name)
         expect(page).to have_css(".pages-used", text: "2")

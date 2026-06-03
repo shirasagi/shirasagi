@@ -17,6 +17,10 @@ describe "cms/line/settings", type: :feature, dbscope: :example, js: true do
 
     it "#show" do
       visit show_path
+      within "#crumbs" do
+        expect(page).to have_link(I18n.t("cms.line"), href: cms_line_messages_path(site))
+        expect(page).to have_text(I18n.t("cms.line_setting"))
+      end
       within "#addon-basic" do
         expect(page).to have_text(types_label(default_template_types))
       end
