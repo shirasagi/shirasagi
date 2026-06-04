@@ -107,6 +107,9 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
       textarea_value = find('#item_loop_liquid', visible: false).value
       expect(textarea_value).to include("existing-liquid-content")
       expect(textarea_value).to include(snippet_html_high)
+      # スニペットはカーソル位置 (fill_in_code_mirror 後は先頭) にそのまま挿入され、
+      # 前後に余分な改行が付かないこと (回帰防止)
+      expect(textarea_value).to eq(snippet_html_high + "existing-liquid-content")
     end
   end
 
@@ -213,6 +216,32 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
       # i18n 未定義プレースホルダは出ない (回帰防止)
       expect(page).to have_no_css('.translation_missing[title*="ss.notice.loading"]')
       expect(page).to have_no_content('translation missing: ja.ss.notice.loading')
+    end
+  end
+
+  #
+  # テンプレート選択時、textarea は readOnly になるが editor.replaceSelection で
+  # スニペットが挿入できてしまっていた (利用者には反映されないテンプレート内容に
+  # 上書きされ、混乱を招いた)。回帰防止のため、テンプレート選択中はスニペット
+  # セレクターが disabled になることを検証する。
+  #
+  it "disables the snippet selector while a liquid template is selected" do
+    visit edit_node_conf_path(site.id, node)
+    ensure_addon_opened('#addon-event-agents-addons-page_list')
+
+    within '#addon-event-agents-addons-page_list' do
+      select('Liquid', from: 'item[loop_format]') if page.has_select?('item[loop_format]')
+      wait_for_js_ready
+
+      expect(loop_snippet_select).not_to be_disabled
+
+      select_loop_setting('item_loop_setting_id_liquid', liquid_template_low.name)
+      Selenium::WebDriver::Wait.new(timeout: Capybara.default_max_wait_time).until { loop_snippet_select.disabled? }
+      expect(loop_snippet_select).to be_disabled
+
+      select_loop_setting('item_loop_setting_id_liquid', I18n.t('cms.input_directly'))
+      Selenium::WebDriver::Wait.new(timeout: Capybara.default_max_wait_time).until { !loop_snippet_select.disabled? }
+      expect(loop_snippet_select).not_to be_disabled
     end
   end
 

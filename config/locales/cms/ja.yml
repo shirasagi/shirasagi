@@ -2207,6 +2207,8 @@ ja:
         snippets:
           - 良く使うHTML片が一覧に表示されます。
           - HTML片を選択すると、現在のカーソル位置にHTML片が挿入されます。
+          - その他、liquidに使用するタグは下記よりご確認ください。
+          - <a href="https://shirasagi.github.io/features/liquid/index.html" target="_blank" rel="noopener">https://shirasagi.github.io/features/liquid/index.html</a>
         loop_html:
           - 事前に登録したテンプレートが一覧表示されます。
           - 一覧からテンプレートを選択するか、「直接入力する」を選択し任意のHTMLを設定してください。
