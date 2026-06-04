@@ -425,7 +425,7 @@ en:
         -
         - 'e.g.) April 1, 2024 (the first Monday)'
         - 'Date: the 1st of every month'
-        - 'Day of the week: the first Monday of every month'
+        - 'Day of week: the first Monday of every month'
       wdays:
         - Select the day of the week.
     gws/addon/schedule/repeat:
