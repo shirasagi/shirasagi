@@ -65,6 +65,27 @@
 
         <h2>Body</h2>
         <div><%= f.text_area :body %></div>
+
+        <h2>Settings</h2>
+        <div>
+          <div class="input-group gap-5 align-items-center">
+            <%= t("sys.server_name") %>: <%= Rails.application.hostname %>
+          </div>
+
+          <div class="input-group gap-5 align-items-center">
+            delivery_method: <%= ActionMailer::Base.delivery_method %>
+          </div>
+
+          <% settings = ActionMailer::Base.try("#{ActionMailer::Base.delivery_method}_settings") %>
+          <% if settings.present? %>
+            <% filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters) %>
+            <% settings.each do |key, value| %>
+              <div class="input-group gap-5 align-items-center">
+                <%= key %>: <%= filter.filter_param(key, value) %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
       </div>
     </article>
 
