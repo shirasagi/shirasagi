@@ -4,16 +4,20 @@
 %>
 
 <% from_site_options = capture do %>
-  <optgroup label=<%= t "cms.site" %>>
-    <% cms_sites.each do |cms_site| %>
-      <option value="cms:<%= cms_site.id %>" data-description="<%= cms_site.sender_address %>"><%= cms_site.name %></option>
-    <% end %>
-  </optgroup>
-  <optgroup label=<%= t "gws.group" %>>
-    <% gws_sites.each do |gws_site| %>
-      <option value="gws:<%= gws_site.id %>" data-description="<%= gws_site.sender_address %>"><%= gws_site.name %></option>
-    <% end %>
-  </optgroup>
+  <% if cms_sites.present? %>
+    <optgroup label="<%= t "cms.site" %>">
+      <% cms_sites.each do |cms_site| %>
+        <option value="cms:<%= cms_site.id %>" data-description="<%= cms_site.sender_address %>"><%= cms_site.name %></option>
+      <% end %>
+    </optgroup>
+  <% end %>
+  <% if gws_sites.present? %>
+    <optgroup label="<%= t "gws.group" %>">
+      <% gws_sites.each do |gws_site| %>
+        <option value="gws:<%= gws_site.id %>" data-description="<%= gws_site.sender_address %>"><%= gws_site.name %></option>
+      <% end %>
+    </optgroup>
+  <% end %>
 <% end %>
 
 <%= form_for :item, url: { action: :create }, html: { id: "item-form", multipart: true } do |f| %>
@@ -21,21 +25,28 @@
     <article id="http-tester">
       <div class="view">
         <h2>Mail From</h2>
-        <div class="input-group gap-5 align-items-center">
-          <label style="display: inline-flex; align-items: center; word-break: keep-all;">
-            <%= f.radio_button :from_type, "site" %> サイトから選択:
-          </label>
-          <span data-controller="ss--select-with-description">
-            <%= f.select :from_site, from_site_options %>
-            <span class="description"></span>
-          </span>
-        </div>
-        <div class="input-group gap-5 align-items-center">
-          <label style="display: inline-flex; align-items: center; word-break: keep-all;">
-            <%= f.radio_button :from_type, "manual" %> 手動で入力:
-          </label>
-          <%= f.text_field :from_manual %>
-        </div>
+        <% if from_site_options.present? %>
+          <div class="input-group gap-5 align-items-center">
+            <label style="display: inline-flex; align-items: center; word-break: keep-all;">
+              <%= f.radio_button :from_type, "site" %> サイトから選択:
+            </label>
+            <span data-controller="ss--select-with-description">
+              <%= f.select :from_site, from_site_options %>
+              <span class="description"></span>
+            </span>
+          </div>
+          <div class="input-group gap-5 align-items-center">
+            <label style="display: inline-flex; align-items: center; word-break: keep-all;">
+              <%= f.radio_button :from_type, "manual" %> 手動で入力:
+            </label>
+            <%= f.text_field :from_manual %>
+          </div>
+        <% else %>
+          <div>
+            <%= f.hidden_field :from_type, value: "manual", id: nil %>
+            <%= f.text_field :from_manual %>
+          </div>
+        <% end %>
 
         <h2>Mail To</h2>
         <div><%= f.text_field :to %></div>

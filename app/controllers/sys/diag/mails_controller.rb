@@ -42,9 +42,12 @@ class Sys::Diag::MailsController < ApplicationController
       id = id.to_i
       case type
       when "cms"
-        SS.cms_sites(cur_user).find { _1.id == id }.sender_address
+        site = SS.cms_sites(cur_user).find { _1.id == id }
+        site.sender_address
       when "gws"
-        SS.gws_sites(cur_user).find { _1.id == id }.sender_address
+        site = SS.gws_sites(cur_user).find { _1.id == id }
+        site = site.gws_group
+        site.sender_address
       else
         nil
       end
