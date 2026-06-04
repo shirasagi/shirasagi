@@ -344,7 +344,7 @@ describe "cms breadcrumbs", type: :feature, dbscope: :example do
       let(:visit_path) { cms_source_cleaner_site_setting_path(site) }
       include_examples "linked parent and leaf",
                        I18n.t("cms.source_cleaner"), :cms_source_cleaner_main_path,
-                       I18n.t("cms.site_setting")
+                       I18n.t("translate.site_setting")
     end
   end
 
