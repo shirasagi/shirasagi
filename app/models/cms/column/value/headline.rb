@@ -12,7 +12,7 @@ class Cms::Column::Value::Headline < Cms::Column::Value::Base
     export :text
     export :anchor
     export as: :anchor_id do
-      resolved_anchor
+      column&.try(:anchor_enabled?) ? resolved_anchor : nil
     end
   end
 
@@ -128,26 +128,30 @@ class Cms::Column::Value::Headline < Cms::Column::Value::Base
   end
 
   def validate_anchor
-    return if anchor.blank?
-
-    unless anchor.match?(ANCHOR_FORMAT)
+    if anchor.present? && !anchor.match?(ANCHOR_FORMAT)
       self.errors.add(:anchor, :invalid)
       return
     end
 
-    if duplicate_anchor?
+    if duplicate_resolved_anchor?
       self.errors.add(:anchor, :taken)
     end
   end
 
-  def duplicate_anchor?
+  # Compares the effective id (resolved_anchor) rather than only the explicitly entered
+  # anchor, so that a collision between an explicit anchor (e.g. "headline-2") and another
+  # headline's auto-generated fallback id is also detected. Only checked when the anchor
+  # feature is enabled, since ids are emitted only in that case.
+  def duplicate_resolved_anchor?
     return false if _parent.blank?
+    return false unless column&.try(:anchor_enabled?)
 
-    _parent.column_values.any? do |v|
+    current_anchor = resolved_anchor
+    sibling_headlines.any? do |v|
       next false if v.id == id
-      next false unless v.is_a?(Cms::Column::Value::Headline)
+      next false unless v.column&.try(:anchor_enabled?)
 
-      v.anchor.present? && v.anchor == anchor
+      v.resolved_anchor == current_anchor
     end
   end
 

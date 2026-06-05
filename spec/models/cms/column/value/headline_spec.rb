@@ -188,6 +188,25 @@ describe Cms::Column::Value::Headline, type: :model, dbscope: :example do
           expect(dup_value.errors[:anchor]).not_to be_empty
         end
       end
+
+      context 'when an explicit anchor collides with another headline fallback id' do
+        let!(:page) do
+          create(:article_page, cur_node: node, form: form,
+                 column_values: [
+                   column.value_type.new(column: column, head: 'h2', text: 'First', anchor: 'headline-2', order: 1)
+                 ])
+        end
+
+        it 'rejects the blank-anchor headline whose fallback id matches the explicit one' do
+          # Second headline has no explicit anchor; its fallback resolves to "headline-2",
+          # which collides with the first headline's explicit anchor.
+          page.column_values << column.value_type.new(column: column, head: 'h3', text: 'Second', order: 2)
+          blank_value = page.column_values.last
+          expect(blank_value.resolved_anchor).to eq 'headline-2'
+          expect(blank_value).not_to be_valid
+          expect(blank_value.errors[:anchor]).not_to be_empty
+        end
+      end
     end
   end
 end
