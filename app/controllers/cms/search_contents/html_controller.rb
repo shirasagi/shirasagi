@@ -75,7 +75,9 @@ class Cms::SearchContents::HtmlController < ApplicationController
 
   def set_crumbs
     @crumbs << [t("cms.search_contents"), cms_search_contents_pages_path]
-    @crumbs << [t("cms.search_contents_html"), action: :index]
+    # I18n.t を使う: t("..._html") は Rails 規約で html_safe 文字列になり、パンくずの
+    # .breadcrumb-title span ラッパーが付与されず末尾項目の表示がずれるため、プレーン文字列で渡す
+    @crumbs << [I18n.t("cms.search_contents_html"), action: :index]
   end
 
   def replace_html_with_string(string, replacement)
