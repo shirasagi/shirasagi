@@ -138,9 +138,13 @@ class Gws::Tabular::FilesController < ApplicationController
 
   # 項目ごとの絞り込み条件を明示的に permit する。
   # 列挙型はスカラー値の配列（[]）、日付型は from / to の2欄を許可する。
+  # `?s[col]=x` のように非ハッシュが渡された場合は空ハッシュへ正規化する。
   def permit_search_col_params(col_params)
+    return {} unless col_params.respond_to?(:permit) && col_params.respond_to?(:keys)
+
     filters = col_params.keys.index_with do |column_id|
-      col_params[column_id].respond_to?(:keys) ? %i[from to] : []
+      value = col_params[column_id]
+      value.respond_to?(:keys) ? %i[from to] : []
     end
     col_params.permit(filters).to_h
   end
