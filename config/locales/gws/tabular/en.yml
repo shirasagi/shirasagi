@@ -54,6 +54,9 @@ en:
         index: Select form
     buttons:
       manage_space: Space Management
+    search:
+      date_from: Date From
+      date_to: Date To
     notice:
       delay_download_with_message: |-
         Prepare files in the background.

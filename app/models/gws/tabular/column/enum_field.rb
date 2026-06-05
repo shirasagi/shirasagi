@@ -28,6 +28,20 @@ class Gws::Tabular::Column::EnumField < Gws::Column::Base
     end
   end
 
+  # 検索ボックス右レールでは、選択肢のチェックボックス一覧として表示する。
+  def search_input_type
+    "checkbox"
+  end
+
+  # 選択された選択肢に完全一致（$in）するレコードを絞り込む条件を返す。
+  def search_file_criteria(value)
+    values = Array(value).flatten.map { |v| v.to_s.strip }.select(&:present?)
+    values &= select_options.to_a
+    return if values.blank?
+
+    { store_as_in_file => { "$in" => values } }
+  end
+
   def configure_file(file_model)
     field_name = store_as_in_file
     file_model.field field_name, type: SS::Extensions::Words

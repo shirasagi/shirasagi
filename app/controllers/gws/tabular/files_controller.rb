@@ -127,6 +127,11 @@ class Gws::Tabular::FilesController < ApplicationController
       if cur_form.workflow_enabled?
         s.act ||= "all"
       end
+      # 右レールの絞り込み条件（params[:s][:col]）をプレーンなハッシュへ正規化して受け渡す。
+      # 日付欄などはここで文字列のまま保持し、各項目の検索条件メソッドで正規化する。
+      if params[:s].present? && params[:s][:col].present?
+        s.col = params[:s][:col].permit!.to_h
+      end
       s
     end
   end

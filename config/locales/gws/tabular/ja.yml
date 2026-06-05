@@ -54,6 +54,9 @@ ja:
         index: 定義を選択する
     buttons:
       manage_space: スペース管理
+    search:
+      date_from: 開始日
+      date_to: 終了日
     notice:
       delay_download_with_message: |-
         バックグランドでファイルを準備します。

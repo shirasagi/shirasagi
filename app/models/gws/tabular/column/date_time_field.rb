@@ -14,6 +14,27 @@ class Gws::Tabular::Column::DateTimeField < Gws::Column::Base
     end
   end
 
+  # 検索ボックス右レールでは、from / to の2欄（日付範囲）として表示する。
+  def search_input_type
+    "date_range"
+  end
+
+  # from / to で指定された範囲（当日を含む範囲）に一致するレコードを絞り込む条件を返す。
+  def search_file_criteria(value)
+    return unless value.respond_to?(:key?)
+
+    conditions = {}
+    if (from_value = normalize_search_boundary(value[:from] || value["from"], :beginning))
+      conditions["$gte"] = from_value
+    end
+    if (to_value = normalize_search_boundary(value[:to] || value["to"], :end))
+      conditions["$lte"] = to_value
+    end
+    return if conditions.blank?
+
+    { store_as_in_file => conditions }
+  end
+
   def configure_file(file_model)
     field_name = store_as_in_file
     if input_type == 'date'
@@ -63,6 +84,30 @@ class Gws::Tabular::Column::DateTimeField < Gws::Column::Base
       I18n.l(db_value.to_date, format: :csv)
     else # "datetime"
       I18n.l(db_value, format: :csv)
+    end
+  end
+
+  private
+
+  # 検索フォームから渡された日付文字列を、絞り込みに使える境界値へ正規化する。
+  # 日付型は日付（当日を含む）として、日時型は当日の開始/終了時刻として扱う。
+  def normalize_search_boundary(str, boundary)
+    return if str.blank?
+
+    time =
+      begin
+        Time.zone.parse(str.to_s)
+      rescue ArgumentError, TypeError
+        nil
+      end
+    return if time.blank?
+
+    if input_type == "date"
+      time.to_date
+    elsif boundary == :beginning
+      time.beginning_of_day
+    else
+      time.end_of_day
     end
   end
 end

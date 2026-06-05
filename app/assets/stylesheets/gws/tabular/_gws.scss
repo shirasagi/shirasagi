@@ -33,6 +33,113 @@
   }
 }
 
+// 一覧画面を「左:一覧 / 右:絞り込みレール」の2カラムに分割する
+.gws-tabular-file-index-columns {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+
+  &.gws-tabular-file-index-columns-no-rail {
+    display: block;
+  }
+
+  @include init.mb {
+    flex-direction: column;
+  }
+}
+
+.gws-tabular-file-index-list {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.gws-tabular-file-index-rail {
+  flex: 0 0 240px;
+  width: 240px;
+
+  @include init.mb {
+    flex: 1 1 auto;
+    width: 100%;
+    order: -1;
+  }
+}
+
+.gws-tabular-file-search {
+  padding: 12px;
+  border: 1px solid init.$gray2;
+  border-radius: 4px;
+  background-color: #fafafa;
+
+  .index-search {
+    display: block;
+  }
+
+  .gws-tabular-file-search-keyword {
+    margin-bottom: 12px;
+
+    input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
+
+  .gws-tabular-file-search-section {
+    margin-bottom: 12px;
+  }
+
+  .gws-tabular-file-search-section-head {
+    margin: 0 0 6px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #616161;
+  }
+
+  .gws-tabular-file-search-options {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .gws-tabular-file-search-option {
+    label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin: 2px 0;
+      cursor: pointer;
+    }
+
+    input[type="checkbox"] {
+      margin: 0;
+    }
+  }
+
+  .gws-tabular-file-search-date-range {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
+
+  .gws-tabular-file-search-date-sep {
+    text-align: center;
+    color: #9e9e9e;
+  }
+
+  .gws-tabular-file-search-actions {
+    margin-top: 12px;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}
+
 .list-head {
   .badge {
     padding: 2px 4px;
