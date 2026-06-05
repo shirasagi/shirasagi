@@ -11,6 +11,7 @@ class Cms::Ldap::SettingsController < ApplicationController
   private
 
   def set_crumbs
+    @crumbs << [t("ldap.links.ldap"), cms_ldap_main_path]
     @crumbs << [t("ldap.setting"), url_for(action: :show)]
   end
 

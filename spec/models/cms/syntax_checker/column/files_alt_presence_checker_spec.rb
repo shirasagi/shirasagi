@@ -4,7 +4,7 @@ describe Cms::SyntaxChecker::Column::FilesAltPresenceChecker, type: :model, dbsc
   let!(:site) { cms_site }
   let!(:node) { create :article_node_page }
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
-  let!(:column) { create(:cms_column_multiple_images_upload, cur_form: form, order: 1) }
+  let!(:column) { create(:cms_column_multiple_files_upload, cur_form: form, order: 1, file_type: "image") }
   let!(:image1) do
     tmp_ss_file(
       Cms::File,
@@ -81,7 +81,7 @@ describe Cms::SyntaxChecker::Column::FilesAltPresenceChecker, type: :model, dbsc
   end
 
   describe "#check via Cms::SyntaxChecker.check_page (multiple attachments upload)" do
-    let!(:attachment_column) { create(:cms_column_multiple_attachments_upload, cur_form: form, order: 2) }
+    let!(:attachment_column) { create(:cms_column_multiple_files_upload, cur_form: form, order: 2, file_type: "attachment") }
     let!(:attachment1) do
       tmp_ss_file(
         Cms::File,

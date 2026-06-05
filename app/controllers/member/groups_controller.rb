@@ -10,6 +10,7 @@ class Member::GroupsController < ApplicationController
   private
 
   def set_crumbs
+    @crumbs << [t("cms.member"), cms_members_path]
     @crumbs << [t("member.group"), action: :index]
   end
 

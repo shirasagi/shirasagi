@@ -9,6 +9,11 @@ class Sys::Auth::EnvironmentsController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [t("sys.auth"), sys_auth_path]
+    @crumbs << [t("sys.auth/environment"), action: :index]
+  end
+
   def append_view_paths
     append_view_path "app/views/sys/auth/main/"
     super

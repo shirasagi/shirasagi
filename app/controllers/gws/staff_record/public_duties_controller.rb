@@ -14,6 +14,7 @@ class Gws::StaffRecord::PublicDutiesController < ApplicationController
   end
 
   def set_crumbs
+    @crumbs << [t("gws/staff_record.staff_records"), gws_staff_record_public_records_path]
     @crumbs << [t("gws/staff_record.divide_duties"), action: :index]
   end
 

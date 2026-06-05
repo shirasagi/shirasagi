@@ -60,6 +60,7 @@ class Gws::Affair::DutySetting::HolidaysController < ApplicationController
   def set_crumbs
     set_holiday_calendar
     @crumbs << [ @cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path ]
+    @crumbs << [ t("modules.gws/affair/duty_calendar"), gws_affair_duty_setting_duty_calendars_path ]
     @crumbs << [ t("mongoid.models.gws/affair/holiday_calendar"), gws_affair_duty_setting_holiday_calendars_path ]
     @crumbs << [ @holiday_calendar.name, gws_affair_duty_setting_holiday_calendar_path(id: @holiday_calendar) ]
   end

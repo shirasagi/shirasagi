@@ -10,6 +10,12 @@ class Cms::GenerationReport::TitlesController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [t("mongoid.models.cms/generation_report/title"), cms_generation_report_main_path]
+    leaf = params[:type].to_s == "pages" ? t("cms.generate_page") : t("cms.generate_node")
+    @crumbs << [leaf, action: :index]
+  end
+
   def set_items
     @items ||= begin
       items = @model.site(@cur_site)

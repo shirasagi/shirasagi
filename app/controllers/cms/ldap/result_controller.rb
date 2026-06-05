@@ -14,6 +14,7 @@ class Cms::Ldap::ResultController < ApplicationController
   end
 
   def set_crumbs
+    @crumbs << [t("ldap.links.ldap"), cms_ldap_main_path]
     @crumbs << [t("ldap.result"), action: :index]
   end
 

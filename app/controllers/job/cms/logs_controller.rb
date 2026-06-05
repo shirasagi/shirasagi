@@ -7,6 +7,11 @@ class Job::Cms::LogsController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [t("job.main"), job_cms_main_path]
+    @crumbs << [t("job.log"), action: :index]
+  end
+
   def filter_permission
     raise "403" unless Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site)
   end

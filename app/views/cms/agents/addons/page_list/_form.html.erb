@@ -157,33 +157,10 @@
   </dl>
 
   <%= jquery do %>
-    var $addon = $("<%= "##{addon[:id]}" %>");
-    var $snippetSelect = $addon.find('.loop-snippet-selector');
-    var $liquidTextarea = $addon.find('#item_loop_liquid');
-
-    // スニペットセレクターの初期値を「直接入力」に設定
-    if ($snippetSelect.length && !$snippetSelect.val()) {
-      $snippetSelect.val('');
-    }
-
-    // スニペットの選択処理: CodeMirror のカーソル位置/選択範囲に挿入
-    $snippetSelect.on('change', function() {
-      var $option = $snippetSelect.find(':selected');
-      var snippet = $option.data('snippet');
-      $snippetSelect.val('');
-      if (!snippet) {
-        return;
-      }
-      if ($liquidTextarea.length === 0) {
-        return;
-      }
-      var editor = $liquidTextarea.data('editor');
-      if (!editor) {
-        return;
-      }
-      editor.getDoc().replaceSelection(snippet + "\n");
-      editor.focus();
-      editor.save();
+    Cms_Loop_Snippet.render({
+      addon: '#<%= addon[:id] %>',
+      textarea: '#item_loop_liquid',
+      templateSelect: '#item_loop_setting_id_liquid'
     });
   <% end %>
 <% end %>

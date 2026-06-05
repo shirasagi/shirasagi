@@ -7,6 +7,11 @@ class Cms::Translate::TextCachesController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [t("translate.main"), cms_translate_main_path]
+    @crumbs << [t("translate.text_cache"), action: :index]
+  end
+
   def fix_params
     { cur_site: @cur_site, api: @cur_site.translate_api, update_state: "manually" }
   end

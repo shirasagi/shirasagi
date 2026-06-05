@@ -11,6 +11,7 @@ class Gws::Affair::Leave::DetailsController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path]
+    @crumbs << [t('modules.gws/affair/leave'), gws_affair_leave_main_path]
     @crumbs << [t('modules.gws/affair/leave/detail'), gws_affair_leave_details_path]
   end
 

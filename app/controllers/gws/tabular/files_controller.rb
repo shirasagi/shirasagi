@@ -260,7 +260,7 @@ class Gws::Tabular::FilesController < ApplicationController
     raise "404" unless cur_view.authoring_allowed?("download_all")
     raise "403" unless policy_class.download_all?(@cur_site, @cur_user, @model)
 
-    @item = SS::DownloadParam.new(cur_site: @cur_site, cur_user: @cur_user)
+    @item = Gws::Tabular::File::DownloadParam.new(cur_site: @cur_site, cur_user: @cur_user)
     if request.get? || request.head?
       render
       return

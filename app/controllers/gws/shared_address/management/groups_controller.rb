@@ -9,7 +9,7 @@ class Gws::SharedAddress::Management::GroupsController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_shared_address_label || t("modules.gws/shared_address"), gws_shared_address_addresses_path]
-    @crumbs << [t("mongoid.models.gws/shared_address/group"), action: :index]
+    @crumbs << [t("gws/shared_address.navi.group"), action: :index]
   end
 
   def fix_params

@@ -11,8 +11,8 @@ class Gws::Job::UserLogsController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("job.task_manager"), gws_job_user_main_path]
-    @crumbs << [t("job.log"), action: :index]
+    @crumbs << [t("modules.gws/job"), gws_job_user_main_path]
+    @crumbs << [t("gws/job.log"), action: :index]
   end
 
   def append_view_paths

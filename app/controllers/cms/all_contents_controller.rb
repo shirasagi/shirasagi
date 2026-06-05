@@ -19,6 +19,8 @@ class Cms::AllContentsController < ApplicationController
       @crumbs << [t("cms.all_content.download_tab"), cms_all_contents_download_path]
     when 'import'
       @crumbs << [t("cms.all_content.import_tab"), cms_all_contents_import_path]
+    when 'sampling_all'
+      @crumbs << [t("cms.all_content.sampling_tab"), cms_all_contents_sampling_path]
     end
   end
 

@@ -7,6 +7,10 @@ class Cms::PageSearchesController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [t("cms.page_search"), action: :index]
+  end
+
   def fix_params
     { cur_site: @cur_site, cur_user: @cur_user }
   end

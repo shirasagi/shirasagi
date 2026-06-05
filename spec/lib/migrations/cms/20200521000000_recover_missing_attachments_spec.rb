@@ -25,6 +25,15 @@ RSpec.describe SS::Migration20200521000000, dbscope: :example do
   end
 
   describe "#change" do
+    # このマイグレーションは Cms::Page / SS::File をサイト非依存で全件走査する（unscoped）ため、
+    # 直前に実行された spec（特に feature spec のアプリサーバースレッド）が残したページ／ファイルが
+    # 走査対象に混入すると、欠損ファイルの復旧先が本来のページとずれて不安定になることがある。
+    # spec ファイルの並び順（シャード分割）に依存して顕在化するため、
+    # フィクスチャ生成前に DB をクリーンにし、本 example のデータだけを対象にする。
+    prepend_before do
+      clean_database
+    end
+
     let!(:site) { cms_site }
     let!(:user1) { create :cms_user, name: unique_id, group_ids: cms_user.group_ids, cms_role_ids: cms_user.cms_role_ids }
     let!(:user2) { create :cms_user, name: unique_id, group_ids: cms_user.group_ids, cms_role_ids: cms_user.cms_role_ids }
