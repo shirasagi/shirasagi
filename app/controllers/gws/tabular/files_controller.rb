@@ -130,10 +130,19 @@ class Gws::Tabular::FilesController < ApplicationController
       # 右レールの絞り込み条件（params[:s][:col]）をプレーンなハッシュへ正規化して受け渡す。
       # 日付欄などはここで文字列のまま保持し、各項目の検索条件メソッドで正規化する。
       if params[:s].present? && params[:s][:col].present?
-        s.col = params[:s][:col].permit!.to_h
+        s.col = permit_search_col_params(params[:s][:col])
       end
       s
     end
+  end
+
+  # 項目ごとの絞り込み条件を明示的に permit する。
+  # 列挙型はスカラー値の配列（[]）、日付型は from / to の2欄を許可する。
+  def permit_search_col_params(col_params)
+    filters = col_params.keys.index_with do |column_id|
+      col_params[column_id].respond_to?(:keys) ? %i[from to] : []
+    end
+    col_params.permit(filters).to_h
   end
 
   def base_items
