@@ -397,4 +397,13 @@ describe "gws breadcrumbs", type: :feature, dbscope: :example do
       end
     end
   end
+
+  # 在席管理は「在席管理 > 在席状況 > グループ」とサイドメニューの階層に合わせる。
+  context "在席管理" do
+    context "在席状況 (グループ)" do
+      let(:visit_path) { gws_presence_group_users_path(site: site, group: site) }
+      include_examples "crumbs contain",
+                       -> { [I18n.t("modules.gws/presence"), I18n.t("modules.gws/presence/users")] }
+    end
+  end
 end
