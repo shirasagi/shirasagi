@@ -21,6 +21,7 @@ class Gws::Bookmark::ItemsController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_bookmark_label || t("mongoid.models.gws/bookmark/item"), action: :index]
+    @crumbs << [t("ss.navi.readable"), action: :index]
   end
 
   def set_item
