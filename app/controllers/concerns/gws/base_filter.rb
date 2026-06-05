@@ -75,12 +75,14 @@ module Gws::BaseFilter
   # set_crumbs の後に実行され、site crumb の直後（index 1）へ挿入するため、
   # 1 階層メニューは「サイト名 > 設定 > 機能」、多階層メニューは
   # 「サイト名 > 設定 > 機能 > …」の並びになる。
-  # ラベルはサイドメニュー見出しと同じ gws.site_config（設定 / Settings）を用い、
-  # 「設定」のランディングページは存在しないためリンク無し（プレーンテキスト）とする。
+  # ラベルはサイドメニュー見出しと同じ gws.site_config（設定 / Settings）。
+  # 設定専用のランディングは無いが、他の crumb と見た目（breadcrumb-link）を
+  # 揃えるため、設定メニュー先頭の「組織情報」(gws_site_path) へのリンクとする
+  # （親モジュールの crumb を main ページへリンクする既存パターンに倣う）。
   def set_conf_crumb
     return unless SETTINGS_NAVI_VIEWS.include?(navi_view_file)
     return if @crumbs.blank?
-    @crumbs.insert(1, [t("gws.site_config")])
+    @crumbs.insert(1, [t("gws.site_config"), gws_site_path])
   end
 
   def set_current_group
