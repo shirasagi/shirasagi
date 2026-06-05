@@ -75,7 +75,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
 
   def set_crumbs
     @crumbs << [t("cms.search_contents"), cms_search_contents_pages_path]
-    @crumbs << [t("cms.search_contents_html"), url_for(action: :index)]
+    @crumbs << [t("cms.search_contents_html"), action: :index]
   end
 
   def replace_html_with_string(string, replacement)
