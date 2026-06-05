@@ -1034,12 +1034,12 @@ _:future,
       &::before {
         // Material Icons Outlined: search
         content: "\e8b6";
-        font-family: "Material Icons Outlined";
-        font-size: 18px;
-        line-height: 1;
         position: absolute;
         top: 50%;
         left: 34px;
+        font-family: "Material Icons Outlined";
+        font-size: 18px;
+        line-height: 1;
         transform: translateY(-50%);
       }
     }
@@ -1194,12 +1194,12 @@ _:future,
         &::before {
           // Material Icons Outlined: search
           content: "\e8b6";
-          font-family: "Material Icons Outlined";
-          font-size: 18px;
-          line-height: 1;
           position: absolute;
           top: 50%;
           left: 59px;
+          font-family: "Material Icons Outlined";
+          font-size: 18px;
+          line-height: 1;
           transform: translateY(-50%);
         }
       }
