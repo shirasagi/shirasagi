@@ -9,7 +9,8 @@ class Kana::DictionariesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("kana.dictionary"), action: :index]
+    @crumbs << [t("modules.kana"), nil]
+    @crumbs << [t("kana.dictionary_list"), action: :index]
   end
 
   def fix_params
