@@ -1037,10 +1037,10 @@ _:future,
         position: absolute;
         top: 50%;
         left: 34px;
+        transform: translateY(-50%);
         font-family: "Material Icons Outlined";
         font-size: 18px;
         line-height: 1;
-        transform: translateY(-50%);
       }
     }
 
@@ -1197,10 +1197,10 @@ _:future,
           position: absolute;
           top: 50%;
           left: 59px;
+          transform: translateY(-50%);
           font-family: "Material Icons Outlined";
           font-size: 18px;
           line-height: 1;
-          transform: translateY(-50%);
         }
       }
 
