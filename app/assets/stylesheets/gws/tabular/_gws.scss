@@ -123,9 +123,9 @@
     gap: 4px;
 
     input[type="text"] {
+      box-sizing: border-box;
       flex: 1 1 0;
       min-width: 0;
-      box-sizing: border-box;
     }
   }
 
@@ -135,13 +135,13 @@
   }
 
   .gws-tabular-file-search-actions {
-    margin-top: 12px;
     display: flex;
+    margin-top: 12px;
     gap: 6px;
 
     .btn {
-      flex: 1 1 0;
       box-sizing: border-box;
+      flex: 1 1 0;
       text-align: center;
     }
   }
