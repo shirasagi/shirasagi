@@ -1,9 +1,25 @@
+<%
+  search_columns = @model.respond_to?(:search_column_candidates) ? @model.search_column_candidates : []
+  # 絞り込み項目（タクソノミー）があるときだけ右レールを表示し、キーワードのみのときは従来の検索ボックスを表示する
+  show_search_rail = !@trash && search_columns.present?
+%>
 <div class="gws-tabular-views-main-box">
-  <div class="index">
-    <div class="list-head">
-      <%= render template: "_search" %>
-    </div>
+  <div class="gws-tabular-file-index-columns<%= show_search_rail ? "" : " gws-tabular-file-index-columns-no-rail" %>">
+    <div class="gws-tabular-file-index-list">
+      <div class="index">
+        <% unless show_search_rail %>
+          <div class="list-head">
+            <%= render template: "_search" %>
+          </div>
+        <% end %>
 
-    <%= render Gws::Tabular::View::LiquidComponent.new(cur_site: @cur_site, cur_space: cur_space, cur_form: cur_form, cur_view: cur_view, items: @items) %>
+        <%= render Gws::Tabular::View::LiquidComponent.new(cur_site: @cur_site, cur_space: cur_space, cur_form: cur_form, cur_view: cur_view, items: @items) %>
+      </div>
+    </div>
+    <% if show_search_rail %>
+      <aside class="gws-tabular-file-index-rail">
+        <%= render template: "_search", locals: { search_rail: true } %>
+      </aside>
+    <% end %>
   </div>
 </div>

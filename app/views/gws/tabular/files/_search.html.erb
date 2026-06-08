@@ -58,6 +58,7 @@
     <% if search_rail %>
       <div class="gws-tabular-file-search-actions">
         <%= f.submit t('ss.buttons.search'), class: "btn", name: nil %>
+        <%= link_to t('ss.buttons.reset'), { action: :index }, class: "btn" %>
       </div>
     <% else %>
       <%= f.submit t('ss.buttons.search'), class: "btn", name: nil %>

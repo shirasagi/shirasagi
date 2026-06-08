@@ -1,7 +1,8 @@
 <%
   columns = cur_form.columns.reorder(order: 1, id: 1).to_a
   search_columns = @model.respond_to?(:search_column_candidates) ? @model.search_column_candidates : []
-  show_search_rail = !@trash && (@model.keyword_fields.present? || search_columns.present?)
+  # 絞り込み項目（タクソノミー）があるときだけ右レールを表示し、キーワードのみのときは従来の検索ボックスを表示する
+  show_search_rail = !@trash && search_columns.present?
   # 右レールにキーワード欄をまとめるため、一覧ヘッダー側の検索ボックスは抑制する
   @gws_tabular_search_rail = show_search_rail
 %>

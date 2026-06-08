@@ -45,6 +45,8 @@
 
   @include init.mb {
     flex-direction: column;
+    // 縦並びでは交差軸が横方向になるため、リストとレールを揃えて全幅にする
+    align-items: stretch;
   }
 }
 
@@ -55,8 +57,8 @@
 }
 
 .gws-tabular-file-index-rail {
-  flex: 0 0 240px;
-  width: 240px;
+  flex: 0 0 320px;
+  width: 320px;
 
   @include init.mb {
     flex: 1 1 auto;
@@ -117,25 +119,57 @@
 
   .gws-tabular-file-search-date-range {
     display: flex;
-    flex-direction: column;
+    align-items: center;
     gap: 4px;
 
     input[type="text"] {
+      flex: 1 1 0;
+      min-width: 0;
       box-sizing: border-box;
-      width: 100%;
     }
   }
 
   .gws-tabular-file-search-date-sep {
+    flex: 0 0 auto;
     color: #9e9e9e;
-    text-align: center;
   }
 
   .gws-tabular-file-search-actions {
     margin-top: 12px;
+    display: flex;
+    gap: 6px;
 
     .btn {
-      width: 100%;
+      flex: 1 1 0;
+      box-sizing: border-box;
+      text-align: center;
+    }
+  }
+
+  // モバイルではレールが全幅になるため、各項目を多段に並べて余白を埋め、
+  // 選択肢は横に折り返してバランスを取る
+  @include init.mb {
+    .index-search {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px 20px;
+      align-items: start;
+    }
+
+    .gws-tabular-file-search-keyword,
+    .gws-tabular-file-search-actions {
+      grid-column: 1 / -1;
+      margin: 0;
+    }
+
+    .gws-tabular-file-search-section {
+      margin-bottom: 0;
+    }
+
+    .gws-tabular-file-search-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 16px;
     }
   }
 }
