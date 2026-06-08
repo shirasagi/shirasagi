@@ -13,8 +13,18 @@ ja:
     links:
       categories: カテゴリー
       file_download: ダウンロード
+      move: 移動
       confirm:
         download_all: 選択した項目をダウンロードしますか？
+        move: 選択した項目を移動しますか？
+        move_drop:
+          head: 選択したファイルを
+          tail: に移動しますか？
+    select_check: 件のファイルを選択
+    notice:
+      move_failed: "移動できなかった項目があります：%{names}"
+    errors:
+      different_library: 別のライブラリーには移動できません。
     mailers:
       compressed:
         subject: ダウンロード準備完了のお知らせ

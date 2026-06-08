@@ -6,11 +6,12 @@ class Gws::Share::FilesController < ApplicationController
   model Gws::Share::File
 
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :delete, :lock, :disable]
-  before_action :set_selected_items, only: [:disable_all, :download_all]
+  before_action :set_selected_items, only: [:disable_all, :download_all, :move_all]
   before_action :set_categories, only: [:index]
   before_action :set_category
   before_action :set_folder
   before_action :set_tree_navi, only: [:index]
+  before_action :set_destination_folders, only: [:index]
   before_action :set_default_readable_setting, only: [:new]
 
   # テスト時 unlock 実行前に database cleaner が実行されてしまい、
@@ -56,6 +57,37 @@ class Gws::Share::FilesController < ApplicationController
 
     @folder ||= Gws::Share::Folder.site(@cur_site).find(params[:folder])
     raise "403" unless @folder.readable?(@cur_user) || @folder.allowed?(:read, @cur_user, site: @cur_site)
+  end
+
+  # 一括移動の移動先候補（アップロード可能なフォルダー一覧）。
+  # フォルダー内を表示している場合は、同一ライブラリー（最上位フォルダー）内に絞り込む。
+  def set_destination_folders
+    folders = Gws::Share::Folder.site(@cur_site).
+      allow(:read, @cur_user, site: @cur_site).
+      tree_sort.
+      select { |folder| folder.uploadable?(@cur_user) }
+
+    if @folder
+      library = @folder.name.to_s.split("/").first
+      folders = folders.select { |folder| folder.name.to_s.split("/").first == library }
+    end
+
+    @destination_folders = folders
+  end
+
+  # ドラッグ&ドロップでの移動先制限用に、各ファイルが属するライブラリー（最上位フォルダー名）を求める
+  def set_file_libraries
+    @file_libraries = {}
+    items = @items.to_a
+    return if items.blank?
+
+    folder_ids = items.map(&:folder_id).compact.uniq
+    folder_names = Gws::Share::Folder.site(@cur_site).in(id: folder_ids).pluck(:id, :name).to_h
+    items.each do |item|
+      name = folder_names[item.folder_id]
+      next if name.blank?
+      @file_libraries[item.id.to_s] = name.split("/").first
+    end
   end
 
   def fix_params
@@ -154,6 +186,8 @@ class Gws::Share::FilesController < ApplicationController
       search(params[:s]).
       custom_order(@sort).
       page(params[:page]).per(50)
+
+    set_file_libraries
   end
 
   def show
@@ -323,6 +357,59 @@ class Gws::Share::FilesController < ApplicationController
       raise '500' unless zip.save
 
       send_file(zip.path, type: zip.type, filename: zip.name, disposition: 'attachment', x_sendfile: true)
+    end
+  end
+
+  def move_all
+    folder = Gws::Share::Folder.site(@cur_site).where(id: params[:folder_id]).first
+    raise "404" if folder.blank?
+    raise "403" unless folder.uploadable?(@cur_user)
+
+    dest_library = folder.name.to_s.split("/").first
+    affected_folder_ids = [ folder.id ]
+
+    # 再描画時に再クエリされてエラー情報が失われないよう、配列として保持する
+    @items = @items.to_a
+    @items.each do |item|
+      unless item.allowed?(:edit, @cur_user, site: @cur_site)
+        item.errors.add :base, :auth_error
+        next
+      end
+
+      src_library = item.folder.try(:name).to_s.split("/").first
+      if src_library != dest_library
+        # 別ライブラリー（最上位フォルダー）へは移動できない
+        item.errors.add :base, t("gws/share.errors.different_library")
+        next
+      end
+
+      next if item.folder_id == folder.id
+
+      affected_folder_ids << item.folder_id if item.folder_id
+      item.folder_id = folder.id
+      item.save
+    end
+
+    # 移動元・移動先フォルダーの容量・ファイル数の集計を更新する
+    Gws::Share::Folder.site(@cur_site).in(id: affected_folder_ids.uniq).each(&:update_folder_descendants_file_info)
+
+    render_change_all(location: { action: :index, folder: params[:folder], category: params[:category] })
+  end
+
+  def render_change_all(opts = {})
+    location = opts[:location].presence || crud_redirect_url || { action: :index }
+    failed = @items.select { |item| item.errors.present? }
+
+    if failed.present?
+      notice = { notice: t("gws/share.notice.move_failed", names: failed.map(&:name).join("、")) }
+    else
+      notice = { notice: t("ss.notice.saved") }
+    end
+    errors = failed.map { |item| [item.id, item.errors.full_messages] }
+
+    respond_to do |format|
+      format.html { redirect_to location, notice }
+      format.json { head json: errors }
     end
   end
 

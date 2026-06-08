@@ -39,6 +39,7 @@ Rails.application.routes.draw do
         post :disable, on: :member
         post :disable_all, on: :collection
         post :download_all, on: :collection
+        post :move_all, on: :collection
       end
 
       resources :folders, concerns: [:deletion, :export] do
@@ -51,6 +52,7 @@ Rails.application.routes.draw do
           post :disable, on: :member
           post :download_all, on: :collection
           post :disable_all, on: :collection
+          post :move_all, on: :collection
         end
       end
     end
