@@ -35,7 +35,7 @@
 <%= tag.div class: "gws-tabular-views-main-box", data: { controller: "ss--list-action-enabler" } do %>
   <div class="gws-tabular-file-index-columns<%= show_search_rail ? "" : " gws-tabular-file-index-columns-no-rail" %>">
     <div class="gws-tabular-file-index-list">
-      <%= render "applied_filters" %>
+      <%= render "gws/tabular/files/applied_filters" %>
       <%= render template: "gws/crud/index" %>
     </div>
     <% if show_search_rail %>
