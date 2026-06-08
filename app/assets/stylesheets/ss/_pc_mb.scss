@@ -1,6 +1,7 @@
 // -------------------------------------------------------------------------------------------------
 // base
 @use "init";
+@use "gws_navi_icons" as nav;
 
 header,
 footer,
@@ -835,7 +836,7 @@ _:future,
   h3 a {
     display: block;
     padding: 5px 15px 5px 60px;
-    background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+    @include nav.icon-base(35px);
   }
 }
 .main-navi-md {
@@ -1013,35 +1014,22 @@ _:future,
   h3:not(.no-icons) a {
     display: block;
     padding: 5px 15px 5px 60px;
-    background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+    @include nav.icon-base(35px);
 
     &.down {
-      background: url(/assets/img/ic-arrow16down-off.png) no-repeat 35px center;
+      @include nav.icon("arrow-down");
     }
 
     &.management {
-      background: url(/assets/img/ic-setting.png) no-repeat 35px center;
+      @include nav.icon("setting");
     }
 
     &.trash {
-      background: url(/assets/img/ic-trash.png) no-repeat 35px center;
+      @include nav.icon("trash");
     }
 
     &:hover {
-      background: init.$gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 35px
-        center;
-    }
-
-    &.down:hover {
-      background: url(/assets/img/ic-arrow16down-on.png) no-repeat 35px center;
-    }
-
-    &.management:hover {
-      background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 35px center;
-    }
-
-    &.trash:hover {
-      background: init.$gray1 url(/assets/img/ic-trash.png) no-repeat 35px center;
+      background-color: init.$gray1;
     }
   }
   h3 a {
@@ -1065,12 +1053,12 @@ _:future,
   h3:not(.no-icons) .label {
     display: block;
     padding: 5px 15px 5px 60px;
-    background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+    @include nav.icon-base(35px);
   }
   h3:not(.no-icons) span {
     display: block;
     padding: 5px 15px 5px 60px;
-    background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+    @include nav.icon-base(35px);
   }
   h3:last-child,
   ul:last-child {
@@ -1147,19 +1135,15 @@ _:future,
 
     &:not(.no-icons) {
       padding: 5px 15px 5px 85px;
-      background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
+      @include nav.icon-base(60px);
 
       &:hover {
-        background: init.$gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px
-          center;
+        background-color: init.$gray1;
+        color: init.$orange;
       }
 
       &.management {
-        background: url(/assets/img/ic-setting.png) no-repeat 60px center;
-      }
-
-      &.management:hover {
-        background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
+        @include nav.icon("setting");
       }
     }
   }
@@ -1262,19 +1246,13 @@ _:future,
     a {
       display: block;
       padding: 5px 15px 5px 85px;
-      background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
+      @include nav.icon-base(60px);
       &.management {
-        background: url(/assets/img/ic-setting.png) no-repeat 60px center;
+        @include nav.icon("setting");
       }
       color: init.$black;
       &:hover {
-        background: init.$gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px
-          center;
-        color: init.$orange;
-        text-decoration: none;
-      }
-      &:hover.management {
-        background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
+        background-color: init.$gray1;
         color: init.$orange;
         text-decoration: none;
       }

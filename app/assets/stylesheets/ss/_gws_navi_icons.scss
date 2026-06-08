@@ -1,0 +1,66 @@
+// -------------------------------------------------------------------------------------------------
+// GWS サイドメニュー用アイコンフォント
+//
+// 従来 PNG 背景画像で描画していた「矢印 / 下矢印 / 歯車 / ゴミ箱」を、SVG から生成した
+// アイコンフォント (gws-navi-icons) のグリフ (::before) で描画する。
+// 色は文字色を継承するため、コントラスト設定（body * { color: ... !important }）に追従する。
+//
+// フォントの生成元 SVG とビルド設定: vendor/icon_fonts/gws_navi/
+//   npx fantasticon --config vendor/icon_fonts/gws_navi/fantasticon.json
+@use "sass:map";
+
+$gws-navi-icons-font: "gws-navi-icons";
+
+@font-face {
+  font-family: $gws-navi-icons-font;
+  src:
+    url("/assets/font/gws-navi-icons.woff2?v=20260608") format("woff2"),
+    url("/assets/font/gws-navi-icons.woff?v=20260608") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+$gws-navi-icons-map: (
+  "arrow": "\f101",
+  "arrow-down": "\f102",
+  "setting": "\f103",
+  "trash": "\f104",
+);
+
+// PNG 背景をやめ、::before のグリフでアイコンを表示する基盤。
+// 既定では矢印を表示する。$left はアイコンの水平位置(px)。
+@mixin icon-base($left, $size: 16px) {
+  position: relative;
+  background-image: none;
+
+  &::before {
+    content: map.get($gws-navi-icons-map, "arrow");
+    font-family: $gws-navi-icons-font;
+    font-weight: normal;
+    font-style: normal;
+    font-size: $size;
+    line-height: 1;
+    speak: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    position: absolute;
+    top: 50%;
+    left: $left;
+    transform: translateY(-50%);
+  }
+}
+
+// 表示するグリフを変更する（arrow / arrow-down / setting / trash）。
+@mixin icon($name) {
+  &::before {
+    content: map.get($gws-navi-icons-map, $name);
+  }
+}
+
+// アイコンの水平位置だけ変更する（モバイル用の上書きなど）。
+@mixin icon-left($left) {
+  &::before {
+    left: $left;
+  }
+}
