@@ -18,6 +18,32 @@ module Cms::NodeFilter
     end
   end
 
+  def destroy_items
+    return super if SS.config.cms.node_destroy_job.try(:[], 'enable').blank?
+
+    raise "400" if @selected_items.blank?
+
+    entries = @selected_items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+        item.cur_user = @cur_user if item.respond_to?(:cur_user)
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+
+    if SS.config.cms.node_destroy_job.try(:[], 'enable').present? && @items.present?
+      result = Cms::Node::DestroyJob.bind(site_id: @cur_site.id, user_id: @cur_user.id).
+        perform_later(@items.collect(&:id))
+      return result
+    end
+
+    entries.size != @items.size
+  end
+
   def change_item_class
     @item.route = params[:route] if params[:route]
     @item = @item.becomes_with_route(@item.route) rescue @item
@@ -60,6 +86,31 @@ module Cms::NodeFilter
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     render_update @item.update, location: redirect_url
+  end
+
+  def destroy
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+    @item.cur_user = @cur_user if @item.respond_to?(:cur_user)
+
+    if SS.config.cms.node_destroy_job.try(:[], 'enable').present?
+      result = Cms::Node::DestroyJob.bind(site_id: @cur_site.id, user_id: @cur_user.id).
+        perform_later([@item.id])
+      render_destroy result, notice: t('ss.notice.started_purge')
+      return
+    end
+
+    super
+  end
+
+  def destroy_all
+    raise "400" if @selected_items.blank?
+
+    if params[:destroy_all].present? && SS.config.cms.node_destroy_job.try(:[], 'enable').present?
+      render_confirmed_all(destroy_items, location: SS.request_path(request), notice: t('ss.notice.started_purge'))
+      return
+    end
+
+    super
   end
 
   def move
