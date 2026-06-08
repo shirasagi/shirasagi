@@ -10,10 +10,14 @@
     Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
 
     <% if @model.use_liquid %>
-    Cms_Editor_CodeMirror.lock('#item_loop_setting_id_liquid', '#item_loop_liquid');
-
     var $loopSettingSelectShirasagi = $('#item_loop_setting_id');
     var $loopSettingSelectLiquid = $('#item_loop_setting_id_liquid');
+
+    // liquid のループ設定が無いと select 自体が描画されない。
+    // 存在する時だけロックする（無い場合は直接入力で編集可のままにする）。
+    if ($loopSettingSelectLiquid.length) {
+      Cms_Editor_CodeMirror.lock('#item_loop_setting_id_liquid', '#item_loop_liquid');
+    }
 
     var changeLoopFormat = function() {
       var format = $loopFormatSelect.val();
