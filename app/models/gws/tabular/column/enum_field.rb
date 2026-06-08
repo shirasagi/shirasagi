@@ -24,7 +24,8 @@ class Gws::Tabular::Column::EnumField < Gws::Column::Base
 
   ##
   # Returns the available input type choices for the column as translated label/value pairs.
-  # @return [Array] An array of [label, value] pairs where `label` is the translated name and `value` is one of "radio", "checkbox", or "select".
+  # @return [Array] An array of [label, value] pairs where `label` is the translated name and `value`
+  #   is one of "radio", "checkbox", or "select".
   def input_type_options
     %w(radio checkbox select).map do |v|
       [ I18n.t("gws/tabular.options.enum_input_type.#{v}"), v ]

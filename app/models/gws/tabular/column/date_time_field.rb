@@ -20,15 +20,19 @@ class Gws::Tabular::Column::DateTimeField < Gws::Column::Base
 
   ##
   # Selects the search UI input type for this column to use a from/to date range layout.
-  # @return [String] The input type identifier "date_range", indicating the search box should render two fields for start and end timestamps.
+  # @return [String] The input type identifier "date_range", indicating the search box should render
+  #   two fields for start and end timestamps.
   def search_input_type
     "date_range"
   end
 
   ##
-  # Builds query criteria to filter records within the range specified by `from`/`to`, treating date inputs as inclusive of the whole day.
-  # @param [Object] value - A hash-like object (responds to `#key?`) that may contain `:from`/`"from"` and `:to`/`"to"` entries.
-  # @return [Hash, nil] A hash mapping the stored file field name to a conditions hash containing `$gte` and/or `$lte` as applicable, or `nil` when no valid boundaries are present.
+  # Builds query criteria to filter records within the range specified by `from`/`to`,
+  # treating date inputs as inclusive of the whole day.
+  # @param [Object] value - A hash-like object (responds to `#key?`) that may contain
+  #   `:from`/`"from"` and `:to`/`"to"` entries.
+  # @return [Hash, nil] A hash mapping the stored file field name to a conditions hash containing
+  #   `$gte` and/or `$lte` as applicable, or `nil` when no valid boundaries are present.
   def search_file_criteria(value)
     return unless value.respond_to?(:key?)
 
@@ -48,7 +52,8 @@ class Gws::Tabular::Column::DateTimeField < Gws::Column::Base
   ##
   # Builds a single search filter chip representing a from–to date range when `value` contains `from` or `to`.
   # @param [Hash, #key?] value - A hash-like object that may contain `:from`/"from" and `:to`/"to" string values.
-  # @return [Array<Hash>] An array with one chip hash `{ label: "...", remaining: nil }` when at least one boundary is present, or an empty array when both are blank.
+  # @return [Array<Hash>] An array with one chip hash `{ label: "...", remaining: nil }` when at least
+  #   one boundary is present, or an empty array when both are blank.
   def search_filter_chips(value)
     return [] unless value.respond_to?(:key?)
 
@@ -113,7 +118,8 @@ class Gws::Tabular::Column::DateTimeField < Gws::Column::Base
   ##
   # Format the stored date or datetime value for CSV export.
   #
-  # Converts `db_value` to a locale-aware CSV string; when `input_type` is `"date"` the value is converted to a Date before formatting.
+  # Converts `db_value` to a locale-aware CSV string; when `input_type` is `"date"` the value is
+  # converted to a Date before formatting.
   # Returns nil if `db_value` is blank.
   # @param [Object] db_value - The stored value (Time/Date/DateTime or parsable value) to format.
   # @return [String, nil] The localized CSV-formatted representation of the value, or `nil` when `db_value` is blank.

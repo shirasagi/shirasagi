@@ -19,7 +19,8 @@ module Gws::Tabular::File::Search
     # Filters records by `params[:keyword]` across the configured `keyword_fields`.
     # If `params[:keyword]` is blank, returns the unfiltered relation.
     # @param [Hash] params - Parameters hash that may include :keyword.
-    # @return [ActiveRecord::Relation] Relation matching the keyword in `keyword_fields`, or the original relation when no keyword is provided.
+    # @return [ActiveRecord::Relation] Relation matching the keyword in `keyword_fields`,
+    #   or the original relation when no keyword is provided.
     def search_keyword(params)
       return all if params[:keyword].blank?
       all.keyword_in(params[:keyword], *keyword_fields)
@@ -62,7 +63,8 @@ module Gws::Tabular::File::Search
     ##
     # Filters records by the requested action context.
     #
-    # @param [Hash, ActionController::Parameters] params - Parameters containing the action filter and current site, user, and form context.
+    # @param [Hash, ActionController::Parameters] params - Parameters containing the action filter
+    #   and current site, user, and form context.
     # @return [Mongoid::Criteria] The filtered search criteria.
     def search_act(params)
       Gws::Tabular::File::ActQuery.call(self, all, **params.to_h.slice(:cur_site, :cur_user, :cur_form, :act))

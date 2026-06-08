@@ -147,8 +147,10 @@ class Gws::Tabular::FilesController < ApplicationController
   # 列挙型はスカラー値の配列（[]）、日付型は from / to の2欄を許可する。
   ##
   # Normalize and permit column search parameters for right-rail filters.
-  # @param [#permit, #keys, nil] col_params - The incoming params-like object for `s[:col]`. If it does not respond to `permit` and `keys`, it will be treated as absent.
-  # @return [Hash] A plain Hash of permitted column filters keyed by column id. Each value is either an Array (for multi-value filters) or a Hash with `from` and `to` keys (for range/date filters).
+  # @param [#permit, #keys, nil] col_params - The incoming params-like object for `s[:col]`.
+  #   If it does not respond to `permit` and `keys`, it will be treated as absent.
+  # @return [Hash] A plain Hash of permitted column filters keyed by column id. Each value is either
+  #   an Array (for multi-value filters) or a Hash with `from` and `to` keys (for range/date filters).
   def permit_search_col_params(col_params)
     return {} unless col_params.respond_to?(:permit) && col_params.respond_to?(:keys)
 
@@ -163,7 +165,8 @@ class Gws::Tabular::FilesController < ApplicationController
   # Builds the base query relation for tabular files scoped to the current site.
   # It excludes deleted records, restricts results to items readable by the current user,
   # and applies the current view's ordering when available.
-  # @return [Object] The query relation (criteria) for items scoped to the site, without deleted records, readable by the current user, and ordered by the current view if present.
+  # @return [Object] The query relation (criteria) for items scoped to the site, without deleted records,
+  #   readable by the current user, and ordered by the current view if present.
   def base_items
     @base_items ||= begin
       criteria = @model.site(@cur_site)

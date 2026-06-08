@@ -26,7 +26,8 @@ module Gws::Tabular::FilesHelper
   # Builds a sanitized search base hash containing only present search fields.
   # The resulting hash may include :keyword, :act and a deep-duplicated :col.
   # @param [Hash] search - The original search parameters.
-  # @return [Hash] A hash with only the present keys from `search` (`:keyword`, `:act`, and `:col` where `:col` is deep-duplicated).
+  # @return [Hash] A hash with only the present keys from `search` (`:keyword`, `:act`, and `:col`
+  #   where `:col` is deep-duplicated).
   def gws_tabular_search_base(search)
     base = {}
     base[:keyword] = search[:keyword] if search[:keyword].present?
@@ -36,10 +37,12 @@ module Gws::Tabular::FilesHelper
   end
 
   ##
-  # Builds an array with a single chip representing the keyword filter and a URL that removes that keyword from the search.
+  # Builds an array with a single chip representing the keyword filter and a URL that removes
+  # that keyword from the search.
   # @param [Hash] search - Current search parameters (may include :keyword).
   # @param [Hash] base - Sanitized base search hash used as the starting point for the removal URL.
-  # @return [Array<Hash>] An array containing one chip hash with keys `:label` and `:url`; returns an empty array if no keyword is present.
+  # @return [Array<Hash>] An array containing one chip hash with keys `:label` and `:url`;
+  #   returns an empty array if no keyword is present.
   def gws_tabular_keyword_chips(search, base)
     return [] if search[:keyword].blank?
 
@@ -54,8 +57,10 @@ module Gws::Tabular::FilesHelper
   # produces one or more chip hashes that remove or adjust that column's filter when visited.
   # @param [Hash] search - The raw search parameters; expected to contain a `:col` hash keyed by column id strings.
   # @param [Class, Object] model - The model or class that may respond to `:search_column_candidates`.
-  # @param [Hash] base - A sanitized base search hash (typically produced by `gws_tabular_search_base`) used as the starting point for generated URLs.
-  # @return [Array<Hash>] Array of chips; each chip is a hash with `:label` (String) and `:url` (String). Empty array if there are no column filters.
+  # @param [Hash] base - A sanitized base search hash (typically produced by `gws_tabular_search_base`)
+  #   used as the starting point for generated URLs.
+  # @return [Array<Hash>] Array of chips; each chip is a hash with `:label` (String) and `:url` (String).
+  #   Empty array if there are no column filters.
   def gws_tabular_column_chips(search, model, base)
     col = search[:col]
     return [] if col.blank?
@@ -77,7 +82,8 @@ module Gws::Tabular::FilesHelper
   # @param [Hash] base - The original search hash to duplicate; may include a `:col` sub-hash.
   # @param [String] column_id - The column identifier whose filter should be changed or removed.
   # @param [Object] remaining - The remaining value for the column filter; if blank, the column filter is removed.
-  # @return [Hash] A new search hash reflecting the updated `:col` state; if no column filters remain, the `:col` key is omitted.
+  # @return [Hash] A new search hash reflecting the updated `:col` state; if no column filters remain,
+  #   the `:col` key is omitted.
   def gws_tabular_remove_col(base, column_id, remaining)
     new_search = base.deep_dup
     new_search[:col] ||= {}
@@ -92,8 +98,10 @@ module Gws::Tabular::FilesHelper
 
   ##
   # Builds the index URL applying the given search parameters when present.
-  # @param [Hash, nil] new_search - Search parameters to include as the `s` query parameter; if `nil` or empty, no search parameters are included.
-  # @return [String] The URL for the index action with `s` set to `new_search` when present, otherwise the index URL without search parameters.
+  # @param [Hash, nil] new_search - Search parameters to include as the `s` query parameter;
+  #   if `nil` or empty, no search parameters are included.
+  # @return [String] The URL for the index action with `s` set to `new_search` when present,
+  #   otherwise the index URL without search parameters.
   def gws_tabular_search_url(new_search)
     new_search.present? ? url_for(action: :index, s: new_search) : url_for(action: :index)
   end
