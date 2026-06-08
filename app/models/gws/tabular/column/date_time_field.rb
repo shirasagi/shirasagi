@@ -35,6 +35,18 @@ class Gws::Tabular::Column::DateTimeField < Gws::Column::Base
     { store_as_in_file => conditions }
   end
 
+  # 適用中の絞り込み条件を「チップ」表示するための要素を返す。
+  # 日付範囲は from〜to を1チップにまとめ、解除すると範囲全体を外す（remaining: nil）。
+  def search_filter_chips(value)
+    return [] unless value.respond_to?(:key?)
+
+    from = (value[:from] || value["from"]).to_s.strip
+    to = (value[:to] || value["to"]).to_s.strip
+    return [] if from.blank? && to.blank?
+
+    [{ label: "#{name}: #{from}〜#{to}", remaining: nil }]
+  end
+
   def configure_file(file_model)
     field_name = store_as_in_file
     if input_type == 'date'

@@ -1,0 +1,18 @@
+<%
+  filters = gws_tabular_applied_search_filters(@s, @model)
+  return if filters.blank?
+%>
+<div class="gws-tabular-applied-filters">
+  <span class="gws-tabular-applied-filters-label"><%= t("gws/tabular.search.applied_filters") %></span>
+  <ul class="gws-tabular-applied-filters-list">
+    <% filters.each do |filter| %>
+      <li class="gws-tabular-applied-filter">
+        <span class="gws-tabular-applied-filter-text"><%= filter[:label] %></span>
+        <%= link_to filter[:url], class: "gws-tabular-applied-filter-remove", title: t("gws/tabular.search.remove_filter") do %>
+          <span class="material-icons-outlined md-15">close</span>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+  <%= link_to t("gws/tabular.search.clear_all"), gws_tabular_clear_search_url, class: "gws-tabular-applied-filters-clear" %>
+</div>

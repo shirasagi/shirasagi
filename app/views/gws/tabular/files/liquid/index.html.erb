@@ -6,6 +6,7 @@
 <div class="gws-tabular-views-main-box">
   <div class="gws-tabular-file-index-columns<%= show_search_rail ? "" : " gws-tabular-file-index-columns-no-rail" %>">
     <div class="gws-tabular-file-index-list">
+      <%= render "applied_filters" %>
       <div class="index">
         <% unless show_search_rail %>
           <div class="list-head">

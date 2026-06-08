@@ -42,6 +42,16 @@ class Gws::Tabular::Column::EnumField < Gws::Column::Base
     { store_as_in_file => { "$in" => values } }
   end
 
+  # 適用中の絞り込み条件を「チップ」表示するための要素を返す。
+  # 選択値ごとに1チップを作り、remaining はその値を外した残りの選択値（空なら nil）。
+  def search_filter_chips(value)
+    values = Array(value).flatten.map { |v| v.to_s.strip }.select(&:present?)
+    values &= select_options.to_a
+    values.map do |v|
+      { label: "#{name}: #{v}", remaining: (values - [v]).presence }
+    end
+  end
+
   def configure_file(file_model)
     field_name = store_as_in_file
     file_model.field field_name, type: SS::Extensions::Words

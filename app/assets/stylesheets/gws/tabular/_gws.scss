@@ -174,6 +174,56 @@
   }
 }
 
+// 一覧上部に「適用中の条件」をチップで表示する帯
+.gws-tabular-applied-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.gws-tabular-applied-filters-label {
+  color: #616161;
+  font-size: 0.85rem;
+}
+
+.gws-tabular-applied-filters-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gws-tabular-applied-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px 2px 10px;
+  border: 1px solid init.$gray2;
+  border-radius: 14px;
+  background-color: #f5f5f5;
+  font-size: 0.85rem;
+}
+
+.gws-tabular-applied-filter-remove {
+  display: inline-flex;
+  align-items: center;
+  color: #757575;
+  text-decoration: none;
+
+  &:hover {
+    color: #333;
+  }
+}
+
+.gws-tabular-applied-filters-clear {
+  margin-left: auto;
+  font-size: 0.85rem;
+}
+
 .list-head {
   .badge {
     padding: 2px 4px;
