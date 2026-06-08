@@ -30,6 +30,11 @@ describe Gws::Tabular::File, type: :model, dbscope: :example do
     expect(form.state).to eq 'public'
   end
 
+  ##
+  # Creates and saves a file record for the form's current release and assigns optional column values.
+  # @param [Array<String>, nil] enum_values - Values to set on the enum column, or `nil` to leave unset.
+  # @param [Date, Time, String, nil] date_value - Value to set on the date/datetime column, or `nil` to leave unset.
+  # @return [Gws::Tabular::File] The saved file record.
   def create_file(enum_values: nil, date_value: nil)
     file = file_model.new(cur_site: site, cur_space: space, cur_form: form)
     file.send("#{enum_field}=", enum_values) if enum_values
