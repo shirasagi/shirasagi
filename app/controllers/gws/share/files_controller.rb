@@ -409,7 +409,7 @@ class Gws::Share::FilesController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to location, notice }
-      format.json { head json: errors }
+      format.json { render json: errors }
     end
   end
 

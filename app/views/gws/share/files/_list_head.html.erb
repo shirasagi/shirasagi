@@ -17,12 +17,12 @@
 
     <% if @destination_folders.present? %>
       <div class="dropdown dropdown-toggle gws-share-dropdown move-menu ml-2">
-        <button type="button" class="btn">
+        <button type="button" class="btn" aria-haspopup="true" aria-expanded="false">
           <%= t('gws/share.links.move') %> <i class="material-icons md-13">keyboard_arrow_down</i>
         </button>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu" role="menu">
           <% @destination_folders.each do |folder| %>
-            <li><a href="#" data-folder-id="<%= folder.id %>"><%= folder.name %></a></li>
+            <li role="none"><a href="#" role="menuitem" data-folder-id="<%= folder.id %>"><%= folder.name %></a></li>
           <% end %>
         </ul>
       </div>
