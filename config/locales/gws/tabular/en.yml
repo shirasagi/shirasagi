@@ -54,6 +54,12 @@ en:
         index: Select form
     buttons:
       manage_space: Space Management
+    search:
+      date_from: Date From
+      date_to: Date To
+      applied_filters: "Applied filters"
+      clear_all: "Clear all"
+      remove_filter: "Remove this filter"
     notice:
       delay_download_with_message: |-
         Prepare files in the background.

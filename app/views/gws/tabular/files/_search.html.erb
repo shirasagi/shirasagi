@@ -1,11 +1,67 @@
 <%
-  return if @model.keyword_fields.blank?
+  search_rail = local_assigns[:search_rail]
+  has_keyword = @model.keyword_fields.present?
+  search_columns =
+    if search_rail && @model.respond_to?(:search_column_candidates)
+      @model.search_column_candidates
+    else
+      []
+    end
+  return if !has_keyword && search_columns.blank?
 
   @s ||= OpenStruct.new params[:s]
+  col_params = @s[:col].presence || {}
 %>
-<div class="list-head-search">
+<div class="list-head-search<%= search_rail ? " gws-tabular-file-search" : "" %>">
   <%= form_with scope: :s, url: "", class: "index-search", method: :get do |f| %>
-    <%= f.text_field :keyword, placeholder: t('ss.keyword'), style: "width: 300px;", id: nil %>
-    <%= f.submit t('ss.buttons.search'), class: "btn", name: nil %>
+    <% if has_keyword %>
+      <% if search_rail %>
+        <div class="gws-tabular-file-search-keyword">
+          <%= f.text_field :keyword, placeholder: t('ss.keyword'), id: nil %>
+        </div>
+      <% else %>
+        <%= f.text_field :keyword, placeholder: t('ss.keyword'), style: "width: 300px;", id: nil %>
+      <% end %>
+    <% end %>
+
+    <% search_columns.each do |column| %>
+      <% selected = col_params[column.id.to_s] %>
+      <div class="gws-tabular-file-search-section" data-column-id="<%= column.id %>">
+        <h3 class="gws-tabular-file-search-section-head"><%= column.name %></h3>
+        <% case column.search_input_type %>
+        <% when "checkbox" %>
+          <% selected_values = Array(selected).map(&:to_s) %>
+          <ul class="gws-tabular-file-search-options">
+            <% column.select_options.to_a.each do |option| %>
+              <li class="gws-tabular-file-search-option">
+                <label>
+                  <%= check_box_tag "s[col][#{column.id}][]", option, selected_values.include?(option.to_s), id: nil %>
+                  <span><%= option %></span>
+                </label>
+              </li>
+            <% end %>
+          </ul>
+        <% when "date_range" %>
+          <%
+            from_value = selected.respond_to?(:key?) ? (selected["from"] || selected[:from]) : nil
+            to_value = selected.respond_to?(:key?) ? (selected["to"] || selected[:to]) : nil
+          %>
+          <div class="gws-tabular-file-search-date-range">
+            <%= ss_date_field_tag "s[col][#{column.id}][from]", from_value, {}, class: "gws-tabular-file-search-date", title: t("gws/tabular.search.date_from") %>
+            <span class="gws-tabular-file-search-date-sep">〜</span>
+            <%= ss_date_field_tag "s[col][#{column.id}][to]", to_value, {}, class: "gws-tabular-file-search-date", title: t("gws/tabular.search.date_to") %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if search_rail %>
+      <div class="gws-tabular-file-search-actions">
+        <%= f.submit t('ss.buttons.search'), class: "btn", name: nil %>
+        <%= link_to t('ss.buttons.reset'), { action: :index }, class: "btn" %>
+      </div>
+    <% else %>
+      <%= f.submit t('ss.buttons.search'), class: "btn", name: nil %>
+    <% end %>
   <% end %>
 </div>
