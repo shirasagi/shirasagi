@@ -13,7 +13,7 @@ class Cms::SearchContents::PagesController < ApplicationController
 
   def set_crumbs
     @crumbs << [t("cms.search_contents"), cms_search_contents_pages_path]
-    @crumbs << [t("cms.search_contents_pages"), url_for(action: :index)]
+    @crumbs << [t("cms.search_contents_pages"), action: :index]
   end
 
   def fix_params
