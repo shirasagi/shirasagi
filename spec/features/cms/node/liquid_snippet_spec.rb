@@ -220,6 +220,43 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
   end
 
   #
+  # liquid のループ設定 (テンプレート/スニペット) が 1 件も無いと、テンプレート選択用
+  # select (#item_loop_setting_id_liquid) 自体が描画されない。この select を無条件に
+  # lock 対象にしていたため、val() が undefined となり editor が readOnly になって、
+  # liquid 入力欄に何も入力できなくなっていた (K03012-1911)。select が無い場合は
+  # 直接入力で編集可のままになることを回帰防止としてテストする。
+  #
+  it "keeps the loop_liquid editor editable when no liquid loop setting exists" do
+    # liquid のループ設定を全て削除し、テンプレート/スニペットが何も無い状態にする
+    Cms::LoopSetting.where(html_format: "liquid").destroy_all
+
+    visit edit_node_conf_path(site.id, node)
+    ensure_addon_opened('#addon-event-agents-addons-page_list')
+
+    loop_liquid_readonly = -> do
+      page.evaluate_script(<<~JS)
+        (function() {
+          var ta = document.getElementById('item_loop_liquid');
+          var wrapper = ta && $(ta).next('.CodeMirror')[0];
+          return !!(wrapper && wrapper.CodeMirror && wrapper.CodeMirror.getOption('readOnly'));
+        })();
+      JS
+    end
+
+    within '#addon-event-agents-addons-page_list' do
+      select('Liquid', from: 'item[loop_format]') if page.has_select?('item[loop_format]')
+      wait_for_js_ready
+
+      # ループ設定が無いため、テンプレート選択 select は描画されない (バグ条件)
+      expect(page).to have_no_css('#item_loop_setting_id_liquid', visible: :all)
+
+      # select が無くても editor は readOnly にならず、直接入力で編集できる
+      # (修正前は lock が undefined の select で readOnly=true にしていた)
+      expect(loop_liquid_readonly.call).to eq false
+    end
+  end
+
+  #
   # テンプレート選択時、textarea は readOnly になるが editor.replaceSelection で
   # スニペットが挿入できてしまっていた (利用者には反映されないテンプレート内容に
   # 上書きされ、混乱を招いた)。回帰防止のため、テンプレート選択中はスニペット
