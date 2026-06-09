@@ -49,7 +49,12 @@ $gws-navi-icons-map: (
 }
 
 // 表示するグリフを変更する（arrow / arrow-down）。
+// typo 等で未定義キーを渡した場合はビルド時にエラーで止める。
 @mixin icon($name) {
+  @if not map.has-key($gws-navi-icons-map, $name) {
+    @error "Unknown gws-navi icon: #{$name}";
+  }
+
   &::before {
     content: map.get($gws-navi-icons-map, $name);
   }
