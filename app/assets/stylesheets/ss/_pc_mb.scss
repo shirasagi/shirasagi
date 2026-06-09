@@ -1021,7 +1021,7 @@ _:future,
     }
 
     &.management {
-      @include nav.icon("setting");
+      @include nav.icon-material-setting;
     }
 
     &.trash {
@@ -1143,7 +1143,7 @@ _:future,
       }
 
       &.management {
-        @include nav.icon("setting");
+        @include nav.icon-material-setting;
       }
     }
   }
@@ -1248,7 +1248,7 @@ _:future,
       padding: 5px 15px 5px 85px;
       @include nav.icon-base(60px);
       &.management {
-        @include nav.icon("setting");
+        @include nav.icon-material-setting;
       }
       color: init.$black;
       &:hover {

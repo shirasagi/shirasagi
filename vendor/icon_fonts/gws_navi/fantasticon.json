@@ -2,13 +2,12 @@
   "inputDir": "./svg",
   "outputDir": "../../../public/assets/font",
   "name": "gws-navi-icons",
-  "fontTypes": ["woff2", "woff", "ttf"],
+  "fontTypes": ["woff2", "woff"],
   "assetTypes": ["json"],
   "normalize": true,
   "codepoints": {
     "arrow": 61697,
     "arrow-down": 61698,
-    "setting": 61699,
     "trash": 61700
   }
 }
