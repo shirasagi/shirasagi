@@ -29,10 +29,10 @@ module Cms::NodeFilter
     entries.each do |item|
       if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
         item.cur_user = @cur_user if item.respond_to?(:cur_user)
+        @items << item
       else
         item.errors.add :base, :auth_error
       end
-      @items << item
     end
 
     if SS.config.cms.node_destroy_job.try(:[], 'enable').present? && @items.present?
@@ -41,7 +41,7 @@ module Cms::NodeFilter
       return result
     end
 
-    entries.size != @items.size
+    @items.size < entries.size
   end
 
   def change_item_class
