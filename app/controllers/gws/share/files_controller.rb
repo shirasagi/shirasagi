@@ -59,35 +59,13 @@ class Gws::Share::FilesController < ApplicationController
     raise "403" unless @folder.readable?(@cur_user) || @folder.allowed?(:read, @cur_user, site: @cur_site)
   end
 
-  # 一括移動の移動先候補（アップロード可能なフォルダー一覧）。
-  # フォルダー内を表示している場合は、同一ライブラリー（最上位フォルダー）内に絞り込む。
+  # 一括移動・ドラッグ&ドロップの移動先候補（アップロード可能なフォルダー一覧）。
+  # 部署（最上位フォルダー）をまたいだ移動を許可するため、ライブラリーでの絞り込みは行わない。
   def set_destination_folders
-    folders = Gws::Share::Folder.site(@cur_site).
+    @destination_folders = Gws::Share::Folder.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site).
       tree_sort.
       select { |folder| folder.uploadable?(@cur_user) }
-
-    if @folder
-      library = @folder.name.to_s.split("/").first
-      folders = folders.select { |folder| folder.name.to_s.split("/").first == library }
-    end
-
-    @destination_folders = folders
-  end
-
-  # ドラッグ&ドロップでの移動先制限用に、各ファイルが属するライブラリー（最上位フォルダー名）を求める
-  def set_file_libraries
-    @file_libraries = {}
-    items = @items.to_a
-    return if items.blank?
-
-    folder_ids = items.map(&:folder_id).compact.uniq
-    folder_names = Gws::Share::Folder.site(@cur_site).in(id: folder_ids).pluck(:id, :name).to_h
-    items.each do |item|
-      name = folder_names[item.folder_id]
-      next if name.blank?
-      @file_libraries[item.id.to_s] = name.split("/").first
-    end
   end
 
   def fix_params
@@ -186,8 +164,6 @@ class Gws::Share::FilesController < ApplicationController
       search(params[:s]).
       custom_order(@sort).
       page(params[:page]).per(50)
-
-    set_file_libraries
   end
 
   def show
@@ -365,7 +341,6 @@ class Gws::Share::FilesController < ApplicationController
     raise "404" if folder.blank?
     raise "403" unless folder.uploadable?(@cur_user)
 
-    dest_library = folder.name.to_s.split("/").first
     affected_folder_ids = [ folder.id ]
 
     # 再描画時に再クエリされてエラー情報が失われないよう、配列として保持する
@@ -373,13 +348,6 @@ class Gws::Share::FilesController < ApplicationController
     @items.each do |item|
       unless item.allowed?(:edit, @cur_user, site: @cur_site)
         item.errors.add :base, :auth_error
-        next
-      end
-
-      src_library = item.folder.try(:name).to_s.split("/").first
-      if src_library != dest_library
-        # 別ライブラリー（最上位フォルダー）へは移動できない
-        item.errors.add :base, t("gws/share.errors.different_library")
         next
       end
 

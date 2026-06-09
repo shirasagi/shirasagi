@@ -49,16 +49,33 @@ describe "gws_share_files move_all", type: :feature, dbscope: :example, js: true
     end
   end
 
-  context "移動先候補は同一ライブラリー内に絞り込まれる" do
+  context "別ライブラリー（別の最上位フォルダー＝別部署）へも一括移動できる" do
     it do
+      expect(item1.folder_id).to eq folder1.id
+      expect(item2.folder_id).to eq folder1.id
+
       login_gws_user to: index_path
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
 
       within ".list-head-action .move-menu" do
         find("button.btn", text: I18n.t("gws/share.links.move")).click
-        expect(page).to have_link folder2.name
-        # 別ライブラリーは候補に表示されない
-        expect(page).to have_no_link other_library.name
+        # 別ライブラリーも移動先候補に表示される
+        expect(page).to have_link other_library.name
+        page.accept_confirm do
+          click_on other_library.name
+        end
       end
+
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      expect(Gws::Share::File.find(item1.id).folder_id).to eq other_library.id
+      expect(Gws::Share::File.find(item2.id).folder_id).to eq other_library.id
+
+      # 移動元・移動先の集計が更新されていること
+      folder1.reload
+      expect(folder1.descendants_files_count).to eq 0
+      other_library.reload
+      expect(other_library.descendants_files_count).to eq 2
     end
   end
 end

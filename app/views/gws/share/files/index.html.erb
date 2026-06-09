@@ -54,16 +54,14 @@
 
 <%= jquery do %>
   var moveAllUrl = "<%= url_for(action: :move_all) %>";
-  var fileLibraries = <%== @file_libraries.to_json.html_safe %>;
+  // アップロード可能なフォルダー（＝移動先として許可されるフォルダー）のIDの集合
+  var validFolderIds = {};
+  $.each(<%== @destination_folders.map(&:id).to_json.html_safe %>, function(_i, id) {
+    validFolderIds[id] = true;
+  });
 
-  // ドラッグ中のファイルが属するライブラリー（最上位フォルダー名）の一覧を返す
-  function gwsShareDraggedLibraries() {
-    var libs = {};
-    $(".gws-schedule-file-main .list-item input:checkbox:checked").each(function() {
-      var lib = fileLibraries[$(this).val()];
-      if (lib) { libs[lib] = true; }
-    });
-    return Object.keys(libs);
+  function gwsShareIsValidTarget($node) {
+    return !!validFolderIds[$node.data("id")];
   }
 
   // フォルダーノードをドロップ先として有効化する（既に初期化済みならスキップ）
@@ -76,7 +74,7 @@
         tolerance: "pointer",
         hoverClass: "gws-share-drop-hover",
         drop: function() {
-          if ($node.hasClass("gws-share-drop-invalid")) { return; }
+          if (!gwsShareIsValidTarget($node)) { return; }
 
           var folderId = $node.data("id");
           var folderName = $node.find("a.item-name").text();
@@ -107,27 +105,15 @@
       return helper;
     },
     start: function() {
-      // 別ライブラリー（移動不可）のフォルダーをグレーアウトしてドロップ無効化する
-      var libs = gwsShareDraggedLibraries();
+      // アップロード権限が無いフォルダーはグレーアウトしてドロップ不可を明示する
       $(".gws-share-file-folder-navi .tree-item[data-id]").each(function() {
         var $node = $(this);
-        if (!$node.data("ssDroppable")) { return; }
-
-        var nodeLib = String($node.data("filename") || "").split("/")[0];
-        var valid = (libs.length === 1 && libs[0] === nodeLib);
-        if (valid) {
-          $node.removeClass("gws-share-drop-invalid").droppable("enable");
-        } else {
-          $node.addClass("gws-share-drop-invalid").droppable("disable");
-        }
+        if (gwsShareIsValidTarget($node)) { return; }
+        $node.addClass("gws-share-drop-invalid");
       });
     },
     stop: function() {
-      $(".gws-share-file-folder-navi .tree-item[data-id]").each(function() {
-        var $node = $(this);
-        if (!$node.data("ssDroppable")) { return; }
-        $node.removeClass("gws-share-drop-invalid").droppable("enable");
-      });
+      $(".gws-share-file-folder-navi .tree-item.gws-share-drop-invalid").removeClass("gws-share-drop-invalid");
     }
   });
 

@@ -23,8 +23,6 @@ ja:
     select_check: 件のファイルを選択
     notice:
       move_failed: "移動できなかった項目があります：%{names}"
-    errors:
-      different_library: 別のライブラリーには移動できません。
     mailers:
       compressed:
         subject: ダウンロード準備完了のお知らせ

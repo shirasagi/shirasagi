@@ -1,5 +1,24 @@
 <%= jquery do %>
-  $(".move-menu li a").on("click", function() {
+  // ドロップダウンの項目は開いた時に初めて生成する。
+  // 一覧ページには同名のフォルダーリンク（ツリーナビ）が存在し、テスト環境では
+  // ignore_hidden_elements = false のため、常時 DOM に項目があると click_on が
+  // 曖昧マッチになってしまう。これを避けるため遅延生成する。
+  $(".move-menu").each(function() {
+    var $menu = $(this);
+    var $list = $menu.find(".dropdown-menu");
+    $menu.on("ss:dropdownOpened", function() {
+      if ($list.data("populated")) { return; }
+      $list.data("populated", true);
+
+      var folders = $menu.data("folders") || [];
+      $.each(folders, function(_i, folder) {
+        var $a = $("<a/>", { href: "#", role: "menuitem", "data-folder-id": folder.id, text: folder.name });
+        $list.append($("<li/>", { role: "none" }).append($a));
+      });
+    });
+  });
+
+  $(".move-menu").on("click", ".dropdown-menu a", function() {
     var folderId = $(this).attr("data-folder-id");
     var form = Gws_Share_File.buildForm("<%= url_for(action: :move_all) %>", "<%= t('gws/share.links.confirm.move') %>");
     if (!form) { return false; }
@@ -16,15 +35,12 @@
     <%= ss_button_to t("gws/share.links.file_download"), url_for(action: :download_all), class: "download-all btn btn-list-head-action", method: "post", confirm: t('gws/share.links.confirm.download_all') %>
 
     <% if @destination_folders.present? %>
-      <div class="dropdown dropdown-toggle gws-share-dropdown move-menu ml-2">
+      <div class="dropdown dropdown-toggle gws-share-dropdown move-menu ml-2"
+           data-folders="<%= @destination_folders.map { |folder| { id: folder.id, name: folder.name } }.to_json %>">
         <button type="button" class="btn" aria-haspopup="true" aria-expanded="false">
           <%= t('gws/share.links.move') %> <i class="material-icons md-13">keyboard_arrow_down</i>
         </button>
-        <ul class="dropdown-menu" role="menu">
-          <% @destination_folders.each do |folder| %>
-            <li role="none"><a href="#" role="menuitem" data-folder-id="<%= folder.id %>"><%= folder.name %></a></li>
-          <% end %>
-        </ul>
+        <ul class="dropdown-menu" role="menu"></ul>
       </div>
     <% end %>
 

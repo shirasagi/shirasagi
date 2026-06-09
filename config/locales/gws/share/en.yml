@@ -23,8 +23,6 @@ en:
     select_check: " file(s) selected"
     notice:
       move_failed: "Some items could not be moved: %{names}"
-    errors:
-      different_library: Files cannot be moved to a different library.
     mailers:
       compressed:
         subject: Your download is now ready
