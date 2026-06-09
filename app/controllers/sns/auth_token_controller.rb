@@ -5,7 +5,7 @@ class Sns::AuthTokenController < ApplicationController
     respond_to do |format|
       format.html do
         response.headers['Content-Type'] = "text/plain"
-        render layout: false
+        render plain: @item
       end
       format.json { render }
     end
