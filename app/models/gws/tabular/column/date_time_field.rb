@@ -141,7 +141,8 @@ class Gws::Tabular::Column::DateTimeField < Gws::Column::Base
   # 指定した文字列を検索境界の値（date または time の境界）に正規化する。
   # パースできないか空の場合は `nil` を返す。
   # @param [String, nil] str - 日付/日時を表す文字列
-  # @param [Symbol] boundary - 境界種別。`:beginning` は日の開始、その他は日の終了として扱う
+  # @param [Symbol] boundary - 境界種別。`:beginning` の場合は日の開始時刻、`:end` の場合は日の終了時刻として扱う
+  #   （`input_type` が `"date"` の場合は無視される）
   # @return [Date, Time, nil] `input_type` が `"date"` の場合は Date（その日全体を表す）、それ以外では境界に応じた Time（当日の開始時刻または終了時刻）。パース失敗または入力空の場合は `nil`
   def normalize_search_boundary(str, boundary)
     return if str.blank?
