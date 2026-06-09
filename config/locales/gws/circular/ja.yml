@@ -2,8 +2,8 @@ ja:
   gws/circular:
     setting: 回覧板設定
     tabs:
-      post: 受信した回覧
-      admin: 作成した回覧
+      post: 受信一覧
+      admin: 管理一覧
       trash: ゴミ箱
     links:
       back_to_admin: 作成した回覧へ戻る

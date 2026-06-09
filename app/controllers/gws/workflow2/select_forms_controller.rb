@@ -13,6 +13,10 @@ class Gws::Workflow2::SelectFormsController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_workflow2_label || t("modules.gws/workflow2"), gws_workflow2_files_main_path]
+    @crumbs << [
+      t("gws/workflow2.navi.new_application"),
+      gws_workflow2_select_forms_path(state: "all", mode: "by_keyword")
+    ]
     @crumbs << [t("gws/workflow2.navi.#{mode_navi_key}"), action: :index, mode: mode]
   end
 

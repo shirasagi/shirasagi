@@ -1,6 +1,7 @@
 ja:
   kana:
     dictionary: かな辞書
+    dictionary_list: かな辞書一覧
     diagnostic: 診断
     build_start: 辞書の作成を開始しました。
     build_success: 辞書の作成に成功しました。
@@ -21,7 +22,7 @@ ja:
         build_description: 以下のかな辞書から辞書をビルドし、システムに反映します。
 
   modules:
-    kana: かな
+    kana: かな辞書
 
   cms_role:
     read_kana_dictionaries: かな辞書の閲覧

@@ -2,6 +2,21 @@ module Gws::BaseFilter
   extend ActiveSupport::Concern
   include SS::BaseFilter
 
+  # 「設定」モジュール（旧「標準機能」）のサイドメニュー（conf_navi 系）を表示する
+  # コントローラの navi_view 一覧。これらのページに限り、パンくずへ「設定」階層を挿入する。
+  # 判定を navi_view に紐付けることで、設定モジュールのコントローラが増えても
+  # この一覧に追記するだけで追従できる。
+  SETTINGS_NAVI_VIEWS = %w(
+    gws/main/conf_navi
+    gws/user_conf/navi
+    gws/histories/navi
+    gws/search_form/main/conf_navi
+    gws/job/main/conf_navi
+    gws/ldap/main/navi
+    gws/tabular/gws/main/conf_navi
+    gws/elasticsearch/diagnostic/main/conf_navi
+  ).freeze
+
   included do
     self.user_class = Gws::User
     self.log_class = Gws::History
@@ -19,6 +34,9 @@ module Gws::BaseFilter
     # SS::BaseFilter#set_model の呼び出しはここ。set_current_site の後ろで set_crumbs の前
     before_action :set_model
     before_action :set_crumbs
+    # 各コントローラの set_crumbs で機能名 crumb が積まれた「後」に実行し、
+    # site crumb の直後へ「設定」を挿入する（set_conf_crumb 参照）。
+    before_action :set_conf_crumb
     after_action :put_history_log, if: ->{ @cur_user }
     navi_view "gws/main/navi"
   end
@@ -45,6 +63,26 @@ module Gws::BaseFilter
     @cur_site = SS.current_site = Gws::Group.find(params[:site])
     @cur_user.cur_site = @cur_site if @cur_user
     @crumbs << [@cur_site.name, gws_portal_path]
+  end
+
+  # 「設定」モジュール配下のページのパンくずに「設定」階層を挿入する。
+  #
+  # Gws::BaseFilter は全 GWS コントローラが include するため、無条件に挿入すると
+  # スケジュールやお知らせなど設定と無関係なページのパンくずにまで「設定」が
+  # 混入してしまう。そこで navi_view_file が設定系メニュー（SETTINGS_NAVI_VIEWS）
+  # のときに限定して挿入する。
+  #
+  # set_crumbs の後に実行され、site crumb の直後（index 1）へ挿入するため、
+  # 1 階層メニューは「サイト名 > 設定 > 機能」、多階層メニューは
+  # 「サイト名 > 設定 > 機能 > …」の並びになる。
+  # ラベルはサイドメニュー見出しと同じ gws.site_config（設定 / Settings）。
+  # 設定専用のランディングは無いが、他の crumb と見た目（breadcrumb-link）を
+  # 揃えるため、設定メニュー先頭の「組織情報」(gws_site_path) へのリンクとする
+  # （親モジュールの crumb を main ページへリンクする既存パターンに倣う）。
+  def set_conf_crumb
+    return unless SETTINGS_NAVI_VIEWS.include?(navi_view_file)
+    return if @crumbs.blank?
+    @crumbs.insert(1, [t("gws.site_config"), gws_site_path])
   end
 
   def set_current_group

@@ -40,7 +40,7 @@ en:
     buttons:
       zip_all_files: Attached file
     navi:
-      readable: Inbox
+      readable: Received list
 
   gws_role:
     use_gws_survey: Use of questionnaires

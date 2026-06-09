@@ -40,7 +40,7 @@ ja:
     buttons:
       zip_all_files: 添付ファイル
     navi:
-      readable: 受信トレイ
+      readable: 受信一覧
 
   gws_role:
     use_gws_survey: アンケートの利用
