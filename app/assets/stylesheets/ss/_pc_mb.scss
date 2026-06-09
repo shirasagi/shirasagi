@@ -1025,7 +1025,7 @@ _:future,
     }
 
     &.trash {
-      @include nav.icon("trash");
+      @include nav.icon-material-trash;
     }
 
     &:hover {

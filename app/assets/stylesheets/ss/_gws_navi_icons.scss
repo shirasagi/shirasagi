@@ -1,8 +1,8 @@
 // -------------------------------------------------------------------------------------------------
 // GWS サイドメニュー用アイコンフォント
-// 従来 PNG 背景画像で描画していた「矢印 / 下矢印 / ゴミ箱」を、SVG から生成した
+// 従来 PNG 背景画像で描画していた「矢印 / 下矢印」を、SVG から生成した
 // アイコンフォント (gws-navi-icons) のグリフ (::before) で描画する。
-// 歯車（設定）はシラサギ既存の Material Icons (settings) に統一する。
+// 歯車（設定）・ゴミ箱はシラサギ既存の Material Icons (settings / delete) に統一する。
 // 色は文字色を継承するため、コントラスト設定（body * { color: ... !important }）に追従する。
 // フォントの生成元 SVG とビルド設定: vendor/icon_fonts/gws_navi/
 //   npx fantasticon --config vendor/icon_fonts/gws_navi/fantasticon.json
@@ -23,7 +23,6 @@ $gws-navi-icons-font: "gws-navi-icons";
 $gws-navi-icons-map: (
   "arrow": "\f101",
   "arrow-down": "\f102",
-  "trash": "\f104",
 );
 
 // PNG 背景をやめ、::before のグリフでアイコンを表示する基盤。
@@ -49,7 +48,7 @@ $gws-navi-icons-map: (
   }
 }
 
-// 表示するグリフを変更する（arrow / arrow-down / trash）。
+// 表示するグリフを変更する（arrow / arrow-down）。
 @mixin icon($name) {
   &::before {
     content: map.get($gws-navi-icons-map, $name);
@@ -61,6 +60,14 @@ $gws-navi-icons-map: (
 @mixin icon-material-setting {
   &::before {
     content: "\e8b8"; // Material Icons Outlined: settings
+    font-family: "Material Icons Outlined";
+  }
+}
+
+// ゴミ箱もシラサギ既存の Material Icons (delete) を使う（汎用DB等と統一）。
+@mixin icon-material-trash {
+  &::before {
+    content: "\e872"; // Material Icons Outlined: delete
     font-family: "Material Icons Outlined";
   }
 }
