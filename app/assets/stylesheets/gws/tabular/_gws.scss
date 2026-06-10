@@ -243,6 +243,9 @@
 }
 
 .gws-tabular-applied-filters-clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
   margin-left: auto;
   font-size: 0.85rem;
 }

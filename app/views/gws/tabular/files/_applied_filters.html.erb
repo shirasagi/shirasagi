@@ -15,5 +15,8 @@
       </li>
     <% end %>
   </ul>
-  <%= link_to t("gws/tabular.search.clear_all"), gws_tabular_clear_search_url, class: "gws-tabular-applied-filters-clear" %>
+  <%= link_to gws_tabular_clear_search_url, class: "gws-tabular-applied-filters-clear" do %>
+    <span class="material-icons-outlined md-15" aria-hidden="true">filter_alt_off</span>
+    <span><%= t("gws/tabular.search.clear_all") %></span>
+  <% end %>
 </div>
