@@ -1,0 +1,27 @@
+<%= form_for :item, url: { action: :download_template }, html: { id: "item-form", method: :post } do |f| %>
+  <%= error_messages_for :item %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t('ss.links.download_template') %></h2></div>
+      <div class="addon-body">
+        <dl class="see">
+          <dt><%= t('ss.encoding') %></dt>
+          <dd>
+            <% %w(UTF-8 Shift_JIS).each do |encoding| %>
+              <label>
+                <%= radio_button_tag "item[encoding]", encoding, encoding == 'UTF-8', { id: nil } %>
+                <%= t("ss.options.csv_encoding.#{encoding}") %>
+              </label>
+            <% end %>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send ss-sticky ss-sticky-bottom">
+    <%= f.submit t('ss.buttons.download'), class: 'btn-primary save' %>
+    <%= link_to t('ss.buttons.cancel'), { action: :import }, { class: 'btn-default' } %>
+  </footer>
+<% end %>

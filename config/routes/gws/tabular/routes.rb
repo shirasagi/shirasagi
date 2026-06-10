@@ -9,7 +9,7 @@ Rails.application.routes.draw do
         resources :files do
           match :download_all, on: :collection, via: %i[get post]
           match :import, on: :collection, via: %i[get post]
-          get :download_template, on: :collection
+          match :download_template, on: :collection, via: %i[get post]
           match :copy, on: :member, via: %i[get post]
         end
         resources :trash_files, only: %i[index show destroy] do
