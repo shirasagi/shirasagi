@@ -253,6 +253,35 @@
   font-size: 0.85rem;
 }
 
+// 適用中条件チップ帯のアイコンは material-icons-outlined フォントのコードポイントを
+// SCSS 側で指定する（HTML にアイコン名を埋め込まない）。
+.gws-tabular-applied-filters-label::before,
+.gws-tabular-applied-filter-remove::before,
+.gws-tabular-applied-filters-clear::before {
+  flex: 0 0 auto;
+  font-family: "Material Icons Outlined";
+  font-size: 15px;
+  font-style: normal;
+  font-weight: normal;
+  font-feature-settings: "liga";
+  letter-spacing: normal;
+  line-height: 1;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.gws-tabular-applied-filters-label::before {
+  content: "\ef4f"; // filter_alt
+}
+
+.gws-tabular-applied-filter-remove::before {
+  content: "\e5cd"; // close
+}
+
+.gws-tabular-applied-filters-clear::before {
+  content: "\eb32"; // filter_alt_off
+}
+
 .list-head {
   .badge {
     padding: 2px 4px;

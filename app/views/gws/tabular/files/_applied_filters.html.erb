@@ -3,23 +3,15 @@
   return if filters.blank?
 %>
 <div class="gws-tabular-applied-filters">
-  <span class="gws-tabular-applied-filters-label">
-    <span class="material-icons-outlined md-15" aria-hidden="true">filter_alt</span>
-    <span><%= t("gws/tabular.search.applied_filters") %></span>
-  </span>
+  <span class="gws-tabular-applied-filters-label"><%= t("gws/tabular.search.applied_filters") %></span>
   <ul class="gws-tabular-applied-filters-list">
     <% filters.each do |filter| %>
       <li class="gws-tabular-applied-filter">
         <span class="gws-tabular-applied-filter-text"><%= filter[:label] %></span>
-        <%= link_to filter[:url], class: "gws-tabular-applied-filter-remove",
-          title: t("gws/tabular.search.remove_filter"), aria: { label: t("gws/tabular.search.remove_filter") } do %>
-          <span class="material-icons-outlined md-15" aria-hidden="true">close</span>
-        <% end %>
+        <%= link_to "", filter[:url], class: "gws-tabular-applied-filter-remove",
+          title: t("gws/tabular.search.remove_filter"), aria: { label: t("gws/tabular.search.remove_filter") } %>
       </li>
     <% end %>
   </ul>
-  <%= link_to gws_tabular_clear_search_url, class: "gws-tabular-applied-filters-clear" do %>
-    <span class="material-icons-outlined md-15" aria-hidden="true">filter_alt_off</span>
-    <span><%= t("gws/tabular.search.clear_all") %></span>
-  <% end %>
+  <%= link_to t("gws/tabular.search.clear_all"), gws_tabular_clear_search_url, class: "gws-tabular-applied-filters-clear" %>
 </div>
