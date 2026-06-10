@@ -250,7 +250,19 @@
   align-items: center;
   gap: 2px;
   margin-left: auto;
+  padding: 2px 10px;
+  border: 1px solid init.$gray2;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #616161;
   font-size: 0.85rem;
+  text-decoration: none;
+
+  &:hover {
+    border-color: #bdbdbd;
+    background-color: #f0f0f0;
+    color: #333;
+  }
 }
 
 // 適用中条件チップ帯のアイコンは material-icons-outlined フォントのコードポイントを
