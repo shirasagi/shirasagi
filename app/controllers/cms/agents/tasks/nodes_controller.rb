@@ -177,32 +177,4 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
       end
     end
   end
-
-  def destroy
-    return if @selected_ids.blank?
-
-    @task.log "# #{@site.name}"
-
-    nodes = Cms::Node.site(@site).in(id: @selected_ids)
-
-    ids   = nodes.pluck(:id)
-    @task.total_count = ids.size
-
-    ids.each do |id|
-      rescue_with(rescue_p: rescue_p) do
-        @task.count
-        node = nodes.where(id: id).first
-        node.cur_user = @cur_user if node.respond_to?(:cur_user)
-        next unless node
-
-        if @user.present? && !node.allowed?(:delete, @user, site: @site, node: @node)
-          @task.log "skip delete #{node.name}: permission denied"
-          next
-        end
-
-        @task.log "delete #{node.name}"
-        node.destroy
-      end
-    end
-  end
 end

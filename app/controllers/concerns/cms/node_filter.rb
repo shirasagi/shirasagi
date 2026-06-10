@@ -36,9 +36,9 @@ module Cms::NodeFilter
     end
 
     if SS.config.cms.node_destroy_job.try(:[], 'enable').present? && @items.present?
-      result = Cms::Node::DestroyJob.bind(site_id: @cur_site.id, user_id: @cur_user.id).
+      Cms::Node::DestroyJob.bind(site_id: @cur_site.id, user_id: @cur_user.id).
         perform_later(@items.collect(&:id))
-      return result
+      return true
     end
 
     @items.size < entries.size
@@ -93,9 +93,9 @@ module Cms::NodeFilter
     @item.cur_user = @cur_user if @item.respond_to?(:cur_user)
 
     if SS.config.cms.node_destroy_job.try(:[], 'enable').present?
-      result = Cms::Node::DestroyJob.bind(site_id: @cur_site.id, user_id: @cur_user.id).
+      Cms::Node::DestroyJob.bind(site_id: @cur_site.id, user_id: @cur_user.id).
         perform_later([@item.id])
-      render_destroy result, notice: t('ss.notice.started_purge')
+      render_destroy true, notice: t('ss.notice.started_purge')
       return
     end
 
