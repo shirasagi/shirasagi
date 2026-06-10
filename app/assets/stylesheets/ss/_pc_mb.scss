@@ -1556,7 +1556,9 @@ _:future,
 // -------------------------------------------------------------------------------------------------
 // main
 #main:not(.print-preview) {
+  flex: 1;
   width: 100%;
+  min-width: 0;
   padding-bottom: 40px;
   @include init.mb {
     margin: 0 0 100px;
