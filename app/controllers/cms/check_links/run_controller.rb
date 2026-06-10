@@ -6,6 +6,11 @@ class Cms::CheckLinks::RunController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [t("modules.cms/check_links"), cms_check_links_path]
+    @crumbs << [t("cms/check_links.run"), action: :index]
+  end
+
   def job_class
     Cms::CheckLinksJob
   end

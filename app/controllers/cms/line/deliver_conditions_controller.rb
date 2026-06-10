@@ -9,6 +9,7 @@ class Cms::Line::DeliverConditionsController < ApplicationController
   private
 
   def set_crumbs
+    @crumbs << [t("cms.line"), cms_line_messages_path]
     @crumbs << [t("cms.line_deliver_condition"), cms_line_deliver_conditions_path]
   end
 

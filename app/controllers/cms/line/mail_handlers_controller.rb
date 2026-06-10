@@ -13,6 +13,7 @@ class Cms::Line::MailHandlersController < ApplicationController
   end
 
   def set_crumbs
+    @crumbs << [t("cms.line"), cms_line_messages_path]
     @crumbs << [t("cms.line_mail_handlers"), cms_line_mail_handlers_path]
   end
 end

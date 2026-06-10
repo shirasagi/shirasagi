@@ -27,6 +27,7 @@ class Gws::Share::FilesController < ApplicationController
   def set_crumbs
     set_folder
     @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path(category: params[:category])]
+    @crumbs << [t("ss.navi.readable"), gws_share_files_path(category: params[:category])]
     if @folder.present?
       folder_hierarchy_count = @folder.name.split("/").count - 1
       0.upto(folder_hierarchy_count) do |i|
@@ -310,7 +311,7 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   def download_all
-    zip = Gws::Compressor.new(@cur_user, items: @items)
+    zip = Gws::Compressor.new(@cur_user, model: Gws::Share::File, items: @items)
     zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename)
 
     if zip.deley_download?

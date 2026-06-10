@@ -2,8 +2,8 @@ en:
   gws/circular:
     setting: Settings for circulars
     tabs:
-      post: Received circulars
-      admin: Created circulars
+      post: Received list
+      admin: Management list
       trash: Trash
     links:
       back_to_admin: Back to created circulars

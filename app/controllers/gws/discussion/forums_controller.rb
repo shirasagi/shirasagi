@@ -17,7 +17,13 @@ class Gws::Discussion::ForumsController < ApplicationController
   end
 
   def set_crumbs
+    set_mode
     @crumbs << [ @cur_site.menu_discussion_label || I18n.t('modules.gws/discussion'), gws_discussion_forums_path ]
+    if @mode == 'editable'
+      @crumbs << [ I18n.t('ss.navi.editable'), action: :index, mode: 'editable' ]
+    else
+      @crumbs << [ I18n.t('ss.navi.readable'), action: :index, mode: 'readable' ]
+    end
   end
 
   def set_item

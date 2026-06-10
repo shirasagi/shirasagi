@@ -9,6 +9,7 @@ class Cms::Line::Richmenu::GroupsController < ApplicationController
   private
 
   def set_crumbs
+    @crumbs << [t("cms.line"), cms_line_messages_path]
     @crumbs << [t("cms.line_richmenu"), cms_line_richmenu_groups_path]
   end
 

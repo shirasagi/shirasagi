@@ -5,6 +5,13 @@ class Cms::Translate::AccessLogsController < ApplicationController
   model Translate::AccessLog
   navi_view "cms/translate/main/navi"
 
+  private
+
+  def set_crumbs
+    @crumbs << [t("translate.main"), cms_translate_main_path]
+    @crumbs << [t("translate.access_log"), action: :index]
+  end
+
   public
 
   def download

@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :cms_column_multiple_attachments_upload, class: Cms::Column::MultipleAttachmentsUpload do
+  factory :cms_column_multiple_files_upload, class: Cms::Column::MultipleFilesUpload do
     cur_site { cms_site }
 
     name { "name-#{unique_id}" }
@@ -8,5 +8,6 @@ FactoryBot.define do
     tooltips { "tooltips-#{unique_id}" }
     prefix_label { "pre-#{unique_id}"[0, 10] }
     postfix_label { "pos-#{unique_id}"[0, 10] }
+    file_type { "image" }
   end
 end

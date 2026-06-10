@@ -6,7 +6,8 @@ class Voice::FilesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("voice.file"), action: :index]
+    @crumbs << [t("voice.file"), voice_files_path]
+    @crumbs << [t("views.voice/files.index"), action: :index]
   end
 
   public

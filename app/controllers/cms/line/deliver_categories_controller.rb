@@ -9,6 +9,7 @@ class Cms::Line::DeliverCategoriesController < ApplicationController
   private
 
   def set_crumbs
+    @crumbs << [t("cms.line"), cms_line_messages_path]
     @crumbs << [t("cms.line_deliver_category"), cms_line_deliver_categories_path]
   end
 

@@ -958,7 +958,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
 
               # confirm syntax check header is shown to wait for ajax completion
               expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
-              expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('errors.messages.invalid_order_of_h'))
+              expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('errors.messages.invalid_first_heading_level'))
             end
           end
         end
@@ -1036,7 +1036,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
 
               # confirm syntax check header is shown to wait for ajax completion
               expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
-              expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('errors.messages.invalid_order_of_h'))
+              expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('errors.messages.invalid_heading_level_skip'))
             end
           end
         end
@@ -1076,6 +1076,75 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
               # confirm syntax check header is shown to wait for ajax completion
               expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
               expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+            end
+          end
+        end
+
+        context "when h4 closes subsection (h2 → h3 → h4 → h2)" do
+          it do
+            visit edit_path
+
+            %w[h2 h3 h4 h2].each_with_index do |head, i|
+              within ".column-value-palette" do
+                wait_for_event_fired("ss:columnAdded") do
+                  click_on column1.name
+                end
+              end
+              within all(".column-value-cms-column-headline")[i] do
+                select head, from: "item[column_values][][in_wrap][head]"
+                fill_in "item[column_values][][in_wrap][text]", with: unique_id
+              end
+            end
+
+            within "#addon-cms-agents-addons-form-page" do
+              wait_for_event_fired "ss:check:done" do
+                within ".cms-body-checker" do
+                  check I18n.t("cms.syntax_check")
+                  click_on I18n.t("ss.buttons.run")
+                end
+              end
+
+              expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+              expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+            end
+          end
+        end
+
+        context "when first-heading and skip violations both exist" do
+          # 先頭 h6 (first 違反) と h4→h6 (skip 違反) を同時に含むケース
+          # h6 をプルダウンに含めるため、max_headline_level を h6 に拡張
+          let!(:column1) do
+            create(
+              :cms_column_headline, cur_site: site, cur_form: form,
+              required: "optional", order: 1, max_headline_level: "h6")
+          end
+
+          it do
+            visit edit_path
+
+            %w[h6 h3 h2 h3 h4 h6].each_with_index do |head, i|
+              within ".column-value-palette" do
+                wait_for_event_fired("ss:columnAdded") do
+                  click_on column1.name
+                end
+              end
+              within all(".column-value-cms-column-headline")[i] do
+                select head, from: "item[column_values][][in_wrap][head]"
+                fill_in "item[column_values][][in_wrap][text]", with: unique_id
+              end
+            end
+
+            within "#addon-cms-agents-addons-form-page" do
+              wait_for_event_fired "ss:check:done" do
+                within ".cms-body-checker" do
+                  check I18n.t("cms.syntax_check")
+                  click_on I18n.t("ss.buttons.run")
+                end
+              end
+
+              expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+              expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('errors.messages.invalid_first_heading_level'))
+              expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('errors.messages.invalid_heading_level_skip'))
             end
           end
         end

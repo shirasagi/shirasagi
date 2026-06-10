@@ -19,6 +19,7 @@ class Cms::Ldap::ImportsController < ApplicationController
   end
 
   def set_crumbs
+    @crumbs << [t("ldap.links.ldap"), cms_ldap_main_path]
     @crumbs << [t("ldap.import"), action: :index]
   end
 

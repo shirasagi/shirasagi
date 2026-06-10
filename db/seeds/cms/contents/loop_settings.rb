@@ -271,17 +271,6 @@ save_loop_setting(
   html: "{{ page.categories | map: \"basename\" | ss_prepend: \"item-\" | join: \" \" }}"
 )
 
-# ページ変数 - タグ
-save_loop_setting(
-  name: "ページ/タグ",
-  loop_html_setting_type: "snippet",
-  description: "ページのタグをスペース区切りで表示",
-  html_format: "liquid",
-  state: "public",
-  order: 250,
-  html: "{{ page.tags | join: \" \" }}"
-)
-
 # ページ変数 - グループ
 save_loop_setting(
   name: "ページ/管理グループ",

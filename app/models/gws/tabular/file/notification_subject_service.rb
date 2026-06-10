@@ -9,7 +9,9 @@ class Gws::Tabular::File::NotificationSubjectService
     workflow_circular: "gws_notification.gws/tabular/file.circular",
     workflow_comment: "gws_notification.gws/tabular/file.comment",
     workflow_destination: "gws_notification.gws/tabular/file.destination",
-    workflow_cancel: "gws_notification.gws/tabular/file.cancel"
+    workflow_cancel: "gws_notification.gws/tabular/file.cancel",
+    import_succeeded: "gws_notification.gws/tabular/file.import_succeeded",
+    import_failed: "gws_notification.gws/tabular/file.import_failed"
   }.freeze
 
   attr_accessor :site, :item, :type

@@ -6,6 +6,15 @@ class Cms::CheckLinks::SiteSettingsController < ApplicationController
   navi_view "cms/check_links/main/navi"
   menu_view "cms/crud/resource_menu"
 
+  private
+
+  def set_crumbs
+    @crumbs << [t("modules.cms/check_links"), cms_check_links_path]
+    @crumbs << [t("cms/check_links.site_setting"), action: :show]
+  end
+
+  public
+
   def set_item
     @item = @cur_site
 

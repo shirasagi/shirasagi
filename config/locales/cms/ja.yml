@@ -214,14 +214,18 @@ ja:
         link_url: URL
         file_label_place_holder: 代替テキストを入力してください。
         link_url_place_holder: URLを入力してください。
-    column_multiple_images_upload:
-      file_label: 代替テキスト
-      file_label_placeholder: 代替テキストを入力してください。
-    column_multiple_attachments_upload:
-      header: 説明文
-      header_placeholder: 添付ファイルリストの先頭に表示する説明文（例：詳細については下記をご覧ください。）
-      file_label: ファイル名
-      file_label_placeholder: リンクテキストとして表示するファイル名を入力してください。
+    column_multiple_files_upload:
+      order_aria_label: 表示順
+      image:
+        header: 説明文
+        header_placeholder: 画像リストの先頭に表示する説明文（例：詳細については下記の画像をご覧ください。）
+        file_label: 代替テキスト
+        file_label_placeholder: 代替テキストを入力してください。
+      attachment:
+        header: 説明文
+        header_placeholder: 添付ファイルリストの先頭に表示する説明文（例：詳細については下記をご覧ください。）
+        file_label: ファイル名
+        file_label_placeholder: リンクテキストとして表示するファイル名を入力してください。
     column_table:
       width: 列数
       height: 行数
@@ -637,6 +641,9 @@ ja:
         video: 動画
         attachment: 添付ファイル
         banner: バナー
+      multiple_files_upload_file_type:
+        image: 画像
+        attachment: 添付ファイル
       column_image_html_type:
         thumb: サムネイル
         image: 画像貼付
@@ -861,8 +868,7 @@ ja:
       cms/radio_button: ラジオボタン
       cms/check_box: チェックボックス
       cms/file_upload: ファイルアップロード
-      cms/multiple_images_upload: 複数画像アップロード
-      cms/multiple_attachments_upload: 複数添付ファイルアップロード
+      cms/multiple_files_upload: 複数ファイルアップロード
       cms/headline: 見出し入力
       cms/list: リスト入力
       cms/youtube: YouTube埋め込み
@@ -1193,8 +1199,7 @@ ja:
       cms/column/radio_button: ラジオボタン
       cms/column/check_box: チェックボックス
       cms/column/file_upload: ファイルアップロード
-      cms/column/multiple_images_upload: 複数画像アップロード
-      cms/column/multiple_attachments_upload: 複数添付ファイルアップロード
+      cms/column/multiple_files_upload: 複数ファイルアップロード
       cms/column/headline: 見出し入力
       cms/column/list: リスト入力
       cms/column/youtube: YouTube埋め込み
@@ -1647,6 +1652,8 @@ ja:
         max_length: 最大長
         place_holder: プレースホルダー
         file_type: ファイルタイプ
+      cms/column/multiple_files_upload:
+        file_type: ファイルタイプ
       cms/column/list:
         list_type: 種類
       cms/column/select_page:
@@ -1669,12 +1676,9 @@ ja:
         image_html_type: 貼付方法
         text: 動画の内容説明
         link_url: URL
-      cms/column/value/multiple_images_upload:
-        file_ids: 画像
-        file_labels: 代替テキスト
-      cms/column/value/multiple_attachments_upload:
-        file_ids: 添付ファイル
-        file_labels: リンクテキスト
+      cms/column/value/multiple_files_upload:
+        file_ids: ファイル
+        file_labels: リンクテキスト・代替テキスト
         header: 説明文
       cms/column/value/radio_button:
         value: 選択肢
@@ -2095,7 +2099,8 @@ ja:
       not_a_child_group: はサイトに所属するグループを設定してください。
       not_found_parent_group: 親グループが存在しません。
       plz_check_targets_to_change_state: 公開ステータス変更対象が選択されておりません。対象のチェックボックスにチェックを入れてください。
-      invalid_order_of_h: 見出し(H)の順番が不正です。
+      invalid_first_heading_level: 先頭の見出しは h1 または h2 にしてください。
+      invalid_heading_level_skip: 見出しレベルが 1 段を超えて深くなっています。
       invalid_multibyte_character: 英数字は半角文字を入力してください。
       invalid_kana_character: 半角カナ文字が含まれています。
       invalid_date_format: 日付の表記は○年○月○日としてください。
@@ -2138,8 +2143,12 @@ ja:
           - 表のヘッダー(TH)に見出しの方向であるSCOPE属性が設定されていません。
           - 行方向であればscope="colを設定してください。
           - 列方向であればscope="row"を設定してください。
-        invalid_order_of_h:
-          - 適切な順に配置してください。
+        invalid_first_heading_level:
+          - ページ先頭の見出しは h1 または h2 から開始してください。
+          - 該当の見出しを h1 または h2 に変更してください。
+        invalid_heading_level_skip:
+          - 直前の見出しの次に来る見出しは、同じレベルまたは 1 段深いレベル（例：h2 の次は h3）にしてください。
+          - h2 の直後に h4 を置くなど、レベルを 2 段以上スキップしないでください。
         invalid_multibyte_character:
           - 本文に全角英数が含まれています。
           - 半角英数に置き換えるか削除してください。
@@ -2202,6 +2211,8 @@ ja:
         snippets:
           - 良く使うHTML片が一覧に表示されます。
           - HTML片を選択すると、現在のカーソル位置にHTML片が挿入されます。
+          - その他、liquidに使用するタグは下記よりご確認ください。
+          - <a href="https://shirasagi.github.io/features/liquid/index.html" target="_blank" rel="noopener">https://shirasagi.github.io/features/liquid/index.html</a>
         loop_html:
           - 事前に登録したテンプレートが一覧表示されます。
           - 一覧からテンプレートを選択するか、「直接入力する」を選択し任意のHTMLを設定してください。
@@ -3304,6 +3315,10 @@ ja:
         - リンクテキストの最大長を入力します。
       label_place_holder:
         - リンクテキストのプレースホルダーを入力します。
+
+    cms/column/multiple_files_upload:
+      file_type:
+        - 複数アップロードするファイルの種別を選択します。
 
     cms/column/headline:
       min_headline_level:

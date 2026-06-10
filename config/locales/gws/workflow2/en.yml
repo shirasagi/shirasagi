@@ -40,7 +40,7 @@ en:
       purposes:
         index: Select a purpose
     navi:
-      new_application: New
+      new_application: Create new application
       find_by_keyword: By Keyword
       find_by_purpose: By Business
       readable: All Applications

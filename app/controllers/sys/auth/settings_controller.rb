@@ -9,6 +9,11 @@ class Sys::Auth::SettingsController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [t("sys.auth"), sys_auth_path]
+    @crumbs << [t("sys.auth/setting"), action: :show]
+  end
+
   def set_item
     @item = @model.first_or_create
   end

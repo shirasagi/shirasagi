@@ -18,8 +18,8 @@
   <%= gws_menu_icon(:workflow2, gws_workflow2_files_main_path) %>
 
   <h3><%= link_to t('gws/workflow2.navi.new_application'), gws_workflow2_select_forms_path(state: "all", mode: "by_keyword") %></h3>
-  <h4><%= link_to t('gws/workflow2.navi.find_by_keyword'), gws_workflow2_select_forms_path(state: "all", mode: "by_keyword") %></h4>
-  <h4><%= link_to t('gws/workflow2.navi.find_by_purpose'), gws_workflow2_select_forms_path(state: "all", mode: "by_purpose") %></h4>
+  <h4 class="search"><%= link_to t('gws/workflow2.navi.find_by_keyword'), gws_workflow2_select_forms_path(state: "all", mode: "by_keyword") %></h4>
+  <h4 class="search"><%= link_to t('gws/workflow2.navi.find_by_purpose'), gws_workflow2_select_forms_path(state: "all", mode: "by_purpose") %></h4>
 
   <h3><%= link_to t('gws/workflow2.navi.readable'), gws_workflow2_files_path(state: :all) %></h3>
   <h4><%= link_to t('gws/workflow2.navi.approve'), gws_workflow2_files_path(state: :approve) %></h4>
@@ -35,7 +35,7 @@
   <% if workflow_form_lins.present? %>
     <h3><%= link_to t("gws/workflow2.navi.form.main"), sns_redirect_path(ref: workflow_form_lins.first[1]), class: "management" %></h3>
     <% workflow_form_lins.each do |label, path| %>
-      <h4><%= link_to label, path, class: "management" %></h4>
+      <h4 class="management"><%= link_to label, path, class: "management" %></h4>
     <% end %>
   <% end %>
 </nav>

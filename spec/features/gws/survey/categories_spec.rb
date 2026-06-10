@@ -68,7 +68,9 @@ describe "gws_survey_categories", type: :feature, dbscope: :example, js: true do
     context "readable" do
       it do
         visit gws_survey_main_path(site: site)
-        click_on I18n.t("gws/survey.navi.readable")
+        within ".current-navi" do
+          click_on I18n.t("gws/survey.navi.readable")
+        end
 
         within ".list-items" do
           expect(page).to have_css(".list-item", text: form1.name)

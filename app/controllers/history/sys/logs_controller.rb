@@ -9,6 +9,7 @@ class History::Sys::LogsController < ApplicationController
   private
 
   def set_crumbs
+    @crumbs << [t("mongoid.models.gws/history"), history_sys_logs_path]
     @crumbs << [t("history.log"), action: :index]
   end
 

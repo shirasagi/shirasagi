@@ -4,6 +4,8 @@ en:
     no_subjects: 'No title'
     no_senders: 'No name'
     unseen: Unread
+    navi:
+      messages: Message list
     options:
       priority:
         '1': Highest

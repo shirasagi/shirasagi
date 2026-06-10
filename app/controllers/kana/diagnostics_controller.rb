@@ -16,6 +16,7 @@ class Kana::DiagnosticsController < ApplicationController
   end
 
   def set_crumbs
+    @crumbs << [t("modules.kana"), nil]
     @crumbs << [t("kana.diagnostic"), url_for(action: :show)]
   end
 

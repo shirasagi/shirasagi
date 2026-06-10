@@ -4,8 +4,10 @@ class Cms::SyntaxChecker::Column::OrderOfHChecker
   attr_accessor :context, :contents
 
   def check
-    code = ''
-    first_error_content = nil
+    code_first = ''
+    code_skip = ''
+    first_content_for_first = nil
+    first_content_for_skip = nil
     h_level_check = context.h_level_check
     header_check = context.header_check
 
@@ -20,9 +22,12 @@ class Cms::SyntaxChecker::Column::OrderOfHChecker
         if current_level <= 2 && !header_check
           h_level_check = current_level
           header_check = true
-        elsif (current_level > 2 && !header_check) || (h_level_check < current_level - 1)
-          code += current_content.column_value.head + " "
-          first_error_content ||= current_content
+        elsif current_level > 2 && !header_check
+          code_first += current_content.column_value.head + " "
+          first_content_for_first ||= current_content
+        elsif h_level_check < current_level - 1
+          code_skip += current_content.column_value.head + " "
+          first_content_for_skip ||= current_content
         else
           h_level_check = current_level
         end
@@ -30,14 +35,21 @@ class Cms::SyntaxChecker::Column::OrderOfHChecker
         # 2 個目以降にある h1, h2 は無チェック
         next
       elsif prev_level < current_level - 1
-        code += current_content.column_value.head + " "
-        first_error_content ||= current_content
+        code_skip += current_content.column_value.head + " "
+        first_content_for_skip ||= current_content
       end
     end
-    return if code.blank?
 
-    context.errors << Cms::SyntaxChecker::CheckerError.new(
-      context: context, content: first_error_content, code: code.strip, checker: self, error: :invalid_order_of_h)
+    if code_first.present?
+      context.errors << Cms::SyntaxChecker::CheckerError.new(
+        context: context, content: first_content_for_first, code: code_first.strip, checker: self,
+        error: :invalid_first_heading_level)
+    end
+    if code_skip.present?
+      context.errors << Cms::SyntaxChecker::CheckerError.new(
+        context: context, content: first_content_for_skip, code: code_skip.strip, checker: self,
+        error: :invalid_heading_level_skip)
+    end
   end
 
   private

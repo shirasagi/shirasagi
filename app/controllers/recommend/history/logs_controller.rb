@@ -7,6 +7,16 @@ class Recommend::History::LogsController < ApplicationController
   navi_view "recommend/main/navi"
   menu_view "recommend/main/menu"
 
+  private
+
+  def set_crumbs
+    @crumbs << [t("recommend.main"), recommend_history_logs_tokens_path]
+    leaf = action_name == "paths" ? t("recommend.paths") : t("recommend.tokens")
+    @crumbs << [leaf, action: action_name]
+  end
+
+  public
+
   def tokens
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 

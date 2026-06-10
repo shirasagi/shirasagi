@@ -68,12 +68,12 @@
 //= require chat/lib/chart
 //= require cms/lib/base
 //= require cms/lib/editor
+//= require cms/lib/loop_snippet
 //= require cms/lib/form
 //= require cms/lib/source_cleaner
 //= require cms/lib/template_form
 //= require cms/lib/column_file_upload
-//= require cms/lib/column_multiple_images_upload
-//= require cms/lib/column_multiple_attachments_upload
+//= require cms/lib/column_multiple_files_upload
 //= require cms/lib/column_free
 //= require cms/lib/column_list
 //= require cms/lib/column_table

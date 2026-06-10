@@ -15,6 +15,7 @@ class Gws::Affair::Worktime::AggregateController < ApplicationController
   def set_crumbs
     @crumbs << [@cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path]
     @crumbs << [t("modules.gws/affair/worktime/aggregate"), gws_affair_worktime_aggregate_path]
+    @crumbs << [t("modules.gws/affair/worktime/aggregate/default"), action: :index]
   end
 
   def set_query

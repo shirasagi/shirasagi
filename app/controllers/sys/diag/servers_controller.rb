@@ -15,6 +15,7 @@ class Sys::Diag::ServersController < ApplicationController
   private
 
   def set_crumbs
+    @crumbs << [t("sys.diag"), sys_diag_main_path]
     @crumbs << ["Server Info", action: :show]
   end
 

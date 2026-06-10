@@ -150,9 +150,9 @@ ja:
     errors:
       denied_comment: コメントの投稿は許可されていません。
     tabs:
-      unanswer: 未回答
-      answer: 回答済み
-      admin: 作成した設問
+      unanswer: 未回答一覧
+      answer: 回答済み一覧
+      admin: 管理一覧
       article_management: 設問（管理）
       management_admin: 設問（管理）
     management:

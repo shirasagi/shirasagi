@@ -42,6 +42,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
     set_cur_folder
     @crumbs << [@cur_site.menu_memo_label || t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
+    @crumbs << [t('gws/memo.navi.messages'), gws_memo_messages_path]
     if @cur_folder.folder_path != 'INBOX'
       @cur_folder.ancestor_or_self.each do |folder|
         @crumbs << [folder.current_name, gws_memo_messages_path(folder: folder.folder_path)]

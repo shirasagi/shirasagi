@@ -14,7 +14,13 @@ class Gws::Workflow::FilesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [@cur_site.menu_workflow_label || t("modules.gws/workflow"), action: :index]
+    @crumbs << [@cur_site.menu_workflow_label || t("modules.gws/workflow"), gws_workflow_files_main_path]
+    sub_state = %w(approve request).find { |s| params[:state] == s }
+    if sub_state
+      @crumbs << [t("gws/workflow.options.file_state.#{sub_state}"), gws_workflow_files_path(state: sub_state)]
+    else
+      @crumbs << [t("ss.navi.readable"), gws_workflow_files_main_path]
+    end
   end
 
   def set_forms
@@ -262,7 +268,7 @@ class Gws::Workflow::FilesController < ApplicationController
     end
 
     filename = "workflow_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip"
-    zip = Gws::Compressor.new(@cur_user, items: files, filename: filename)
+    zip = Gws::Compressor.new(@cur_user, model: SS::File, items: files, filename: filename)
     zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename)
 
     if zip.deley_download?
@@ -287,7 +293,7 @@ class Gws::Workflow::FilesController < ApplicationController
     end
 
     filename = "workflow_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip"
-    zip = Gws::Compressor.new(@cur_user, items: files, filename: filename)
+    zip = Gws::Compressor.new(@cur_user, model: SS::File, items: files, filename: filename)
     zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename)
 
     if zip.deley_download?

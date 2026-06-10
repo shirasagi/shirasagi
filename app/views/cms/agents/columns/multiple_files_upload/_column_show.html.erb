@@ -1,7 +1,10 @@
-<% value ||= nil %>
+<%
+  value ||= nil
+  file_type = column.try(:file_type).presence || "image"
+%>
 <%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do %>
   <% if value && value.header.present? %>
-    <div class="attachment-header"><%= simple_format(value.header) %></div>
+    <div class="multiple-files-upload-header"><%= simple_format(value.header) %></div>
   <% end %>
   <% if value && value.file_ids.present? %>
     <div id="selected-files">
@@ -16,12 +19,18 @@
             <% end %>
             <div class="properties">
               <span><%= I18n.t("sns.filename") %>: <%= file.name %></span><br>
+              <% if file.image? && file.respond_to?(:image_dimension) %>
+                <% width, height = file.image_dimension %>
+                <% if width && height %>
+                  <span><%= t("sns.w_h") %>: <%= width %> x <%= height %></span><br>
+                <% end %>
+              <% end %>
               <span><%= t("sns.size") %>: <%= number_to_human_size(file.size) %></span><br>
             </div>
           <% end %>
           <div class="name">
             <label><%= file.name %></label><br />
-            <label><%= t("cms.column_multiple_attachments_upload.file_label") %>: <%= value.file_label_for(file) %></label>
+            <label><%= t("cms.column_multiple_files_upload.#{file_type}.file_label") %>: <%= value.file_label_for(file) %></label>
           </div>
           <% if SS::ReplaceFile.replaceable?(@item, user: @cur_user, site: @cur_site, node: @cur_node) %>
             <div class="replace-file">

@@ -9,6 +9,7 @@ class Cms::Line::DeliverLogsController < ApplicationController
   private
 
   def set_crumbs
+    @crumbs << [t("cms.line"), cms_line_messages_path]
     @crumbs << [t("cms.line_deliver_log"), cms_line_deliver_logs_path]
   end
 end

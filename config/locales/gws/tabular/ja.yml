@@ -54,6 +54,12 @@ ja:
         index: 定義を選択する
     buttons:
       manage_space: スペース管理
+    search:
+      date_from: 開始日
+      date_to: 終了日
+      applied_filters: 適用中の条件
+      clear_all: すべてクリア
+      remove_filter: この条件を外す
     notice:
       delay_download_with_message: |-
         バックグランドでファイルを準備します。
@@ -149,6 +155,8 @@ ja:
       remand: "[%{form}]「%{name}」の承認申請が差し戻されました。"
       circular: "[%{form}]「%{name}」が届きました。"
       comment: "[%{form}]「%{name}」にコメントがありました。"
+      import_succeeded: "[%{form}] インポートが完了しました。"
+      import_failed: "[%{form}] インポートに失敗しました。"
 
   modules:
     gws/tabular: 汎用DB
@@ -239,6 +247,9 @@ ja:
         _id: ID
         id: ID
         migration_errors: マイグレーションエラー
+      gws/tabular/file/download_param:
+        format: ファイル形式
+        encoding: 文字コード
       gws/tabular/form:
         name: タイトル
         i18n_name: タイトル

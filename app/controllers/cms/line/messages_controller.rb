@@ -9,6 +9,7 @@ class Cms::Line::MessagesController < ApplicationController
   private
 
   def set_crumbs
+    @crumbs << [t("cms.line"), cms_line_messages_path]
     @crumbs << [t("cms.line_message"), cms_line_messages_path]
   end
 

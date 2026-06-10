@@ -13,6 +13,7 @@ class Gws::StaffRecord::UserTitlesController < ApplicationController
 
   def set_crumbs
     set_year
+    @crumbs << [t("gws/staff_record.staff_records"), gws_staff_record_years_path]
     @crumbs << ["#{@cur_year.name} " + t("mongoid.models.gws/staff_record/user_title"), gws_staff_record_user_titles_path]
   end
 

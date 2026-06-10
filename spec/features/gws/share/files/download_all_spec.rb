@@ -36,12 +36,16 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
     context "when zip file is created in background job" do
       before do
-        @save_config = SS.config.env.deley_download
-        SS.config.replace_value_at(:env, :deley_download, { "min_filesize" => 0, "min_count" => 0 })
+        @save_min_filesize = Gws::Compressor.min_filesize
+        @save_min_count = Gws::Compressor.min_count
+
+        Gws::Compressor.min_filesize = 0
+        Gws::Compressor.min_count = 0
       end
 
       after do
-        SS.config.replace_value_at(:env, :deley_download, @save_config)
+        Gws::Compressor.min_filesize = @save_min_filesize
+        Gws::Compressor.min_count = @save_min_count
       end
 
       it do

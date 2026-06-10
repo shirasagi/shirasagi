@@ -11,7 +11,7 @@ class Gws::Workload::TrashesController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_workload_label || I18n.t('modules.gws/workload'), gws_workload_main_path]
-    @crumbs << [I18n.t("gws/workload.tabs.admin"), url_for(action: :index) ]
+    @crumbs << [I18n.t("gws/workload.tabs.trash"), url_for(action: :index) ]
   end
 
   def dropdowns

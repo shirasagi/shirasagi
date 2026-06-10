@@ -1,10 +1,9 @@
 require 'spec_helper'
 
 describe "article_agents_parts_page", type: :feature, dbscope: :example do
-  let(:site)   { cms_site }
+  let(:site) { cms_site }
   let(:layout) { create_cms_layout part }
-  let(:node)   { create :cms_node, layout_id: layout.id, filename: "node" }
-  let(:part)   { create :article_part_page, filename: "node/part" }
+  let(:node) { create :cms_node, layout_id: layout.id, filename: "node" }
 
   before do
     site.mobile_state = "enabled"
@@ -16,6 +15,7 @@ describe "article_agents_parts_page", type: :feature, dbscope: :example do
   end
 
   context "public" do
+    let(:part) { create :article_part_page, filename: "node/part" }
     let!(:item) { create :article_page, layout_id: layout.id, filename: "node/item" }
 
     before do
@@ -74,6 +74,7 @@ describe "article_agents_parts_page", type: :feature, dbscope: :example do
   end
 
   context "request_dir" do
+    let(:part) { create :article_part_page, filename: "node/part" }
     let!(:item) { create :article_page, cur_node: node }
     let(:node2) { create :article_node_page, layout_id: layout.id }
     let!(:item2) { create :article_page, cur_node: node2 }
@@ -86,13 +87,129 @@ describe "article_agents_parts_page", type: :feature, dbscope: :example do
     end
 
     it do
-      visit "#{node.full_url}/index.html"
+      visit "#{node.full_url}index.html"
       expect(page).to have_css(".parts", text: item.name)
       expect(page).to have_no_css(".parts", text: item2.name)
 
-      visit "#{node2.full_url}/index.html"
+      visit "#{node2.full_url}index.html"
       expect(page).to have_no_css(".parts", text: item.name)
       expect(page).to have_css(".parts", text: item2.name)
+    end
+  end
+
+  context "request_dir in root part", mecab: true, js: true do
+    context "ajax_view enabled" do
+      let(:part) { create :article_part_page, filename: "part" }
+      let!(:item) { create :article_page, cur_node: node }
+      let(:node2) { create :article_node_page, layout_id: layout.id }
+      let!(:item2) { create :article_page, cur_node: node2 }
+      let!(:ajax_view) { "enabled" }
+
+      before do
+        part.ajax_view = ajax_view
+        part.upper_html = '<div class="parts">'
+        part.lower_html = '</div>'
+        part.conditions = [ "\#{request_dir}" ]
+        part.save!
+      end
+
+      it do
+        visit "#{node.full_url}index.html"
+        wait_for_ajax
+
+        expect(page).to have_css(".parts", text: item.name)
+        expect(page).to have_no_css(".parts", text: item2.name)
+
+        visit "#{node2.full_url}index.html"
+        wait_for_ajax
+
+        expect(page).to have_no_css(".parts", text: item.name)
+        expect(page).to have_css(".parts", text: item2.name)
+      end
+    end
+
+    context "ajax_view disabled" do
+      let(:part) { create :article_part_page, filename: "part" }
+      let!(:item) { create :article_page, cur_node: node }
+      let(:node2) { create :article_node_page, layout_id: layout.id }
+      let!(:item2) { create :article_page, cur_node: node2 }
+      let!(:ajax_view) { "disabled" }
+
+      before do
+        part.ajax_view = ajax_view
+        part.upper_html = '<div class="parts">'
+        part.lower_html = '</div>'
+        part.conditions = [ "\#{request_dir}" ]
+        part.save!
+      end
+
+      it do
+        visit "#{node.full_url}index.html"
+        expect(page).to have_css(".parts", text: item.name)
+        expect(page).to have_no_css(".parts", text: item2.name)
+
+        visit "#{node2.full_url}index.html"
+        expect(page).to have_no_css(".parts", text: item.name)
+        expect(page).to have_css(".parts", text: item2.name)
+      end
+    end
+
+    context "with kana" do
+      context "ajax_view enabled" do
+        let(:part) { create :article_part_page, filename: "part" }
+        let!(:item) { create :article_page, cur_node: node }
+        let(:node2) { create :article_node_page, layout_id: layout.id }
+        let!(:item2) { create :article_page, cur_node: node2 }
+        let!(:ajax_view) { "enabled" }
+
+        before do
+          part.ajax_view = ajax_view
+          part.upper_html = '<div class="parts">'
+          part.lower_html = '</div>'
+          part.conditions = [ "\#{request_dir}" ]
+          part.save!
+        end
+
+        it do
+          visit node.full_url.sub(node.url, SS.config.kana.location + node.url)
+          wait_for_ajax
+
+          expect(page).to have_css(".parts", text: item.name)
+          expect(page).to have_no_css(".parts", text: item2.name)
+
+          visit node2.full_url.sub(node2.url, SS.config.kana.location + node2.url)
+          wait_for_ajax
+
+          expect(page).to have_no_css(".parts", text: item.name)
+          expect(page).to have_css(".parts", text: item2.name)
+        end
+      end
+
+      context "ajax_view disabled" do
+        let(:part) { create :article_part_page, filename: "part" }
+        let!(:item) { create :article_page, cur_node: node }
+        let(:node2) { create :article_node_page, layout_id: layout.id }
+        let!(:item2) { create :article_page, cur_node: node2 }
+        let!(:ajax_view) { "disabled" }
+
+        before do
+          part.ajax_view = ajax_view
+          part.upper_html = '<div class="parts">'
+          part.lower_html = '</div>'
+          part.conditions = [ "\#{request_dir}" ]
+          part.save!
+        end
+
+        it do
+          visit node.full_url.sub(node.url, SS.config.kana.location + node.url)
+          expect(page).to have_css(".parts", text: item.name)
+          expect(page).to have_no_css(".parts", text: item2.name)
+
+          visit node2.full_url.sub(node2.url, SS.config.kana.location + node2.url)
+          expect(page).to have_no_css(".parts", text: item.name)
+          expect(page).to have_css(".parts", text: item2.name)
+        end
+      end
     end
   end
 
@@ -156,6 +273,7 @@ describe "article_agents_parts_page", type: :feature, dbscope: :example do
   end
 
   context "with さまざまな公開予約" do
+    let(:part) { create :article_part_page, filename: "node/part" }
     let!(:item0) { create :article_page, cur_site: site, cur_node: node, layout: layout, state: "public" }
     let!(:item1) { create :article_page, cur_site: site, cur_node: node, layout: layout, state: "closed" }
     let!(:item2) { create :article_page, cur_site: site, cur_node: node, layout: layout, state: "public" }
@@ -190,7 +308,7 @@ describe "article_agents_parts_page", type: :feature, dbscope: :example do
     end
 
     it do
-      visit "#{node.full_url}/index.html"
+      visit "#{node.full_url}index.html"
       within ".parts" do
         expect(page).to have_css("article", count: 1)
         within ".item-#{::File.basename(item0.basename, ".*")}" do
@@ -201,6 +319,7 @@ describe "article_agents_parts_page", type: :feature, dbscope: :example do
   end
 
   context "with sort_column_name" do
+    let(:part) { create :article_part_page, filename: "node/part" }
     let!(:form) { create :cms_form, cur_site: site, state: 'public', sub_type: 'entry', html: nil }
     let!(:column) do
       create(
