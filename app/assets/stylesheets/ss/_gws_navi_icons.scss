@@ -1,32 +1,28 @@
 // -------------------------------------------------------------------------------------------------
-// GWS サイドメニュー用アイコンフォント
-// 従来 PNG 背景画像で描画していた「矢印 / 下矢印」を、SVG から生成した
-// アイコンフォント (gws-navi-icons) のグリフ (::before) で描画する。
-// 歯車（設定）・ゴミ箱はシラサギ既存の Material Icons (settings / delete) に統一する。
+// GWS サイドメニュー用アイコン
+// 従来 PNG 背景画像で描画していた「矢印 / 下矢印 / 歯車 / ゴミ箱」を、
+// シラサギ既存の Material Icons Outlined のグリフ (::before) で描画する。
+//   - 矢印（右） … expand_circle_right（= expand_circle_down を 90 度回転）
+//   - 矢印（下） … expand_circle_down
+//   - 歯車（設定）… settings
+//   - ゴミ箱      … delete
 // 色は文字色を継承するため、コントラスト設定（body * { color: ... !important }）に追従する。
-// フォントの生成元 SVG とビルド設定: vendor/icon_fonts/gws_navi/
-//   npx fantasticon --config vendor/icon_fonts/gws_navi/fantasticon.json
+// ※ expand_circle_right は Material Icons Outlined に収録されていないため、
+//    expand_circle_down を CSS で 90 度回転させて右向き矢印として表示する。
 @use "sass:map";
 
-$gws-navi-icons-font: "gws-navi-icons";
+$gws-navi-icons-font: "Material Icons Outlined";
 
-@font-face {
-  font-family: $gws-navi-icons-font;
-  font-style: normal;
-  font-weight: normal;
-  src:
-    url("/assets/font/gws-navi-icons.woff2?v=20260608") format("woff2"),
-    url("/assets/font/gws-navi-icons.woff?v=20260608") format("woff");
-  font-display: block;
-}
-
+// Material Icons Outlined のコードポイント。
 $gws-navi-icons-map: (
-  "arrow": "\f101",
-  "arrow-down": "\f102",
+  "arrow": "\e7cd", // expand_circle_down（右矢印として 90 度回転して使用）
+  "arrow-down": "\e7cd", // expand_circle_down
+  "setting": "\e8b8", // settings
+  "trash": "\e872", // delete
 );
 
 // PNG 背景をやめ、::before のグリフでアイコンを表示する基盤。
-// 既定では矢印を表示する。$left はアイコンの水平位置(px)。
+// 既定では右矢印（expand_circle_down を 90 度回転）を表示する。$left は水平位置(px)。
 @mixin icon-base($left, $size: 16px) {
   position: relative;
   background-image: none;
@@ -36,7 +32,7 @@ $gws-navi-icons-map: (
     position: absolute;
     top: 50%;
     left: $left;
-    transform: translateY(-50%);
+    transform: translateY(-50%) rotate(-90deg);
     font-family: $gws-navi-icons-font;
     font-size: $size;
     -webkit-font-smoothing: antialiased;
@@ -48,7 +44,8 @@ $gws-navi-icons-map: (
   }
 }
 
-// 表示するグリフを変更する（arrow / arrow-down）。
+// 表示するグリフを変更する。回転は右矢印（arrow）のみ必要なので、
+// それ以外のグリフでは回転を解除する。
 // typo 等で未定義キーを渡した場合はビルド時にエラーで止める。
 @mixin icon($name) {
   @if not map.has-key($gws-navi-icons-map, $name) {
@@ -57,24 +54,21 @@ $gws-navi-icons-map: (
 
   &::before {
     content: map.get($gws-navi-icons-map, $name);
+
+    @if $name != "arrow" {
+      transform: translateY(-50%);
+    }
   }
 }
 
-// 歯車（設定）はシラサギ既存の Material Icons (settings) を使う。
-// 共有ファイルのフォルダー設定ボタン等と表現を統一し、色は文字色を継承する。
+// 歯車（設定）は Material Icons Outlined (settings) を使う。
 @mixin icon-material-setting {
-  &::before {
-    content: "\e8b8"; // Material Icons Outlined: settings
-    font-family: "Material Icons Outlined";
-  }
+  @include icon("setting");
 }
 
-// ゴミ箱もシラサギ既存の Material Icons (delete) を使う（汎用DB等と統一）。
+// ゴミ箱は Material Icons Outlined (delete) を使う。
 @mixin icon-material-trash {
-  &::before {
-    content: "\e872"; // Material Icons Outlined: delete
-    font-family: "Material Icons Outlined";
-  }
+  @include icon("trash");
 }
 
 // アイコンの水平位置だけ変更する（モバイル用の上書きなど）。
