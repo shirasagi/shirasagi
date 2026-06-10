@@ -341,11 +341,14 @@ class Gws::Tabular::FilesController < ApplicationController
     set_model
     raise "403" unless policy_class.import?(@cur_site, @cur_user, @model)
 
+    encoding = params[:encoding].to_s
+    encoding = "UTF-8" unless %w(UTF-8 Shift_JIS).include?(encoding)
+
     exporter = Gws::Tabular::File::CsvExporter.new(
       site: @cur_site, user: @cur_user, space: cur_space, form: cur_form, release: cur_release, criteria: @model.none)
 
     filename = "gws_tabular_files_#{cur_form.i18n_name}_template.csv"
-    send_enum exporter.enum_csv(encoding: "UTF-8"), filename: filename
+    send_enum exporter.enum_csv(encoding: encoding), filename: filename
   end
 
   def copy

@@ -13,7 +13,12 @@
           </dd>
           <% download_template_path = url_for(action: :download_template) rescue nil %>
           <% if download_template_path.present? %>
-            <dd><%= link_to t('ss.links.download_template'), download_template_path %></dd>
+            <% %w(UTF-8 Shift_JIS).each do |encoding| %>
+              <dd>
+                <%= link_to "#{t('ss.links.download_template')} (#{t("ss.options.csv_encoding.#{encoding}")})",
+                      url_for(action: :download_template, encoding: encoding) %>
+              </dd>
+            <% end %>
           <% end %>
           <dd>
             <div class="body markdown-body">
