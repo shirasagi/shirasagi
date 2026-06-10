@@ -98,22 +98,39 @@
   }
 
   .gws-tabular-file-search-options {
+    // 選択肢が多いときは縦に伸び過ぎないようスクロールさせる
+    max-height: 220px;
     margin: 0;
     padding: 0;
+    overflow-y: auto;
     list-style: none;
   }
 
   .gws-tabular-file-search-option {
     label {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 4px;
       margin: 2px 0;
       cursor: pointer;
     }
 
     input[type="checkbox"] {
-      margin: 0;
+      flex: 0 0 auto;
+      // テキストの1行目に揃える
+      margin: 2px 0 0;
+    }
+
+    span {
+      // 横にはみ出す長いラベルは最大2行で省略表示する
+      display: -webkit-box;
+      min-width: 0;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      text-overflow: ellipsis;
+      word-break: break-word;
     }
   }
 
@@ -144,6 +161,12 @@
       flex: 1 1 0;
       text-align: center;
     }
+  }
+
+  // キーワード直下に置く検索ボタンはキーワード欄の余白を流用する
+  .gws-tabular-file-search-actions-top {
+    margin-top: 0;
+    margin-bottom: 12px;
   }
 
   // モバイルではレールが全幅になるため、各項目を多段に並べて余白を埋め、

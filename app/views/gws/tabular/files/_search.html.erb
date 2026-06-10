@@ -24,6 +24,13 @@
       <% end %>
     <% end %>
 
+    <% if search_rail && search_columns.present? %>
+      <%# 絞り込み項目が多いと末尾の検索ボタンが下方に離れるため、上部にも検索ボタンを置く %>
+      <div class="gws-tabular-file-search-actions gws-tabular-file-search-actions-top">
+        <%= f.submit t('ss.buttons.search'), class: "btn", name: nil %>
+      </div>
+    <% end %>
+
     <% search_columns.each do |column| %>
       <% selected = col_params[column.id.to_s] %>
       <div class="gws-tabular-file-search-section" data-column-id="<%= column.id %>">
