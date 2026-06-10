@@ -150,9 +150,9 @@ en:
     errors:
       denied_comment: You are not allowed to post comments.
     tabs:
-      unanswer: Unanswered
-      answer: Answered
-      admin: Created inquiries
+      unanswer: Unanswered list
+      answer: Answered list
+      admin: Management list
       article_management: Inquiry (management)
       management_admin: Inquiry (management)
     management:

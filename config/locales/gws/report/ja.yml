@@ -1,5 +1,7 @@
 ja:
   gws/report:
+    navi:
+      draft: 下書き一覧
     links:
       publish: 送信する
       depublish: 送信を取り消す
