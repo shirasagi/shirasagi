@@ -3,7 +3,10 @@
   return if filters.blank?
 %>
 <div class="gws-tabular-applied-filters">
-  <span class="gws-tabular-applied-filters-label"><%= t("gws/tabular.search.applied_filters") %></span>
+  <span class="gws-tabular-applied-filters-label">
+    <span class="material-icons-outlined md-15" aria-hidden="true">filter_alt</span>
+    <span><%= t("gws/tabular.search.applied_filters") %></span>
+  </span>
   <ul class="gws-tabular-applied-filters-list">
     <% filters.each do |filter| %>
       <li class="gws-tabular-applied-filter">

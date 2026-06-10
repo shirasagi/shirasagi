@@ -207,6 +207,9 @@
 }
 
 .gws-tabular-applied-filters-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
   color: #616161;
   font-size: 0.85rem;
 }
