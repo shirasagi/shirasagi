@@ -33,6 +33,267 @@
   }
 }
 
+// 一覧画面を「左:一覧 / 右:絞り込みレール」の2カラムに分割する
+.gws-tabular-file-index-columns {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+
+  &.gws-tabular-file-index-columns-no-rail {
+    display: block;
+  }
+
+  @include init.mb {
+    flex-direction: column;
+    // 縦並びでは交差軸が横方向になるため、リストとレールを揃えて全幅にする
+    align-items: stretch;
+  }
+}
+
+.gws-tabular-file-index-list {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.gws-tabular-file-index-rail {
+  flex: 0 0 320px;
+  width: 320px;
+
+  @include init.mb {
+    flex: 1 1 auto;
+    order: -1;
+    width: 100%;
+  }
+}
+
+.gws-tabular-file-search {
+  padding: 12px;
+  border: 1px solid init.$gray2;
+  border-radius: 4px;
+  background-color: #fafafa;
+
+  .index-search {
+    display: block;
+  }
+
+  .gws-tabular-file-search-keyword {
+    margin-bottom: 12px;
+
+    input[type="text"] {
+      box-sizing: border-box;
+      width: 100%;
+    }
+  }
+
+  .gws-tabular-file-search-section {
+    margin-bottom: 12px;
+  }
+
+  .gws-tabular-file-search-section-head {
+    margin: 0 0 6px;
+    color: #616161;
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  .gws-tabular-file-search-options {
+    // 選択肢が多いときは縦に伸び過ぎないようスクロールさせる
+    max-height: 220px;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    list-style: none;
+  }
+
+  .gws-tabular-file-search-option {
+    label {
+      display: flex;
+      align-items: flex-start;
+      gap: 4px;
+      margin: 2px 0;
+      cursor: pointer;
+    }
+
+    input[type="checkbox"] {
+      flex: 0 0 auto;
+      // テキストの1行目に揃える
+      margin: 2px 0 0;
+    }
+
+    span {
+      // 横にはみ出す長いラベルは最大2行で省略表示する
+      display: -webkit-box;
+      min-width: 0;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      text-overflow: ellipsis;
+      word-break: break-word;
+    }
+  }
+
+  .gws-tabular-file-search-date-range {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    input[type="text"] {
+      box-sizing: border-box;
+      flex: 1 1 0;
+      min-width: 0;
+    }
+  }
+
+  .gws-tabular-file-search-date-sep {
+    flex: 0 0 auto;
+    color: #9e9e9e;
+  }
+
+  .gws-tabular-file-search-actions {
+    display: flex;
+    margin-top: 12px;
+    gap: 6px;
+
+    .btn {
+      box-sizing: border-box;
+      flex: 1 1 0;
+      text-align: center;
+    }
+  }
+
+  // キーワード直下に置く検索ボタンはキーワード欄の余白を流用する
+  .gws-tabular-file-search-actions-top {
+    margin-top: 0;
+    margin-bottom: 12px;
+  }
+
+  // モバイルではレールが全幅になるため、各項目を多段に並べて余白を埋め、
+  // 選択肢は横に折り返してバランスを取る
+  @include init.mb {
+    .index-search {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px 20px;
+      align-items: start;
+    }
+
+    .gws-tabular-file-search-keyword,
+    .gws-tabular-file-search-actions {
+      grid-column: 1 / -1;
+      margin: 0;
+    }
+
+    .gws-tabular-file-search-section {
+      margin-bottom: 0;
+    }
+
+    .gws-tabular-file-search-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 16px;
+    }
+  }
+}
+
+// 一覧上部に「適用中の条件」をチップで表示する帯
+.gws-tabular-applied-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.gws-tabular-applied-filters-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: #616161;
+  font-size: 0.85rem;
+}
+
+.gws-tabular-applied-filters-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gws-tabular-applied-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px 2px 10px;
+  border: 1px solid init.$gray2;
+  border-radius: 14px;
+  background-color: #f5f5f5;
+  font-size: 0.85rem;
+}
+
+.gws-tabular-applied-filter-remove {
+  display: inline-flex;
+  align-items: center;
+  color: #757575;
+  text-decoration: none;
+
+  &:hover {
+    color: #333;
+  }
+}
+
+.gws-tabular-applied-filters-clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+  padding: 2px 10px;
+  border: 1px solid init.$gray2;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #616161;
+  font-size: 0.85rem;
+  text-decoration: none;
+
+  &:hover {
+    border-color: #bdbdbd;
+    background-color: #f0f0f0;
+    color: #333;
+  }
+}
+
+// 適用中条件チップ帯のアイコンは material-icons-outlined フォントのコードポイントを
+// SCSS 側で指定する（HTML にアイコン名を埋め込まない）。
+.gws-tabular-applied-filters-label::before,
+.gws-tabular-applied-filter-remove::before,
+.gws-tabular-applied-filters-clear::before {
+  flex: 0 0 auto;
+  font-family: "Material Icons Outlined";
+  font-size: 15px;
+  font-style: normal;
+  font-weight: normal;
+  font-feature-settings: "liga";
+  letter-spacing: normal;
+  line-height: 1;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.gws-tabular-applied-filters-label::before {
+  content: "\ef4f"; // filter_alt
+}
+
+.gws-tabular-applied-filter-remove::before {
+  content: "\e5cd"; // close
+}
+
+.gws-tabular-applied-filters-clear::before {
+  content: "\eb32"; // filter_alt_off
+}
+
 .list-head {
   .badge {
     padding: 2px 4px;
