@@ -334,6 +334,20 @@ class Gws::Tabular::FilesController < ApplicationController
     redirect_to url_for(action: :index), notice: t('ss.notice.started_import')
   end
 
+  def download_template
+    raise "404" if cur_release.blank?
+    raise "404" unless cur_view.authoring_allowed?("import")
+
+    set_model
+    raise "403" unless policy_class.import?(@cur_site, @cur_user, @model)
+
+    exporter = Gws::Tabular::File::CsvExporter.new(
+      site: @cur_site, user: @cur_user, space: cur_space, form: cur_form, release: cur_release, criteria: @model.none)
+
+    filename = "gws_tabular_files_#{cur_form.i18n_name}_template.csv"
+    send_enum exporter.enum_csv(encoding: "UTF-8"), filename: filename
+  end
+
   def copy
     raise "404" if cur_release.blank?
     raise "404" unless cur_view.authoring_allowed?("edit")
