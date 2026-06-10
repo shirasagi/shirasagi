@@ -79,7 +79,10 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
         within ".gws-tabular-file-search-section[data-column-id='#{enum_column.id}']" do
           find(".gws-tabular-file-search-option label", text: "alpha").click
         end
-        click_on I18n.t("ss.buttons.search")
+        # キーワード直下とフォーム末尾の2か所に検索ボタンがあるため、上部のボタンを明示的に押す
+        within ".gws-tabular-file-search-actions-top" do
+          click_on I18n.t("ss.buttons.search")
+        end
       end
       wait_for_js_ready
 
