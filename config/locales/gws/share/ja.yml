@@ -13,7 +13,7 @@ ja:
     links:
       categories: カテゴリー
       file_download: ダウンロード
-      move: 移動
+      move: 移動する
       confirm:
         download_all: 選択した項目をダウンロードしますか？
         move: 選択した項目を移動しますか？
