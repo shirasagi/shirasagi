@@ -34,12 +34,16 @@ jobs:
       - name: Install pre requisites
         run: |
           sudo apt update
-          sudo apt -y install imagemagick libmagick++-dev graphicsmagick
+          sudo apt -y install imagemagick libmagick++-dev graphicsmagick mecab libmecab-dev mecab-ipadic-utf8
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
           bundler-cache: true
+      - name: Install MeCab Ruby
+        run: |
+          tar xzf vendor/mecab/mecab-ruby-0.996.tar.gz
+          cd mecab-ruby-0.996 && bundle exec ruby extconf.rb && make && sudo make install
       - name: Set up Node
         uses: actions/setup-node@v6
         with:
@@ -51,6 +55,11 @@ jobs:
         run: yarn install
       - name: Prepare Config
         run: bash .travis.d/exec.sh before_script 10-copy-config
+      - name: Prepare kana.yml
+        run: |
+          cp config/defaults/kana.yml config/
+          sed -i "s#/usr/local/libexec/mecab/mecab-dict-index#/usr/lib/mecab/mecab-dict-index#" config/kana.yml
+          sed -i "s#/usr/local/lib/mecab/dic/ipadic#/usr/share/mecab/dic/ipadic#" config/kana.yml
       - name: Bundle assets
         run: npx webpack-cli build
       - name: Repro loop
