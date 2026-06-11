@@ -10,7 +10,7 @@ class Cms::Node::DestroyJob < Cms::ApplicationJob
 
     return if selected_ids.blank?
 
-    task.log "caution: user blank" if user.blank?
+    task.log "caution: user not found" if user.blank?
     task.log "# #{site.name}"
 
     items = Cms::Node.site(site).in(id: selected_ids).to_a
@@ -20,7 +20,7 @@ class Cms::Node::DestroyJob < Cms::ApplicationJob
       task.count
       item.cur_user = user if item.respond_to?(:cur_user)
 
-      if user.present? && item.allowed?(:delete, user, site: site, node: node)
+      if user.present? && !item.allowed?(:delete, user, site: site, node: node)
         task.log "skip delete #{item.name}: permission denied"
         next
       end
