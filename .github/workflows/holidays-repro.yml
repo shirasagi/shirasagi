@@ -1,0 +1,86 @@
+# Temporary reproduction workflow for investigating the intermittent
+# gws_schedule_holidays "#import ... imported the datas" failure.
+# Runs ONLY that spec many times across a locale matrix and reports a
+# pass/fail tally. This file is meant to be removed once the root cause
+# is confirmed.
+name: Holidays-Repro
+
+on:
+  push:
+    branches: [ claude/inspiring-curie-4qrTf ]
+  workflow_dispatch:
+
+env:
+  DISABLE_SPRING: 1
+
+jobs:
+  repro:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        rspec_locale: [ "en", "ja", "random" ]
+    steps:
+      - uses: actions/checkout@v6
+      - name: Generate ja_JP.UTF-8
+        run: |
+          sudo locale-gen ja_JP
+          sudo update-locale LANG=ja_JP.UTF-8
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.12.1
+        with:
+          mongodb-version: 7.0
+      - name: Install pre requisites
+        run: |
+          sudo apt update
+          sudo apt -y install imagemagick libmagick++-dev graphicsmagick
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install yarn
+        run: npm install -g yarn
+      - name: Install node modules
+        run: yarn install
+      - name: Prepare Config
+        run: bash .travis.d/exec.sh before_script 10-copy-config
+      - name: Bundle assets
+        run: npx webpack-cli build
+      - name: Repro loop
+        run: |
+          SPEC="spec/features/gws/schedule/holidays/basic_crud_spec.rb"
+          EXAMPLE="when the all datas on csv is valid imported the datas"
+          ITER=15
+          pass=0; fail=0
+          for i in $(seq 1 $ITER); do
+            if [ "${{ matrix.rspec_locale }}" = "random" ]; then
+              unset RSPEC_LOCALE
+            else
+              export RSPEC_LOCALE="${{ matrix.rspec_locale }}"
+            fi
+            if bundle exec rspec "$SPEC" -e "$EXAMPLE" --no-color > "/tmp/run_${i}.log" 2>&1; then
+              pass=$((pass+1))
+              echo "iter $i: PASS"
+            else
+              fail=$((fail+1))
+              echo "iter $i: FAIL ==================================="
+              grep -nE "run specs with lang|repeat_plan|Failure/Error|NoMethodError|examples,|rspec \./spec" "/tmp/run_${i}.log" | head -30 || true
+            fi
+          done
+          echo "================ SUMMARY ================"
+          echo "RESULT locale=${{ matrix.rspec_locale }} pass=${pass} fail=${fail} of ${ITER}"
+        env:
+          TZ: "Asia/Tokyo"
+          LANG: ja_JP.UTF-8
+          LC_ALL: ja_JP.UTF-8
+          ANALYZE_COVERAGE: disabled
+          CAPYBARA_MAX_WAIT_TIME: 30
+          DOWNLOAD_MAX_WAIT_TIME: 10
+          driver: rack_test
