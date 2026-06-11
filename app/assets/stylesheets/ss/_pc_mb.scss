@@ -1056,13 +1056,10 @@ _:future,
       content: "\e92e";
     }
 
-    &.management {
-      // 歯車は画像アイコン（ic-setting.png）を使用
-      background: url(/assets/img/ic-setting.png) no-repeat 35px center;
-
-      &::before {
-        content: none;
-      }
+    &.management::before {
+      // Material Icons: settings（共有ファイルの歯車と同じアイコン）
+      content: "\e8b8";
+      font-family: "Material Icons";
     }
 
     &.search::before {
@@ -1079,10 +1076,6 @@ _:future,
       &::before {
         color: init.$orange;
       }
-    }
-
-    &.management:hover {
-      background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 35px center;
     }
   }
   h3 a {
@@ -1193,12 +1186,10 @@ _:future,
       // Material Symbols Outlined: expand_circle_right
       @include ms-icon("\f591", 60px);
 
-      &.management {
-        background: url(/assets/img/ic-setting.png) no-repeat 60px center;
-
-        &::before {
-          content: none;
-        }
+      &.management::before {
+        // Material Icons: settings（共有ファイルの歯車と同じアイコン）
+        content: "\e8b8";
+        font-family: "Material Icons";
       }
 
       &.search::before {
@@ -1215,10 +1206,6 @@ _:future,
         &::before {
           color: init.$orange;
         }
-      }
-
-      &.management:hover {
-        background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
       }
     }
   }
@@ -1239,8 +1226,6 @@ _:future,
       a:hover.search,
       span {
         padding: 5px 15px 5px 35px;
-        // 画像アイコン（.management）用の位置調整
-        background-position: 15px center;
       }
 
       // グリフアイコン（::before）をモバイル表示位置へ
@@ -1333,12 +1318,10 @@ _:future,
       // Material Symbols Outlined: expand_circle_right
       @include ms-icon("\f591", 60px);
       color: init.$black;
-      &.management {
-        background: url(/assets/img/ic-setting.png) no-repeat 60px center;
-
-        &::before {
-          content: none;
-        }
+      &.management::before {
+        // Material Icons: settings（共有ファイルの歯車と同じアイコン）
+        content: "\e8b8";
+        font-family: "Material Icons";
       }
       &:hover {
         background: init.$gray1;
@@ -1351,7 +1334,6 @@ _:future,
         }
       }
       &:hover.management {
-        background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
         color: init.$orange;
         text-decoration: none;
       }
@@ -1367,7 +1349,6 @@ _:future,
         a,
         a:hover {
           padding: 5px 0 5px 20px;
-          background-position: left center;
         }
         // グリフアイコン（::before）もモバイル表示位置（左端）へ
         a::before {
