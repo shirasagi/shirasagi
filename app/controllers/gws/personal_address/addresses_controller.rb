@@ -15,6 +15,7 @@ class Gws::PersonalAddress::AddressesController < ApplicationController
   def set_crumbs
     set_address_group
     @crumbs << [@cur_site.menu_personal_address_label || t("modules.gws/personal_address"), gws_personal_address_addresses_path]
+    @crumbs << [t("ss.navi.readable"), action: :index]
     @crumbs << [@address_group.name, action: :index] if @address_group
   end
 

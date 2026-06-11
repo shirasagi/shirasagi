@@ -4,6 +4,11 @@ class Gws::Tabular::TrashFilesController < ApplicationController
 
   model Gws::Tabular::File
 
+  # 一覧テンプレート（default_view/list/liquid）は FilesController と共用しており、
+  # 適用中条件チップのパーシャルが Gws::Tabular::FilesHelper を参照する。
+  # include_all_helpers = false のため、ここで明示的に読み込む。
+  helper Gws::Tabular::FilesHelper
+
   navi_view "gws/tabular/main/navi"
 
   before_action :set_trash

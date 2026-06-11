@@ -40,7 +40,7 @@ ja:
       purposes:
         index: 目的別を選択する
     navi:
-      new_application: 新規申請
+      new_application: 新規申請作成
       find_by_keyword: キーワード検索
       find_by_purpose: 業務内容で探す
       readable: 全申請データ一覧

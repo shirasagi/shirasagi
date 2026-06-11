@@ -54,6 +54,12 @@ ja:
         index: 定義を選択する
     buttons:
       manage_space: スペース管理
+    search:
+      date_from: 開始日
+      date_to: 終了日
+      applied_filters: 適用中の条件
+      clear_all: すべてクリア
+      remove_filter: この条件を外す
     notice:
       delay_download_with_message: |-
         バックグランドでファイルを準備します。

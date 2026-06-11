@@ -1,5 +1,7 @@
 en:
   gws/report:
+    navi:
+      draft: Draft list
     links:
       publish: Send
       depublish: Cancel sending

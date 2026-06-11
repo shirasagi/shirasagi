@@ -117,6 +117,13 @@ class Gws::Tabular::FilesController < ApplicationController
     end
   end
 
+  ##
+  # Builds and memoized an OpenStruct of search parameters for the current request and context.
+  # Adds contextual fields (cur_site, cur_user, cur_form, cur_release), ensures workflow action defaults
+  # to "all" when the form's workflow is enabled, and normalizes right-rail column filters from
+  # params[:s][:col] into a plain hash via permit_search_col_params while leaving raw values (e.g. date
+  # strings) for per-column normalization.
+  # @return [OpenStruct] The search parameters object with contextual fields and optional normalized `col` hash.
   def set_search_params
     @s ||= begin
       s = OpenStruct.new(params[:s])
@@ -127,10 +134,39 @@ class Gws::Tabular::FilesController < ApplicationController
       if cur_form.workflow_enabled?
         s.act ||= "all"
       end
+      # 右レールの絞り込み条件（params[:s][:col]）をプレーンなハッシュへ正規化して受け渡す。
+      # 日付欄などはここで文字列のまま保持し、各項目の検索条件メソッドで正規化する。
+      if params[:s].present? && params[:s][:col].present?
+        s.col = permit_search_col_params(params[:s][:col])
+      end
       s
     end
   end
 
+  # 項目ごとの絞り込み条件を明示的に permit する。
+  # 列挙型はスカラー値の配列（[]）、日付型は from / to の2欄を許可する。
+  ##
+  # Normalize and permit column search parameters for right-rail filters.
+  # @param [#permit, #keys, nil] col_params - The incoming params-like object for `s[:col]`.
+  #   If it does not respond to `permit` and `keys`, it will be treated as absent.
+  # @return [Hash] A plain Hash of permitted column filters keyed by column id. Each value is either
+  #   an Array (for multi-value filters) or a Hash with `from` and `to` keys (for range/date filters).
+  def permit_search_col_params(col_params)
+    return {} unless col_params.respond_to?(:permit) && col_params.respond_to?(:keys)
+
+    filters = col_params.keys.index_with do |column_id|
+      value = col_params[column_id]
+      value.respond_to?(:keys) ? %i[from to] : []
+    end
+    col_params.permit(filters).to_h
+  end
+
+  ##
+  # Builds the base query relation for tabular files scoped to the current site.
+  # It excludes deleted records, restricts results to items readable by the current user,
+  # and applies the current view's ordering when available.
+  # @return [Object] The query relation (criteria) for items scoped to the site, without deleted records,
+  #   readable by the current user, and ordered by the current view if present.
   def base_items
     @base_items ||= begin
       criteria = @model.site(@cur_site)

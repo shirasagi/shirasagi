@@ -11,7 +11,8 @@ class Gws::Workflow2::Form::ApplicationsController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [@cur_site.menu_workflow2_label || t('modules.gws/workflow2'), gws_workflow2_setting_path]
+    @crumbs << [@cur_site.menu_workflow2_label || t('modules.gws/workflow2'), gws_workflow2_files_main_path]
+    @crumbs << [t("gws/workflow2.navi.form.main"), gws_workflow2_setting_path]
     @crumbs << [t("gws/workflow2.navi.form.application"), url_for(action: :index)]
   end
 

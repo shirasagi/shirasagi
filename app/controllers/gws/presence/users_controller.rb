@@ -7,7 +7,8 @@ class Gws::Presence::UsersController < ApplicationController
 
   def set_crumbs
     set_group
-    @crumbs << [t("modules.gws/presence"), gws_presence_users_path]
+    @crumbs << [t("modules.gws/presence"), gws_presence_main_path]
+    @crumbs << [t("modules.gws/presence/users"), gws_presence_users_path]
   end
 
   def set_group

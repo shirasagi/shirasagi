@@ -21,7 +21,7 @@ module Gws::Tabular::File
     cattr_accessor(:display_order_hash, instance_accessor: false)
     self.display_order_hash = {}
     cattr_accessor(:search_handlers, instance_accessor: false)
-    self.search_handlers = %i[search_keyword search_act]
+    self.search_handlers = %i[search_keyword search_columns search_act]
 
     field :migration_errors, type: Array
 

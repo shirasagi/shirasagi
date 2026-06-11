@@ -38,5 +38,7 @@
     </div>
   <% end %>
 
-  <%= render template: "_search" %>
+  <% unless @gws_tabular_search_rail %>
+    <%= render template: "_search" %>
+  <% end %>
 </div>
