@@ -1063,6 +1063,7 @@ _:future,
     }
 
     &.trash:hover {
+      // 歯車（.management）と同様、ホバー時もアイコン色は変えず（テキストのみオレンジ化）背景のみグレーにする
       background: init.$gray1 url(/assets/img/ic-delete.svg) no-repeat 35px center;
     }
 
