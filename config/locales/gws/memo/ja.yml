@@ -4,6 +4,8 @@ ja:
     no_subjects: 'No title'
     no_senders: 'No name'
     unseen: 未読
+    navi:
+      messages: メッセージ一覧
     options:
       priority:
         '1': 最高

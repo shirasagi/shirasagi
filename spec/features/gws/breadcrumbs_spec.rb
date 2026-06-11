@@ -377,4 +377,33 @@ describe "gws breadcrumbs", type: :feature, dbscope: :example do
                        -> { [I18n.t("modules.gws/job"), I18n.t("gws/job.reservation")] }
     end
   end
+
+  # 「設定」モジュール配下のページでは、サイト名と機能名の間に「設定」階層が入ること。
+  context "設定" do
+    context "組織情報" do
+      let(:visit_path) { gws_site_path(site: site) }
+      include_examples "crumbs contain",
+                       -> { [I18n.t("gws.site_config"), I18n.t("gws.site_info")] }
+    end
+
+    # 設定モジュール以外のページには「設定」階層が混入しないこと（リグレッション）。
+    context "設定モジュール外には混入しない" do
+      let(:visit_path) { gws_schedule_trashes_path(site: site) }
+      it "does not insert the 設定 crumb on non-settings pages" do
+        visit visit_path
+        within "#crumbs" do
+          expect(page).to have_no_content(I18n.t("gws.site_config"))
+        end
+      end
+    end
+  end
+
+  # 在席管理は「在席管理 > 在席状況 > グループ」とサイドメニューの階層に合わせる。
+  context "在席管理" do
+    context "在席状況 (グループ)" do
+      let(:visit_path) { gws_presence_group_users_path(site: site, group: site) }
+      include_examples "crumbs contain",
+                       -> { [I18n.t("modules.gws/presence"), I18n.t("modules.gws/presence/users")] }
+    end
+  end
 end

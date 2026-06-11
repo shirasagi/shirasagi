@@ -1,5 +1,10 @@
 <%
   columns = cur_form.columns.reorder(order: 1, id: 1).to_a
+  search_columns = @model.respond_to?(:search_column_candidates) ? @model.search_column_candidates : []
+  # 絞り込み項目（タクソノミー）があるときだけ右レールを表示し、キーワードのみのときは従来の検索ボックスを表示する
+  show_search_rail = !@trash && search_columns.present?
+  # 右レールにキーワード欄をまとめるため、一覧ヘッダー側の検索ボックスは抑制する
+  @gws_tabular_search_rail = show_search_rail
 %>
 <% @tap_menu = proc do |item| %>
   <%= link_to t('ss.links.show'), url_for(action: :show, id: item) if item.allowed?(:read, @cur_user, site: @cur_site) %>
@@ -28,5 +33,15 @@
 <% end %>
 
 <%= tag.div class: "gws-tabular-views-main-box", data: { controller: "ss--list-action-enabler" } do %>
-  <%= render template: "gws/crud/index" %>
+  <div class="gws-tabular-file-index-columns<%= show_search_rail ? "" : " gws-tabular-file-index-columns-no-rail" %>">
+    <div class="gws-tabular-file-index-list">
+      <%= render "gws/tabular/files/applied_filters" %>
+      <%= render template: "gws/crud/index" %>
+    </div>
+    <% if show_search_rail %>
+      <aside class="gws-tabular-file-index-rail">
+        <%= render template: "_search", locals: { search_rail: true } %>
+      </aside>
+    <% end %>
+  </div>
 <% end %>

@@ -1028,8 +1028,33 @@ _:future,
       @include nav.icon-material-trash;
     }
 
+    &.search {
+      position: relative;
+      background: none;
+
+      &::before {
+        // Material Icons Outlined: search
+        content: "\e8b6";
+        position: absolute;
+        top: 50%;
+        left: 34px;
+        transform: translateY(-50%);
+        font-family: "Material Icons Outlined";
+        font-size: 18px;
+        line-height: 1;
+      }
+    }
+
     &:hover {
       background-color: init.$gray1;
+    }
+
+    &.search:hover {
+      background: init.$gray1;
+
+      &::before {
+        color: init.$orange;
+      }
     }
   }
   h3 a {
@@ -1145,6 +1170,31 @@ _:future,
       &.management {
         @include nav.icon-material-setting;
       }
+
+      &.search {
+        position: relative;
+        background: none;
+
+        &::before {
+          // Material Icons Outlined: search
+          content: "\e8b6";
+          position: absolute;
+          top: 50%;
+          left: 59px;
+          transform: translateY(-50%);
+          font-family: "Material Icons Outlined";
+          font-size: 18px;
+          line-height: 1;
+        }
+      }
+
+      &.search:hover {
+        background: init.$gray1;
+
+        &::before {
+          color: init.$orange;
+        }
+      }
     }
   }
   .navi-link:hover {
@@ -1160,9 +1210,15 @@ _:future,
       a:hover.management,
       a.trash,
       a:hover.trash,
+      a.search,
+      a:hover.search,
       span {
         padding: 5px 15px 5px 35px;
         background-position: 15px center;
+      }
+
+      a.search::before {
+        left: 15px;
       }
     }
   }
@@ -1534,7 +1590,9 @@ _:future,
 // -------------------------------------------------------------------------------------------------
 // main
 #main:not(.print-preview) {
+  flex: 1;
   width: 100%;
+  min-width: 0;
   padding-bottom: 40px;
   @include init.mb {
     margin: 0 0 100px;

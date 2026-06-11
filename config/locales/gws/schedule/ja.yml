@@ -85,10 +85,10 @@ ja:
         wday: 曜日
       repeat_type:
         none: 繰り返しなし
-        daily: 毎日
-        weekly: 毎週
-        monthly: 毎月
-        yearly: 毎年
+        daily: 日ごと
+        weekly: 週ごと
+        monthly: 月ごと
+        yearly: 年ごと
       schedule_attachment_state:
         allow: 許可する
         deny: 許可しない
@@ -422,6 +422,10 @@ ja:
         - 終了日を入力します。
       repeat_base:
         - 繰り返しの基準を選択します。
+        -
+        - 例）2024年4月1日（第一月曜日）
+        - 日付：月ごと1日
+        - 曜日：月ごと第一月曜日
       wdays:
         - 曜日を選択します。
     gws/addon/schedule/repeat:
