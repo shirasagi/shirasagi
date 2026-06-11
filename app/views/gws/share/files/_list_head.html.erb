@@ -1,8 +1,10 @@
 <%= jquery do %>
   // ドロップダウンの項目は開いた時に初めて生成する。
-  // 一覧ページには同名のフォルダーリンク（ツリーナビ）が存在し、テスト環境では
-  // ignore_hidden_elements = false のため、常時 DOM に項目があると click_on が
-  // 曖昧マッチになってしまう。これを避けるため遅延生成する。
+  // 一覧ページにはツリーナビに同名のフォルダーリンクが既に存在するため、移動先項目を
+  // 常時サーバー描画するとフォルダー名のクリック対象が二重化する。共有ファイル系の
+  // feature spec は多くがスコープ無しの click_on folder.name でツリーナビを操作しており
+  // （ignore_hidden_elements = false 環境では非表示の項目も照合対象）、常設すると広範な
+  // 曖昧マッチを招く。バインドは DOM ready 時・生成はユーザーが開いた後のため本番でも安全。
   $(".move-menu").each(function() {
     var $menu = $(this);
     var $list = $menu.find(".dropdown-menu");

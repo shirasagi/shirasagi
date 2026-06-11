@@ -54,10 +54,11 @@
 
 <%= jquery do %>
   var moveAllUrl = "<%= url_for(action: :move_all) %>";
-  // アップロード可能なフォルダー（＝移動先として許可されるフォルダー）のIDの集合
+  // 移動先候補は移動ドロップダウン（.move-menu[data-folders]）を唯一の出所とし、
+  // ドロップダウンとD&Dで集合がズレないよう同じデータからIDの集合を作る。
   var validFolderIds = {};
-  $.each(<%== @destination_folders.map(&:id).to_json.html_safe %>, function(_i, id) {
-    validFolderIds[id] = true;
+  $.each($(".move-menu").data("folders") || [], function(_i, folder) {
+    validFolderIds[folder.id] = true;
   });
 
   function gwsShareIsValidTarget($node) {

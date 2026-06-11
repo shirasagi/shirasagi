@@ -23,6 +23,7 @@ en:
     select_check: " file(s) selected"
     notice:
       move_failed: "Some items could not be moved: %{names}"
+      move_none: No items were moved.
     mailers:
       compressed:
         subject: Your download is now ready

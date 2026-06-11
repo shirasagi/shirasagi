@@ -23,6 +23,7 @@ ja:
     select_check: 件のファイルを選択
     notice:
       move_failed: "移動できなかった項目があります：%{names}"
+      move_none: 移動する項目がありませんでした。
     mailers:
       compressed:
         subject: ダウンロード準備完了のお知らせ

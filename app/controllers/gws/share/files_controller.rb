@@ -345,6 +345,7 @@ class Gws::Share::FilesController < ApplicationController
     raise "403" unless folder.uploadable?(@cur_user)
 
     affected_folder_ids = [ folder.id ]
+    moved = []
 
     # 再描画時に再クエリされてエラー情報が失われないよう、配列として保持する
     @items = @items.to_a
@@ -357,9 +358,11 @@ class Gws::Share::FilesController < ApplicationController
       source_folder_id = item.folder_id
       next if source_folder_id == folder.id
 
-      affected_folder_ids << source_folder_id if source_folder_id
       item.folder_id = folder.id
-      item.save
+      next unless item.save
+
+      affected_folder_ids << source_folder_id if source_folder_id
+      moved << item
     end
 
     # 移動元・移動先フォルダーの容量・ファイル数の集計を更新する。
@@ -371,24 +374,25 @@ class Gws::Share::FilesController < ApplicationController
       target&.update_folder_descendants_file_info
     end
 
-    render_change_all(location: { action: :index, folder: params[:folder], category: params[:category] })
+    render_change_all(moved: moved, location: { action: :index, folder: params[:folder], category: params[:category] })
   end
 
   def render_change_all(opts = {})
     location = opts[:location].presence || crud_redirect_url || { action: :index }
     failed = @items.select { |item| item.errors.present? }
 
-    if failed.present?
-      notice = { notice: t("gws/share.notice.move_failed", names: failed.map(&:name).join("、")) }
-    else
-      notice = { notice: t("ss.notice.saved") }
-    end
-    errors = failed.map { |item| [item.id, item.errors.full_messages] }
+    notice =
+      if failed.present?
+        t("gws/share.notice.move_failed", names: failed.map(&:name).join("、"))
+      elsif opts[:moved].blank?
+        # 全件が移動先と同一フォルダーにあった等、実際には何も移動しなかった場合
+        t("gws/share.notice.move_none")
+      else
+        t("ss.notice.saved")
+      end
 
-    respond_to do |format|
-      format.html { redirect_to location, notice }
-      format.json { render json: errors }
-    end
+    # 一括移動はフォーム送信（HTML）のみで呼ばれるため、リダイレクトで応答する
+    redirect_to location, notice: notice
   end
 
   def render_destroy_all(result)
