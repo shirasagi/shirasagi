@@ -339,6 +339,9 @@ class Gws::Share::FilesController < ApplicationController
   def move_all
     folder = Gws::Share::Folder.site(@cur_site).where(id: params[:folder_id]).first
     raise "404" if folder.blank?
+    # 移動先候補（set_destination_folders）と同じ read ゲートを課し、
+    # 候補に出ないフォルダーへ細工した POST で移動されるのを防ぐ。
+    raise "403" unless folder.readable?(@cur_user) || folder.allowed?(:read, @cur_user, site: @cur_site)
     raise "403" unless folder.uploadable?(@cur_user)
 
     affected_folder_ids = [ folder.id ]
@@ -351,15 +354,22 @@ class Gws::Share::FilesController < ApplicationController
         next
       end
 
-      next if item.folder_id == folder.id
+      source_folder_id = item.folder_id
+      next if source_folder_id == folder.id
 
-      affected_folder_ids << item.folder_id if item.folder_id
+      affected_folder_ids << source_folder_id if source_folder_id
       item.folder_id = folder.id
       item.save
     end
 
-    # 移動元・移動先フォルダーの容量・ファイル数の集計を更新する
-    Gws::Share::Folder.site(@cur_site).in(id: affected_folder_ids.uniq).each(&:update_folder_descendants_file_info)
+    # 移動元・移動先フォルダーの容量・ファイル数の集計を更新する。
+    # update_folder_descendants_file_info は delta+inc 方式のため、入れ子フォルダー
+    # （移動元が移動先の子孫／祖先など）では更新順による stale 値で集計がズレる。
+    # 各フォルダーを更新直前に最新状態で読み直すことで、先行更新の inc を取り込む。
+    affected_folder_ids.uniq.each do |folder_id|
+      target = Gws::Share::Folder.site(@cur_site).where(id: folder_id).first
+      target&.update_folder_descendants_file_info
+    end
 
     render_change_all(location: { action: :index, folder: params[:folder], category: params[:category] })
   end
