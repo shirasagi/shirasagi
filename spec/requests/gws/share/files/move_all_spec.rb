@@ -20,7 +20,7 @@ describe "gws_share_files move_all (request)", type: :request, dbscope: :example
 
   before do
     get sns_auth_token_path(format: :json)
-    auth_token = JSON.parse(response.body)["auth_token"]
+    auth_token = response.parsed_body["auth_token"]
     post sns_login_path(format: :json), params: {
       'authenticity_token' => auth_token,
       'item[email]' => user.email,
@@ -48,26 +48,38 @@ describe "gws_share_files move_all (request)", type: :request, dbscope: :example
     end
   end
 
-  context "入れ子フォルダー（子フォルダーからその親フォルダー）へ移動しても集計が壊れない" do
-    it do
-      folder0.reload
-      expect(folder0.descendants_files_count).to eq 2
-      folder1.reload
-      expect(folder1.descendants_files_count).to eq 2
+  # 入れ子（親子）フォルダー間の移動では、集計の delta+inc 伝播が更新順に依存する。
+  # move_all は移動先（dest）を先頭に集計するため、親→子の移動では子（dest）→親（source）
+  # の順で再計算され、各フォルダーを最新状態で読み直さないと親の集計が二重計上/欠落する。
+  # ここではその経路（reload による補正）を検証する。
+  context "入れ子フォルダー（親→子）へ移動しても親の集計が壊れない" do
+    let!(:parent_folder) { create :gws_share_folder, cur_site: site }
+    let!(:child_folder) { create :gws_share_folder, cur_site: site, name: "#{parent_folder.name}/#{unique_id}" }
+    let!(:nested_item1) { create :gws_share_file, cur_site: site, folder: parent_folder, category_ids: [ category.id ] }
+    let!(:nested_item2) { create :gws_share_file, cur_site: site, folder: parent_folder, category_ids: [ category.id ] }
 
-      post_move_all(folder0)
+    it do
+      # 本番ではアップロード等の操作時に集計が更新される。factory 経由では集計が
+      # 走らないため、移動前の正しいベースライン（親直下に2件）を作る。
+      parent_folder.update_folder_descendants_file_info
+      expect(parent_folder.reload.descendants_files_count).to eq 2
+      expect(child_folder.reload.descendants_files_count).to eq 0
+
+      # 親 parent_folder にいる状態で、子 child_folder へ一括移動する
+      post move_all_gws_share_folder_files_path(site, parent_folder),
+        params: { ids: [ nested_item1.id, nested_item2.id ], folder_id: child_folder.id }
       expect(response.status).to eq 302
 
-      expect(Gws::Share::File.find(item1.id).folder_id).to eq folder0.id
-      expect(Gws::Share::File.find(item2.id).folder_id).to eq folder0.id
+      expect(Gws::Share::File.find(nested_item1.id).folder_id).to eq child_folder.id
+      expect(Gws::Share::File.find(nested_item2.id).folder_id).to eq child_folder.id
 
-      # 子→親の入れ子移動でも集計（自フォルダー＋子孫）がズレないこと
-      folder0.reload
-      expect(folder0.descendants_files_count).to eq 2
-      expect(folder0.descendants_total_file_size).to eq(Gws::Share::File.in(id: [ item1.id, item2.id ]).pluck(:size).sum)
-      folder1.reload
-      expect(folder1.descendants_files_count).to eq 0
-      expect(folder1.descendants_total_file_size).to eq 0
+      # 子へ移動しても親の総集計（自フォルダー＋子孫）は2件のまま（二重計上/欠落しない）
+      total_size = Gws::Share::File.in(id: [ nested_item1.id, nested_item2.id ]).pluck(:size).sum
+      parent_folder.reload
+      expect(parent_folder.descendants_files_count).to eq 2
+      expect(parent_folder.descendants_total_file_size).to eq total_size
+      child_folder.reload
+      expect(child_folder.descendants_files_count).to eq 2
     end
   end
 

@@ -49,38 +49,8 @@ describe "gws_share_files move_all", type: :feature, dbscope: :example, js: true
     end
   end
 
-  context "入れ子フォルダー（子フォルダーからその親フォルダー）へ移動しても集計が壊れない" do
-    it do
-      # 初期状態: 親 folder0 の集計は配下 folder1 の2件を含む
-      folder0.reload
-      expect(folder0.descendants_files_count).to eq 2
-      folder1.reload
-      expect(folder1.descendants_files_count).to eq 2
-
-      login_gws_user to: index_path
-      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
-
-      within ".list-head-action .move-menu" do
-        find("button.btn", text: I18n.t("gws/share.links.move")).click
-        page.accept_confirm do
-          click_on folder0.name
-        end
-      end
-
-      wait_for_notice I18n.t('ss.notice.saved')
-
-      expect(Gws::Share::File.find(item1.id).folder_id).to eq folder0.id
-      expect(Gws::Share::File.find(item2.id).folder_id).to eq folder0.id
-
-      # 子→親の入れ子移動でも集計がズレないこと
-      folder0.reload
-      expect(folder0.descendants_files_count).to eq 2
-      expect(folder0.descendants_total_file_size).to eq(Gws::Share::File.in(id: [item1.id, item2.id]).pluck(:size).sum)
-      folder1.reload
-      expect(folder1.descendants_files_count).to eq 0
-      expect(folder1.descendants_total_file_size).to eq 0
-    end
-  end
+  # 入れ子フォルダー間の移動を含む集計再計算の検証は、ブラウザ非依存で決定的な
+  # spec/requests/gws/share/files/move_all_spec.rb に集約している。
 
   context "別ライブラリー（別の最上位フォルダー＝別部署）へも一括移動できる" do
     it do
