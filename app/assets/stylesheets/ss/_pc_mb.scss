@@ -1369,6 +1369,10 @@ _:future,
           padding: 5px 0 5px 20px;
           background-position: left center;
         }
+        // グリフアイコン（::before）もモバイル表示位置（左端）へ
+        a::before {
+          left: 0;
+        }
       }
     }
   }
