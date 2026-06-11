@@ -68,8 +68,8 @@ $gws-navi-icons-map: (
 @mixin icon-material-setting {
   &::before {
     content: map.get($gws-navi-icons-map, "setting"); // settings
-    font-family: "Material Icons"; // Filled（塗りつぶし）
     transform: translateY(-50%); // icon-base の右矢印用の回転を解除
+    font-family: "Material Icons"; // Filled（塗りつぶし）
   }
 }
 
