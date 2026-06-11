@@ -1,0 +1,155 @@
+# Temporary reproduction workflow (phase 2): run shard(12,0)'s prefix up to
+# and including the holidays import spec, in DEFINED order, in a single rspec
+# process, to reproduce the order-dependent failure. Pinned to RSPEC_LOCALE=en
+# and looped a few times. Remove once the polluting spec is identified.
+name: Holidays-Repro2
+
+on:
+  push:
+    branches: [ claude/inspiring-curie-4qrTf ]
+  workflow_dispatch:
+
+env:
+  DISABLE_SPRING: 1
+
+jobs:
+  repro:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        rspec_locale: [ "en" ]
+    steps:
+      - uses: actions/checkout@v6
+      - name: Generate ja_JP.UTF-8
+        run: |
+          sudo locale-gen ja_JP
+          sudo update-locale LANG=ja_JP.UTF-8
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.12.1
+        with:
+          mongodb-version: 7.0
+      - name: Prepare Ldap
+        run: docker pull osixia/openldap
+      - name: Start Shirasagi Mail
+        run: |
+          docker pull ghcr.io/shirasagi/mail:latest
+          docker tag ghcr.io/shirasagi/mail:latest shirasagi/mail:latest
+          docker run --name test_mail -d -p 10143:143 -p 10587:587 shirasagi/mail
+      - name: Prepare Michecker
+        run: |
+          docker pull ghcr.io/shirasagi/michecker:latest
+          docker tag ghcr.io/shirasagi/michecker:latest shirasagi/michecker:latest
+      - name: Prepare Elasticsearch
+        run: |
+          docker pull ghcr.io/shirasagi/elasticsearch:7
+          docker tag ghcr.io/shirasagi/elasticsearch:7 shirasagi/elasticsearch:latest
+      - name: Launch Elasticsearch
+        id: elasticsearch
+        run: |
+          container_id=$(docker run -d --name elasticsearch -p 9200:9200 -e discovery.type=single-node shirasagi/elasticsearch)
+          echo "CONTAINER_ID=$container_id" >> $GITHUB_OUTPUT
+      - name: Prepare Ckan
+        run: |
+          docker pull ghcr.io/shirasagi/ckan:latest
+          docker tag ghcr.io/shirasagi/ckan:latest shirasagi/ckan:latest
+      - name: Launch Ckan
+        id: ckan
+        run: |
+          container_id=$(docker run -d --name ckan -p 8080:80 shirasagi/ckan)
+          echo "CONTAINER_ID=$container_id" >> $GITHUB_OUTPUT
+      - name: Install pre requisites
+        run: |
+          sudo apt update
+          sudo apt -y install imagemagick libmagick++-dev sox libsox-dev lame libmp3lame-dev mecab libmecab-dev mecab-ipadic-utf8 open-jtalk open-jtalk-mecab-naist-jdic graphicsmagick
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install yarn
+        run: npm install -g yarn
+      - name: Install node modules
+        run: yarn install
+      - name: Install MeCab Ruby
+        run: |
+          tar xzf vendor/mecab/mecab-ruby-0.996.tar.gz
+          cd mecab-ruby-0.996 && bundle exec ruby extconf.rb && make && sudo make install
+      - name: Prepare Config
+        run: bash .travis.d/exec.sh before_script 10-copy-config
+      - name: Prepare kana.yml
+        run: |
+          cp config/defaults/kana.yml config/
+          sed -i "s#/usr/local/libexec/mecab/mecab-dict-index#/usr/lib/mecab/mecab-dict-index#" config/kana.yml
+          sed -i "s#/usr/local/lib/mecab/dic/ipadic#/usr/share/mecab/dic/ipadic#" config/kana.yml
+      - name: Prepare voice.yml
+        run: |
+          cp config/defaults/voice.yml config/
+          sed -i "s#/usr/local/bin/open_jtalk#/usr/bin/open_jtalk#" config/voice.yml
+          sed -i "s#/usr/local/dic#/var/lib/mecab/dic/open-jtalk/naist-jdic#" config/voice.yml
+          sed -i "s#/usr/local/bin/sox#/usr/bin/sox#" config/voice.yml
+          sed -i "s#/usr/local/bin/lame#/usr/bin/lame#" config/voice.yml
+      - name: Prepare ImageMagick-6 policy
+        run: |
+          cd /etc/ImageMagick-6
+          sudo sed -i "s#<policy domain=\"coder\" rights=\"none\" pattern=\"PDF\" />#<policy domain=\"coder\" rights=\"read\" pattern=\"PDF\" />#" policy.xml
+      - name: Bundle assets
+        run: npx webpack-cli build
+      - name: Compute shard(12,0) prefix up to holidays
+        run: |
+          ruby -e '
+            files = Dir.glob("spec/**/*_spec.rb")
+            files.sort! { |l,r| d = File.size(r) <=> File.size(l); d != 0 ? d : (l <=> r) }
+            shard = files.select.with_index { |_,i| i % 12 == 0 }
+            pos = shard.index { |f| f.include?("schedule/holidays/basic_crud") }
+            prefix = shard[0..pos]
+            File.write("prefix.txt", prefix.join("\n"))
+            STDERR.puts "prefix size: #{prefix.size}, holidays at #{pos}"
+          '
+          echo "----- prefix files -----"
+          cat prefix.txt
+      - name: Repro loop (shard prefix, defined order)
+        run: |
+          export RSPEC_LOCALE="${{ matrix.rspec_locale }}"
+          files=$(tr '\n' ' ' < prefix.txt)
+          repro=0
+          for attempt in 1 2 3; do
+            echo "================ ATTEMPT $attempt (locale=$RSPEC_LOCALE) ================"
+            if bundle exec rspec $files --no-color > "/tmp/attempt_${attempt}.log" 2>&1; then
+              echo "ATTEMPT $attempt: shard prefix GREEN"
+            else
+              echo "ATTEMPT $attempt: shard prefix had FAILURES"
+            fi
+            if grep -q "schedule/holidays/basic_crud_spec.rb.*imported the datas\|imported the datas" "/tmp/attempt_${attempt}.log" && grep -qE "repeat_plan|rspec ./spec/features/gws/schedule/holidays/basic_crud_spec.rb" "/tmp/attempt_${attempt}.log"; then
+              echo "--- holidays import failure DETAILS (attempt $attempt) ---"
+              grep -nE "imported the datas|repeat_plan|Failure/Error|NoMethodError|Randomized|seed|examples,|rspec ./spec/features/gws/schedule/holidays" "/tmp/attempt_${attempt}.log" | head -40
+              repro=1
+              break
+            fi
+          done
+          echo "================ REPRO RESULT: reproduced=${repro} ================"
+        env:
+          TZ: "Asia/Tokyo"
+          LANG: ja_JP.UTF-8
+          LC_ALL: ja_JP.UTF-8
+          allow_open_jtalk: 1
+          LDAP_TEST: enable
+          ES_CONTAINER_ID: ${{ steps.elasticsearch.outputs.CONTAINER_ID }}
+          CKAN_CONTAINER_ID: ${{ steps.ckan.outputs.CONTAINER_ID }}
+          ANALYZE_COVERAGE: disabled
+          CAPYBARA_MAX_WAIT_TIME: 30
+          DOWNLOAD_MAX_WAIT_TIME: 10
+          driver: chrome
+          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
