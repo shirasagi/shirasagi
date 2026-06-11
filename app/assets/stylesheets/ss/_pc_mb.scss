@@ -835,7 +835,8 @@ _:future,
   h3 a {
     display: block;
     padding: 5px 15px 5px 60px;
-    background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+    // Material Symbols Outlined: expand_circle_right
+    background: url(/assets/img/ic-expand-right.svg) no-repeat 35px center;
   }
 }
 .main-navi-md {
@@ -1013,10 +1014,12 @@ _:future,
   h3:not(.no-icons) a {
     display: block;
     padding: 5px 15px 5px 60px;
-    background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+    // Material Symbols Outlined: expand_circle_right
+    background: url(/assets/img/ic-expand-right.svg) no-repeat 35px center;
 
     &.down {
-      background: url(/assets/img/ic-arrow16down-off.png) no-repeat 35px center;
+      // Material Symbols Outlined: expand_circle_down
+      background: url(/assets/img/ic-expand-down.svg) no-repeat 35px center;
     }
 
     &.management {
@@ -1024,7 +1027,8 @@ _:future,
     }
 
     &.trash {
-      background: url(/assets/img/ic-trash.png) no-repeat 35px center;
+      // Material Symbols Outlined: delete
+      background: url(/assets/img/ic-delete.svg) no-repeat 35px center;
     }
 
     &.search {
@@ -1045,12 +1049,13 @@ _:future,
     }
 
     &:hover {
-      background: init.$gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 35px
-        center;
+      background: init.$gray1 url(/assets/img/ic-expand-right-on.svg) no-repeat
+        35px center;
     }
 
     &.down:hover {
-      background: url(/assets/img/ic-arrow16down-on.png) no-repeat 35px center;
+      background: init.$gray1 url(/assets/img/ic-expand-down-on.svg) no-repeat
+        35px center;
     }
 
     &.management:hover {
@@ -1058,7 +1063,7 @@ _:future,
     }
 
     &.trash:hover {
-      background: init.$gray1 url(/assets/img/ic-trash.png) no-repeat 35px center;
+      background: init.$gray1 url(/assets/img/ic-delete.svg) no-repeat 35px center;
     }
 
     &.search:hover {
@@ -1090,12 +1095,14 @@ _:future,
   h3:not(.no-icons) .label {
     display: block;
     padding: 5px 15px 5px 60px;
-    background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+    // Material Symbols Outlined: expand_circle_right
+    background: url(/assets/img/ic-expand-right.svg) no-repeat 35px center;
   }
   h3:not(.no-icons) span {
     display: block;
     padding: 5px 15px 5px 60px;
-    background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+    // Material Symbols Outlined: expand_circle_right
+    background: url(/assets/img/ic-expand-right.svg) no-repeat 35px center;
   }
   h3:last-child,
   ul:last-child {
@@ -1172,11 +1179,12 @@ _:future,
 
     &:not(.no-icons) {
       padding: 5px 15px 5px 85px;
-      background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
+      // Material Symbols Outlined: expand_circle_right
+      background: url(/assets/img/ic-expand-right.svg) no-repeat 60px center;
 
       &:hover {
-        background: init.$gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px
-          center;
+        background: init.$gray1 url(/assets/img/ic-expand-right-on.svg) no-repeat
+          60px center;
       }
 
       &.management {
@@ -1318,14 +1326,15 @@ _:future,
     a {
       display: block;
       padding: 5px 15px 5px 85px;
-      background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
+      // Material Symbols Outlined: expand_circle_right
+      background: url(/assets/img/ic-expand-right.svg) no-repeat 60px center;
       &.management {
         background: url(/assets/img/ic-setting.png) no-repeat 60px center;
       }
       color: init.$black;
       &:hover {
-        background: init.$gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px
-          center;
+        background: init.$gray1 url(/assets/img/ic-expand-right-on.svg) no-repeat
+          60px center;
         color: init.$orange;
         text-decoration: none;
       }
