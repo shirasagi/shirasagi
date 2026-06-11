@@ -4,7 +4,7 @@
 // シラサギ既存の Material Icons Outlined のグリフ (::before) で描画する。
 //   - 矢印（右） … expand_circle_right（= expand_circle_down を 90 度回転）
 //   - 矢印（下） … expand_circle_down
-//   - 歯車（設定）… settings
+//   - 歯車（設定）… settings（塗りつぶし＝Filled）
 //   - ゴミ箱      … delete
 // 色は文字色を継承するため、コントラスト設定（body * { color: ... !important }）に追従する。
 // ※ expand_circle_right は Material Icons Outlined に収録されていないため、
@@ -13,7 +13,8 @@
 
 $gws-navi-icons-font: "Material Icons Outlined";
 
-// Material Icons Outlined のコードポイント。
+// Material Icons のコードポイント（全バリアント共通）。
+// 既定の font-family は icon-base で "Material Icons Outlined"。歯車のみ Filled を使う。
 $gws-navi-icons-map: (
   "arrow": "\e7cd", // expand_circle_down（右矢印として 90 度回転して使用）
   "arrow-down": "\e7cd", // expand_circle_down
@@ -61,9 +62,15 @@ $gws-navi-icons-map: (
   }
 }
 
-// 歯車（設定）は Material Icons Outlined (settings) を使う。
+// 歯車（設定）は塗りつぶしの Material Icons (settings) を使う。
+// アウトライン版は線が細く白っぽく見えるため、従来の PNG と同じ塗りつぶしの字形にする。
+// コードポイントは全バリアント共通（settings = \e8b8）で、font-family のみ Filled を指定する。
 @mixin icon-material-setting {
-  @include icon("setting");
+  &::before {
+    content: map.get($gws-navi-icons-map, "setting"); // settings
+    font-family: "Material Icons"; // Filled（塗りつぶし）
+    transform: translateY(-50%); // icon-base の右矢印用の回転を解除
+  }
 }
 
 // ゴミ箱は Material Icons Outlined (delete) を使う。

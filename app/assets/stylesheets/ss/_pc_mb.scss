@@ -1217,6 +1217,14 @@ _:future,
         background-position: 15px center;
       }
 
+      // モバイルでは余白が狭くなるため、::before のアイコンも左に寄せる。
+      a::before,
+      .label::before,
+      span::before {
+        left: 15px;
+      }
+
+      // 虫眼鏡は専用の left 指定（デスクトップ 34px）を持つため、個別に上書きする。
       a.search::before {
         left: 15px;
       }
