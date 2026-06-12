@@ -18,11 +18,13 @@
        data-label-name="item[column_values][][in_wrap][file_labels]"
        data-label-placeholder="<%= t("cms.column_multiple_files_upload.#{file_type}.file_label_placeholder") %>"
        data-order-aria-label="<%= t("cms.column_multiple_files_upload.order_aria_label") %>">
-    <div class="multiple-files-upload-header">
-      <label for="<%= "#{id}-header" %>"><%= t("cms.column_multiple_files_upload.#{file_type}.header") %></label>
-      <%= text_area_tag header_field_name, current_header, id: "#{id}-header", rows: 3,
-            placeholder: t("cms.column_multiple_files_upload.#{file_type}.header_placeholder") %>
-    </div>
+    <% if column.try(:header_enabled?) %>
+      <div class="multiple-files-upload-header">
+        <label for="<%= "#{id}-header" %>"><%= t("cms.column_multiple_files_upload.#{file_type}.header") %></label>
+        <%= text_area_tag header_field_name, current_header, id: "#{id}-header", rows: 3,
+              placeholder: t("cms.column_multiple_files_upload.#{file_type}.header_placeholder") %>
+      </div>
+    <% end %>
 
     <%=
       component = SS::FileSelectBoxComponent.new(
