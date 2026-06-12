@@ -15,7 +15,7 @@ module Tasks
         if name
           criteria = ::Gws::Group.all.where(name: name)
         else
-          criteria = ::Gws::Group.all.where(name: { "$not" => /\// })
+          criteria = ::Gws::Group.all.active.where(name: { "$not" => /\// })
         end
 
         ::Tasks::Gws::Base.each_item(criteria, &block)
