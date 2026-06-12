@@ -82,6 +82,7 @@ module Gws::Memo::NotificationFilter
 
     @destroyed_items ||= []
     @destroyed_items << @destroyed_item if @destroyed_item
+    ensure_destroyed_items if @ensure_destroyed_items
     return if @destroyed_items.blank?
 
     check = []
@@ -132,7 +133,14 @@ module Gws::Memo::NotificationFilter
           @destroyed_items << [copy, item.subscribed_users]
         end
       end
+      @ensure_destroyed_items = true
     end
+  end
+
+  def ensure_destroyed_items
+    # 削除できなかったものが @items に残る
+    item_ids = @items.pluck(:id)
+    @destroyed_items.select! { |item, _| !item_ids.include?(item.id) }
   end
 
   def item_notify_enabled?(item)
