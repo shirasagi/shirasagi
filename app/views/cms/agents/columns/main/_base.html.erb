@@ -58,7 +58,7 @@
     <% if controller %>
       <div class="column-value-header-group">
         <button type="button" class="column-value-controller-move-up"><i class="material-icons md-14">keyboard_arrow_up</i></button>
-        <%= select_tag("#{f.object_name}[][order]", [], class: "column-value-controller-move-position no-form-control") %>
+        <%= select_tag("#{f.object_name}[][order]", [], id: nil, class: "column-value-controller-move-position no-form-control") %>
         <button type="button" class="column-value-controller-move-down"><i class="material-icons md-14">keyboard_arrow_down</i></button>
       </div>
       <div class="column-value-header-group">
