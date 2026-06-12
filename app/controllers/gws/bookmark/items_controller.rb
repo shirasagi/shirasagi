@@ -87,7 +87,13 @@ class Gws::Bookmark::ItemsController < ApplicationController
 
     notice =
       if failed.present?
-        t("gws/bookmark.notice.move_failed", names: failed.map(&:name).join("、"))
+        # 権限エラーで弾いた項目がある場合は、細工された ids[] による他ユーザーの
+        # ブックマーク名の漏洩を防ぐため、名前を含めない汎用メッセージにフォールバックする。
+        if failed.any? { |item| item.errors.details[:base].any? { |detail| detail[:error] == :auth_error } }
+          t("errors.messages.auth_error")
+        else
+          t("gws/bookmark.notice.move_failed", names: failed.map(&:name).join("、"))
+        end
       elsif opts[:moved].blank?
         # 全件が移動先と同一フォルダーにあった等、実際には何も移動しなかった場合
         t("gws/bookmark.notice.move_none")

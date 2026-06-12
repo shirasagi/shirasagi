@@ -33,8 +33,13 @@
       $node.droppable({
         tolerance: "pointer",
         hoverClass: "gws-bookmark-drop-hover",
-        drop: function() {
+        drop: function(_event, ui) {
           if (!gwsBookmarkIsValidTarget($node)) { return; }
+
+          // 有効なフォルダーへドロップしたときだけ、ドラッグ元の行を選択対象に含める。
+          // （ドラッグ開始では選択を変更しないため、無効ドロップやキャンセルで選択が汚れない）
+          var sourceCheckbox = ui.draggable.find("label.check input[name='ids[]']");
+          if (!sourceCheckbox.prop("checked")) { sourceCheckbox.prop("checked", true); }
 
           var folderId = $node.data("id");
           var folderName = $node.find("a.item-name").text();
@@ -56,12 +61,13 @@
     opacity: 0.75,
     cursorAt: { top: 16, left: 5 },
     helper: function() {
+      // 表示用の件数のみ算出する。選択状態(checkbox)はドラッグ開始では変更せず、
+      // 実際の対象化は drop ハンドラ側でドラッグ元を含めて確定する。
       var checkbox = $(this).find("label.check input[name='ids[]']");
-      if (!checkbox.prop("checked")) { checkbox.prop("checked", true); }
-
       var checked = $(".index .list-item input:checkbox:checked");
+      var count = checked.length + (checkbox.prop("checked") ? 0 : 1);
       var helper = $('<div style="background-color: lightgreen; padding: 2px 10px;"></div>');
-      helper.text(checked.length + "<%= t('gws/bookmark.select_check') %>");
+      helper.text(count + "<%= t('gws/bookmark.select_check') %>");
       return helper;
     }
   });

@@ -91,4 +91,26 @@ describe "gws_bookmark_items move_all (request)", type: :request, dbscope: :exam
       expect(Gws::Bookmark::Item.find(item2.id).folder_id).to eq folder1.id
     end
   end
+
+  context "細工された ids[] に他ユーザーのブックマークを混ぜても名前を漏らさない" do
+    let!(:other_user) { create :gws_user, group_ids: user.group_ids, gws_role_ids: user.gws_role_ids }
+    let!(:other_folder) { other_user.bookmark_root_folder(site) }
+    let!(:other_item) do
+      create :gws_bookmark_item, cur_user: other_user, folder: other_folder, name: "他人の秘密ブックマーク"
+    end
+
+    it do
+      post move_all_gws_bookmark_items_path(site, folder_id: folder1),
+        params: { ids: [ item1.id, other_item.id ], dst_folder_id: folder2.id }
+      expect(response.status).to eq 302
+
+      # 権限エラーで弾いた項目があるため、名前を含まない汎用メッセージにフォールバックする
+      expect(notice_translations('errors.messages.auth_error')).to include(flash[:notice])
+      expect(flash[:notice]).not_to include(other_item.name)
+
+      # 自分の item1 は移動でき、他ユーザーの項目は元のフォルダーから動かない
+      expect(Gws::Bookmark::Item.find(item1.id).folder_id).to eq folder2.id
+      expect(Gws::Bookmark::Item.find(other_item.id).folder_id).to eq other_folder.id
+    end
+  end
 end

@@ -33,6 +33,8 @@ describe "gws_bookmark_items move_all (drag and drop)", type: :feature, dbscope:
       .click_and_hold(source.native)
       .move_by(15, 15)        # 最初の mousemove で jQuery UI のドラッグを開始させる
       .move_to(target.native) # ドロップ先ノードへ移動して droppable の hover を発火
+      # 2回目の移動で hover/over を確実に再発火させ、Selenium のタイミング依存による
+      # droppable 未認識（flaky）を避けるためのワークアラウンド。
       .move_to(target.native)
       .release
       .perform
