@@ -69,7 +69,8 @@ describe "gws_bookmark_items move_all (request)", type: :request, dbscope: :exam
 
   context "存在しない移動先フォルダーを指定した場合" do
     it do
-      post move_all_gws_bookmark_items_path(site, folder_id: folder1), params: { ids: [ item1.id, item2.id ], dst_folder_id: 9_999_999 }
+      post move_all_gws_bookmark_items_path(site, folder_id: folder1),
+        params: { ids: [ item1.id, item2.id ], dst_folder_id: 9_999_999 }
       expect(response.status).to eq 404
 
       expect(Gws::Bookmark::Item.find(item1.id).folder_id).to eq folder1.id
@@ -82,7 +83,8 @@ describe "gws_bookmark_items move_all (request)", type: :request, dbscope: :exam
     let!(:other_folder) { other_user.bookmark_root_folder(site) }
 
     it do
-      post move_all_gws_bookmark_items_path(site, folder_id: folder1), params: { ids: [ item1.id, item2.id ], dst_folder_id: other_folder.id }
+      post move_all_gws_bookmark_items_path(site, folder_id: folder1),
+        params: { ids: [ item1.id, item2.id ], dst_folder_id: other_folder.id }
       expect(response.status).to eq 404
 
       expect(Gws::Bookmark::Item.find(item1.id).folder_id).to eq folder1.id
