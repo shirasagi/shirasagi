@@ -1,0 +1,26 @@
+<%
+  return unless @cur_site.menu_links_visible?
+%>
+<div class="dropdown dropdown-toggle gws-public-links" data-ref="#gws-public-links-dropdown">
+  <button type="button" class="gws-public-links-toggle" aria-label="<%= @cur_site.menu_links_label.presence || t('mongoid.models.gws/link') %>">
+    <%= md_icons.filled "link", tag: :i %>
+  </button>
+
+  <div class="dropdown-menu gws-public-links-dropdown-menu" id="gws-public-links-dropdown">
+    <header class="gws-public-links-menu-header">
+      <h2><%= @cur_site.menu_links_label.presence || t('mongoid.models.gws/link') %></h2>
+      <% if Gws::Link.allowed?(:read, @cur_user, site: @cur_site) %>
+        <%= link_to gws_links_path(site: @cur_site),
+              class: "gws-public-links-menu-manage",
+              title: t("gws.public_links.manage"),
+              aria: { label: t("gws.public_links.manage") },
+              data: { turbo: false } do %>
+          <%= md_icons.outlined "settings" %>
+        <% end %>
+      <% end %>
+    </header>
+    <turbo-frame id="gws-public-links-frame" src="<%= menu_gws_public_links_path(site: @cur_site) %>" loading="lazy">
+      <%= loading %>
+    </turbo-frame>
+  </div>
+</div>

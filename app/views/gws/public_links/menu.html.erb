@@ -1,0 +1,38 @@
+<div class="gws-public-links-menu-frame">
+  <% if @items.blank? %>
+    <p class="gws-public-links-menu-empty"><%= t("gws.public_links.no_items") %></p>
+  <% else %>
+    <div class="gws-public-links-boxes">
+      <% @items.each do |item| %>
+        <section class="gws-public-links-box">
+          <header class="gws-public-links-box-head">
+            <h3><%= item.name %></h3>
+          </header>
+          <div class="gws-public-links-box-body">
+            <ul class="gws-public-links-list">
+              <% (item.links || []).each do |link| %>
+                <%
+                  target = link[:target].presence || Gws::Link.default_link_target
+                  rel = target == "_blank" ? "noopener" : nil
+                %>
+                <li class="gws-public-links-list-item">
+                  <% if link[:url].present? %>
+                    <%= link_to sns_redirect_path(ref: link[:url]), target: target, rel: rel,
+                          class: "gws-public-links-link#{target == '_blank' ? ' gws-public-links-link--external' : ''}" do %>
+                      <span class="gws-public-links-link-name"><%= link[:name].presence || link[:url] %></span>
+                      <% if target == "_blank" %>
+                        <%= md_icons.outlined "open_in_new", class: "gws-public-links-link-icon", size: 16 %>
+                      <% end %>
+                    <% end %>
+                  <% elsif link[:name].present? %>
+                    <span class="gws-public-links-link-name"><%= link[:name] %></span>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </section>
+      <% end %>
+    </div>
+  <% end %>
+</div>
