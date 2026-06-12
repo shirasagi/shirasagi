@@ -1,9 +1,19 @@
 ja:
   gws/bookmark:
     all: 全てのブックマーク
+    links:
+      move: 移動する
+      confirm:
+        move: 選択した項目を移動しますか？
+        move_drop:
+          head: 選択したブックマークを
+          tail: に移動しますか？
+    select_check: 件のブックマークを選択
     notice:
       save: お気に入りを保存しました
       edit: お気に入りを編集
+      move_failed: "移動できなかった項目があります：%{names}"
+      move_none: 移動する項目がありませんでした。
     options:
       bookmark_model:
         external_link: 外部リンク
