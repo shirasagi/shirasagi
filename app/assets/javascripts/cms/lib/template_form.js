@@ -236,6 +236,10 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
     });
   });
 
+  this.$el.on("ss:correct:done", function() {
+    self.resetOrder();
+  });
+
   if (options && options.type === "entry") {
     this.$el.find(".addon-body").sortable({
       axis: "y",
