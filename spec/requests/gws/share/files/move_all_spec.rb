@@ -32,11 +32,19 @@ describe "gws_share_files move_all (request)", type: :request, dbscope: :example
     post move_all_gws_share_folder_files_path(site, folder1), params: { ids: ids, folder_id: folder.id }
   end
 
+  # flash の notice はコントローラがリクエスト時のロケールで翻訳して格納するため、
+  # spec 側の I18n.locale（locale.rb がランダムに選ぶ）と一致するとは限らない。
+  # ロケールに依存せず「どの notice キーが使われたか」を検証するため、
+  # 利用可能な全ロケールの翻訳のいずれかと一致することを確認する。
+  def notice_translations(key)
+    I18n.available_locales.map { |locale| I18n.t(key, locale: locale) }
+  end
+
   context "同一ライブラリー内の別フォルダーへ移動できる" do
     it do
       post_move_all(folder2)
       expect(response.status).to eq 302
-      expect(flash[:notice]).to eq I18n.t('ss.notice.saved')
+      expect(notice_translations('ss.notice.saved')).to include(flash[:notice])
 
       expect(Gws::Share::File.find(item1.id).folder_id).to eq folder2.id
       expect(Gws::Share::File.find(item2.id).folder_id).to eq folder2.id
@@ -102,7 +110,7 @@ describe "gws_share_files move_all (request)", type: :request, dbscope: :example
     it do
       post_move_all(folder1)
       expect(response.status).to eq 302
-      expect(flash[:notice]).to eq I18n.t('gws/share.notice.move_none')
+      expect(notice_translations('gws/share.notice.move_none')).to include(flash[:notice])
 
       expect(Gws::Share::File.find(item1.id).folder_id).to eq folder1.id
       expect(Gws::Share::File.find(item2.id).folder_id).to eq folder1.id
