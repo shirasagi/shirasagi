@@ -245,17 +245,15 @@ _:future,
 .gws-memo-notice {
   display: inline-block;
   //color: init.$white;
-  a {
+  > .ajax-popup-notice {
+    display: block;
+    position: relative;
+    padding: 12px;
     color: init.$white;
     &:hover {
       background: #424242;
       color: init.$white;
     }
-  }
-  > .ajax-popup-notice {
-    display: block;
-    position: relative;
-    padding: 12px;
     .unseen {
       display: inline-block;
       position: absolute;
