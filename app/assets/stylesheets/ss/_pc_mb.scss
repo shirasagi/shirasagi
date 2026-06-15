@@ -3311,6 +3311,8 @@ form .CodeMirror {
 }
 .input-group {
   display: flex;
+  flex-wrap: wrap;
+  gap: 5px 0;
 
   .input-group-append {
     display: flex;
