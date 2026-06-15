@@ -93,12 +93,16 @@ describe "gws_public_links_menu", type: :feature, dbscope: :example, js: true do
       gws_user.clear_gws_role_permissions
     end
 
-    it "shows the public links but hides the manage gear" do
+    it "shows an empty panel without the manage gear" do
+      # When read permission is missing, the readable scope returns no records
+      # (gws.readable_setting.requires_read_permission defaults to true), so the
+      # panel shows the empty message and the management gear is hidden.
       visit gws_portal_path(site: site)
 
       within ".gws-public-links" do
         find(".gws-public-links-toggle").click
-        expect(page).to have_link(link_name1)
+        expect(page).to have_content(I18n.t("gws.public_links.no_items"))
+        expect(page).to have_no_link(link_name1)
         expect(page).to have_no_css(".gws-public-links-menu-manage")
       end
     end

@@ -18,7 +18,8 @@
                 <li class="gws-public-links-list-item">
                   <% if link[:url].present? %>
                     <%= link_to sns_redirect_path(ref: link[:url]), target: target, rel: rel,
-                          class: "gws-public-links-link#{target == '_blank' ? ' gws-public-links-link--external' : ''}" do %>
+                          class: "gws-public-links-link#{target == '_blank' ? ' gws-public-links-link--external' : ''}",
+                          data: { turbo: false } do %>
                       <span class="gws-public-links-link-name"><%= link[:name].presence || link[:url] %></span>
                       <% if target == "_blank" %>
                         <%= md_icons.outlined "open_in_new", class: "gws-public-links-link-icon", size: 16 %>
