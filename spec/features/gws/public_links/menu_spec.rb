@@ -101,7 +101,7 @@ describe "gws_public_links_menu", type: :feature, dbscope: :example, js: true do
 
       within ".gws-public-links" do
         find(".gws-public-links-toggle").click
-        expect(page).to have_content(I18n.t("gws.public_links.no_items"))
+        expect(page).to have_css(".gws-public-links-menu-empty", text: I18n.t("gws.public_links.no_items"))
         expect(page).to have_no_link(link_name1)
         expect(page).to have_no_css(".gws-public-links-menu-manage")
       end
