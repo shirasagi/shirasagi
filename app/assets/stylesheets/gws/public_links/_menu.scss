@@ -105,9 +105,9 @@ $gws-public-links-frame-padding: 15px;
 }
 
 .gws-public-links-box {
+  display: flex;
   // box-sizing keeps the 1px borders inside the fixed width so 4 boxes fit the row
   box-sizing: border-box;
-  display: flex;
   flex: 0 0 $gws-public-links-box-width;
   flex-direction: column;
   width: $gws-public-links-box-width;
