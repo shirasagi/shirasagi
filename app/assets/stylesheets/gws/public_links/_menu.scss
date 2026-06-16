@@ -74,10 +74,11 @@ $gws-public-links-frame-padding: 15px;
       display: inline-flex;
       align-items: center;
       margin-left: auto;
+      color: #555;
       line-height: 1;
 
       &:hover {
-        opacity: 0.7;
+        color: init.$orange;
       }
     }
 

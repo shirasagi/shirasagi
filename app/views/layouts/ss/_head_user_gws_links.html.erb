@@ -18,9 +18,8 @@
               title: t("gws.public_links.manage"),
               aria: { label: t("gws.public_links.manage") },
               data: { turbo: false } do %>
-          <%# ic-cms-on is the dark variant (the header uses the white ic-cms-off on its dark background); use the dark one on this white panel %>
-          <%= image_tag "/assets/img/ic-cms-on.png", alt: "", width: 19, height: 19,
-              class: "gws-public-links-menu-manage-icon" %>
+          <%# Material Icons: settings (same gear as gws share files) %>
+          <%= md_icons.filled "settings", tag: :i, class: "gws-public-links-menu-manage-icon" %>
         <% end %>
       <% end %>
     </header>
