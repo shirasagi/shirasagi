@@ -50,27 +50,21 @@ $gws-public-links-link-row-height: 37px;
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
     color: init.$black;
 
-    // speech-bubble pointer aimed at the toggle icon (panel is right-aligned to it)
-    &::before,
+    // speech-bubble pointer aimed at the toggle icon (panel is right-aligned to it).
+    // Use a rotated square whose fill is background-color so it follows the
+    // contrast theme (which overrides background-color on `body *:after`).
     &::after {
       content: "";
       position: absolute;
+      right: 18px;
       bottom: 100%;
-      width: 0;
-      height: 0;
-      border: 8px solid transparent;
-      border-top: 0;
-    }
-    &::before {
-      right: 16px;
-      border-bottom-color: init.$gray4;
-    }
-    &::after {
-      right: 17px;
-      margin-bottom: -1px;
-      border: 7px solid transparent;
-      border-top: 0;
-      border-bottom-color: init.$white;
+      width: 12px;
+      height: 12px;
+      margin-bottom: -6px;
+      border-top: init.$border-gray4;
+      border-left: init.$border-gray4;
+      background-color: inherit;
+      transform: rotate(45deg);
     }
 
     // the lazy turbo-frame is inline by default; make it a block so its
@@ -106,7 +100,6 @@ $gws-public-links-link-row-height: 37px;
       display: inline-flex;
       align-items: center;
       margin-left: auto;
-      color: #555;
       line-height: 1;
 
       &:hover {
@@ -216,7 +209,9 @@ $gws-public-links-link-row-height: 37px;
   }
 }
 
-span.gws-public-links-link-name {
+// the no-url case renders the name as a bare span directly in the list item
+// (scoped so it does NOT add extra padding to the name span inside a link)
+.gws-public-links-list-item > .gws-public-links-link-name {
   display: block;
   padding: 8px 12px;
   color: init.$black;
