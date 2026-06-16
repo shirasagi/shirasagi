@@ -61,9 +61,11 @@ $gws-public-links-link-row-height: 37px;
       width: 12px;
       height: 12px;
       margin-bottom: -6px;
-      border-top: init.$border-gray4;
-      border-left: init.$border-gray4;
       transform: rotate(45deg);
+      border-top: 1px solid;
+      border-left: 1px solid;
+      // follow the panel border color so the contrast theme recolors it
+      border-color: inherit;
       background-color: inherit;
     }
 
@@ -200,7 +202,10 @@ $gws-public-links-link-row-height: 37px;
 
   .gws-public-links-link-name {
     flex: 1 1 auto;
-    word-break: break-all;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .gws-public-links-link-icon {
@@ -214,5 +219,8 @@ $gws-public-links-link-row-height: 37px;
 .gws-public-links-list-item > .gws-public-links-link-name {
   display: block;
   padding: 8px 12px;
+  overflow: hidden;
   color: init.$black;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
