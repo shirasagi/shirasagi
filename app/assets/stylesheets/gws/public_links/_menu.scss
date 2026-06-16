@@ -6,10 +6,7 @@ $gws-public-links-box-width: 230px;
 $gws-public-links-box-gap: 15px;
 $gws-public-links-frame-padding: 15px;
 // Width that fits up to 4 boxes in a row (plus gaps and frame padding).
-$gws-public-links-menu-width:
-  $gws-public-links-box-width * 4 +
-  $gws-public-links-box-gap * 3 +
-  $gws-public-links-frame-padding * 2;
+$gws-public-links-menu-width: $gws-public-links-box-width * 4 + $gws-public-links-box-gap * 3 + $gws-public-links-frame-padding * 2;
 
 .gws-public-links {
   display: inline-block;
