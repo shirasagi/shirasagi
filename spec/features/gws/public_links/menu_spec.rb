@@ -27,7 +27,7 @@ describe "gws_public_links_menu", type: :feature, dbscope: :example, js: true do
     Gws::Link.default_link_target = @default_link_target
   end
 
-  context "with link read permission" do
+  context "with read and edit permissions" do
     it "opens the header dropdown and shows boxes/links and the manage gear" do
       visit gws_portal_path(site: site)
 
@@ -48,6 +48,19 @@ describe "gws_public_links_menu", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".gws-public-links-menu-manage")
         expect(find(".gws-public-links-menu-manage")[:href]).to end_with(gws_links_path(site: site))
       end
+    end
+
+    it "moves to the link management screen from the manage gear" do
+      visit gws_portal_path(site: site)
+
+      within ".gws-public-links" do
+        find(".gws-public-links-toggle").click
+        expect(page).to have_css(".gws-public-links-menu-manage")
+        find(".gws-public-links-menu-manage").click
+      end
+
+      expect(page).to have_current_path(gws_links_path(site: site))
+      expect(page).to have_content(item.name)
     end
 
     it "follows an internal link through the redirect" do
@@ -86,17 +99,39 @@ describe "gws_public_links_menu", type: :feature, dbscope: :example, js: true do
     end
   end
 
-  context "without link read permission" do
+  context "with read permission but without edit permission" do
     before do
       role = gws_user.gws_roles[0]
-      role.update(permissions: Gws::Role.permission_names - %w(read_other_gws_links read_private_gws_links))
+      role.update(permissions: Gws::Role.permission_names - %w(edit_other_gws_links edit_private_gws_links))
+      gws_user.clear_gws_role_permissions
+    end
+
+    it "shows the public links but hides the manage gear" do
+      # The gear is gated on edit permission, so a read-only user sees the
+      # links but no management gear.
+      visit gws_portal_path(site: site)
+
+      within ".gws-public-links" do
+        find(".gws-public-links-toggle").click
+        expect(page).to have_link(link_name1)
+        expect(page).to have_no_css(".gws-public-links-menu-manage")
+      end
+    end
+  end
+
+  context "without link permissions" do
+    before do
+      role = gws_user.gws_roles[0]
+      role.update(permissions: Gws::Role.permission_names - %w(
+        read_other_gws_links read_private_gws_links edit_other_gws_links edit_private_gws_links
+      ))
       gws_user.clear_gws_role_permissions
     end
 
     it "shows an empty panel without the manage gear" do
       # When read permission is missing, the readable scope returns no records
       # (gws.readable_setting.requires_read_permission defaults to true), so the
-      # panel shows the empty message and the management gear is hidden.
+      # panel shows the empty message; the gear is also hidden (no edit permission).
       visit gws_portal_path(site: site)
 
       within ".gws-public-links" do
