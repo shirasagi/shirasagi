@@ -4,6 +4,12 @@
 
 $gws-public-links-box-width: 230px;
 $gws-public-links-box-gap: 15px;
+$gws-public-links-frame-padding: 15px;
+// Width that fits up to 4 boxes in a row (plus gaps and frame padding).
+$gws-public-links-menu-width:
+  $gws-public-links-box-width * 4 +
+  $gws-public-links-box-gap * 3 +
+  $gws-public-links-frame-padding * 2;
 
 .gws-public-links {
   display: inline-block;
@@ -30,7 +36,7 @@ $gws-public-links-box-gap: 15px;
 
   .gws-public-links-dropdown-menu {
     right: 0;
-    width: auto;
+    width: $gws-public-links-menu-width;
     max-width: 90vw;
     padding: 0;
     border: init.$border-gray4;
@@ -38,7 +44,14 @@ $gws-public-links-box-gap: 15px;
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
     color: init.$black;
 
+    // the lazy turbo-frame is inline by default; make it a block so its
+    // contents can lay out across the full panel width.
+    turbo-frame {
+      display: block;
+    }
+
     @include init.mb {
+      width: auto;
       max-width: 100vw;
     }
   }
@@ -71,7 +84,7 @@ $gws-public-links-box-gap: 15px;
 
 // frame contents (rendered inside the lazy turbo-frame)
 .gws-public-links-menu-frame {
-  padding: 15px;
+  padding: $gws-public-links-frame-padding;
 }
 
 .gws-public-links-menu-empty {
