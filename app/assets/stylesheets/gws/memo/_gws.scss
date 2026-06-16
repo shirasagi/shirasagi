@@ -180,7 +180,7 @@
       }
       .from,
       .to {
-        flex: 0 0 200px;
+        flex: 0 0 240px;
       }
       .priority {
         width: 50px;
@@ -226,7 +226,7 @@
     }
     .from,
     .to {
-      flex: 0 0 200px;
+      flex: 0 0 240px;
       padding-right: 5px;
       @include init.mb {
         width: 100%;
