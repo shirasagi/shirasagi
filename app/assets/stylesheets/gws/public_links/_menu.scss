@@ -91,30 +91,22 @@ $gws-public-links-menu-width: $gws-public-links-box-width * 4 + $gws-public-link
 }
 
 .gws-public-links-boxes {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  // exactly 4 equal columns; the 5th box wraps to a new line
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: $gws-public-links-box-gap;
-  // up to 4 columns; the 5th box wraps to a new line
-  max-width: $gws-public-links-box-width * 4 + $gws-public-links-box-gap * 3;
 
   @include init.mb {
-    max-width: none;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
 .gws-public-links-box {
   display: flex;
-  flex: 0 0 $gws-public-links-box-width;
   flex-direction: column;
-  width: $gws-public-links-box-width;
   overflow: hidden;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
-
-  @include init.mb {
-    flex-basis: 100%;
-    width: 100%;
-  }
 }
 
 .gws-public-links-box-head {
