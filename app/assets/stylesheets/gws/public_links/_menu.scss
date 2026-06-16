@@ -5,6 +5,8 @@
 $gws-public-links-box-width: 230px;
 $gws-public-links-box-gap: 15px;
 $gws-public-links-frame-padding: 15px;
+// one link row ≈ 8px+8px padding + line + 1px divider; show up to 6, then scroll
+$gws-public-links-link-row-height: 37px;
 
 .gws-public-links {
   display: inline-block;
@@ -40,11 +42,36 @@ $gws-public-links-frame-padding: 15px;
     // add frame padding and border automatically, so 4 columns always fit.
     width: max-content;
     max-width: 90vw;
+    // leave a gap above for the speech-bubble pointer
+    margin-top: 10px;
     padding: 0;
     border: init.$border-gray4;
     background-color: init.$white;
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
     color: init.$black;
+
+    // speech-bubble pointer aimed at the toggle icon (panel is right-aligned to it)
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 100%;
+      width: 0;
+      height: 0;
+      border: 8px solid transparent;
+      border-top: 0;
+    }
+    &::before {
+      right: 16px;
+      border-bottom-color: init.$gray4;
+    }
+    &::after {
+      right: 17px;
+      margin-bottom: -1px;
+      border-width: 7px;
+      border-top: 0;
+      border-bottom-color: init.$white;
+    }
 
     // the lazy turbo-frame is inline by default; make it a block so its
     // contents can lay out across the full panel width.
@@ -65,9 +92,14 @@ $gws-public-links-frame-padding: 15px;
     border-bottom: 1px solid #f2f2f2;
 
     h2 {
+      // match the addon title style (orange left bar)
       margin: 0;
-      font-size: 14px;
-      line-height: 1.4;
+      padding-left: 8px;
+      border-left: 3px solid init.$orange;
+      color: init.$black3;
+      font-size: init.$px15;
+      font-weight: bold;
+      line-height: 1.2;
     }
 
     .gws-public-links-menu-manage {
@@ -142,7 +174,8 @@ $gws-public-links-frame-padding: 15px;
 }
 
 .gws-public-links-box-body {
-  max-height: 220px;
+  // show at most 6 links; more than that scroll within the box
+  max-height: $gws-public-links-link-row-height * 6;
   overflow-y: auto;
 }
 
