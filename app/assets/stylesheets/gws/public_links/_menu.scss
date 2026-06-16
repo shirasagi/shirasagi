@@ -63,8 +63,8 @@ $gws-public-links-link-row-height: 37px;
       margin-bottom: -6px;
       border-top: init.$border-gray4;
       border-left: init.$border-gray4;
-      background-color: inherit;
       transform: rotate(45deg);
+      background-color: inherit;
     }
 
     // the lazy turbo-frame is inline by default; make it a block so its
