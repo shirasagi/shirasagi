@@ -117,6 +117,11 @@ $gws-public-links-link-row-height: 37px;
       &:hover {
         color: init.$orange;
       }
+
+      &:focus-visible {
+        outline: 2px solid init.$orange;
+        outline-offset: 2px;
+      }
     }
 
     .gws-public-links-menu-manage-icon {
