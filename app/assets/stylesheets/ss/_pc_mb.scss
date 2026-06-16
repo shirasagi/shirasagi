@@ -2,6 +2,35 @@
 // base
 @use "init";
 
+// Material Symbols Outlined（必要なグリフのみを収録したサブセットフォント）
+// 背景画像ではなくフォントグリフで表示することで、color に追従し
+// グループウェアのコントラスト機能（body * へ color !important を適用）でも色が変わる。
+@font-face {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: 400;
+  src:
+    url("/assets/font/material-symbols-outlined-subset.woff2") format("woff2"),
+    url("/assets/font/material-symbols-outlined-subset.woff") format("woff");
+}
+
+// サイドメニューのアイコンを ::before のグリフで表示する共通スタイル。
+// color は指定せず継承させることで、コントラスト機能やホバー時の文字色に追従する。
+@mixin ms-icon($content, $left: 35px) {
+  position: relative;
+
+  &::before {
+    content: $content;
+    position: absolute;
+    top: 50%;
+    left: $left;
+    transform: translateY(-50%);
+    font-family: "Material Symbols Outlined";
+    font-size: 18px;
+    line-height: 1;
+  }
+}
+
 header,
 footer,
 nav,
@@ -833,7 +862,8 @@ _:future,
   h3 a {
     display: block;
     padding: 5px 15px 5px 60px;
-    background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+    // Material Symbols Outlined: expand_circle_right
+    @include ms-icon("\f591");
   }
 }
 .main-navi-md {
@@ -1011,57 +1041,36 @@ _:future,
   h3:not(.no-icons) a {
     display: block;
     padding: 5px 15px 5px 60px;
-    background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+    // Material Symbols Outlined: expand_circle_right
+    @include ms-icon("\f591");
 
-    &.down {
-      background: url(/assets/img/ic-arrow16down-off.png) no-repeat 35px center;
+    &.down::before {
+      // Material Symbols Outlined: expand_circle_down
+      content: "\e7cd";
     }
 
-    &.management {
-      background: url(/assets/img/ic-setting.png) no-repeat 35px center;
+    &.trash::before {
+      // Material Symbols Outlined: delete
+      content: "\e92e";
     }
 
-    &.trash {
-      background: url(/assets/img/ic-trash.png) no-repeat 35px center;
+    &.management::before {
+      // Material Icons: settings（共有ファイルの歯車と同じアイコン）
+      content: "\e8b8";
+      font-family: "Material Icons";
     }
 
-    &.search {
-      position: relative;
-      background: none;
-
-      &::before {
-        // Material Icons Outlined: search
-        content: "\e8b6";
-        position: absolute;
-        top: 50%;
-        left: 34px;
-        transform: translateY(-50%);
-        font-family: "Material Icons Outlined";
-        font-size: 18px;
-        line-height: 1;
-      }
+    &.search::before {
+      // Material Icons Outlined: search
+      content: "\e8b6";
+      left: 34px;
+      font-family: "Material Icons Outlined";
     }
 
     &:hover {
-      background: init.$gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 35px
-        center;
-    }
-
-    &.down:hover {
-      background: url(/assets/img/ic-arrow16down-on.png) no-repeat 35px center;
-    }
-
-    &.management:hover {
-      background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 35px center;
-    }
-
-    &.trash:hover {
-      background: init.$gray1 url(/assets/img/ic-trash.png) no-repeat 35px center;
-    }
-
-    &.search:hover {
       background: init.$gray1;
 
+      // ホバー時はグリフもオレンジ（検索アイコンと同じ挙動）
       &::before {
         color: init.$orange;
       }
@@ -1088,12 +1097,14 @@ _:future,
   h3:not(.no-icons) .label {
     display: block;
     padding: 5px 15px 5px 60px;
-    background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+    // Material Symbols Outlined: expand_circle_right
+    @include ms-icon("\f591");
   }
   h3:not(.no-icons) span {
     display: block;
     padding: 5px 15px 5px 60px;
-    background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+    // Material Symbols Outlined: expand_circle_right
+    @include ms-icon("\f591");
   }
   h3:last-child,
   ul:last-child {
@@ -1170,41 +1181,26 @@ _:future,
 
     &:not(.no-icons) {
       padding: 5px 15px 5px 85px;
-      background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
+      // Material Symbols Outlined: expand_circle_right
+      @include ms-icon("\f591", 60px);
+
+      &.management::before {
+        // Material Icons: settings（共有ファイルの歯車と同じアイコン）
+        content: "\e8b8";
+        font-family: "Material Icons";
+      }
+
+      &.search::before {
+        // Material Icons Outlined: search
+        content: "\e8b6";
+        left: 59px;
+        font-family: "Material Icons Outlined";
+      }
 
       &:hover {
-        background: init.$gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px
-          center;
-      }
-
-      &.management {
-        background: url(/assets/img/ic-setting.png) no-repeat 60px center;
-      }
-
-      &.management:hover {
-        background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
-      }
-
-      &.search {
-        position: relative;
-        background: none;
-
-        &::before {
-          // Material Icons Outlined: search
-          content: "\e8b6";
-          position: absolute;
-          top: 50%;
-          left: 59px;
-          transform: translateY(-50%);
-          font-family: "Material Icons Outlined";
-          font-size: 18px;
-          line-height: 1;
-        }
-      }
-
-      &.search:hover {
         background: init.$gray1;
 
+        // ホバー時はグリフもオレンジ（検索アイコンと同じ挙動）
         &::before {
           color: init.$orange;
         }
@@ -1228,10 +1224,11 @@ _:future,
       a:hover.search,
       span {
         padding: 5px 15px 5px 35px;
-        background-position: 15px center;
       }
 
-      a.search::before {
+      // グリフアイコン（::before）をモバイル表示位置へ
+      a::before,
+      span::before {
         left: 15px;
       }
     }
@@ -1316,19 +1313,25 @@ _:future,
     a {
       display: block;
       padding: 5px 15px 5px 85px;
-      background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
-      &.management {
-        background: url(/assets/img/ic-setting.png) no-repeat 60px center;
-      }
+      // Material Symbols Outlined: expand_circle_right
+      @include ms-icon("\f591", 60px);
       color: init.$black;
+      &.management::before {
+        // Material Icons: settings（共有ファイルの歯車と同じアイコン）
+        content: "\e8b8";
+        font-family: "Material Icons";
+      }
       &:hover {
-        background: init.$gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px
-          center;
+        background: init.$gray1;
         color: init.$orange;
         text-decoration: none;
+
+        // ホバー時はグリフもオレンジ（検索アイコンと同じ挙動）
+        &::before {
+          color: init.$orange;
+        }
       }
       &:hover.management {
-        background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
         color: init.$orange;
         text-decoration: none;
       }
@@ -1344,7 +1347,10 @@ _:future,
         a,
         a:hover {
           padding: 5px 0 5px 20px;
-          background-position: left center;
+        }
+        // グリフアイコン（::before）もモバイル表示位置（左端）へ
+        a::before {
+          left: 0;
         }
       }
     }
