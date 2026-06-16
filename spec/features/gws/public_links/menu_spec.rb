@@ -39,9 +39,11 @@ describe "gws_public_links_menu", type: :feature, dbscope: :example, js: true do
         expect(page).to have_link(link_name1)
         expect(page).to have_link(link_name2)
 
-        # the external (_blank) link has the open-in-new icon
+        # the external (_blank) link has the open-in-new icon and opener-safe rel
         within all(".gws-public-links-list-item")[1] do
           expect(page).to have_css(".gws-public-links-link--external")
+          external_link = find("a.gws-public-links-link--external")
+          expect(external_link[:rel].to_s.split).to include("noopener")
         end
 
         # the manage gear is visible and points to the management list
@@ -102,7 +104,7 @@ describe "gws_public_links_menu", type: :feature, dbscope: :example, js: true do
   context "with read permission but without edit permission" do
     before do
       role = gws_user.gws_roles[0]
-      role.update(permissions: Gws::Role.permission_names - %w(edit_other_gws_links edit_private_gws_links))
+      role.update!(permissions: Gws::Role.permission_names - %w(edit_other_gws_links edit_private_gws_links))
       gws_user.clear_gws_role_permissions
     end
 
@@ -122,7 +124,7 @@ describe "gws_public_links_menu", type: :feature, dbscope: :example, js: true do
   context "without link permissions" do
     before do
       role = gws_user.gws_roles[0]
-      role.update(permissions: Gws::Role.permission_names - %w(
+      role.update!(permissions: Gws::Role.permission_names - %w(
         read_other_gws_links read_private_gws_links edit_other_gws_links edit_private_gws_links
       ))
       gws_user.clear_gws_role_permissions
