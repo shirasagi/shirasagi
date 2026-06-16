@@ -5,8 +5,6 @@
 $gws-public-links-box-width: 230px;
 $gws-public-links-box-gap: 15px;
 $gws-public-links-frame-padding: 15px;
-// Width that fits up to 4 boxes in a row (plus gaps and frame padding).
-$gws-public-links-menu-width: $gws-public-links-box-width * 4 + $gws-public-links-box-gap * 3 + $gws-public-links-frame-padding * 2;
 
 .gws-public-links {
   display: inline-block;
@@ -33,7 +31,11 @@ $gws-public-links-menu-width: $gws-public-links-box-width * 4 + $gws-public-link
 
   .gws-public-links-dropdown-menu {
     right: 0;
-    width: $gws-public-links-menu-width;
+    // With absolute positioning + right:0, width:auto collapses to one box.
+    // Follow the content instead: the boxes container caps itself at 4 columns
+    // (see .gws-public-links-boxes max-width), and max-content lets the browser
+    // add frame padding and border automatically, so 4 columns always fit.
+    width: max-content;
     max-width: 90vw;
     padding: 0;
     border: init.$border-gray4;
@@ -91,22 +93,32 @@ $gws-public-links-menu-width: $gws-public-links-box-width * 4 + $gws-public-link
 }
 
 .gws-public-links-boxes {
-  display: grid;
-  // exactly 4 equal columns; the 5th box wraps to a new line
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: $gws-public-links-box-gap;
+  // cap the row at 4 boxes; the 5th wraps to the next line
+  max-width: $gws-public-links-box-width * 4 + $gws-public-links-box-gap * 3;
 
   @include init.mb {
-    grid-template-columns: minmax(0, 1fr);
+    max-width: none;
   }
 }
 
 .gws-public-links-box {
   display: flex;
+  flex: 0 0 $gws-public-links-box-width;
   flex-direction: column;
+  // box-sizing keeps the 1px borders inside the fixed width so 4 boxes fit the row
+  box-sizing: border-box;
+  width: $gws-public-links-box-width;
   overflow: hidden;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
+
+  @include init.mb {
+    flex-basis: 100%;
+    width: 100%;
+  }
 }
 
 .gws-public-links-box-head {
