@@ -15,7 +15,8 @@
               title: t("gws.public_links.manage"),
               aria: { label: t("gws.public_links.manage") },
               data: { turbo: false } do %>
-          <%= md_icons.outlined "settings" %>
+          <%= image_tag "/assets/img/ic-cms-off.png", alt: "", width: 19, height: 19,
+              class: "gws-public-links-menu-manage-icon" %>
         <% end %>
       <% end %>
     </header>

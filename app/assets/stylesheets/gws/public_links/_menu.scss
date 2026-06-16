@@ -71,12 +71,15 @@ $gws-public-links-frame-padding: 15px;
       display: inline-flex;
       align-items: center;
       margin-left: auto;
-      color: #888;
       line-height: 1;
 
       &:hover {
-        color: init.$orange;
+        opacity: 0.7;
       }
+    }
+
+    .gws-public-links-menu-manage-icon {
+      display: block;
     }
   }
 }
