@@ -24,8 +24,11 @@ $gws-public-links-frame-padding: 15px;
       background-color: #424242;
     }
 
-    i {
-      vertical-align: middle;
+    .gws-public-links-toggle-icon {
+      display: block;
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
     }
   }
 
