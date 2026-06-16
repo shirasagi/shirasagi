@@ -68,7 +68,7 @@ $gws-public-links-link-row-height: 37px;
     &::after {
       right: 17px;
       margin-bottom: -1px;
-      border-width: 7px;
+      border: 7px solid transparent;
       border-top: 0;
       border-bottom-color: init.$white;
     }
