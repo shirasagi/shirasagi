@@ -96,6 +96,9 @@ en:
       back_to_portal: Back to portal
       webmail_user_import: Import with webmail permissions
       switch_group: Change group
+    public_links:
+      manage: Manage links
+      no_items: No links.
     buttons:
       unset: Cancel
       add_item: Add a new element
