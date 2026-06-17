@@ -42,7 +42,7 @@ describe "translate/public_filter", type: :feature, dbscope: :example, js: true,
       site.translate_api = "google_translation"
       site.translate_google_api_project_id = "shirasagi-dev"
       "#{Rails.root}/spec/fixtures/translate/gcp_credential.json".tap do |path|
-        site.translate_google_api_credential_file = tmp_ss_file(contents: path)
+        site.translate_google_api_credential_file = load_gcp_credential(path)
       end
 
       site.save!

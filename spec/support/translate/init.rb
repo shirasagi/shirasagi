@@ -3,7 +3,7 @@ module TranslateSupport
 
   def self.extended(obj)
     obj.class_eval do
-      delegate :translate_requests, :install_google_stubs, :install_azure_stubs, to: ::TranslateSupport
+      delegate :translate_requests, :install_google_stubs, :install_azure_stubs, :load_gcp_credential, to: ::TranslateSupport
     end
 
     obj.after(:example) do
@@ -54,6 +54,14 @@ module TranslateSupport
       end
       { status: 200, body: response.to_json, headers: { 'Content-Type' => 'application/json', "x-metered-usage" => 1 } }
     end
+  end
+
+  def load_gcp_credential(path, size: 4096)
+    gcp_credential = JSON.parse(File.read(path))
+    gcp_credential["private_key_id"] = SecureRandom.hex(20)
+    gcp_credential["private_key"] = OpenSSL::PKey::RSA.generate(size).to_pem
+
+    SS::TmpDir.tmp_ss_file(contents: gcp_credential.to_json, basename: "gcp_credential.json")
   end
 end
 
