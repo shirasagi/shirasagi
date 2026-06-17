@@ -7,7 +7,7 @@
 <%= hidden_field_tag 'calendar[viewFormat]', params.dig(:calendar, :viewFormat) %>
 
 <dl class="see">
-  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
 
   <dt><%= @model.t :term %><%= @model.tt :term %></dt>
@@ -18,6 +18,6 @@
     </div>
   </dd>
 
-  <dt><%= @model.t :color %><%= @model.tt :color %></dt>
+  <dt class="required"><%= @model.t :color %><%= @model.tt :color %></dt>
   <dd><%= f.ss_color_picker :color %></dd>
 </dl>

@@ -1,8 +1,8 @@
 <dl class="see">
-  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :url %><%= @model.tt :url %></dt>
+  <dt class="required"><%= @model.t :url %><%= @model.tt :url %></dt>
   <dd><%= f.text_field :url %></dd>
 
   <dt><%= @model.t :link_target %><%= @model.tt :link_target %></dt>
