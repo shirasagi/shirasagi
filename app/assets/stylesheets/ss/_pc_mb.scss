@@ -2,14 +2,14 @@
 // base
 @use "init";
 
-// Material Symbols Outlined は npm パッケージ（material-symbols）から application.scss で
-// 取り込んでおり、@font-face はそちらで定義される（material-icons と同じ方式）。
+// サイドメニューのアイコンは、既に application.scss で取り込み済みの Material Icons
+// （material-icons npm パッケージ）のフォントグリフで表示する。新たなフォントの追加は不要。
 // 背景画像ではなくフォントグリフで表示することで color に追従し、
 // グループウェアのコントラスト機能（body * へ color !important を適用）でも色が変わる。
-
-// サイドメニューのアイコンを ::before のグリフで表示する共通スタイル。
-// color は指定せず継承させることで、コントラスト機能やホバー時の文字色に追従する。
-@mixin ms-icon($content, $left: 35px) {
+// 既定の矢印（折りたたみ時の右向き）は Material Icons Outlined に expand_circle_right が
+// 無いため、expand_circle_down（\e7cd）を -90deg 回転させて右向きとして表示する。
+// 展開時（.down）は回転を打ち消して下向きのまま表示する。
+@mixin mi-icon($content: "\e7cd", $left: 35px, $rotate: -90deg) {
   position: relative;
 
   &::before {
@@ -17,8 +17,8 @@
     position: absolute;
     top: 50%;
     left: $left;
-    transform: translateY(-50%);
-    font-family: "Material Symbols Outlined";
+    transform: translateY(-50%) rotate($rotate);
+    font-family: "Material Icons Outlined";
     font-size: 18px;
     line-height: 1;
   }
@@ -857,8 +857,8 @@ _:future,
   h3 a {
     display: block;
     padding: 5px 15px 5px 60px;
-    // Material Symbols Outlined: expand_circle_right
-    @include ms-icon("\f591");
+    // Material Icons Outlined: expand_circle_down を回転して右向き矢印として表示
+    @include mi-icon;
   }
 }
 .main-navi-md {
@@ -1036,22 +1036,25 @@ _:future,
   h3:not(.no-icons) a {
     display: block;
     padding: 5px 15px 5px 60px;
-    // Material Symbols Outlined: expand_circle_right
-    @include ms-icon("\f591");
+    // Material Icons Outlined: expand_circle_down を回転して右向き矢印として表示
+    @include mi-icon;
 
     &.down::before {
-      // Material Symbols Outlined: expand_circle_down
+      // Material Icons Outlined: expand_circle_down（展開時は回転を打ち消して下向き）
       content: "\e7cd";
+      transform: translateY(-50%);
     }
 
     &.trash::before {
-      // Material Symbols Outlined: delete
-      content: "\e92e";
+      // Material Icons Outlined: delete
+      content: "\e872";
+      transform: translateY(-50%);
     }
 
     &.management::before {
       // Material Icons: settings（共有ファイルの歯車と同じアイコン）
       content: "\e8b8";
+      transform: translateY(-50%);
       font-family: "Material Icons";
     }
 
@@ -1059,7 +1062,7 @@ _:future,
       // Material Icons Outlined: search
       content: "\e8b6";
       left: 34px;
-      font-family: "Material Icons Outlined";
+      transform: translateY(-50%);
     }
 
     &:hover {
@@ -1092,14 +1095,14 @@ _:future,
   h3:not(.no-icons) .label {
     display: block;
     padding: 5px 15px 5px 60px;
-    // Material Symbols Outlined: expand_circle_right
-    @include ms-icon("\f591");
+    // Material Icons Outlined: expand_circle_down を回転して右向き矢印として表示
+    @include mi-icon;
   }
   h3:not(.no-icons) span {
     display: block;
     padding: 5px 15px 5px 60px;
-    // Material Symbols Outlined: expand_circle_right
-    @include ms-icon("\f591");
+    // Material Icons Outlined: expand_circle_down を回転して右向き矢印として表示
+    @include mi-icon;
   }
   h3:last-child,
   ul:last-child {
@@ -1176,12 +1179,13 @@ _:future,
 
     &:not(.no-icons) {
       padding: 5px 15px 5px 85px;
-      // Material Symbols Outlined: expand_circle_right
-      @include ms-icon("\f591", 60px);
+      // Material Icons Outlined: expand_circle_down を回転して右向き矢印として表示
+      @include mi-icon($left: 60px);
 
       &.management::before {
         // Material Icons: settings（共有ファイルの歯車と同じアイコン）
         content: "\e8b8";
+        transform: translateY(-50%);
         font-family: "Material Icons";
       }
 
@@ -1189,7 +1193,7 @@ _:future,
         // Material Icons Outlined: search
         content: "\e8b6";
         left: 59px;
-        font-family: "Material Icons Outlined";
+        transform: translateY(-50%);
       }
 
       &:hover {
@@ -1308,12 +1312,13 @@ _:future,
     a {
       display: block;
       padding: 5px 15px 5px 85px;
-      // Material Symbols Outlined: expand_circle_right
-      @include ms-icon("\f591", 60px);
+      // Material Icons Outlined: expand_circle_down を回転して右向き矢印として表示
+      @include mi-icon($left: 60px);
       color: init.$black;
       &.management::before {
         // Material Icons: settings（共有ファイルの歯車と同じアイコン）
         content: "\e8b8";
+        transform: translateY(-50%);
         font-family: "Material Icons";
       }
       &:hover {
