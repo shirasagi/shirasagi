@@ -10,7 +10,7 @@
 <% end %>
 
 <dl class="see mod-gws-user">
-  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
 
   <dt><%= @model.t :kana %><%= @model.tt :kana %></dt>

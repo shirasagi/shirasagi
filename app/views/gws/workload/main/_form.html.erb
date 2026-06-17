@@ -32,10 +32,10 @@ $group.on("change", loadOptions);
   <dt class="required"><%= @model.t :year %><%= @model.tt :year %></dt>
   <dd><%= f.number_field :year %></dd>
 
-  <dt><%= @model.t :due_date %><%= @model.tt :due_date %></dt>
+  <dt class="required"><%= @model.t :due_date %><%= @model.tt :due_date %></dt>
   <dd><%= f.text_field :due_date, class: 'date js-date', value: tryb { @item.due_date.strftime('%Y/%m/%d') } %></dd>
 
-  <dt><%= @model.t :due_start_on %><%= @model.tt :due_start_on %></dt>
+  <dt class="required"><%= @model.t :due_start_on %><%= @model.tt :due_start_on %></dt>
   <dd><%= f.text_field :due_start_on, class: 'date js-date', value: tryb { @item.due_start_on.strftime('%Y/%m/%d') } %></dd>
 
   <dt><%= @model.t :due_end_on %><%= @model.tt :due_end_on %></dt>

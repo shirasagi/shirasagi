@@ -1,5 +1,5 @@
 <dl class="see">
-  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :in_basename, value: @item.trailing_name %></dd>
 
 <% if @item.new_record? %>
