@@ -13,8 +13,17 @@ en:
     links:
       categories: Category
       file_download: Download
+      move: Move
       confirm:
         download_all: Do you want to download the selected items?
+        move: Do you want to move the selected items?
+        move_drop:
+          head: Move the selected files to
+          tail: "?"
+    select_check: " file(s) selected"
+    notice:
+      move_failed: "Some items could not be moved: %{names}"
+      move_none: No items were moved.
     mailers:
       compressed:
         subject: Your download is now ready

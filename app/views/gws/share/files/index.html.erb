@@ -51,3 +51,84 @@
     <%= render template: "gws/crud/index" %>
   </div>
 </div>
+
+<%= jquery do %>
+  var moveAllUrl = "<%= url_for(action: :move_all) %>";
+  // 移動先候補は移動ドロップダウン（.move-menu[data-folders]）を唯一の出所とし、
+  // ドロップダウンとD&Dで集合がズレないよう同じデータからIDの集合を作る。
+  var validFolderIds = {};
+  $.each($(".move-menu").data("folders") || [], function(_i, folder) {
+    validFolderIds[folder.id] = true;
+  });
+
+  function gwsShareIsValidTarget($node) {
+    return !!validFolderIds[$node.data("id")];
+  }
+
+  // フォルダーノードをドロップ先として有効化する（既に初期化済みならスキップ）
+  function gwsShareMakeDroppable($nodes) {
+    $nodes.filter(".tree-item[data-id]").each(function() {
+      var $node = $(this);
+      if ($node.data("ssDroppable")) { return; }
+      $node.data("ssDroppable", true);
+      $node.droppable({
+        tolerance: "pointer",
+        hoverClass: "gws-share-drop-hover",
+        drop: function() {
+          if (!gwsShareIsValidTarget($node)) { return; }
+
+          var folderId = $node.data("id");
+          var folderName = $node.find("a.item-name").text();
+          var confirmMsg = "<%= t('gws/share.links.confirm.move_drop.head') %>" +
+            " \"" + folderName + "\" " + "<%= t('gws/share.links.confirm.move_drop.tail') %>";
+
+          var form = Gws_Share_File.buildForm(moveAllUrl, confirmMsg);
+          if (!form) { return; }
+          form.append($("<input/>", { name: "folder_id", value: folderId, type: "hidden" }));
+          form.appendTo(document.body)[0].requestSubmit();
+        }
+      });
+    });
+  }
+
+  // 一覧のファイル行をドラッグ可能にする
+  $(".gws-schedule-file-main .list-item").draggable({
+    zIndex: 100,
+    opacity: 0.75,
+    cursorAt: { top: 16, left: 5 },
+    helper: function() {
+      var checkbox = $(this).find("label.check input[name='ids[]']");
+      if (!checkbox.prop("checked")) { checkbox.prop("checked", true); }
+
+      var checked = $(".gws-schedule-file-main .list-item input:checkbox:checked");
+      var helper = $('<div style="background-color: lightgreen; padding: 2px 10px;"></div>');
+      helper.text(checked.length + "<%= t('gws/share.select_check') %>");
+      return helper;
+    },
+    start: function() {
+      // アップロード権限が無いフォルダーはグレーアウトしてドロップ不可を明示する
+      $(".gws-share-file-folder-navi .tree-item[data-id]").each(function() {
+        var $node = $(this);
+        if (gwsShareIsValidTarget($node)) { return; }
+        $node.addClass("gws-share-drop-invalid");
+      });
+    },
+    stop: function() {
+      $(".gws-share-file-folder-navi .tree-item.gws-share-drop-invalid").removeClass("gws-share-drop-invalid");
+    }
+  });
+
+  // ツリーは非同期・遅延描画されるため、追加されたノードに順次ドロップ先を適用する
+  var treeContainer = $("#gws-share-file-folder-list .tree-navi").get(0);
+  if (treeContainer) {
+    gwsShareMakeDroppable($(treeContainer).find(".tree-item"));
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        $(mutation.addedNodes).each(function() {
+          gwsShareMakeDroppable($(this).find(".tree-item").addBack(".tree-item"));
+        });
+      });
+    });
+    observer.observe(treeContainer, { childList: true, subtree: true });
+  }
+<% end %>
