@@ -7,6 +7,9 @@
 //  $material-icons-font-path: '~material-icons/iconfont/'
 //);
 @import "material-icons/iconfont/material-icons.css";
+// Material Symbols Outlined（サイドメニューの矢印・ゴミ箱アイコン等で使用）
+// material-icons と同様に npm パッケージから取り込み、@font-face をビルドに同梱する。
+@import "material-symbols/outlined.css";
 
 .material-icons,
 .material-icons-outlined,
