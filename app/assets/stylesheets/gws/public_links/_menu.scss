@@ -2,19 +2,6 @@
 // Public links dropdown (header menu)
 @use "ss/init";
 
-// Material Symbols Outlined (subset font holding only the glyphs we reference).
-// Self-hosted the same way as the side-menu icons (see ss/_pc_mb.scss in PR #6086);
-// the subset here is a superset of that one (adds link_2) so both can share the file.
-// color is inherited so it follows the gws contrast theme like the other icons.
-@font-face {
-  font-family: "Material Symbols Outlined";
-  font-style: normal;
-  font-weight: 400;
-  src:
-    url("/assets/font/material-symbols-outlined-subset.woff2") format("woff2"),
-    url("/assets/font/material-symbols-outlined-subset.woff") format("woff");
-}
-
 $gws-public-links-box-width: 230px;
 $gws-public-links-box-gap: 15px;
 $gws-public-links-frame-padding: 15px;
@@ -46,13 +33,13 @@ $gws-public-links-link-row-height: 37px;
 
     .gws-public-links-toggle-icon {
       display: block;
-      font-family: "Material Symbols Outlined";
+      font-family: "Material Icons Outlined";
       font-size: 24px;
       line-height: 1;
 
-      // Material Symbols Outlined: link_2
+      // Material Icons Outlined: link
       &::before {
-        content: "\fffb5";
+        content: "\e157";
       }
     }
   }
