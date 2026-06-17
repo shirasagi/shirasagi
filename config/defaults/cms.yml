@@ -223,6 +223,9 @@ production: &production
     external_block: "block_if_untrusted"
     trusted_urls: []
 
+  node_destroy_job:
+    enable: false
+
 test:
   <<: *production
 

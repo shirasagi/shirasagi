@@ -58,7 +58,7 @@ class Cms::ImportJobFile
   end
 
   def save_import_node(filename)
-    item = Cms::Node::ImportNode.new
+    item = Cms::Node::ImportNode.find_or_initialize_by(site_id: site.id, filename: filename)
     item.filename = filename
     item.name = ::File.basename(filename)
     item.cur_site = site
@@ -79,7 +79,7 @@ class Cms::ImportJobFile
     import_html = file.read.force_encoding("utf-8").scrub
     import_html = modify_relative_paths(import_html)
 
-    item = Cms::ImportPage.new
+    item = Cms::ImportPage.find_or_initialize_by(site_id: site.id, filename: filename)
     item.filename = filename
     item.name = ::File.basename(filename)
     item.html = import_html
