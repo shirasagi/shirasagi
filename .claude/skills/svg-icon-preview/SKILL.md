@@ -1,6 +1,6 @@
 ---
 name: svg-icon-preview
-description: SVGアイコンのテキストを受け取り、SHIRASAGIアイコンフォント(ss-icon)に変換して実寸(ユーザーに確認したサイズ)のプレビューHTMLを生成する。ユーザーがSVGの中身を貼り付けて表示を確認したいとき、SVGをフォントアイコン化したいとき、ss-icon-XXX の見え方を確認したいときに使う。
+description: SVGアイコンのテキストを受け取り、SHIRASAGIアイコンフォント(ss-icon)に変換して実寸(ユーザーに確認したサイズ)のプレビューHTMLを生成する。さらに必要に応じてSHIRASAGI本体反映用のフルビルド一式(eot/woff/woff2/scss)も出力できる。ユーザーがSVGの中身を貼り付けて表示を確認したいとき、SVGをフォントアイコン化したいとき、ss-icon-XXX の見え方を確認したいとき、SHIRASAGIにアイコンを反映したいときに使う。
 ---
 
 # SVG → アイコンフォント 実寸プレビュー
@@ -66,6 +66,33 @@ python3 .claude/skills/svg-icon-preview/preview_icon.py /tmp/pdf.svg pdf --size 
 ### 6. プレビューHTMLをユーザーに届ける
 `SendUserFile` で生成HTMLを送る。ユーザーはブラウザで開くだけで
 確認したサイズでの実寸表示・色違い・文章中での見え方を確認できる。
+
+## オプション: SHIRASAGI本体反映用フルビルド
+
+プレビューで見た目を確認したあと、ユーザーが「SHIRASAGIに反映したい/本体用の
+ファイル一式が欲しい」と言った場合は、`build_full.py` でフルビルドする。
+
+このスクリプトは ss-icon リポジトリの**全SVG(既存アイコン)に新しいSVGを加えて**
+ビルドするため、既存アイコンを失わず、`eot / woff / woff2 / scss / css / html` を
+一括生成する(プレビュー用の単体ビルドとは異なる点に注意)。
+
+```bash
+python3 .claude/skills/svg-icon-preview/build_full.py <svgファイル> <アイコン名> [--out-dir DIR]
+```
+例:
+```bash
+python3 .claude/skills/svg-icon-preview/build_full.py /tmp/pdf.svg pdf --out-dir /tmp/shirasagi-icons-dist
+```
+
+実行後、生成物と SHIRASAGI での配置先を表示する:
+- `shirasagi-icons.eot` / `.woff` / `.woff2` → `public/assets/font/`
+- `shirasagi-icons.scss` → `app/assets/stylesheets/ss/_shirasagi-icons.scss`(上書き。
+  `style.scss` には既に `@use "shirasagi-icons";` がある)
+- `.css` / `.html` は参考・プレビュー用
+
+生成された一式を `SendUserFile` でユーザーに届けるか、SHIRASAGI のリポジトリへ
+直接配置する。**新アイコンだけの単体ビルドで `_shirasagi-icons.scss` を上書きしないこと**
+(既存アイコンが消える)。必ず全SVGを含むこのフルビルドを使う。
 
 ## 注意・補足
 - アイコンフォントは**単色**。元SVGが複数色でも1色のシルエット/抜き文字になる
