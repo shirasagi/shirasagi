@@ -178,11 +178,11 @@ module SS::CrudFilter
   end
 
   def render_confirmed_all(result, opts = {})
-    action = if %w(close_all change_state_all).include?(params[:action])
-               'change'
-             else
-               'delete'
-             end
+    if %w(close_all change_state_all).include?(params[:action])
+      action = 'change'
+    else
+      action = 'delete'
+    end
 
     location = opts[:location].presence || crud_redirect_url || { action: :index }
     if result
