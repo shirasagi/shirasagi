@@ -24,6 +24,7 @@ class Gws::Board::TopicsController < ApplicationController
   end
 
   def set_items
+    set_mode
     @items ||= begin
       base_criteria = @model.site(@cur_site).topic
       case @mode
