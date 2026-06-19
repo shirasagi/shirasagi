@@ -33,6 +33,8 @@ $gws-public-links-link-row-height: 37px;
 
     .gws-public-links-toggle-icon {
       display: block;
+      // tilt the horizontal link glyph to a diagonal
+      transform: rotate(-45deg);
       font-family: "Material Icons Outlined";
       font-size: 24px;
       line-height: 1;
