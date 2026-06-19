@@ -101,3 +101,47 @@
     }
   }
 }
+
+// 共有ファイル一覧のファイルアイコン（ユーザー画面・管理画面 共通）。
+// 拡張子で色を出し分け、フォルダ想起アイコンよりファイル種別が分かるようにする。
+// !important は付けない。高コントラスト時は _contrast_style.html.erb の
+// `body * { color: …!important }` が上書きするため、色分けは自動的に
+// 規定コントラスト時のみ適用される。サイズは 40px。
+.title-icon.gws-share-file-icon {
+  font-size: 40px;
+
+  &.icon-pdf {
+    color: #d9362b;
+  }
+
+  &.icon-doc,
+  &.icon-docx {
+    color: #2b579a;
+  }
+
+  &.icon-xls,
+  &.icon-xlsx,
+  &.icon-csv {
+    color: #217346;
+  }
+
+  &.icon-ppt,
+  &.icon-pptx {
+    color: #c43e1c;
+  }
+
+  &.icon-jpg,
+  &.icon-jpeg,
+  &.icon-png,
+  &.icon-gif,
+  &.icon-webp {
+    color: #6a737d;
+  }
+
+  &.icon-zip,
+  &.icon-7z,
+  &.icon-tar,
+  &.icon-gz {
+    color: #b8860b;
+  }
+}

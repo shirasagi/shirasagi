@@ -21,7 +21,7 @@
       <div class="info">
         <%= sanitizer_status(item) %>
         <%= link_to opts.merge(action: :show), class: "title" do %>
-          <%= md_icons.filled "folder_open", tag: :i, size: 18, class: "md-dark title-icon" %>
+          <%= md_icons.filled "folder_open", tag: :i, class: "md-dark title-icon gws-share-file-icon icon-#{item.extname.downcase}" %>
           <%= item.name %>
         <% end %>
 
