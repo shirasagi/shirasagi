@@ -266,6 +266,7 @@ ja:
         member_ids: 参加ユーザー
       gws/link:
         name: タイトル
+        order: 並び順
       gws/history:
         session_id: セッションID
         request_id: リクエストID
