@@ -269,6 +269,7 @@ en:
         member_ids: Participating users
       gws/link:
         name: Title
+        order: Order
       gws/history:
         session_id: Session ID
         request_id: Request ID

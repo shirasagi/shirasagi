@@ -27,4 +27,27 @@ describe Gws::Link, type: :model, dbscope: :example do
       expect(described_class.search(keyword: domain2).count).to eq 1
     end
   end
+
+  describe "order" do
+    it "defaults to 0" do
+      item = create :gws_link, cur_site: site
+      expect(item.order).to eq 0
+    end
+
+    it "validates the numeric range" do
+      item = build :gws_link, cur_site: site, order: -1
+      expect(item.valid?).to be_falsey
+      item.order = 1_000_000
+      expect(item.valid?).to be_falsey
+      item.order = 10
+      expect(item.valid?).to be_truthy
+    end
+
+    it "sorts by order ascending (smaller first)" do
+      item1 = create :gws_link, cur_site: site, order: 20
+      item2 = create :gws_link, cur_site: site, order: 10
+      item3 = create :gws_link, cur_site: site, order: 30
+      expect(described_class.site(site).pluck(:id)).to eq [ item2.id, item1.id, item3.id ]
+    end
+  end
 end
