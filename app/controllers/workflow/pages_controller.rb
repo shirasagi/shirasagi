@@ -36,25 +36,29 @@ class Workflow::PagesController < ApplicationController
   def request_approval
     current_level = @item.workflow_current_level
     current_workflow_approvers = @item.workflow_pull_up_approvers_at(current_level)
+    url = @item.private_show_path
+    url ||= params[:url].to_s if Sys::TrustedUrlValidator.myself_url?(params[:url].to_s)
     Workflow::Mailer.send_request_mails(
       f_uid: @item.workflow_user_id, m_id: @item.workflow_member_id,
       t_uids: current_workflow_approvers.map { |approver| approver[:user_id] },
       site: @cur_site, page: @item,
-      url: params[:url], comment: @item.workflow_comment
+      url: url, comment: @item.workflow_comment
     )
 
     notification = SS::Notification.new
     notification.cur_user = @cur_user
     notification.member_ids = current_workflow_approvers.map { |approver| approver[:user_id] }
     notification.format = "text"
-    notification.url = params[:url]
+    notification.url = url
     notification.send_date = Time.zone.now
 
     notification.subject = I18n.t(
       "workflow.ss_notification.request.subject",
-      name: "[#{@cur_site.name}][#{@cur_node.name}]「#{@item.name}」"
+      name: "[#{@cur_site.name}]#{"[#{@cur_node.name}]" if @cur_node.present?}「#{@item.name}」"
     )
-    notification.save
+    unless notification.save
+      Rails.logger.warn { notification.errors.full_messages.join("\n") }
+    end
 
     @item.set_workflow_approver_state_to_request
     @item.record_timestamps = false
