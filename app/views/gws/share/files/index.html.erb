@@ -15,7 +15,7 @@
   <%= sanitizer_status(item) %>
   <% opts = params[:folder] ? { id: item, folder: params[:folder] } : { id: item } %>
   <%= link_to opts.merge(action: :show), class: "title" do %>
-    <%= md_icons.filled "folder_open", tag: :i, class: "md-dark title-icon gws-share-file-icon icon-#{item.extname.downcase}" %>
+    <span class="title-icon gws-share-file-icon gws-file-icon-<%= item.file_icon_name %>" aria-hidden="true"></span>
     <%= item.name %>
   <% end %>
   <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>

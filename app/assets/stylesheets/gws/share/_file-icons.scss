@@ -1,0 +1,168 @@
+// 共有ファイル一覧のファイル種別アイコン（gws-file-icons フォント）。
+// 納品された単色SVG（拡張子別19種＋other）を fantasticon でフォント化したもの。
+// 形状はフォントグリフ、色は拡張子別の設計カラーを CSS で付与する。
+// 色には !important を付けない。高コントラスト選択時は _contrast_style.html.erb の
+// `body * { color: …!important }` が全要素を上書きするため、拡張子別の色分けは
+// 規定（デフォルト）コントラスト時のみ適用され、高コントラストテーマは温存される。
+
+@font-face {
+  font-family: "gws-file-icons";
+  src:
+    url("/assets/font/gws-file-icons.woff2?c7370a27d95443e45b9adc2fd7cb1a44") format("woff2"),
+    url("/assets/font/gws-file-icons.woff?c7370a27d95443e45b9adc2fd7cb1a44") format("woff"),
+    url("/assets/font/gws-file-icons.eot?c7370a27d95443e45b9adc2fd7cb1a44#iefix") format("embedded-opentype");
+}
+
+span[class^="gws-file-icon-"]::before,
+span[class*=" gws-file-icon-"]::before {
+  font-family: gws-file-icons !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal !important;
+  line-height: 1;
+  text-transform: none;
+}
+
+// 共有ファイル一覧のアイコンは 40px
+.title-icon.gws-share-file-icon {
+  font-size: 40px;
+}
+
+.gws-file-icon-pdf {
+  color: #e30015;
+
+  &::before {
+    content: "\f10a";
+  }
+}
+
+.gws-file-icon-doc,
+.gws-file-icon-docx {
+  color: #1a2f94;
+}
+
+.gws-file-icon-doc::before {
+  content: "\f111";
+}
+
+.gws-file-icon-docx::before {
+  content: "\f110";
+}
+
+.gws-file-icon-xls,
+.gws-file-icon-xlsx {
+  color: #2c5b39;
+}
+
+.gws-file-icon-xls::before {
+  content: "\f103";
+}
+
+.gws-file-icon-xlsx::before {
+  content: "\f102";
+}
+
+.gws-file-icon-ppt,
+.gws-file-icon-pptx {
+  color: #d84000;
+}
+
+.gws-file-icon-ppt::before {
+  content: "\f108";
+}
+
+.gws-file-icon-pptx::before {
+  content: "\f107";
+}
+
+.gws-file-icon-csv {
+  color: #0f766e;
+
+  &::before {
+    content: "\f112";
+  }
+}
+
+.gws-file-icon-txt {
+  color: #1f3a5f;
+
+  &::before {
+    content: "\f104";
+  }
+}
+
+.gws-file-icon-rtf {
+  color: #7c3aed;
+
+  &::before {
+    content: "\f106";
+  }
+}
+
+.gws-file-icon-jpg,
+.gws-file-icon-jpeg {
+  color: #ad07a6;
+}
+
+.gws-file-icon-jpg::before {
+  content: "\f10c";
+}
+
+.gws-file-icon-jpeg::before {
+  content: "\f10d";
+}
+
+.gws-file-icon-png {
+  color: #647629;
+
+  &::before {
+    content: "\f109";
+  }
+}
+
+.gws-file-icon-gif {
+  color: #db2777;
+
+  &::before {
+    content: "\f10e";
+  }
+}
+
+.gws-file-icon-svg {
+  color: #8f6b00;
+
+  &::before {
+    content: "\f105";
+  }
+}
+
+.gws-file-icon-zip,
+.gws-file-icon-7z {
+  color: #6a6f79;
+}
+
+.gws-file-icon-zip::before {
+  content: "\f101";
+}
+
+.gws-file-icon-7z::before {
+  content: "\f113";
+}
+
+.gws-file-icon-eml {
+  color: #3870e9;
+
+  &::before {
+    content: "\f10f";
+  }
+}
+
+.gws-file-icon-other {
+  color: #41749e;
+
+  &::before {
+    content: "\f10b";
+  }
+}
