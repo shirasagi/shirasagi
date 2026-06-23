@@ -1,0 +1,7 @@
+<%
+  return unless @cur_site.elasticsearch_enabled?
+%>
+<dl class="see mod-cms-elasticsearch-group">
+  <dt><%= @model.t :elasticsearch_state %></dt>
+  <dd><%= @item.label(:elasticsearch_state) || t('ss.options.state.enabled') %></dd>
+</dl>

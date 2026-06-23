@@ -17,18 +17,30 @@ document.addEventListener('DOMContentLoaded', () => {
       const select = form.querySelector('.site-search-categories select[name="s[category_names][]"]');
       const input = form.querySelector('.site-search-categories input[name="s[category_name]"]');
 
-      if (!select.disabled) {
+      if (select && !select.disabled) {
         let option = select.querySelector('option[value="' + name + '"]');
         if (option) {
           option.selected = true;
           form.submit();
         }
-      } else if (!input.disabled) {
+      } else if (input && !input.disabled) {
         let values = input.value.split(/[\s\/　]+/).filter(n => n)
         if (!values.includes(name)) values = values.concat(name)
         input.value = values.join(' ');
         form.submit();
       }
+    });
+  });
+  document.querySelectorAll('.cms-site-search-pages .group-name').forEach(group => {
+    group.addEventListener('click', () => {
+      const name = group.text;
+      const form = document.querySelector('.search-form');
+      const input = form.querySelector('.site-search-organization input[name="s[group_name]"]');
+
+      let values = input.value.split(/[\s\/　]+/).filter(n => n)
+      if (!values.includes(name)) values = values.concat(name)
+      input.value = values.join(' ');
+      form.submit();
     });
   });
 });
@@ -86,8 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
           if hit.dig('highlight', 'text_index')
             text = hit.dig('highlight', 'text_index')[0].gsub(/[\s\n]+/, ' ').strip
           end
-
-          categories = source['categories'].presence || []
         %>
         <h2><%= link_to title, url, class: 'title', target: link_target %></h2>
         <div class="summary">
@@ -112,11 +122,19 @@ document.addEventListener('DOMContentLoaded', () => {
               </time>
             </div>
           <% end %>
-          <% if @cur_node.category_state != 'hide' && categories.present? %>
+          <% if @cur_node.category_state != 'hide' && source['categories'].present? %>
             <div class="category-list">
               <%= Cms::Page.t(:category_ids) %>:
-              <% categories.each_with_index do |name, idx| %>
+              <% source['categories'].each_with_index do |name, idx| %>
                 <%= ' | ' if idx > 0 %><a class="category-name"><%= name %></a>
+              <% end %>
+            </div>
+          <% end %>
+          <% if @cur_site.elasticsearch_site_ids.present? && @cur_node.organization_state != 'hide' && source['group_names'].present? %>
+            <div class="group-list">
+              <%= t("ss.organization") %>:
+              <% source['group_names'].each_with_index do |name, idx| %>
+                <%= ' | ' if idx > 0 %><a class="group-name"><%= name %></a>
               <% end %>
             </div>
           <% end %>
