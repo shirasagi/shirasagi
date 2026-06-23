@@ -21,7 +21,7 @@
   <dt><%= @model.t :address_group_id %><%= @model.tt :address_group_id %></dt>
   <dd><%= f.select :address_group_id, @item.address_group_options, include_blank: true %></dd>
 
-  <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %><%= required_mark %></dt>
   <dd><%= f.text_field :name %></dd>
 
   <dt><%= @model.t :kana %><%= @model.tt :kana %></dt>

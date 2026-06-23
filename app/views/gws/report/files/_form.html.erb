@@ -1,4 +1,4 @@
 <dl class="see">
-  <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %><%= required_mark %></dt>
   <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
 </dl>

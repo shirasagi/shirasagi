@@ -1,5 +1,5 @@
 <dl class="see">
-  <dt class="required"><%= @model.t :name %></dt>
+  <dt><%= @model.t :name %><%= required_mark %></dt>
   <dd><%= @item.name %><%= f.hidden_field :state, value: 'public' %></dd>
 
   <dt><%= @model.t :released %><%= @model.tt :released %></dt>

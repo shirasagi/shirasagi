@@ -1,5 +1,5 @@
 <dl class="see">
-  <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %><%= required_mark %></dt>
   <dd><%= text_field_tag "#{f.object_name}[in_basename]", @item.name.try { |name| ::File.basename(name) }, autofocus: pc_browser? %></dd>
 
   <% if @item.new_record? %>

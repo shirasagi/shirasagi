@@ -2,7 +2,7 @@
   <dt><%= @model.t :code %><%= @model.tt :code %></dt>
   <dd><%= f.text_field :code, autofocus: pc_browser? %></dd>
 
-  <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %><%= required_mark %></dt>
   <dd><%= f.text_field :name %></dd>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
