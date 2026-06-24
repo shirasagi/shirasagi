@@ -110,7 +110,7 @@
     </dl>
 
     <dl class="see approvers">
-      <dt><%= @model.t :approvers %><%= @model.tt :approvers %></dt>
+      <dt><%= @model.t :approvers %><%= @model.tt :approvers %><%= required_mark if level == 1 %></dt>
       <dd>
         <%= f.hidden_field "approvers[]", value: "", class: "hidden-ids", id: nil %>
         <% row_template = level == 1 ? "##{addon[:id]}-row-template0" : "##{addon[:id]}-row-template" %>

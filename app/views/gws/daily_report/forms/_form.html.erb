@@ -13,7 +13,7 @@
 </dl>
 
 <dl class="see">
-  <dt><%= @model.t :daily_report_group_id %><%= @model.tt :daily_report_group_id %></dt>
+  <dt><%= @model.t :daily_report_group_id %><%= @model.tt :daily_report_group_id %><%= required_mark %></dt>
   <dd>
     <%= f.hidden_field "daily_report_group_id", value: "", class: "hidden-ids" %>
     <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path(single: true), class: "ajax-box" %>

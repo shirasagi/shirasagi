@@ -5,7 +5,7 @@
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order, min: 0 %></dd>
 
-  <dt><%= @model.t :place_holder %><%= @model.tt :place_holder %></dt>
+  <dt><%= @model.t :place_holder %><%= @model.tt :place_holder %><%= required_mark %></dt>
   <dd><%= f.text_field :place_holder, placeholder: t("gws/search_form.options.search_service.shirasagi_es") %></dd>
 
   <dt><%= @model.t :search_service %><%= @model.tt :search_service %></dt>
