@@ -42,15 +42,15 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
     context "export all mails" do
       it do
         visit webmail_export_mails_path(account: 0)
-        within "form#item-form" do
-          choose "item_all_export_all"
-          perform_enqueued_jobs do
+        perform_enqueued_jobs do
+          within "form#item-form" do
+            choose "item_all_export_all"
             click_on I18n.t("ss.export")
           end
-        end
 
-        within "#addon-basic" do
-          expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+          within "#addon-basic" do
+            expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+          end
         end
 
         expect(Gws::Job::Log.count).to eq 1
@@ -86,14 +86,14 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
           expect(page).to have_content(mail3.subject)
           wait_for_cbox_closed { click_on mail2.subject }
         end
-        within "form#item-form" do
-          perform_enqueued_jobs do
+        perform_enqueued_jobs do
+          within "form#item-form" do
             click_on I18n.t("ss.export")
           end
-        end
 
-        within "#addon-basic" do
-          expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+          within "#addon-basic" do
+            expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+          end
         end
 
         expect(Gws::Job::Log.count).to eq 1
@@ -168,15 +168,15 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
 
     it do
       visit webmail_export_mails_path(account: 0)
-      within "form#item-form" do
-        choose "item_all_export_all"
-        perform_enqueued_jobs do
+      perform_enqueued_jobs do
+        within "form#item-form" do
+          choose "item_all_export_all"
           click_on I18n.t("ss.export")
         end
-      end
 
-      within "#addon-basic" do
-        expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+        within "#addon-basic" do
+          expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+        end
       end
 
       expect(Gws::Job::Log.count).to eq 1
@@ -212,15 +212,15 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
 
     it do
       visit webmail_export_mails_path(account: 0)
-      within "form#item-form" do
-        choose "item_all_export_all"
-        perform_enqueued_jobs do
+      perform_enqueued_jobs do
+        within "form#item-form" do
+          choose "item_all_export_all"
           click_on I18n.t("ss.export")
         end
-      end
 
-      within "#addon-basic" do
-        expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+        within "#addon-basic" do
+          expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+        end
       end
 
       expect(Gws::Job::Log.count).to eq 1
@@ -263,15 +263,15 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
 
     it do
       visit webmail_export_mails_path(account: 0)
-      within "form#item-form" do
-        choose "item_all_export_all"
-        perform_enqueued_jobs do
+      perform_enqueued_jobs do
+        within "form#item-form" do
+          choose "item_all_export_all"
           click_on I18n.t("ss.export")
         end
-      end
 
-      within "#addon-basic" do
-        expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+        within "#addon-basic" do
+          expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+        end
       end
 
       expect(Gws::Job::Log.count).to eq 1
