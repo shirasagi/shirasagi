@@ -112,6 +112,8 @@ module SS::FileFilter
     raise
   rescue => e
     raise if e.to_s.numeric?
+
+    Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
     raise "500"
   ensure
     if converter
