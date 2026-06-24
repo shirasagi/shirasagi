@@ -28,5 +28,7 @@
       <%= @facility.try(:name) || gws_public_user_long_name((@user || @cur_user).long_name) %>
     </h2>
   </header>
-  <div id="calendar" class="calendar"></div>
+  <div class="calendar-wrap">
+    <div id="calendar" class="calendar"></div>
+  </div>
 </section>
