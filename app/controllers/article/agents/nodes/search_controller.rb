@@ -6,6 +6,8 @@ class Article::Agents::Nodes::SearchController < ApplicationController
 
   before_action :accept_cors_request, only: [:rss]
 
+  helper_method :category_options
+
   def pages
     Article::Page.public_list(site: @cur_site, node: @cur_node, date: @cur_date)
   end
@@ -44,5 +46,12 @@ class Article::Agents::Nodes::SearchController < ApplicationController
 
   def make_query(query)
     { name: /#{::Regexp.escape(query)}/ }
+  end
+
+  def category_options
+    @category_options ||= begin
+      categories = @cur_node.st_categories.and_public.order_by(order: 1).to_a
+      categories.map { |c| [c.name, c.id] }
+    end
   end
 end
