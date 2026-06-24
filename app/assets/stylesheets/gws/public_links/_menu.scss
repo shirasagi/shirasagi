@@ -1,0 +1,248 @@
+// -------------------------------------------------------------------------------------------------
+// Public links dropdown (header menu)
+@use "ss/init";
+
+$gws-public-links-box-width: 230px;
+$gws-public-links-box-gap: 15px;
+$gws-public-links-frame-padding: 15px;
+// one link row ≈ 8px+8px padding + line + 1px divider; show up to 6, then scroll
+$gws-public-links-link-row-height: 37px;
+
+.gws-public-links {
+  display: inline-block;
+  vertical-align: bottom;
+
+  .gws-public-links-toggle {
+    display: block;
+    margin: 0;
+    padding: 12px;
+    border: 0;
+    background-color: transparent;
+    color: init.$white;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #424242;
+    }
+
+    &:focus-visible {
+      outline: 2px solid init.$white;
+      outline-offset: -2px;
+    }
+
+    .gws-public-links-toggle-icon {
+      display: block;
+      // tilt the horizontal link glyph to a diagonal
+      transform: rotate(-45deg);
+      font-family: "Material Icons Outlined";
+      font-size: 24px;
+      line-height: 1;
+
+      // Material Icons Outlined: link
+      &::before {
+        content: "\e157";
+      }
+    }
+  }
+
+  .gws-public-links-dropdown-menu {
+    right: 0;
+    // With absolute positioning + right:0, width:auto collapses to one box.
+    // Follow the content instead: the boxes container caps itself at 4 columns
+    // (see .gws-public-links-boxes max-width), and max-content lets the browser
+    // add frame padding and border automatically, so 4 columns always fit.
+    width: max-content;
+    max-width: 90vw;
+    // leave a gap above for the speech-bubble pointer
+    margin-top: 10px;
+    padding: 0;
+    border: init.$border-gray4;
+    background-color: init.$white;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+    color: init.$black;
+
+    // speech-bubble pointer aimed at the toggle icon (panel is right-aligned to it).
+    // Use a rotated square whose fill is background-color so it follows the
+    // contrast theme (which overrides background-color on `body *:after`).
+    &::after {
+      content: "";
+      position: absolute;
+      right: 18px;
+      bottom: 100%;
+      width: 12px;
+      height: 12px;
+      margin-bottom: -6px;
+      transform: rotate(45deg);
+      border-top: 1px solid;
+      border-left: 1px solid;
+      // follow the panel border color so the contrast theme recolors it
+      border-color: inherit;
+      background-color: inherit;
+    }
+
+    // the lazy turbo-frame is inline by default; make it a block so its
+    // contents can lay out across the full panel width.
+    turbo-frame {
+      display: block;
+    }
+
+    @include init.mb {
+      width: auto;
+      max-width: 100vw;
+    }
+  }
+
+  .gws-public-links-menu-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #f2f2f2;
+
+    h2 {
+      // match the addon title style (orange left bar)
+      margin: 0;
+      padding-left: 8px;
+      border-left: 3px solid init.$orange;
+      color: init.$black3;
+      font-size: init.$px15;
+      font-weight: bold;
+      line-height: 1.2;
+    }
+
+    .gws-public-links-menu-manage {
+      display: inline-flex;
+      align-items: center;
+      margin-left: auto;
+      line-height: 1;
+
+      &:hover {
+        color: init.$orange;
+      }
+
+      &:focus-visible {
+        outline: 2px solid init.$orange;
+        outline-offset: 2px;
+      }
+    }
+
+    .gws-public-links-menu-manage-icon {
+      display: block;
+    }
+  }
+}
+
+// frame contents (rendered inside the lazy turbo-frame)
+.gws-public-links-menu-frame {
+  padding: $gws-public-links-frame-padding;
+}
+
+.gws-public-links-menu-empty {
+  margin: 0;
+  padding: 5px 0;
+  color: #888;
+}
+
+.gws-public-links-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $gws-public-links-box-gap;
+  // cap the row at 4 boxes; the 5th wraps to the next line
+  max-width: $gws-public-links-box-width * 4 + $gws-public-links-box-gap * 3;
+
+  @include init.mb {
+    max-width: none;
+  }
+}
+
+.gws-public-links-box {
+  display: flex;
+  // box-sizing keeps the 1px borders inside the fixed width so 4 boxes fit the row
+  box-sizing: border-box;
+  flex: 0 0 $gws-public-links-box-width;
+  flex-direction: column;
+  width: $gws-public-links-box-width;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+
+  @include init.mb {
+    flex-basis: 100%;
+    width: 100%;
+  }
+}
+
+.gws-public-links-box-head {
+  padding: 8px 12px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f5f5f5;
+
+  h3 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 1.4;
+  }
+}
+
+.gws-public-links-box-body {
+  // show at most 6 links; more than that scroll within the box
+  max-height: $gws-public-links-link-row-height * 6;
+  overflow-y: auto;
+}
+
+.gws-public-links-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gws-public-links-list-item {
+  border-bottom: 1px solid #f2f2f2;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.gws-public-links-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  color: init.$orange;
+  text-decoration: none;
+
+  &:hover {
+    background-color: #fbeee8;
+  }
+
+  &:focus-visible {
+    outline: 2px solid init.$orange;
+    outline-offset: -2px;
+  }
+
+  .gws-public-links-link-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .gws-public-links-link-icon {
+    flex: 0 0 auto;
+    color: #888;
+  }
+}
+
+// the no-url case renders the name as a bare span directly in the list item
+// (scoped so it does NOT add extra padding to the name span inside a link)
+.gws-public-links-list-item > .gws-public-links-link-name {
+  display: block;
+  padding: 8px 12px;
+  overflow: hidden;
+  color: init.$black;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -96,6 +96,9 @@ ja:
       back_to_portal: ポータルへ戻る
       webmail_user_import: ウェブメール権限を含むインポート
       switch_group: グループ切り替え
+    public_links:
+      manage: リンク集の管理
+      no_items: リンクはありません。
     buttons:
       unset: 解除
       add_item: 新しい要素を追加
@@ -266,6 +269,7 @@ ja:
         member_ids: 参加ユーザー
       gws/link:
         name: タイトル
+        order: 並び順
       gws/history:
         session_id: セッションID
         request_id: リクエストID

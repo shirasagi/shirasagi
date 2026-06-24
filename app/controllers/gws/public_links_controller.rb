@@ -24,4 +24,11 @@ class Gws::PublicLinksController < ApplicationController
     raise "403" unless @links.find(@item.id)
     render
   end
+
+  def menu
+    @items = @model.site(@cur_site).and_public.
+      readable(@cur_user, site: @cur_site).to_a
+    @frame_id = "gws-public-links-frame"
+    render layout: "ss/item_frame"
+  end
 end
