@@ -20,7 +20,7 @@ module.exports = {
     "font-family-no-missing-generic-family-keyword": [
       true,
       {
-        "ignoreFontFamilies": [ "Material Icons", "Material Icons Outlined", "FontAwesome", "gws-file-icons" ]
+        "ignoreFontFamilies": [ "Material Icons", "Material Icons Outlined", "FontAwesome" ]
       }
     ],
     "selector-disallowed-list": [
