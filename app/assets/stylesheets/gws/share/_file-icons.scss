@@ -9,8 +9,8 @@
 // margin（4px）のみとし、ss-icon 既定の右マージン 5px は無効化する。
 // いずれも特異度 (0,2,1) が _pc_mb.scss の基底 (0,1,2) に勝つため !important 不要。
 .title-icon.gws-share-file-icon::before {
-  font-size: 40px;
   margin-right: 0;
+  font-size: 40px;
 }
 
 .gws-share-file-icon {
