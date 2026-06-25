@@ -243,6 +243,53 @@
       font-weight: normal;
     }
   }
+
+  // 個人設定「件名 → 差出人」: order で並びを入れ替え、件名列と差出人・宛先列の幅・インデントを
+  // 入れ替える。既定配置で揃うよう調整済みの値をそのまま入れ替えるため、整列状態は既定と同一になる。
+  &.subject-first {
+    .list-item-head .head {
+      .title {
+        order: 1;
+        width: calc(50% - 100px);
+        text-indent: 79.84px;
+      }
+      .from,
+      .to {
+        order: 2;
+        width: calc(50% - 130px);
+        text-indent: 0;
+      }
+      .priority {
+        order: 3;
+      }
+      .datetime {
+        order: 4;
+      }
+      .size {
+        order: 5;
+      }
+    }
+    .info {
+      .title {
+        order: 1;
+        width: calc(50% - 132.84px);
+      }
+      .from,
+      .to {
+        order: 2;
+        width: calc(50% - 75px);
+      }
+      .priority {
+        order: 3;
+      }
+      .datetime {
+        order: 4;
+      }
+      .size {
+        order: 5;
+      }
+    }
+  }
 }
 
 table.index.gws-memo-folder {

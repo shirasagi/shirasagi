@@ -16,6 +16,10 @@
   <% end %>
 
   <h3><%= link_to t('modules.addons.ss/locale_setting'), gws_user_locale_setting_path %></h3>
+
+  <% if @cur_site.menu_memo_visible? && Gws.module_usable?(:memo, @cur_site, @cur_user) %>
+    <h3><%= link_to t('modules.addons.ss/message_display_setting'), gws_user_message_display_setting_path %></h3>
+  <% end %>
 </nav>
 
 <%= render partial: "gws/main/navi" %>

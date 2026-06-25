@@ -633,6 +633,9 @@ en:
       lang:
         ja: 日本語
         en: English (Experimental)
+      message_list_column_order:
+        name_first: "Sender → Subject"
+        subject_first: "Subject → Sender"
       link_target:
         _self: Same tab
         _blank: New tab
@@ -712,6 +715,7 @@ en:
       ss/oauth2/gws_permission: Groupware permissions
       ss/oauth2/webmail_permission: Mail permissions
       ss/locale_setting: Locale settings
+      ss/message_display_setting: Message list display
       ss/mfa/user_setting: MFA settings
       ss/check_links_setting: Email Notification Settings
 
@@ -1153,6 +1157,8 @@ en:
       ss/addon/locale_setting:
         lang: Language
         timezone: Timezone
+      ss/addon/message_display_setting:
+        message_list_column_order: Message list display
       ss/addon/workflow_setting:
         workflow_my_group: Display own group
       ss/api_token:

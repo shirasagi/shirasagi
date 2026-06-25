@@ -7,6 +7,7 @@ module SS::Model::User
   include SS::Reference::UserExpiration
   include SS::UserImportValidator
   include SS::Addon::LocaleSetting
+  include SS::Addon::MessageDisplaySetting
   include SS::Addon::Ldap::User
   include SS::Addon::MFA::UserSetting
   include SS::Addon::SSO::User
