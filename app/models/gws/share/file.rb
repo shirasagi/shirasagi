@@ -74,7 +74,7 @@ class Gws::Share::File
     # TODO: fix SS::Model::File
   end
 
-  # ファイル一覧アイコン（gws-file-icon-*）のグリフが用意されている拡張子。
+  # ファイル一覧アイコン（ss-icon-*）のグリフが用意されている拡張子。
   # 一覧に無い拡張子・拡張子なしは "other" にフォールバックする。
   FILE_ICON_EXTNAMES = %w(
     7z csv doc docx eml gif jpeg jpg pdf png ppt pptx rtf svg txt xls xlsx zip

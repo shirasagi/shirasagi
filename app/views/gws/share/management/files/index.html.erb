@@ -21,7 +21,7 @@
       <div class="info">
         <%= sanitizer_status(item) %>
         <%= link_to opts.merge(action: :show), class: "title" do %>
-          <span class="title-icon gws-share-file-icon gws-file-icon-<%= item.file_icon_name %>" aria-hidden="true"></span>
+          <span class="title-icon gws-share-file-icon ss-icon-<%= item.file_icon_name %>" aria-hidden="true"></span>
           <%= item.name %>
         <% end %>
 

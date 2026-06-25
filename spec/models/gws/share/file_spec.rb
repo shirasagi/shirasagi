@@ -21,7 +21,7 @@ RSpec.describe Gws::Share::File, type: :model, dbscope: :example do
   end
 
   describe "#file_icon_name" do
-    # 拡張子 → ファイル一覧アイコン(gws-file-icon-*)のグリフ名を返す。
+    # 拡張子 → ファイル一覧アイコン(ss-icon-*)のグリフ名を返す。
     # filename を設定すれば extname 経由で判定されるため、アップロードや保存は不要。
     def icon_name_for(filename)
       item = Gws::Share::File.new
