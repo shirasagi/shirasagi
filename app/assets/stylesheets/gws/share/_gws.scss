@@ -38,6 +38,51 @@
     top: 4px;
     right: 4px;
   }
+
+  // ドラッグ&ドロップによる一括移動
+  .tree-item.gws-share-drop-hover {
+    background-color: init.$gray1;
+  }
+
+  .tree-item.gws-share-drop-invalid {
+    opacity: 0.4;
+
+    .item-name {
+      cursor: not-allowed;
+    }
+  }
+}
+
+// 一括移動の「移動」ドロップダウン
+.gws-share-dropdown {
+  display: inline-block;
+  font-weight: normal;
+  vertical-align: middle;
+
+  .dropdown-menu {
+    left: 0;
+    max-height: 320px;
+    margin: 0;
+    padding: 5px 0;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+    text-align: left;
+
+    a {
+      display: block;
+      padding: 5px 10px;
+      color: init.$black;
+      white-space: nowrap;
+    }
+
+    a:hover {
+      background-color: init.$gray1;
+      color: init.$orange;
+      text-decoration: none;
+    }
+  }
 }
 
 .gws-share-apis-folder_crud {

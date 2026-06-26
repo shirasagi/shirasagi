@@ -3,7 +3,7 @@
   file_type = column.try(:file_type).presence || "image"
 %>
 <%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do %>
-  <% if value && value.header.present? %>
+  <% if column.try(:header_enabled?) && value && value.header.present? %>
     <div class="multiple-files-upload-header"><%= simple_format(value.header) %></div>
   <% end %>
   <% if value && value.file_ids.present? %>

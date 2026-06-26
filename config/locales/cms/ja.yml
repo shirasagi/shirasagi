@@ -644,6 +644,9 @@ ja:
       multiple_files_upload_file_type:
         image: 画像
         attachment: 添付ファイル
+      multiple_files_upload_header_input_setting:
+        show: 表示する
+        hide: 表示しない
       column_image_html_type:
         thumb: サムネイル
         image: 画像貼付
@@ -1654,6 +1657,7 @@ ja:
         file_type: ファイルタイプ
       cms/column/multiple_files_upload:
         file_type: ファイルタイプ
+        header_input_setting: 説明文入力欄
       cms/column/list:
         list_type: 種類
       cms/column/select_page:
@@ -3319,6 +3323,8 @@ ja:
     cms/column/multiple_files_upload:
       file_type:
         - 複数アップロードするファイルの種別を選択します。
+      header_input_setting:
+        - ファイルリストの先頭に表示する説明文の入力欄を表示するかどうかを選択します。
 
     cms/column/headline:
       min_headline_level:
@@ -3792,6 +3798,7 @@ ja:
       cms/node/generate_job: CMS/フォルダー書き出し
       cms/node/import_job: CMS/フォルダーインポート
       cms/node/release_job: CMS/フォルダー公開
+      cms/node/destroy_job: CMS/フォルダー削除
       cms/page/generate_job: CMS/ページ書き出し
       cms/page/release_job: CMS/ページ公開
       cms/page/remove_job: CMS/ページ削除

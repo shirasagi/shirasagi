@@ -1,4 +1,6 @@
 <dl class="see mod-cms-column-multiple-files-upload">
   <dt><%= @model.t :file_type %><%= @model.tt :file_type %></dt>
   <dd><%= f.select :file_type, @item.file_type_options %></dd>
+  <dt><%= @model.t :header_input_setting %><%= @model.tt :header_input_setting %></dt>
+  <dd><%= f.select :header_input_setting, @item.header_input_setting_options %></dd>
 </dl>
