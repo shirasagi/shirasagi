@@ -40,7 +40,7 @@ describe "gws/workflow/files", type: :request, dbscope: :example do
         get gws_workflow_files_path(site: site, state: "all", format: "json"), headers: @headers
         expect(response.status).to eq 200
 
-        JSON.parse(response.body).tap do |json|
+        response.parsed_body.tap do |json|
           expect(json).to be_a(Array)
           expect(json.length).to eq 2
 
@@ -94,7 +94,7 @@ describe "gws/workflow/files", type: :request, dbscope: :example do
 
         get gws_workflow_files_path(site: site, state: "all", s: { keyword: item2.name }, format: "json"), headers: @headers
         expect(response.status).to eq 200
-        JSON.parse(response.body).tap do |json|
+        response.parsed_body.tap do |json|
           expect(json).to be_a(Array)
           expect(json.length).to eq 1
         end
@@ -136,7 +136,7 @@ describe "gws/workflow/files", type: :request, dbscope: :example do
 
       post sns_login_oauth2_token_path, params: token_params
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       @headers = {
         "Authorization" => "Bearer #{json["access_token"]}"
       }

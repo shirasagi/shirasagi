@@ -15,7 +15,7 @@ describe "gws_user_profiles", type: :request, dbscope: :example do
   before do
     # get and save  auth token
     get sns_auth_token_path(format: :json)
-    @auth_token = JSON.parse(response.body)["auth_token"]
+    @auth_token = response.parsed_body["auth_token"]
 
     # login
     params = {
@@ -32,7 +32,7 @@ describe "gws_user_profiles", type: :request, dbscope: :example do
     get gws_user_profile_path(site: site, format: :json)
     expect(response.status).to eq 200
 
-    json = JSON.parse(response.body)
+    json = response.parsed_body
     expect(json['user']['_id']).to eq user.id
     expect(json['user']['presence_state']).to eq 'available'
     expect(json['user']['presence_state_label']).to eq states['available'] # 在席

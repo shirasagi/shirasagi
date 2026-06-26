@@ -20,7 +20,7 @@ describe Chat::Agents::Nodes::BotController, type: :request, dbscope: :example d
     }
     get "#{chat_node.full_url}index.json?#{params.to_query}"
     expect(response.status).to eq 200
-    json = JSON.parse(response.body)
+    json = response.parsed_body
     results = json["results"]
     expect(results).to have(1).items
     chat_success = json["chatSuccess"]

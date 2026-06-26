@@ -15,7 +15,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
     before do
       # get and save  auth token
       get auth_token_path
-      @auth_token = JSON.parse(response.body)["auth_token"]
+      @auth_token = response.parsed_body["auth_token"]
 
       # login
       params = {
@@ -32,7 +32,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
       it do
         get index_path
         expect(response.status).to eq 200
-        list = JSON.parse(response.body)
+        list = response.parsed_body
         expect(list.length).to eq 1
         expect(list[0]["_id"]).to eq 1
         expect(list[0]["name"]).to eq page.name
@@ -50,7 +50,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
         }
         post index_path, params: params
         expect(response.status).to eq 201
-        page = JSON.parse(response.body)
+        page = response.parsed_body
         expect(page["_id"]).to eq 1
         expect(page["name"]).to eq params['item[name]']
         expect(page["filename"]).to eq "#{node.filename}/#{params['item[basename]']}.html"
@@ -188,7 +188,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
       describe "POST /.s{site}/article{cid}/pages/download_all" do
         it do
           get auth_token_path
-          @auth_token = JSON.parse(response.body)["auth_token"]
+          @auth_token = response.parsed_body["auth_token"]
 
           params = {
             'authenticity_token' => @auth_token,
@@ -249,7 +249,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
     before do
       # get and save  auth token
       get auth_token_path
-      @auth_token = JSON.parse(response.body)["auth_token"]
+      @auth_token = response.parsed_body["auth_token"]
 
       # login
       params = { 'authenticity_token' => @auth_token, 'item[email]' => user.email, 'item[password]' => user.in_password }

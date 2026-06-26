@@ -29,7 +29,7 @@ describe 'gws_notice_readables', type: :request, dbscope: :example do
     it do
       get gws_notice_readables_path(site: site, folder_id: "-", category_id: "-", format: :json), headers: @headers
       expect(response.status).to eq 200
-      JSON.parse(response.body).tap do |json|
+      response.parsed_body.tap do |json|
         expect(json).to be_a(Array)
         json[0].tap do |item_json|
           expect(item_json).to be_a(Hash)
@@ -59,7 +59,7 @@ describe 'gws_notice_readables', type: :request, dbscope: :example do
     before do
       # get and save  auth token
       get sns_auth_token_path(format: :json)
-      auth_token = JSON.parse(response.body)["auth_token"]
+      auth_token = response.parsed_body["auth_token"]
       @headers = nil
 
       # login
@@ -109,7 +109,7 @@ describe 'gws_notice_readables', type: :request, dbscope: :example do
 
         post sns_login_oauth2_token_path, params: token_params
 
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         @headers = {
           "Authorization" => "Bearer #{json["access_token"]}"
         }
@@ -151,7 +151,7 @@ describe 'gws_notice_readables', type: :request, dbscope: :example do
         post sns_login_oauth2_token_path, params: token_params
         expect(response.status).to eq 200
 
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         @headers = {
           "Authorization" => "Bearer #{json["access_token"]}"
         }
@@ -164,7 +164,7 @@ describe 'gws_notice_readables', type: :request, dbscope: :example do
       before do
         # implicit flow の場合、まずはどうにかしてログインする
         get sns_auth_token_path(format: :json)
-        auth_token = JSON.parse(response.body)["auth_token"]
+        auth_token = response.parsed_body["auth_token"]
         params = {
           'authenticity_token' => auth_token,
           'item[email]' => user.email,
@@ -206,7 +206,7 @@ describe 'gws_notice_readables', type: :request, dbscope: :example do
       before do
         # authorization code flow の場合、まずはどうにかしてログインする
         get sns_auth_token_path(format: :json)
-        auth_token = JSON.parse(response.body)["auth_token"]
+        auth_token = response.parsed_body["auth_token"]
         params = {
           'authenticity_token' => auth_token,
           'item[email]' => user.email,
@@ -247,7 +247,7 @@ describe 'gws_notice_readables', type: :request, dbscope: :example do
         post sns_login_oauth2_token_path, params: authorization_code_params, headers: authorization_code_headers
 
         expect(response.status).to eq 200
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         @headers = {
           "Authorization" => "Bearer #{json["access_token"]}"
         }
