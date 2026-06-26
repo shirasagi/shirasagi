@@ -4,6 +4,14 @@ describe SS::Addon::MessageDisplaySetting, type: :model, dbscope: :example do
   let!(:group) { create(:ss_group) }
   let(:user) { create(:ss_user, group_ids: [ group.id ]) }
 
+  # 本 PR の主契約: 未設定ユーザーは従来どおり「差出人 → 件名」のまま
+  describe "default value" do
+    it "defaults to name_first and is not subject-first for a new user" do
+      expect(user.message_list_column_order).to eq "name_first"
+      expect(user.message_list_subject_first?).to be_falsey
+    end
+  end
+
   describe "validation of message_list_column_order" do
     %w(name_first subject_first).each do |value|
       it "accepts #{value}" do
