@@ -12,10 +12,17 @@ describe SS::Addon::MessageDisplaySetting, type: :model, dbscope: :example do
       end
     end
 
-    [nil, "", "unknown"].each do |value|
-      it "rejects #{value.inspect}" do
-        expect(user.update(message_list_column_order: value)).to be_falsey
-        expect(user.errors[:message_list_column_order]).to be_present
+    it "rejects an unknown value" do
+      expect(user.update(message_list_column_order: "unknown")).to be_falsey
+      expect(user.errors[:message_list_column_order]).to be_present
+    end
+
+    # nil/空は許容し、初期値（差出人 → 件名）として扱う。
+    # allow_blank により default 補完に依存せず、射影パス等で nil が来ても保存を弾かない。
+    [nil, ""].each do |value|
+      it "accepts #{value.inspect} as the initial value" do
+        expect(user.update(message_list_column_order: value)).to be_truthy
+        expect(user.reload.message_list_subject_first?).to be_falsey
       end
     end
   end

@@ -6,7 +6,7 @@ module SS::Addon::MessageDisplaySetting
     field :message_list_column_order, type: String, default: "name_first"
 
     permit_params :message_list_column_order
-    validates :message_list_column_order, inclusion: { in: %w(name_first subject_first) }
+    validates :message_list_column_order, inclusion: { in: %w(name_first subject_first), allow_blank: true }
   end
 
   def message_list_column_order_options
