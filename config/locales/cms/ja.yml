@@ -861,6 +861,8 @@ ja:
       cms/print: 印刷
       cms/clipboard_copy: クリップボードへコピー
       cms/form_search: 定型フォーム絞込検索
+    column_toc:
+      note: このブロックには、同じページ内のアンカー機能を有効にした見出しへのリンク（目次）が自動的に表示されます。
     columns:
       cms/text_field: 一行入力
       cms/date_field: 日付入力
@@ -873,6 +875,7 @@ ja:
       cms/file_upload: ファイルアップロード
       cms/multiple_files_upload: 複数ファイルアップロード
       cms/headline: 見出し入力
+      cms/toc: 目次
       cms/list: リスト入力
       cms/youtube: YouTube埋め込み
       cms/free: 自由入力
@@ -1204,6 +1207,7 @@ ja:
       cms/column/file_upload: ファイルアップロード
       cms/column/multiple_files_upload: 複数ファイルアップロード
       cms/column/headline: 見出し入力
+      cms/column/toc: 目次
       cms/column/list: リスト入力
       cms/column/youtube: YouTube埋め込み
       cms/column/free: 自由入力
@@ -1617,6 +1621,10 @@ ja:
       cms/column/headline:
         min_headline_level: 最小見出しレベル
         max_headline_level: 最大見出しレベル
+        enable_anchor: アンカー機能
+      cms/column/toc:
+        min_headline_level: 対象とする最小見出しレベル
+        max_headline_level: 対象とする最大見出しレベル
       cms/column/date_field:
         place_holder: プレースホルダー
         html_tag: HTMLタグ
@@ -1707,6 +1715,9 @@ ja:
       cms/column/value/headline:
         head: 見出し
         text: テキスト
+        anchor: アンカーID
+      cms/column/value/toc:
+        note: 目次
       cms/column/value/list:
         lists: リスト
         order: 順番
@@ -3332,6 +3343,16 @@ ja:
       max_headline_level:
         - 見出し入力で選択できる最大（最も深い）見出しレベルを設定します。
         - 設定した深さまでの見出しが選択肢に表示されます。
+      enable_anchor:
+        - 有効にすると、見出しごとにアンカーID（リンク用のid属性）を設定できます。
+        - アンカーIDが未入力の場合は headline-連番 が自動付与されます。
+        - 目次ブロックと組み合わせると、ページ内リンクの目次を作成できます。
+
+    cms/column/toc:
+      min_headline_level:
+        - 目次に含める最小（最も浅い）見出しレベルを設定します。
+      max_headline_level:
+        - 目次に含める最大（最も深い）見出しレベルを設定します。
 
     cms/addon/column/text_like:
       max_length:
