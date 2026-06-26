@@ -40,6 +40,7 @@ en:
       gws/report/custom_form: Input details
       gws/report/category: Category
       gws/report/group_setting: Reports
+      gws/report/member: Recipients
 
   gws_role:
     use_gws_report: Use of reports
@@ -78,6 +79,8 @@ en:
     attributes:
       gws/report/file:
         name: Title
+        member_ids: Recipient users
+        member_group_ids: Recipient groups
       gws/report/form:
         name: Title
         order: Order
