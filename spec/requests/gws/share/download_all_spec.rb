@@ -39,7 +39,7 @@ describe "gws/workflow/files", type: :request, dbscope: :example do
 
     # get and save  auth token
     get sns_auth_token_path(format: :json)
-    @auth_token = JSON.parse(response.body)["auth_token"]
+    @auth_token = response.parsed_body["auth_token"]
 
     # login
     params = {
