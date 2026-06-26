@@ -31,38 +31,40 @@
     <nav><%= render template: '_search' %></nav>
   </header>
 
-  <div class="calendar calendar-controller" id="calendar-controller"></div>
+  <div class="calendar-wrap">
+    <div class="calendar calendar-controller" id="calendar-controller"></div>
 
-  <% @users.each_with_index do |user, idx| %>
-    <div class="calendar-multiple-header">
+    <% @users.each_with_index do |user, idx| %>
+      <div class="calendar-multiple-header">
       <%= link_to gws_public_user_long_name(user.long_name), gws_schedule_user_plans_path(user: user.id), class: "calendar-name" %>
       <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && user.id == @cur_user.id %>
         <%= link_to t('gws/schedule.links.add_plan'), new_gws_schedule_user_plan_path(user: user.id), class: 'add-plan' %>
       <% end %>
       <%= render "gws/schedule/main/calendar_attr", user: user %>
-    </div>
-    <div class="calendar multiple" id="cal-<%= user.id %>"></div>
+      </div>
+      <div class="calendar multiple" id="cal-<%= user.id %>"></div>
 
-    <%
-      calendar_options = {
-        tapMenu: user.id == @cur_user.id,
-        restUrl: url_for(action: :index),
-        eventSources: [{ url: "#{events_gws_schedule_user_plans_path(user: user.id, format: :json)}?#{search_query}" }],
-        useWorkload: use_workload?,
-        firstDay: @cur_site.schedule_first_day,
-        views: {
-          timelineDay: {
-            minTime: @cur_site.schedule_min_time,
-            maxTime: @cur_site.schedule_max_time
+      <%
+        calendar_options = {
+          tapMenu: user.id == @cur_user.id,
+          restUrl: url_for(action: :index),
+          eventSources: [{ url: "#{events_gws_schedule_user_plans_path(user: user.id, format: :json)}?#{search_query}" }],
+          useWorkload: use_workload?,
+          firstDay: @cur_site.schedule_first_day,
+          views: {
+            timelineDay: {
+              minTime: @cur_site.schedule_min_time,
+              maxTime: @cur_site.schedule_max_time
+            }
           }
         }
-      }
-      init_options = params[:calendar] || {}
-    %>
-    <%= jquery do %>
-      $(document).on("gws:calendarInitialized", function() {
-        Gws_Schedule_Multiple_Calendar.render('#cal-<%= user.id %>', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
-      });
+        init_options = params[:calendar] || {}
+      %>
+      <%= jquery do %>
+        $(document).on("gws:calendarInitialized", function() {
+          Gws_Schedule_Multiple_Calendar.render('#cal-<%= user.id %>', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+        });
+      <% end %>
     <% end %>
-  <% end %>
+  </div>
 </section>
