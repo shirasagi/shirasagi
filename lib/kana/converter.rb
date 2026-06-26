@@ -41,7 +41,7 @@ module Kana::Converter
       text.gsub!(/<!--[^>]*?\s#{skip_marks[0]}\s[^>]*?-->(.*?)<!--[^>]*?\s#{skip_marks[1]}\s[^>]*?-->/im) do |m|
         "\r" * m.bytes.length
       end
-      text.gsub!(/[ -\/:-@\[-`{-~]/m, "\r")
+      text.gsub!(/[ -\/:-@\[-`{-~]/m) { |m| "\r" * m.bytes.length }
 
       byte = html.bytes
       kana = ""
