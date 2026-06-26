@@ -33,4 +33,25 @@ describe "gws_user_message_display_setting", type: :feature, dbscope: :example, 
       expect(page).to have_css("ul.gws-memos.subject-first")
     end
   end
+
+  context "when memo menu is hidden in site setting" do
+    before { site.update!(menu_memo_state: "hide") }
+
+    it "does not show the setting page (404)" do
+      visit gws_user_message_display_setting_path(site: site)
+      expect(page).to have_title("404 Not Found | SHIRASAGI")
+    end
+  end
+
+  context "when user has no memo permission" do
+    let(:role) { create :gws_role_portal_user_use, cur_site: site }
+    let(:user) do
+      create :gws_user, name: unique_id, email: unique_email, group_ids: [ site.id ], gws_role_ids: [ role.id ]
+    end
+
+    it "does not show the setting page (403)" do
+      login_user user, to: gws_user_message_display_setting_path(site: site)
+      expect(page).to have_title("403 Forbidden | SHIRASAGI")
+    end
+  end
 end
