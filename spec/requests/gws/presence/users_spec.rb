@@ -22,7 +22,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       get users_path, headers: @headers
       expect(response.status).to eq 200
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       gws_admin = json["items"][1]
       expect(gws_admin["id"]).to eq gws_user.id
       expect(gws_admin["name"]).to eq gws_user.name
@@ -32,7 +32,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       get group_users_path, headers: @headers
       expect(response.status).to eq 200
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       gws_admin = json["items"][1]
       expect(gws_admin["id"]).to eq gws_user.id
       expect(gws_admin["name"]).to eq gws_user.name
@@ -42,7 +42,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       get custom_group_users_path, headers: @headers
       expect(response.status).to eq 200
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       gws_admin = json["items"][0]
       expect(gws_admin["id"]).to eq gws_user.id
       expect(gws_admin["name"]).to eq gws_user.name
@@ -56,7 +56,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       }
       put update_path, params: params, headers: @headers
       expect(response.status).to eq 200
-      gws_admin = JSON.parse(response.body)
+      gws_admin = response.parsed_body
       expect(gws_admin["id"]).to eq gws_user.id
       expect(gws_admin["name"]).to eq gws_user.name
       expect(gws_admin["presence_state"]).to eq "available"
@@ -69,7 +69,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       get group_users_path, headers: @headers
       expect(response.status).to eq 200
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       gws_admin = json["items"][1]
       expect(gws_admin["id"]).to eq gws_user.id
       expect(gws_admin["name"]).to eq gws_user.name
@@ -85,7 +85,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       get states_path, headers: @headers
       expect(response.status).to eq 200
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       available = json["items"][0]
       expect(available["name"]).to eq "available"
       expect(available["label"]).to eq presence_states["available"]
@@ -98,7 +98,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
     before do
       # get and save  auth token
       get auth_token_path
-      auth_token = JSON.parse(response.body)["auth_token"]
+      auth_token = response.parsed_body["auth_token"]
       @headers = nil
 
       # login
@@ -148,7 +148,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
 
         post sns_login_oauth2_token_path, params: token_params
 
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         @headers = {
           "Authorization" => "Bearer #{json["access_token"]}"
         }
@@ -189,7 +189,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
 
         post sns_login_oauth2_token_path, params: token_params
 
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         @headers = {
           "Authorization" => "Bearer #{json["access_token"]}"
         }
@@ -202,7 +202,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       before do
         # implicit flow の場合、まずはどうにかしてログインする
         get auth_token_path
-        auth_token = JSON.parse(response.body)["auth_token"]
+        auth_token = response.parsed_body["auth_token"]
         params = {
           'authenticity_token' => auth_token,
           'item[email]' => gws_user.email,
@@ -244,7 +244,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       before do
         # authorization code flow の場合、まずはどうにかしてログインする
         get auth_token_path
-        auth_token = JSON.parse(response.body)["auth_token"]
+        auth_token = response.parsed_body["auth_token"]
         params = {
           'authenticity_token' => auth_token,
           'item[email]' => gws_user.email,
@@ -285,7 +285,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
         post sns_login_oauth2_token_path, params: authorization_code_params, headers: authorization_code_headers
 
         expect(response.status).to eq 200
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         @headers = {
           "Authorization" => "Bearer #{json["access_token"]}"
         }
