@@ -480,3 +480,10 @@
     font-size: 0.9rem;
   }
 }
+
+// 汎用DB アプリ一覧の「汎用DBとは」ヘルプアイコン（一覧ヘッダー右上）
+.gws-tabular-space-help {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+}

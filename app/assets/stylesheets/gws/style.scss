@@ -276,6 +276,31 @@ a.gws-category-label:hover {
   }
 }
 
+// ヘルプアイコン（トリガーボタン）の基本スタイル。サイドメニュー以外（汎用DBアプリ一覧など）でも
+// 使うためグローバルに定義する。配置（絶対位置など）は利用箇所側で指定する。
+.gws-menu-help__icon {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  color: #434343;
+  text-decoration: none;
+  cursor: pointer;
+  .material-icons-outlined {
+    font-size: 20px;
+    line-height: 1;
+  }
+  &:hover {
+    color: init.$orange;
+    text-decoration: none;
+  }
+}
+// ポップアップ用の内容は非表示にしておき、クリック時に Gws_Popup へ複製する
+.gws-menu-help__content {
+  display: none;
+}
+
 // メインナビのヘルプポップアップ（モジュール説明＋マニュアルリンク）の中身
 .gws-menu-help-popup {
   &__desc {

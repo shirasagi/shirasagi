@@ -990,30 +990,6 @@ _:future,
         right: 6px;
         transform: translateY(-50%);
       }
-      .gws-menu-help__icon {
-        display: inline-flex;
-        align-items: center;
-        // 上位の汎用ルール（h2:first-child a の navi-icon padding 50px）を打ち消し、
-        // アイコン幅をグリフ実寸に収める（ラベルとの重なり防止）。
-        padding: 0;
-        border: 0;
-        background-color: transparent;
-        color: #434343;
-        text-decoration: none;
-        cursor: pointer;
-        .material-icons-outlined {
-          font-size: 20px;
-          line-height: 1;
-        }
-        &:hover {
-          color: init.$orange;
-          text-decoration: none;
-        }
-      }
-      // ポップアップ用の内容は非表示にしておき、クリック時に Gws_Popup へ複製する
-      .gws-menu-help__content {
-        display: none;
-      }
 
       a {
         display: block;

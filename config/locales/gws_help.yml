@@ -79,6 +79,9 @@ ja:
     personal_address:
       description: "自分だけが使う連絡先、よく連絡する相手、個人的に分類したい連絡先を登録する場所です。"
       manual_url: "https://www.ss-proj.org/fs/6/8/9/2/_/manual_gws_individual_address.pdf"
+    tabular:
+      description: "業務に合わせて項目を自由に設計し、データを登録・検索できる汎用データベースです。"
+      manual_url: "https://www.ss-proj.org/fs/9/0/5/9/_/manual_gws_genericproducts.pdf"
     elasticsearch:
       description: "GWS内の各機能のコンテンツを横断的にキーワード検索できます。"
       manual_url: "https://www.ss-proj.org/fs/6/9/0/5/_/manual_gws_search.pdf"
@@ -141,6 +144,8 @@ en:
       description: "A place to register contacts to share across all staff, departments, or specific groups."
     personal_address:
       description: "A place to register contacts for your own use, such as frequent contacts and personally categorized contacts."
+    tabular:
+      description: "A general-purpose database where you can freely design fields to suit your work, and register and search data."
     elasticsearch:
       description: "Search content across all groupware features by keyword."
     conf:

@@ -1,3 +1,10 @@
 <div class="list-head">
+  <div class="gws-tabular-space-help">
+    <%= gws_help_icon(
+          t("gws/help.tabular.description"),
+          manual_url: t("gws/help.tabular.manual_url", default: nil),
+          manual_label: t("gws/help.manual_link", name: @cur_site.menu_tabular_effective_label)
+        ) %>
+  </div>
   <%= render template: "_search" %>
 </div>
