@@ -23,10 +23,8 @@
         </span>
       </div>
     </dd>
-    <% if @item.send("menu_#{name}_help_url").present? %>
-      <dt class="depth-2"><%= t("gws/help.manual_url_label") %></dt>
-      <dd class="depth-2"><%= @item.send("menu_#{name}_help_url") %></dd>
-    <% end %>
+    <dt class="depth-2"><%= t("gws/help.manual_url_label") %></dt>
+    <dd class="depth-2"><%= @item.send("menu_#{name}_help_url") %></dd>
   </dl>
 <% end %>
 
