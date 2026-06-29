@@ -3,6 +3,10 @@
 module Gws
   extend Sys::ModulePermission
 
+  # ヘルプのマニュアルURLとして許可する形式。http/https かつホスト部があり、空白を含まないこと。
+  # （javascript: 等のスキームや "https://" のような不完全な値、空白混じりの値を弾く）
+  HELP_URL_FORMAT = %r{\Ahttps?://\S+\z}
+
   module_function
 
   mattr_accessor(:module_usable_handlers) { {} }
