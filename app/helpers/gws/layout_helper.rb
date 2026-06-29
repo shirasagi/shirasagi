@@ -55,7 +55,7 @@ module Gws::LayoutHelper
     end
 
     tag.span(class: "gws-menu-help") do
-      icon = link_to("#", class: "gws-menu-help__icon", role: "button", aria: { label: t("gws/help.aria_label") }) do
+      icon = tag.button(type: "button", class: "gws-menu-help__icon", aria: { label: t("gws/help.aria_label") }) do
         tag.span("help_outline", class: "material-icons-outlined", aria: { hidden: true })
       end
       icon + tag.div(tag.div(popup_body, class: "gws-menu-help-popup"), class: "gws-menu-help__content")
