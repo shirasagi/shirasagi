@@ -18,7 +18,7 @@ module Kana::Converter
       skip_marks = config['skip-marks']
       html = html.tr("\u00A0", " ")
 
-      text = html.gsub(/[\r\n\t]/, " ")
+      text = html.gsub(/[\r\n\t]+/) { " " * _1.bytesize }
       text.gsub!(/<!--[^>]*?\s#{kana_marks[1]}\s[^>]*?-->.*?<!--[^>]*?\s#{kana_marks[0]}\s[^>]*?-->/im) do |m|
         "\r" * m.bytes.length
       end
@@ -41,7 +41,7 @@ module Kana::Converter
       text.gsub!(/<!--[^>]*?\s#{skip_marks[0]}\s[^>]*?-->(.*?)<!--[^>]*?\s#{skip_marks[1]}\s[^>]*?-->/im) do |m|
         "\r" * m.bytes.length
       end
-      text.gsub!(/[ -\/:-@\[-`{-~]/m) { |m| "\r" * m.bytes.length }
+      text.gsub!(/[ -\/:-@\[-`{-~]+/m) { |m| "\r" * m.bytesize }
 
       byte = html.bytes
       kana = ""
