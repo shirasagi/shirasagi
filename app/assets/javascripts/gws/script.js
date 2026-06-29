@@ -45,6 +45,16 @@ SS.ready(function () {
     renderExternalLinks($(ev.target))
   });
 
+  // メインナビのヘルプアイコン: クリックでモジュール説明＋マニュアルリンクのポップアップを表示する
+  $(document).on("click", ".gws-menu-help__icon", function(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    var content = $(this).closest(".gws-menu-help").find(".gws-menu-help__content").html();
+    if (content) {
+      Gws_Popup.render($(this), content);
+    }
+  });
+
   // tabs
   var path = location.pathname + "/";
   $(".gws-schedule-tabs a").each(function () {

@@ -276,6 +276,71 @@ a.gws-category-label:hover {
   }
 }
 
+// メインナビのヘルプポップアップ（モジュール説明＋マニュアルリンク）の中身
+.gws-menu-help-popup {
+  &__desc {
+    margin: 0 0 8px;
+  }
+  &__manual {
+    margin: 0;
+
+    // コントラスト時はリンク色＝本文色で判別しづらいため、下線＋外部リンクアイコンで示す。
+    a {
+      text-decoration: underline;
+
+      // Material Icons: open_in_new（別タブで開くことを示す）
+      &::after {
+        content: "\e89e";
+        margin-left: 4px;
+        font-family: "Material Icons";
+        font-size: 108%;
+        text-decoration: none;
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+// ヘルプ用途のポップアップは、リンク集ポップアップ（.gws-public-links-dropdown-menu）と同様に
+// 枠線＝本文色・吹き出し＝背景色をコントラストテーマに追従させる。
+// （コントラストは body * { border-color/background-color !important } と body *:after { background-color !important } を注入する）
+.gws-popup:has(.gws-menu-help-popup) {
+  border: init.$border-gray4;
+
+  // 既定の三角(border)矢印を、回転した正方形の吹き出しに置き換える。
+  // border-color/background-color を inherit にし、パネルの枠線色・背景色（=コントラスト時の本文色・背景色）へ追従させる。
+  &::after {
+    bottom: -6px;
+    width: 12px;
+    height: 12px;
+    margin-left: -6px;
+    transform: rotate(45deg);
+    border: 1px solid;
+    border-width: 0 1px 1px 0; // 既定（ポップアップが対象の上）: 右・下の辺＝下向き
+    border-color: inherit;
+    background-color: inherit;
+  }
+
+  // ポップアップが対象の下に出る場合（実際のヘルプ位置）: 上・左の辺＝上向き
+  &.top::after {
+    top: -6px;
+    bottom: auto;
+    border-width: 1px 0 0 1px;
+    border-color: inherit;
+  }
+
+  &.left::after {
+    left: 14px;
+    margin-left: 0;
+  }
+
+  &.right::after {
+    right: 14px;
+    left: auto;
+    margin-left: 0;
+  }
+}
+
 // Dropdown
 .gws-dropdown-menu {
   left: -4px;
