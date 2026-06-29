@@ -18,13 +18,14 @@ class Gws::Tabular::Space
   field :order, type: Integer, default: 0
   belongs_to_file :icon
   field :memo, type: String
+  field :help_url, type: String
 
   alias name i18n_name
   alias name= i18n_name=
   alias description i18n_description
   alias description= i18n_description=
 
-  permit_params :name, :state, :order, :memo
+  permit_params :name, :state, :order, :memo, :help_url
   permit_params :i18n_name, i18n_name_translations: I18n.available_locales
   permit_params :i18n_description, i18n_description_translations: I18n.available_locales
 
