@@ -20,13 +20,13 @@ module Kana::Converter
 
       text = html.gsub(/[\r\n\t]+/) { " " * _1.bytesize }
       text.gsub!(/<!--[^>]*?\s#{kana_marks[1]}\s[^>]*?-->.*?<!--[^>]*?\s#{kana_marks[0]}\s[^>]*?-->/im) do |m|
-        "\r" * m.bytes.length
+        "\r" * m.bytesize
       end
       text.gsub!(/.*?<!--[^>]*?\s#{kana_marks[0]}\s[^>]*?-->/im) do |m|
-        "\r" * m.bytes.length
+        "\r" * m.bytesize
       end
       text.gsub!(/<!--[^>]*?\s#{kana_marks[1]}\s[^>]*?-->.*/im) do |m|
-        "\r" * m.bytes.length
+        "\r" * m.bytesize
       end
       tags = %w(head ruby script style)
       text.gsub!(/<!\[CDATA\[.*?\]\]>/m) { |m| mpad(m) }
@@ -34,12 +34,12 @@ module Kana::Converter
       tags.each { |t| text.gsub!(/<#{t}( [^>]*\/>|[^\w].*?<\/#{t}>)/m) { |m| mpad(m) } }
       text.gsub!(/<.*?>/m) do |m|
         mpad(m).gsub(/\s*=\s*['"]([^'"]*)['"]/im) do |m|
-          "\r" * m.bytes.length
+          "\r" * m.bytesize
         end
       end
       text.gsub!(/\\u003c.*?\\u003e/m) { |m| mpad(m) } #<>
       text.gsub!(/<!--[^>]*?\s#{skip_marks[0]}\s[^>]*?-->(.*?)<!--[^>]*?\s#{skip_marks[1]}\s[^>]*?-->/im) do |m|
-        "\r" * m.bytes.length
+        "\r" * m.bytesize
       end
       text.gsub!(/[ -\/:-@\[-`{-~]+/m) { |m| "\r" * m.bytesize }
 
@@ -85,7 +85,7 @@ module Kana::Converter
     private
 
     def mpad(str)
-      str.gsub(/[^ -~]+/) { |m| " " * m.bytes.length }
+      str.gsub(/[^ -~]+/) { |m| " " * m.bytesize }
     end
 
     def katakana_to_yomi(str, format)
