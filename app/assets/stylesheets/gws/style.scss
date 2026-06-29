@@ -341,6 +341,18 @@ a.gws-category-label:hover {
   }
 }
 
+// メニュー設定フォーム: 機能（モジュール）ごとの dl に区切り線と余白を入れ、境目を明確にする。
+// dl.see（specificity が高い）の margin/padding を確実に上書きするため .see も含める。
+.addon-gws-system-menu-setting.see {
+  margin: 0;
+  padding: 14px 0;
+
+  // 機能と機能の間にだけ区切り線（先頭には引かない）
+  & + & {
+    border-top: 1px solid #d0d0d0;
+  }
+}
+
 // Dropdown
 .gws-dropdown-menu {
   left: -4px;

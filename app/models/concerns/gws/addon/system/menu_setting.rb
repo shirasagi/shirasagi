@@ -42,8 +42,9 @@ module Gws::Addon::System::MenuSetting
     def define_menu_setting(name, i18n_key, options = {})
       field "menu_#{name}_state", type: String, default: options[:default_state]
       field "menu_#{name}_label", type: String, localize: true
+      field "menu_#{name}_help_url", type: String
       belongs_to_file "menu_#{name}_icon_image", class_name: "SS::File", accepts: SS::File::IMAGE_FILE_EXTENSIONS + [".svg"]
-      permit_params "menu_#{name}_state", "menu_#{name}_label", "menu_#{name}_icon_image_id"
+      permit_params "menu_#{name}_state", "menu_#{name}_label", "menu_#{name}_icon_image_id", "menu_#{name}_help_url"
       alias_method("menu_#{name}_state_options", "menu_state_options")
 
       define_method("menu_#{name}_default_label") do
@@ -51,6 +52,14 @@ module Gws::Addon::System::MenuSetting
       end
       define_method("menu_#{name}_effective_label") do
         send("menu_#{name}_label").presence || send("menu_#{name}_default_label")
+      end
+      # ヘルプの既定マニュアルURL（i18n: gws/help.<name>.manual_url）。未定義のモジュールは nil。
+      define_method("menu_#{name}_help_url_default") do
+        I18n.t("gws/help.#{name}.manual_url", default: nil).presence
+      end
+      # 実効マニュアルURL。サイト（自治体組織）の設定値を優先し、未設定なら i18n 既定にフォールバックする。
+      define_method("menu_#{name}_effective_help_url") do
+        send("menu_#{name}_help_url").presence || send("menu_#{name}_help_url_default")
       end
       define_method("menu_#{name}_visible?") do
         menu_visible?(name)

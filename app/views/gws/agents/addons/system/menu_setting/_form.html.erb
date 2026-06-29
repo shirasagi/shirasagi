@@ -2,7 +2,7 @@
   addon ||= local_assigns.fetch(:addon, {})
   addon[:display_body] = "hide"
 %>
-<% render_menu_setting = proc do |name, select_state: true, edit_icon: true| %>
+<% render_menu_setting = proc do |name, select_state: true, edit_icon: true, edit_help_url: true| %>
   <dl class="see addon-gws-system-menu-setting menu-setting-<%= name %>">
     <dt><%= @model.t("menu_#{name}_state") %></dt>
     <dd>
@@ -12,7 +12,7 @@
         <% else %>
           <%= f.select "menu_#{name}_state", { t('ss.options.state.show') => "show" } %>
         <% end %>
-        <%= f.text_field("menu_#{name}_label", value: @item.send("menu_#{name}_label"), placeholder: @item.send("menu_#{name}_default_label")) %>
+        <%= f.text_field("menu_#{name}_label", value: @item.send("menu_#{name}_label"), placeholder: @item.send("menu_#{name}_default_label"), style: "flex: 1 1 auto; width: auto; min-width: 0;") %>
       </div>
     </dd>
     <% if edit_icon %>
@@ -26,6 +26,12 @@
           <% end %>
           <%= f.ss_file_field "menu_#{name}_icon_image", accepts: SS::File::IMAGE_FILE_EXTENSIONS + [".svg"] %>
         </div>
+      </dd>
+    <% end %>
+    <% if edit_help_url %>
+      <dt class="depth-2"><%= t("gws/help.manual_url_label") %></dt>
+      <dd class="depth-2">
+        <%= f.text_field("menu_#{name}_help_url", value: @item.send("menu_#{name}_help_url"), placeholder: @item.send("menu_#{name}_help_url_default")) %>
       </dd>
     <% end %>
   </dl>
@@ -56,9 +62,9 @@
 <% render_menu_setting.call(:share) %>
 <% render_menu_setting.call(:shared_address) %>
 <% render_menu_setting.call(:personal_address) %>
-<% render_menu_setting.call(:staff_record, edit_icon: false) %>
-<% render_menu_setting.call(:links, edit_icon: false) %>
-<% render_menu_setting.call(:contrast, edit_icon: false) %>
-<% render_menu_setting.call(:tabular) %>
-<% render_menu_setting.call(:elasticsearch) %>
-<% render_menu_setting.call(:conf, select_state: false) %>
+<% render_menu_setting.call(:staff_record, edit_icon: false, edit_help_url: false) %>
+<% render_menu_setting.call(:links, edit_icon: false, edit_help_url: false) %>
+<% render_menu_setting.call(:contrast, edit_icon: false, edit_help_url: false) %>
+<% render_menu_setting.call(:tabular, edit_help_url: false) %>
+<% render_menu_setting.call(:elasticsearch, edit_help_url: false) %>
+<% render_menu_setting.call(:conf, select_state: false, edit_help_url: false) %>
