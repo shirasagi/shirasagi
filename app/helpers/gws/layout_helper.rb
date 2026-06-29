@@ -48,7 +48,9 @@ module Gws::LayoutHelper
     popup_body = description.present? ? tag.p(description, class: "gws-menu-help-popup__desc") : "".html_safe
     if manual_url.present?
       popup_body += tag.p(class: "gws-menu-help-popup__manual") do
-        link_to(manual_label, manual_url, target: "_blank", rel: "noopener")
+        # 生URLを直接 href にせず、リンク集と同様 sns_redirect 経由にする（href は自サイト内、
+        # リダイレクト側で http/https のみ許可＋外部リンク中間ページ表示）。
+        link_to(manual_label, sns_redirect_path(ref: manual_url), target: "_blank", rel: "noopener")
       end
     end
 
