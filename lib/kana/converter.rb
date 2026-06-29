@@ -32,10 +32,9 @@ module Kana::Converter
       text.gsub!(/<!\[CDATA\[.*?\]\]>/m) { |m| mpad(m) }
       text.gsub!(/<!--.*?-->/m) { |m| mpad(m) }
       tags.each { |t| text.gsub!(/<#{t}( [^>]*\/>|[^\w].*?<\/#{t}>)/m) { |m| mpad(m) } }
-      text.gsub!(/<.*?>/m) do |m|
-        mpad(m).gsub(/\s*=\s*['"]([^'"]*)['"]/im) do |m|
-          "\r" * m.bytesize
-        end
+      text.gsub!(/<.*?>/m) do |matched|
+        matched = mpad(matched)
+        matched.gsub(/\s*=\s*['"]([^'"]*)['"]/im) { "\r" * _1.bytesize }
       end
       text.gsub!(/\\u003c.*?\\u003e/m) { |m| mpad(m) } #<>
       text.gsub!(/<!--[^>]*?\s#{skip_marks[0]}\s[^>]*?-->(.*?)<!--[^>]*?\s#{skip_marks[1]}\s[^>]*?-->/im) do |m|
