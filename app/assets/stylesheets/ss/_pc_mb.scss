@@ -996,6 +996,9 @@ _:future,
         position: relative;
         background-color: init.$gray1;
         @include navi-icon;
+        // navi-icon の右 padding を、ヘルプアイコン（right:6px・約20px幅）分に広げて文字やクリック領域が潜らないようにする
+        // stylelint-disable-next-line order/properties-order
+        padding-right: 32px;
         color: init.$black;
         // &:before {
         //   content: "";

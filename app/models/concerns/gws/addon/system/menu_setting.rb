@@ -57,7 +57,9 @@ module Gws::Addon::System::MenuSetting
       end
       # ヘルプの既定マニュアルURL（i18n: gws/help.<name>.manual_url）。未定義のモジュールは nil。
       define_method("menu_#{name}_help_url_default") do
-        I18n.t("gws/help.#{name}.manual_url", default: nil).presence
+        # manual_url は日本語版PDFのみ。production は en→ja フォールバックしないため、
+        # 表示ロケールに依らず常に既定ロケール(ja)で取得する。
+        I18n.t("gws/help.#{name}.manual_url", default: nil, locale: I18n.default_locale).presence
       end
       # 実効マニュアルURL。サイト（自治体組織）の設定値を優先し、未設定なら i18n 既定にフォールバックする。
       define_method("menu_#{name}_effective_help_url") do

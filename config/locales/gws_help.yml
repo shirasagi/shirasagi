@@ -93,7 +93,8 @@ en:
     manual_link: 'Groupware operation manual "%{name}"'
     app_manual_link: 'Operation manual "%{name}"'
     manual_url_label: "Manual URL"
-    # マニュアルURL（manual_url）は英語版が無いため en では定義せず、ja の同じPDFにフォールバックする。
+    # マニュアルURL（manual_url）は日本語版PDFのみ。en では定義せず、取得側で
+    # locale: I18n.default_locale を指定して常に ja を参照する（production は en→ja フォールバックしない）。
     portal:
       description: "Brings together frequently used features and information—announcements, schedules, messages, and more—on a single screen."
     notice:
