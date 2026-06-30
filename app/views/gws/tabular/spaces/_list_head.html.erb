@@ -2,7 +2,7 @@
   <div class="gws-tabular-space-help">
     <%= gws_help_icon(
           t("gws/help.tabular.description"),
-          manual_url: t("gws/help.tabular.manual_url", default: nil, locale: I18n.default_locale),
+          manual_url: @cur_site.menu_tabular_effective_help_url,
           manual_label: t("gws/help.manual_link", name: @cur_site.menu_tabular_effective_label)
         ) %>
   </div>

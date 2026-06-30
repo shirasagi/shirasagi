@@ -5,7 +5,6 @@ ja:
     app_manual_link: "操作マニュアル「%{name}」"
     manual_url_label: "マニュアルURL（日本語）"
     manual_url_en_label: "マニュアルURL（英語）"
-    default_manual_label: "シラサギ公式マニュアル"
     tooltips:
       manual_url:
         - 日本語表示では「マニュアルURL（日本語）」、英語表示では「マニュアルURL（英語）」が、ヘルプの操作マニュアルのリンク先になります。

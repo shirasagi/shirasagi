@@ -26,16 +26,13 @@
     <%
       help_url = @item.send("menu_#{name}_help_url")
       help_url_en = @item.send("menu_#{name}_help_url_en")
-      default_url = @item.send("menu_#{name}_help_url_default")
     %>
-    <%# マニュアルURLの設定が一切ない（既定も入力も無い）モジュールは、行ごと非表示にする。 %>
-    <% if default_url.present? || help_url.present? || help_url_en.present? %>
-      <%# 未入力なら実際に表示される「シラサギ公式マニュアル」（i18n 既定）を示す。 %>
-      <% default_manual = default_url.present? ? t("gws/help.default_manual_label") : nil %>
+    <%# 既定以外のURLが入力されているときだけ表示する（既定マニュアルは表示しない）。 %>
+    <% if help_url.present? || help_url_en.present? %>
       <dt class="depth-2"><%= t("gws/help.manual_url_label") %></dt>
-      <dd class="depth-2"><%= help_url.presence || default_manual %></dd>
+      <dd class="depth-2"><%= help_url %></dd>
       <dt class="depth-2"><%= t("gws/help.manual_url_en_label") %></dt>
-      <dd class="depth-2"><%= help_url_en.presence || default_manual %></dd>
+      <dd class="depth-2"><%= help_url_en %></dd>
     <% end %>
   </dl>
 <% end %>
