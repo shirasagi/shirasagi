@@ -63,6 +63,31 @@ describe Gws::Tabular::Space, type: :model, dbscope: :example do
     end
   end
 
+  describe '#effective_help_url with a query projection (.only)' do
+    # files/mains/trash の各コントローラは cur_space を .only(...) で読み込むため、
+    # 投影に help_url_en が含まれないと、英語UIの effective_help_url で
+    # Mongoid::Errors::AttributeNotLoaded が発生する（回帰ガード）。
+    let(:projection) { %i[id i18n_name site_id i18n_description help_url help_url_en] }
+
+    before { space.update!(help_url: "https://example.jp/ja.pdf", help_url_en: "https://example.jp/en.pdf") }
+
+    it 'does not raise on a projected space in English UI' do
+      projected = Gws::Tabular::Space.where(id: space.id).only(*projection).first
+      I18n.with_locale(:en) do
+        expect { projected.effective_help_url }.not_to raise_error
+        expect(projected.effective_help_url).to eq "https://example.jp/en.pdf"
+      end
+    end
+
+    it 'does not raise on a projected space in Japanese UI' do
+      projected = Gws::Tabular::Space.where(id: space.id).only(*projection).first
+      I18n.with_locale(:ja) do
+        expect { projected.effective_help_url }.not_to raise_error
+        expect(projected.effective_help_url).to eq "https://example.jp/ja.pdf"
+      end
+    end
+  end
+
   it 'keeps localized name/description working together with help urls' do
     space.update!(help_url: "https://example.jp/manual.pdf")
     space.reload
