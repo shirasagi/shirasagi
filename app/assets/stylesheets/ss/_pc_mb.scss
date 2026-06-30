@@ -1302,7 +1302,9 @@ _:future,
       }
     }
   }
-  .dropdown-menu {
+  // リンク集メニュー用のスタイル。ヘルプアイコンのポップアップ（.gws-menu-help-popup）は
+  // 別物なので除外し、.gws-menu-help-popup 側のスタイルだけが当たるようにする。
+  .dropdown-menu:not(.gws-menu-help-popup) {
     @include init.clear;
     top: -1px;
     left: 211px;
