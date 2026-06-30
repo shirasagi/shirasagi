@@ -45,25 +45,6 @@ SS.ready(function () {
     renderExternalLinks($(ev.target))
   });
 
-  // メインナビのヘルプアイコン: クリックでモジュール説明＋マニュアルリンクのポップアップを表示する。
-  // リンク集アイコンと同様、開いている状態で同じアイコンを再クリックしたら閉じる（トグル）。
-  // （アイコン以外をクリックした場合は Gws_Popup の document ハンドラが閉じる）
-  $(document).on("click", ".gws-menu-help__icon", function(ev) {
-    ev.preventDefault();
-    ev.stopPropagation();
-    var $icon = $(this);
-    // このアイコンで既に開いている場合は閉じる
-    if ($icon.hasClass("gws-popup-event") && $(".gws-popup").length) {
-      $(".gws-popup").remove();
-      $icon.removeClass("gws-popup-event");
-      return;
-    }
-    var content = $icon.closest(".gws-menu-help").find(".gws-menu-help__content").html();
-    if (content) {
-      Gws_Popup.render($icon, content);
-    }
-  });
-
   // tabs
   var path = location.pathname + "/";
   $(".gws-schedule-tabs a").each(function () {

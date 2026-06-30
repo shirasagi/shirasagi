@@ -4,27 +4,20 @@ this.Gws_Popup = (function () {
 
   Gws_Popup.init = null;
 
-  // ポップアップ本体を削除し、所有を示す gws-popup-event クラスも必ず解除する。
-  // （クラスが残ると、別の対象アイコンの再クリック時に別ポップアップを閉じるだけになる）
-  Gws_Popup.remove = function () {
-    $('.gws-popup').remove();
-    return $('.gws-popup-event').removeClass('gws-popup-event');
-  };
-
   Gws_Popup.render = function (target, content) {
     var popup;
     if (!this.init) {
       this.init = true;
       $(window).resize(function () {
-        return Gws_Popup.remove();
+        return $('.gws-popup').remove();
       });
       $(document).on("click", function (ev) {
         if (!$(ev.target).closest('.gws-popup, .gws-popup-event').length) {
-          return Gws_Popup.remove();
+          return $('.gws-popup').remove();
         }
       });
     }
-    Gws_Popup.remove();
+    $('.gws-popup').remove();
     popup = $("<div class='gws-popup'></div>").html($(content));
     $("body").append(popup);
     target.addClass('gws-popup-event');

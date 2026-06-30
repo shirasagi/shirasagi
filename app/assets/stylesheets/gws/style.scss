@@ -296,13 +296,24 @@ a.gws-category-label:hover {
     text-decoration: none;
   }
 }
-// ポップアップ用の内容は非表示にしておき、クリック時に Gws_Popup へ複製する
-.gws-menu-help__content {
-  display: none;
-}
-
-// メインナビのヘルプポップアップ（モジュール説明＋マニュアルリンク）の中身
+// ヘルプポップアップ（モジュール説明＋マニュアルリンク）。
+// 開閉は既存の SS_DropdownToggle に委ね、.dropdown-menu として表示する（専用 JS なし）。
+// リンク集ポップアップ（.gws-public-links-dropdown-menu）と同様に、アイコン右端基準で
+// 下方向に開き、吹き出し＝背景色／枠線＝本文色をコントラストテーマへ追従させる。
 .gws-menu-help-popup {
+  right: 0;
+  width: max-content;
+  max-width: 320px;
+  margin-top: 10px; // 吹き出し矢印分の余白
+  padding: 12px;
+  border: init.$border-gray4;
+  background-color: init.$white;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+  color: init.$black;
+  font-weight: normal;
+  text-align: left;
+  white-space: normal;
+
   &__desc {
     margin: 0 0 8px;
   }
@@ -324,45 +335,22 @@ a.gws-category-label:hover {
       }
     }
   }
-}
 
-// ヘルプ用途のポップアップは、リンク集ポップアップ（.gws-public-links-dropdown-menu）と同様に
-// 枠線＝本文色・吹き出し＝背景色をコントラストテーマに追従させる。
-// （コントラストは body * { border-color/background-color !important } と body *:after { background-color !important } を注入する）
-.gws-popup:has(.gws-menu-help-popup) {
-  border: init.$border-gray4;
-
-  // 既定の三角(border)矢印を、回転した正方形の吹き出しに置き換える。
-  // border-color/background-color を inherit にし、パネルの枠線色・背景色（=コントラスト時の本文色・背景色）へ追従させる。
+  // アイコンを指す吹き出し（パネル上辺、右寄せ）。回転した正方形で、
+  // border-color/background-color を inherit にしてコントラストテーマへ追従させる。
   &::after {
-    bottom: -6px;
+    content: "";
+    position: absolute;
+    right: 14px;
+    bottom: 100%;
     width: 12px;
     height: 12px;
-    margin-left: -6px;
+    margin-bottom: -6px;
     transform: rotate(45deg);
-    border: 1px solid;
-    border-width: 0 1px 1px 0; // 既定（ポップアップが対象の上）: 右・下の辺＝下向き
+    border-top: 1px solid;
+    border-left: 1px solid;
     border-color: inherit;
     background-color: inherit;
-  }
-
-  // ポップアップが対象の下に出る場合（実際のヘルプ位置）: 上・左の辺＝上向き
-  &.top::after {
-    top: -6px;
-    bottom: auto;
-    border-width: 1px 0 0 1px;
-    border-color: inherit;
-  }
-
-  &.left::after {
-    left: 14px;
-    margin-left: 0;
-  }
-
-  &.right::after {
-    right: 14px;
-    left: auto;
-    margin-left: 0;
   }
 }
 

@@ -54,11 +54,13 @@ module Gws::LayoutHelper
       end
     end
 
-    tag.span(class: "gws-menu-help") do
+    # 開閉は既存の SS_DropdownToggle（.dropdown / .dropdown-toggle / .dropdown-menu）に委ねるため、
+    # 専用 JS は不要。リンク集メニュー（gws/public_links）と同じ宣言的構成。
+    tag.span(class: "dropdown dropdown-toggle gws-menu-help") do
       icon = tag.button(type: "button", class: "gws-menu-help__icon", aria: { label: t("gws/help.aria_label") }) do
         tag.span("help_outline", class: "material-icons-outlined", aria: { hidden: true })
       end
-      icon + tag.div(tag.div(popup_body, class: "gws-menu-help-popup"), class: "gws-menu-help__content")
+      icon + tag.div(popup_body, class: "dropdown-menu gws-menu-help-popup")
     end
   end
 
