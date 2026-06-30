@@ -1010,7 +1010,10 @@ _:future,
         }
       }
 
-      a {
+      // 直下のナビリンクのみを対象にする。子孫セレクタ(a)だと、h2 内に描画される
+      // ヘルプポップアップ(.gws-menu-help-popup)のマニュアルリンクにも当たり、見た目と
+      // クリック領域が崩れるため、直下(> a)に限定する。
+      > a {
         display: block;
         position: relative;
         background-color: init.$gray1;
