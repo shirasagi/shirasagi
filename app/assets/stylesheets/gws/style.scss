@@ -320,8 +320,10 @@ a.gws-category-label:hover {
   &__manual {
     margin: 0;
 
-    // コントラスト時はリンク色＝本文色で判別しづらいため、下線＋外部リンクアイコンで示す。
+    // 通常テーマはリンク色（オレンジ）にする（nav a の黒指定に勝つよう .__manual a で上書き）。
+    // コントラスト時はテーマ側の !important で本文色に追従するため、下線＋外部リンクアイコンで示す。
     a {
+      color: init.$orange;
       text-decoration: underline;
 
       // Material Icons: open_in_new（別タブで開くことを示す）
