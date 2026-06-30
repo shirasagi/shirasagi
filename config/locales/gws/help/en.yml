@@ -1,0 +1,64 @@
+en:
+  gws/help:
+    aria_label: "Help"
+    manual_link: 'Groupware operation manual "%{name}"'
+    app_manual_link: 'Operation manual "%{name}"'
+    manual_url_label: "Manual URL"
+    # マニュアルURL（manual_url）は日本語版PDFのみ。en では定義せず、取得側で
+    # locale: I18n.default_locale を指定して常に ja を参照する（production は en→ja フォールバックしない）。
+    portal:
+      description: "Brings together frequently used features and information—announcements, schedules, messages, and more—on a single screen."
+    notice:
+      description: "Create and distribute company-wide or department-level notices, and manage read/unread status."
+    schedule:
+      description: "Register and share your own and other members' schedules, and view them in a calendar."
+    todo:
+      description: "Register tasks to do and manage their deadlines and progress."
+    reminder:
+      description: "Notifies you of upcoming schedule and task deadlines in advance to prevent missed actions."
+    presence:
+      description: "Check and update the presence status—in, away, out, and so on—of yourself and group members."
+    memo:
+      description: "An internal mail feature for sending and receiving messages between users."
+    bookmark:
+      description: "Register and organize frequently used URLs for one-click access."
+    attendance:
+      description: "Record clock-in and clock-out times and tally daily working hours."
+    affair:
+      description: "Submit everyday administrative procedures online, such as supply requests and various notifications."
+    workload:
+      description: "Visualizes the work status and progress of teams and individuals with charts and more."
+    daily_report:
+      description: "Record and submit your daily work, and share it with supervisors and members."
+    report:
+      description: "Create reports from templates and share or publish them to members."
+    workflow:
+      description: "Create applications and route them through a defined approval workflow for review and authorization."
+    workflow2:
+      description: "Create applications and route them through a defined approval workflow for review and authorization."
+    circular:
+      description: "Circulate documents to specified members and collect their confirmations and comments."
+    monitor:
+      description: "Send inquiries to specified groups and aggregate and review their responses."
+    survey:
+      description: "Create and distribute surveys that combine various questions, and tally the results."
+    board:
+      description: "A bulletin board where you can start threads by topic and exchange information through comments."
+    faq:
+      description: "Organize and publish frequently asked questions and answers for users to search."
+    qna:
+      description: "A Q&A board where users post questions and receive answers from other members."
+    discussion:
+      description: "Create discussion rooms for each project or topic so that only the people involved can hold ongoing discussions."
+    share:
+      description: "Online storage for keeping and sharing files within departments and groups."
+    shared_address:
+      description: "A place to register contacts to share across all staff, departments, or specific groups."
+    personal_address:
+      description: "A place to register contacts for your own use, such as frequent contacts and personally categorized contacts."
+    tabular:
+      description: "A general-purpose database where you can freely design fields to suit your work, and register and search data."
+    elasticsearch:
+      description: "Search content across all groupware features by keyword."
+    conf:
+      description: "An administrator menu for configuring site-wide settings such as organizations, users, and roles."
