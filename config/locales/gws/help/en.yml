@@ -5,6 +5,7 @@ en:
     app_manual_link: 'Operation manual "%{name}"'
     manual_url_label: "Manual URL (Japanese)"
     manual_url_en_label: "Manual URL (English)"
+    default_manual_label: "SHIRASAGI official manual"
     tooltips:
       manual_url:
         - 'In Japanese display the "Manual URL (Japanese)" is used; in English display the "Manual URL (English)" is used as the operation manual link.'
