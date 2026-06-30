@@ -42,6 +42,8 @@ class Cms::Column::List < Cms::Column::Base
       { lists: /\A#{::Regexp.escape(value)}/ }
     when 'end_with'
       { lists: /#{::Regexp.escape(value)}\z/ }
+    when 'in'
+      { lists: { "$in" => value } }
     else
       { lists: value }
     end
