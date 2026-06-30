@@ -16,7 +16,7 @@ class Gws::Tabular::FilesController < ApplicationController
       criteria = criteria.and_public
       criteria = criteria.without_deleted
       criteria = criteria.readable(@cur_user, site: @cur_site)
-      criteria.only(:id, :site_id, :i18n_name, :i18n_description, :help_url)
+      criteria.only(:id, :site_id, :i18n_name, :i18n_description, :help_url, :help_url_en)
     end
   end
 
