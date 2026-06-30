@@ -33,7 +33,7 @@ class Gws::Tabular::Space
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
   # マニュアルURLは http/https のみ許可（javascript: 等のスキームによる XSS を防ぐ）。
-  validates :help_url, format: { with: Gws::HELP_URL_FORMAT }, allow_blank: true
+  validates :help_url, url: true
 
   class << self
     SEARCH_HANDLERS = %i[search_keyword].freeze

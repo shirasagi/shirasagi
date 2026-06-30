@@ -46,7 +46,7 @@ module Gws::Addon::System::MenuSetting
       belongs_to_file "menu_#{name}_icon_image", class_name: "SS::File", accepts: SS::File::IMAGE_FILE_EXTENSIONS + [".svg"]
       permit_params "menu_#{name}_state", "menu_#{name}_label", "menu_#{name}_icon_image_id", "menu_#{name}_help_url"
       # マニュアルURLは http/https のみ許可（javascript: 等のスキームによる XSS を防ぐ）。
-      validates "menu_#{name}_help_url", format: { with: Gws::HELP_URL_FORMAT }, allow_blank: true
+      validates "menu_#{name}_help_url", url: true
       alias_method("menu_#{name}_state_options", "menu_state_options")
 
       define_method("menu_#{name}_default_label") do
