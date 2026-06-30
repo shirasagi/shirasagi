@@ -19,13 +19,14 @@ class Gws::Tabular::Space
   belongs_to_file :icon
   field :memo, type: String
   field :help_url, type: String
+  field :help_url_en, type: String
 
   alias name i18n_name
   alias name= i18n_name=
   alias description i18n_description
   alias description= i18n_description=
 
-  permit_params :name, :state, :order, :memo, :help_url
+  permit_params :name, :state, :order, :memo, :help_url, :help_url_en
   permit_params :i18n_name, i18n_name_translations: I18n.available_locales
   permit_params :i18n_description, i18n_description_translations: I18n.available_locales
 
@@ -34,6 +35,13 @@ class Gws::Tabular::Space
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
   # マニュアルURLは http/https のみ許可（javascript: 等のスキームによる XSS を防ぐ）。
   validates :help_url, url: true
+  validates :help_url_en, url: true
+
+  # 実効マニュアルURL。英語UIでは英語設定を優先し、未設定なら日本語設定にフォールバックする。
+  def effective_help_url
+    candidates = I18n.locale == :en ? [ help_url_en, help_url ] : [ help_url ]
+    candidates.find(&:present?)
+  end
 
   class << self
     SEARCH_HANDLERS = %i[search_keyword].freeze

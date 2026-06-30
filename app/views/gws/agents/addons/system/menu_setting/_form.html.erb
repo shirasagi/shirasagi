@@ -29,9 +29,13 @@
       </dd>
     <% end %>
     <% if edit_help_url %>
-      <dt class="depth-2"><%= t("gws/help.manual_url_label") %></dt>
+      <dt class="depth-2"><%= t("gws/help.manual_url_label") %><%= tt(:manual_url, scope: "gws/help.tooltips") %></dt>
       <dd class="depth-2">
         <%= f.text_field("menu_#{name}_help_url", value: @item.send("menu_#{name}_help_url"), placeholder: @item.send("menu_#{name}_help_url_default")) %>
+      </dd>
+      <dt class="depth-2"><%= t("gws/help.manual_url_en_label") %></dt>
+      <dd class="depth-2">
+        <%= f.text_field("menu_#{name}_help_url_en", value: @item.send("menu_#{name}_help_url_en")) %>
       </dd>
     <% end %>
   </dl>

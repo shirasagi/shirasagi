@@ -3,7 +3,13 @@ ja:
     aria_label: "ヘルプ"
     manual_link: "グループウェア操作マニュアル「%{name}」"
     app_manual_link: "操作マニュアル「%{name}」"
-    manual_url_label: "マニュアルURL"
+    manual_url_label: "マニュアルURL（日本語）"
+    manual_url_en_label: "マニュアルURL（英語）"
+    tooltips:
+      manual_url:
+        - 日本語表示では「マニュアルURL（日本語）」、英語表示では「マニュアルURL（英語）」が、ヘルプの操作マニュアルのリンク先になります。
+        - 未設定のときは、英語表示は 英語→日本語→既定マニュアル、日本語表示は 日本語→既定マニュアル の順に補われます。
+        - URLを設定すると、ヘルプのポップアップ内に「操作マニュアル」リンクが表示されます（http/https のみ設定できます）。
     portal:
       description: "お知らせ・スケジュール・メッセージなど、よく使う機能・情報をひとつの画面にまとめて表示します。"
       manual_url: "https://www.ss-proj.org/fs/6/8/9/8/_/manual_gws_portal.pdf"
