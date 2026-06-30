@@ -982,13 +982,32 @@ _:future,
     h2:first-child {
       position: relative;
 
-      // ヘルプアイコン（モジュール説明＋マニュアルリンク）をヘッダー行右端に配置
+      // ヘルプアイコン（モジュール説明＋マニュアルリンク）をヘッダー行右端に配置。
+      // ドロップダウンのポップアップが見出しバー直下に開くよう、バー全高に広げて
+      // アイコンを中央寄せ（transform 中央寄せは popup の基準を崩すため使わない）。
+      // z-index はコンテンツ（パンくず・一覧）より前面にして popup が隠れないようにする。
       .gws-menu-help {
+        display: inline-flex;
         position: absolute;
-        z-index: 1;
-        top: 50%;
+        z-index: 500;
+        top: 0;
         right: 6px;
-        transform: translateY(-50%);
+        align-items: center;
+        height: 100%;
+
+        // 左カラム右端のアイコンでは右寄せ（基底）だと左にはみ出すため、この文脈では
+        // アイコン直下＝左基準で、見出しバー直下から右方向へ開く（パンくずと重ねない）。
+        .gws-menu-help-popup {
+          top: 100%;
+          right: auto;
+          left: -4px;
+          margin-top: 8px;
+
+          &::after {
+            right: auto;
+            left: 10px;
+          }
+        }
       }
 
       a {
