@@ -65,7 +65,3 @@ en:
       description: "A place to register contacts for your own use, such as frequent contacts and personally categorized contacts."
     tabular:
       description: "A general-purpose database where you can freely design fields to suit your work, and register and search data."
-    elasticsearch:
-      description: "Search content across all groupware features by keyword."
-    conf:
-      description: "An administrator menu for configuring site-wide settings such as organizations, users, and roles."

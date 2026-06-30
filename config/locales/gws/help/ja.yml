@@ -89,8 +89,3 @@ ja:
     tabular:
       description: "業務に合わせて項目を自由に設計し、データを登録・検索できる汎用データベースです。"
       manual_url: "https://www.ss-proj.org/fs/9/0/5/9/_/manual_gws_genericproducts.pdf"
-    elasticsearch:
-      description: "GWS内の各機能のコンテンツを横断的にキーワード検索できます。"
-      manual_url: "https://www.ss-proj.org/fs/6/9/0/5/_/manual_gws_search.pdf"
-    conf:
-      description: "組織・ユーザー・ロールなど、サイト全体に関する設定を行う管理者向けメニューです。"
