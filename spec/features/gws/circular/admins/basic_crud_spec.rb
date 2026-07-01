@@ -19,7 +19,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         fill_in "item[name]", with: name
-        within "#addon-gws-agents-addons-member" do
+        within "#addon-gws-agents-addons-circular-member" do
           wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
@@ -185,7 +185,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       end
 
       within "form#item-form" do
-        within "#addon-gws-agents-addons-member" do
+        within "#addon-gws-agents-addons-circular-member" do
           wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
@@ -225,7 +225,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         fill_in "item[name]", with: name
-        within "#addon-gws-agents-addons-member" do
+        within "#addon-gws-agents-addons-circular-member" do
           wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
@@ -317,7 +317,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         fill_in "item[name]", with: name
-        within "#addon-gws-agents-addons-member" do
+        within "#addon-gws-agents-addons-circular-member" do
           wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
@@ -368,7 +368,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       click_on topic.name
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
-        within "#addon-gws-agents-addons-member" do
+        within "#addon-gws-agents-addons-circular-member" do
           within ".ajax-selected [data-id='#{user1.id}']" do
             click_on I18n.t("ss.buttons.delete")
           end

@@ -5,7 +5,7 @@ class Gws::Report::File
   include Gws::Reference::Site
   #include Gws::Addon::Reminder
   include Gws::Addon::Report::CustomForm
-  include Gws::Addon::Member
+  include Gws::Addon::Report::Member
   include Gws::Addon::Schedules
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission

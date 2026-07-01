@@ -40,6 +40,7 @@ ja:
       gws/report/custom_form: 入力内容
       gws/report/category: カテゴリー
       gws/report/group_setting: レポート
+      gws/report/member: 提出先
 
   gws_role:
     use_gws_report: レポートの利用
@@ -78,6 +79,8 @@ ja:
     attributes:
       gws/report/file:
         name: タイトル
+        member_ids: 提出先ユーザー
+        member_group_ids: 提出先グループ
       gws/report/form:
         name: タイトル
         order: 並び順

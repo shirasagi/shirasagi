@@ -31,7 +31,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         ss_upload_file file_path, addon: "#addon-gws-agents-addons-file"
 
         # choose member
-        within "#addon-gws-agents-addons-member" do
+        within "#addon-gws-agents-addons-circular-member" do
           wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
@@ -80,7 +80,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         ss_upload_file file_path, addon: "#addon-gws-agents-addons-file"
 
         # choose member
-        within "#addon-gws-agents-addons-member" do
+        within "#addon-gws-agents-addons-circular-member" do
           wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
