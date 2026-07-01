@@ -489,8 +489,10 @@
 
   // ポップアップの右端を .list-head の右端（外側）に合わせる。.list-head の左右 padding(18px)
   // 分だけ右へずらし、矢印は同量だけ内側へ寄せてアイコンを指したままにする。
+  // 少し下げて、三角の先端がアイコン下端にぴったり接するようにする。
   .gws-menu-help-popup {
     right: -18px;
+    margin-top: 5px;
 
     &::after {
       right: 32px;
