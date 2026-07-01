@@ -23,6 +23,19 @@
         </span>
       </div>
     </dd>
+    <%
+      help_url = @item.send("menu_#{name}_help_url")
+      help_url_en = @item.send("menu_#{name}_help_url_en")
+    %>
+    <%# 入力のあるマニュアルURLだけを表示する（空欄の行は出さない。既定マニュアルも表示しない）。 %>
+    <% if help_url.present? %>
+      <dt class="depth-2"><%= t("gws/help.manual_url_label") %></dt>
+      <dd class="depth-2"><%= help_url %></dd>
+    <% end %>
+    <% if help_url_en.present? %>
+      <dt class="depth-2"><%= t("gws/help.manual_url_en_label") %></dt>
+      <dd class="depth-2"><%= help_url_en %></dd>
+    <% end %>
   </dl>
 <% end %>
 

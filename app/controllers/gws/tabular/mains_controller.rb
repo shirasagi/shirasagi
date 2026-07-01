@@ -14,7 +14,7 @@ class Gws::Tabular::MainsController < ApplicationController
       criteria = criteria.and_public
       criteria = criteria.without_deleted
       criteria = criteria.readable(@cur_user, site: @cur_site)
-      criteria = criteria.only(:id, :i18n_name, :site_id)
+      criteria = criteria.only(:id, :i18n_name, :site_id, :i18n_description, :help_url, :help_url_en)
       item = criteria.find(params[:space])
       item.site = item.cur_site = @cur_site
       item

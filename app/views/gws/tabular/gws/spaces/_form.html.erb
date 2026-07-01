@@ -38,4 +38,10 @@
 
   <dt><%= @model.t :memo %><%= @model.tt :memo %></dt>
   <dd><%= f.text_area :memo %></dd>
+
+  <dt><%= t("gws/help.manual_url_label") %><%= tt(:manual_url, scope: "gws/help.tooltips") %></dt>
+  <dd><%= f.text_field :help_url %></dd>
+
+  <dt><%= t("gws/help.manual_url_en_label") %></dt>
+  <dd><%= f.text_field :help_url_en %></dd>
 </dl>

@@ -3,6 +3,89 @@ require 'spec_helper'
 describe Gws::Addon::System::MenuSetting, type: :model, dbscope: :example do
   let(:site) { gws_site }
 
+  context 'manual url (help_url / help_url_en)' do
+    it 'saves help_url and help_url_en' do
+      site.menu_memo_help_url = "https://example.jp/ja.pdf"
+      site.menu_memo_help_url_en = "https://example.jp/en.pdf"
+      site.save!
+      site.reload
+      expect(site.menu_memo_help_url).to eq "https://example.jp/ja.pdf"
+      expect(site.menu_memo_help_url_en).to eq "https://example.jp/en.pdf"
+    end
+
+    it 'accepts http/https and blank' do
+      %w(http://example.jp https://example.jp/manual.pdf).each do |url|
+        site.menu_memo_help_url = url
+        site.menu_memo_help_url_en = url
+        expect(site).to be_valid
+      end
+      site.menu_memo_help_url = ""
+      site.menu_memo_help_url_en = ""
+      expect(site).to be_valid
+    end
+
+    it 'rejects invalid scheme / relative / scheme-less url (both fields)' do
+      [ "javascript:alert(1)", "ftp://example.jp", "/relative/path", "https://" ].each do |url|
+        site.menu_memo_help_url = url
+        expect(site).not_to be_valid
+        expect(site.errors[:menu_memo_help_url]).to be_present
+
+        site.menu_memo_help_url = nil
+        site.menu_memo_help_url_en = url
+        expect(site).not_to be_valid
+        expect(site.errors[:menu_memo_help_url_en]).to be_present
+        site.menu_memo_help_url_en = nil
+      end
+    end
+
+    describe '#menu_<module>_help_url_default' do
+      it 'returns the Japanese default regardless of the current locale' do
+        ja_default = I18n.t("gws/help.memo.manual_url", locale: :ja)
+        expect(ja_default).to be_present
+        I18n.with_locale(:ja) { expect(site.menu_memo_help_url_default).to eq ja_default }
+        I18n.with_locale(:en) { expect(site.menu_memo_help_url_default).to eq ja_default }
+      end
+
+      it 'is nil for a menu without a default manual' do
+        expect(site.menu_conf_help_url_default).to be_nil
+      end
+    end
+
+    describe '#menu_<module>_effective_help_url' do
+      let(:ja_url) { "https://example.jp/ja.pdf" }
+      let(:en_url) { "https://example.jp/en.pdf" }
+      let(:default_url) { I18n.t("gws/help.memo.manual_url", locale: :ja) }
+
+      it 'Japanese UI: admin value preferred, else the default' do
+        I18n.with_locale(:ja) do
+          site.menu_memo_help_url = ja_url
+          expect(site.menu_memo_effective_help_url).to eq ja_url
+
+          site.menu_memo_help_url = nil
+          expect(site.menu_memo_effective_help_url).to eq default_url
+        end
+      end
+
+      it 'English UI: en -> ja -> default fallback order' do
+        I18n.with_locale(:en) do
+          site.menu_memo_help_url = ja_url
+          site.menu_memo_help_url_en = en_url
+          expect(site.menu_memo_effective_help_url).to eq en_url
+
+          site.menu_memo_help_url_en = nil
+          expect(site.menu_memo_effective_help_url).to eq ja_url
+
+          site.menu_memo_help_url = nil
+          expect(site.menu_memo_effective_help_url).to eq default_url
+        end
+      end
+
+      it 'returns nil for a menu without value and without default' do
+        I18n.with_locale(:en) { expect(site.menu_conf_effective_help_url).to be_nil }
+      end
+    end
+  end
+
   context 'localized field normalization' do
     context 'when non-empty label is given' do
       let(:label) { unique_id }

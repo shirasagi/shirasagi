@@ -1,0 +1,90 @@
+ja:
+  gws/help:
+    aria_label: "ヘルプ"
+    manual_link: "グループウェア操作マニュアル「%{name}」"
+    app_manual_link: "操作マニュアル「%{name}」"
+    manual_url_label: "マニュアルURL（日本語）"
+    manual_url_en_label: "マニュアルURL（英語）"
+    tooltips:
+      manual_url:
+        - 日本語表示では「マニュアルURL（日本語）」、英語表示では「マニュアルURL（英語）」が、ヘルプの操作マニュアルのリンク先になります。
+        - 未設定のときは、英語表示は 英語→日本語→既定マニュアル、日本語表示は 日本語→既定マニュアル の順に補われます。
+        - URLを設定すると、ヘルプのポップアップ内に「操作マニュアル」リンクが表示されます（http/https のみ設定できます）。
+    portal:
+      description: "お知らせ・スケジュール・メッセージなど、よく使う機能・情報をひとつの画面にまとめて表示します。"
+      manual_url: "https://www.ss-proj.org/fs/6/8/9/8/_/manual_gws_portal.pdf"
+    notice:
+      description: "全社・部署単位の通知を作成・配信し、既読／未読を管理します。"
+      manual_url: "https://www.ss-proj.org/fs/8/3/9/7/_/manual_gws_notice_board.pdf"
+    schedule:
+      description: "自分や他のメンバーの予定を登録・共有し、カレンダー形式で確認できます。"
+      manual_url: "https://www.ss-proj.org/fs/8/2/8/4/_/manual_gws_schedule.pdf"
+    todo:
+      description: "やるべき作業を登録し、期限や進捗を管理できる管理機能です。"
+      manual_url: "https://www.ss-proj.org/fs/6/8/8/3/_/manual_gws_ToDo.pdf"
+    reminder:
+      description: "予定やタスクの期日を事前にお知らせし、対応漏れを防ぎます。"
+      manual_url: "https://www.ss-proj.org/fs/6/9/0/1/_/manual_gws_reminds.pdf"
+    presence:
+      description: "自身やグループメンバーの在席・離席・外出などの状況を確認・更新します。"
+      manual_url: "https://www.ss-proj.org/fs/6/8/9/9/_/manual_gws_presence.pdf"
+    memo:
+      description: "ユーザー同士でメッセージを送受信できる、社内メール機能です。"
+      manual_url: "https://www.ss-proj.org/fs/6/8/9/5/_/manual_gws_message.pdf"
+    bookmark:
+      description: "よく使うURLを登録・整理し、ワンクリックでアクセスできます。"
+      manual_url: "https://www.ss-proj.org/fs/6/8/9/0/_/manual_gws_favorite.pdf"
+    attendance:
+      description: "出勤・退勤の打刻を行い、日々の勤務時間を記録・集計します。"
+      manual_url: "https://www.ss-proj.org/fs/6/8/8/5/_/manual_gws_attendance.pdf"
+    affair:
+      description: "備品申請や各種届出など、日常的な事務手続きをオンラインで申請できます。"
+      manual_url: "https://www.ss-proj.org/fs/7/0/1/9/_/manual_gw_syomu.pdf"
+    workload:
+      description: "チームや個人の業務状況・進捗をグラフなどで分かりやすく表示します。"
+      manual_url: "https://www.ss-proj.org/fs/7/2/3/3/_/manual_gws_gyoumumieruka.pdf"
+    daily_report:
+      description: "一日の業務内容を記録・提出し、上司やメンバーと共有できます。"
+      manual_url: "https://www.ss-proj.org/fs/7/2/5/8/_/manual_gw_nippou.pdf"
+    report:
+      description: "テンプレートを使ってレポートを作成し、メンバーへ共有・公開できます。"
+      manual_url: "https://www.ss-proj.org/fs/7/9/9/3/_/manual_gws_report_1_19_0.pdf"
+    workflow:
+      description: "申請書を作成し、定められた承認ルートで稟議・決裁を行います。"
+      manual_url: "https://www.ss-proj.org/fs/7/9/9/4/_/manual_gws_workflow_1_19_0.pdf"
+    workflow2:
+      description: "申請書を作成し、定められた承認ルートで稟議・決裁を行います。"
+      manual_url: "https://www.ss-proj.org/fs/7/9/9/4/_/manual_gws_workflow_1_19_0.pdf"
+    circular:
+      description: "指定したメンバーに資料を回覧し、確認結果やコメントを集めます。"
+      manual_url: "https://www.ss-proj.org/fs/8/3/9/6/_/manual_gws_circulation.pdf"
+    monitor:
+      description: "指定したグループに照会を送り、それぞれの回答を集約・確認します。"
+      manual_url: "https://www.ss-proj.org/fs/6/8/9/3/_/manual_gws_inquiry_answer.pdf"
+    survey:
+      description: "設問を組み合わせたアンケートを作成・配信し、結果を集計します。"
+      manual_url: "https://www.ss-proj.org/fs/7/9/9/9/_/manual_gws_survey_1_19_0.pdf"
+    board:
+      description: "議題・テーマごとにスレッドを立て、コメントで情報を交換できる掲示板です。"
+      manual_url: "https://www.ss-proj.org/fs/6/8/8/6/_/manual_gws_board.pdf"
+    faq:
+      description: "業務のよくある質問と回答を整理・公開し、利用者が検索できます。"
+      manual_url: "https://www.ss-proj.org/fs/6/8/8/9/_/manual_gws_FAQ.pdf"
+    qna:
+      description: "利用者が質問を投稿し、他のメンバーから回答を受け付ける質問掲示板です。"
+      manual_url: "https://www.ss-proj.org/fs/6/9/0/0/_/manual_gws_Q_A.pdf"
+    discussion:
+      description: "プロジェクトやテーマごとに会議室を作成し、関係者だけで継続的に議論を進められます。"
+      manual_url: "https://www.ss-proj.org/fs/7/9/9/6/_/manual_gws_electronic_conference_room_1_19_0.pdf"
+    share:
+      description: "部署やグループでファイルを保管・共有できるオンラインストレージです。"
+      manual_url: "https://www.ss-proj.org/fs/6/8/9/1/_/manual_gws_files.pdf"
+    shared_address:
+      description: "職員全体、部署、担当グループなどで共有したい連絡先を登録しておく場所です。"
+      manual_url: "https://www.ss-proj.org/fs/8/3/9/5/_/manual_gws_address.pdf"
+    personal_address:
+      description: "自分だけが使う連絡先、よく連絡する相手、個人的に分類したい連絡先を登録する場所です。"
+      manual_url: "https://www.ss-proj.org/fs/6/8/9/2/_/manual_gws_individual_address.pdf"
+    tabular:
+      description: "業務に合わせて項目を自由に設計し、データを登録・検索できる汎用データベースです。"
+      manual_url: "https://www.ss-proj.org/fs/9/0/5/9/_/manual_gws_genericproducts.pdf"

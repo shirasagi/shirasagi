@@ -3,6 +3,9 @@
     <%= link_to gws_tabular_main_path(space: cur_space) do %>
       <span><%= cur_space.name %></span>
     <% end %>
+    <%# 説明文だけのスペースでもヘルプアイコンを表示する。manual_url 未設定時は gws_help_icon 側で
+        マニュアルリンクを省き、description・manual_url とも空なら何も描画しない。 %>
+    <%= gws_help_icon(cur_space.description, manual_url: cur_space.effective_help_url, manual_label: t("gws/help.app_manual_link", name: cur_space.name)) %>
   </h2>
 
   <% forms.each do |form| %>
