@@ -43,6 +43,19 @@ class Workflow::PagesController < ApplicationController
       url: params[:url], comment: @item.workflow_comment
     )
 
+    notification = SS::Notification.new
+    notification.cur_user = @cur_user
+    notification.member_ids = current_workflow_approvers.map { |approver| approver[:user_id] }
+    notification.format = "text"
+    notification.url = params[:url]
+    notification.send_date = Time.zone.now
+
+    notification.subject = I18n.t(
+      "workflow.ss_notification.request.subject",
+      name: "[#{@cur_site.name}][#{@cur_node.name}]「#{@item.name}」"
+    )
+    notification.save
+
     @item.set_workflow_approver_state_to_request
     @item.record_timestamps = false
     # 更新履歴が作成されるように変更する

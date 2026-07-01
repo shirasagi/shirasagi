@@ -116,6 +116,10 @@ module SS::Model::Notification
       criteria.member(user).unseen(user)
     end
 
+    def allow(action, user, opts = {})
+      criteria.member(user).undeleted(user)
+    end
+
     def search(params = {})
       criteria = where({})
       return criteria if params.blank?

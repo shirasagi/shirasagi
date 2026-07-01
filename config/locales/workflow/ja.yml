@@ -126,6 +126,14 @@ ja:
         body:
           - 承認依頼を受け取ってから%{duration}以上経過しいています。
           - ページ内容をご確認の上、「承認」あるいは「差し戻し」を実行してください。
+    ss_notification:
+      request:
+        subject: "%{name}の承認申請があります。"
+        text: "%{path}"
+        mail_text: |
+          %{subject}
+
+          %{text}
     dialogue:
       edit_branch_html: |-
         差し替えページが作成されています。<a href="%{show_path}">「差し替えページ」</a>へ移動し編集してください。
