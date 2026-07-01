@@ -74,6 +74,17 @@ class Gws::Share::File
     # TODO: fix SS::Model::File
   end
 
+  # ファイル一覧アイコン（ss-icon-*）のグリフが用意されている拡張子。
+  # 一覧に無い拡張子・拡張子なしは "other" にフォールバックする。
+  FILE_ICON_EXTNAMES = %w(
+    7z csv doc docx eml gif jpeg jpg pdf png ppt pptx rtf svg txt xls xlsx zip
+  ).freeze
+
+  def file_icon_name
+    ext = extname.downcase
+    FILE_ICON_EXTNAMES.include?(ext) ? ext : "other"
+  end
+
   def folder_options
     library = Gws::Share::Folder.find(folder_id).name.split('/')[0].to_s
     library = ::Regexp.escape(library)

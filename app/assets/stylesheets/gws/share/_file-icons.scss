@@ -1,0 +1,77 @@
+// 共有ファイル一覧のファイル種別アイコン。
+// グリフは shirasagi-icons フォント（ss-icon-* / $shirasagi-icons-font）で表示し、
+// ここでは拡張子別の設計カラーとサイズのみを付与する。
+// 色には !important を付けない。高コントラスト選択時は _contrast_style.html.erb の
+// `body * { color: …!important }` が全要素を上書きするため、拡張子別の色分けは
+// 規定（デフォルト）コントラスト時のみ適用され、高コントラストテーマは温存される。
+
+// 共有ファイル一覧のアイコンは 40px。アイコン〜ファイル名の間隔は .title-icon の
+// margin（4px）のみとし、ss-icon 既定の右マージン 5px は無効化する。
+// いずれも特異度 (0,2,1) が _pc_mb.scss の基底 (0,1,2) に勝つため !important 不要。
+.title-icon.gws-share-file-icon::before {
+  margin-right: 0;
+  font-size: 40px;
+}
+
+.gws-share-file-icon {
+  &.ss-icon-pdf {
+    color: #e30015;
+  }
+
+  &.ss-icon-doc,
+  &.ss-icon-docx {
+    color: #1a2f94;
+  }
+
+  &.ss-icon-xls,
+  &.ss-icon-xlsx {
+    color: #2c5b39;
+  }
+
+  &.ss-icon-ppt,
+  &.ss-icon-pptx {
+    color: #d84000;
+  }
+
+  &.ss-icon-csv {
+    color: #0f766e;
+  }
+
+  &.ss-icon-txt {
+    color: #1f3a5f;
+  }
+
+  &.ss-icon-rtf {
+    color: #7c3aed;
+  }
+
+  &.ss-icon-jpg,
+  &.ss-icon-jpeg {
+    color: #ad07a6;
+  }
+
+  &.ss-icon-png {
+    color: #647629;
+  }
+
+  &.ss-icon-gif {
+    color: #db2777;
+  }
+
+  &.ss-icon-svg {
+    color: #8f6b00;
+  }
+
+  &.ss-icon-zip,
+  &.ss-icon-7z {
+    color: #6a6f79;
+  }
+
+  &.ss-icon-eml {
+    color: #3870e9;
+  }
+
+  &.ss-icon-other {
+    color: #41749e;
+  }
+}
