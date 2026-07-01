@@ -1,5 +1,5 @@
 <dl class="see">
-  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %><%= required_mark %></dt>
   <dd><%= f.text_field :name %></dd>
 
   <dt><%= @model.t :description %><%= @model.tt :description %></dt>
@@ -22,7 +22,7 @@
   <dt><%= @model.t :file_edit_state %><%= @model.tt :file_edit_state %></dt>
   <dd><%= f.select :file_edit_state, @item.file_edit_state_options %></dd>
 
-  <dt><%= @model.t :due_date %><%= @model.tt :due_date %></dt>
+  <dt><%= @model.t :due_date %><%= @model.tt :due_date %><%= required_mark %></dt>
   <dd><%= f.ss_datetime_field :due_date %></dd>
 
   <dt><%= @model.t :release_date %><%= @model.tt :release_date %></dt>

@@ -1,13 +1,13 @@
 <dl class="see">
-  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %><%= required_mark %></dt>
   <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
 
-  <dt><%= @model.t :code %><%= @model.tt :code %></dt>
+  <dt><%= @model.t :code %><%= @model.tt :code %><%= required_mark %></dt>
   <dd><%= f.number_field :code %></dd>
 
-  <dt><%= @model.t :start_date %><%= @model.tt :start_date %></dt>
+  <dt><%= @model.t :start_date %><%= @model.tt :start_date %><%= required_mark %></dt>
   <dd><%= f.text_field :start_date, class: 'datetime js-date', value: tryb { @item.start_date.strftime("%Y/%m/%d") } %></dd>
 
-  <dt><%= @model.t :close_date %><%= @model.tt :close_date %></dt>
+  <dt><%= @model.t :close_date %><%= @model.tt :close_date %><%= required_mark %></dt>
   <dd><%= f.text_field :close_date, class: 'datetime js-date', value: tryb { @item.close_date.strftime("%Y/%m/%d") } %></dd>
 </dl>

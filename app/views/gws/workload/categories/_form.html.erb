@@ -1,8 +1,8 @@
 <dl class="see">
-  <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %><%= required_mark %></dt>
   <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
 
-  <dt class="required"><%= @model.t :year %><%= @model.tt :year %></dt>
+  <dt><%= @model.t :year %><%= @model.tt :year %><%= required_mark %></dt>
   <dd><%= f.number_field :year %></dd>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>

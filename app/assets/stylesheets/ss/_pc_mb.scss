@@ -1873,6 +1873,9 @@ dl.see {
     @include init.mb {
       float: none;
     }
+    .required {
+      margin-left: 0.25em;
+    }
   }
   > dd {
     @include init.clear;

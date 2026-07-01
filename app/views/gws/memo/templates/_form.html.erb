@@ -1,8 +1,8 @@
 <dl class="see">
-  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %><%= required_mark %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :text %><%= @model.tt :text %></dt>
+  <dt><%= @model.t :text %><%= @model.tt :text %><%= required_mark %></dt>
   <dd><%= f.text_area :text, style: 'height: 200px;' %></dd>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
