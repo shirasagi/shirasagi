@@ -634,8 +634,8 @@ ja:
         ja: 日本語
         en: English (Experimental)
       message_list_column_order:
-        name_first: 差出人 → 件名
-        subject_first: 件名 → 差出人
+        name_first: 差出人 -> 件名
+        subject_first: 件名 -> 差出人
       link_target:
         _self: 同じタブで開く
         _blank: 新しいタブで開く
@@ -715,7 +715,7 @@ ja:
       ss/oauth2/gws_permission: グループウェア権限
       ss/oauth2/webmail_permission: メール権限
       ss/locale_setting: 言語設定
-      ss/message_display_setting: メッセージ一覧の表示
+      ss/message_display_setting: メール/メッセージ一覧の表示
       ss/mfa/user_setting: MFA設定
       ss/check_links_setting: メール通知設定
 
@@ -1158,7 +1158,7 @@ ja:
         lang: 言語
         timezone: タイムゾーン
       ss/addon/message_display_setting:
-        message_list_column_order: メッセージ一覧の表示
+        message_list_column_order: メール/メッセージ一覧の表示
       ss/addon/workflow_setting:
         workflow_my_group: 自所属の表示
       ss/api_token:
