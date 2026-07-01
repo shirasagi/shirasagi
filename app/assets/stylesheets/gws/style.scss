@@ -304,7 +304,7 @@ a.gws-category-label:hover {
   right: 0;
   width: max-content;
   max-width: 320px;
-  margin-top: 10px; // 吹き出し矢印分の余白
+  margin-top: 0; // ベル通知ポップアップ(.popup-notice)と同様、隙間なくアイコン直下に出して矢印で接続する
   padding: 12px;
   border: init.$border-gray4;
   background-color: init.$white;

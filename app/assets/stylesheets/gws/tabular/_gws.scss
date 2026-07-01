@@ -486,4 +486,14 @@
   display: flex;
   justify-content: flex-end;
   margin-bottom: 5px;
+
+  // ポップアップの右端を .list-head の右端（外側）に合わせる。.list-head の左右 padding(18px)
+  // 分だけ右へずらし、矢印は同量だけ内側へ寄せてアイコンを指したままにする。
+  .gws-menu-help-popup {
+    right: -18px;
+
+    &::after {
+      right: 32px;
+    }
+  }
 }
