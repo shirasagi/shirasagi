@@ -1683,7 +1683,9 @@ _:future,
     }
     a {
       display: inline-block;
-      @include init.arrow;
+      // Material Icons Outlined: expand_circle_down を回転して右向き矢印として表示（コントラスト機能対応）
+      @include mi-icon($left: 0);
+      padding-left: 22px;
       color: init.$black;
       &:hover {
         color: init.$orange;
