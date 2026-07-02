@@ -50,7 +50,7 @@ class Article::Agents::Nodes::SearchController < ApplicationController
 
   def category_options
     @category_options ||= begin
-      categories = @cur_node.st_categories.and_public.order_by(order: 1).to_a
+      categories = @cur_node.st_categories.and_public.order_by(order: 1, filename: 1).to_a
       categories.map { |c| [c.name, c.id] }
     end
   end
