@@ -41,13 +41,13 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
 
       it "click event" do
         visit user_portal_path
-        first(".fc-content", text: item1.name).click
+        first(".fc-event-main", text: item1.name).click
         expect(current_path).to eq gws_schedule_user_plan_path(site, gws_user, item1)
       end
 
       it "click allday event" do
         visit user_portal_path
-        first(".fc-content", text: item2.name).click
+        first(".fc-event-main", text: item2.name).click
         expect(current_path).to eq gws_schedule_user_plan_path(site, gws_user, item2)
       end
     end
@@ -79,13 +79,13 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
 
       it "click event" do
         visit group_portal_path
-        first(".fc-content", text: item1.name).click
+        first(".fc-event-main", text: item1.name).click
         expect(current_path).to eq gws_schedule_user_plan_path(site, gws_user, item1)
       end
 
       it "click allday event" do
         visit group_portal_path
-        first(".fc-content", text: item2.name).click
+        first(".fc-event-main", text: item2.name).click
         expect(current_path).to eq gws_schedule_user_plan_path(site, gws_user, item2)
       end
     end
@@ -179,11 +179,11 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
 
   context "schedule wday" do
     def first_wday_header
-      all("th.fc-day-header").first[:class]
+      all("th.fc-col-header-cell").first[:class]
     end
 
     def last_wday_header
-      all("th.fc-day-header").last[:class]
+      all("th.fc-col-header-cell").last[:class]
     end
 
     context "user portal" do
@@ -191,8 +191,8 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         it "#index" do
           visit user_portal_path
           within ".calendar-controller" do
-            expect(first_wday_header).to include("fc-sun")
-            expect(last_wday_header).to include("fc-sat")
+            expect(first_wday_header).to include("fc-day-sun")
+            expect(last_wday_header).to include("fc-day-sat")
           end
         end
       end
@@ -207,7 +207,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           visit user_portal_path
           within ".calendar-controller" do
             expect(first_wday_header).to include("fc-mon")
-            expect(last_wday_header).to include("fc-sun")
+            expect(last_wday_header).to include("fc-day-sun")
           end
         end
       end
@@ -221,7 +221,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         it "#index" do
           visit user_portal_path
           within ".calendar-controller" do
-            expect(first_wday_header).to include("fc-sat")
+            expect(first_wday_header).to include("fc-day-sat")
             expect(last_wday_header).to include("fc-fri")
           end
         end
@@ -252,8 +252,8 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         it "#index" do
           visit group_portal_path
           within ".calendar-controller" do
-            expect(first_wday_header).to include("fc-sun")
-            expect(last_wday_header).to include("fc-sat")
+            expect(first_wday_header).to include("fc-day-sun")
+            expect(last_wday_header).to include("fc-day-sat")
           end
         end
       end
@@ -268,7 +268,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           visit group_portal_path
           within ".calendar-controller" do
             expect(first_wday_header).to include("fc-mon")
-            expect(last_wday_header).to include("fc-sun")
+            expect(last_wday_header).to include("fc-day-sun")
           end
         end
       end
@@ -282,7 +282,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         it "#index" do
           visit group_portal_path
           within ".calendar-controller" do
-            expect(first_wday_header).to include("fc-sat")
+            expect(first_wday_header).to include("fc-day-sat")
             expect(last_wday_header).to include("fc-fri")
           end
         end

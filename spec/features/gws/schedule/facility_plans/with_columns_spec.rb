@@ -31,7 +31,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         click_on I18n.t("ss.buttons.save")
       end
       wait_for_notice I18n.t('ss.notice.saved')
-      expect(page).to have_css(".fc-title", text: name)
+      expect(page).to have_css(".fc-evnet-title", text: name)
 
       expect(Gws::Schedule::Plan.all.count).to eq 1
       plan = Gws::Schedule::Plan.all.first
@@ -51,7 +51,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         click_on I18n.t("ss.buttons.save")
       end
       wait_for_notice I18n.t('ss.notice.saved')
-      expect(page).to have_css(".fc-title", text: name2)
+      expect(page).to have_css(".fc-evnet-title", text: name2)
 
       expect(Gws::Schedule::Plan.all.count).to eq 1
       plan.reload

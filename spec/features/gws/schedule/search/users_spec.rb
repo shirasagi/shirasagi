@@ -27,9 +27,9 @@ describe "gws_schedule_search_users", type: :feature, dbscope: :example do
         within ".calendar-multiple-header" do
           expect(page).to have_content(user.name)
         end
-        expect(page).to have_css(".fc-content", text: item1.name)
-        expect(page).to have_no_css(".fc-content", text: item2.name)
-        expect(page).to have_no_css(".fc-content", text: item3.name)
+        expect(page).to have_css(".fc-event-main", text: item1.name)
+        expect(page).to have_no_css(".fc-event-main", text: item2.name)
+        expect(page).to have_no_css(".fc-event-main", text: item3.name)
       end
 
       within "form.search" do
@@ -42,9 +42,9 @@ describe "gws_schedule_search_users", type: :feature, dbscope: :example do
         within ".calendar-multiple-header" do
           expect(page).to have_content(user2.name)
         end
-        expect(page).to have_no_css(".fc-content", text: item1.name)
-        expect(page).to have_css(".fc-content", text: item2.name)
-        expect(page).to have_no_css(".fc-content", text: item3.name)
+        expect(page).to have_no_css(".fc-event-main", text: item1.name)
+        expect(page).to have_css(".fc-event-main", text: item2.name)
+        expect(page).to have_no_css(".fc-event-main", text: item3.name)
       end
 
       within "form.search" do
@@ -57,9 +57,9 @@ describe "gws_schedule_search_users", type: :feature, dbscope: :example do
         within ".calendar-multiple-header" do
           expect(page).to have_content(user3.name)
         end
-        expect(page).to have_no_css(".fc-content", text: item1.name)
-        expect(page).to have_no_css(".fc-content", text: item2.name)
-        expect(page).to have_css(".fc-content", text: item3.name)
+        expect(page).to have_no_css(".fc-event-main", text: item1.name)
+        expect(page).to have_no_css(".fc-event-main", text: item2.name)
+        expect(page).to have_css(".fc-event-main", text: item3.name)
       end
     end
   end

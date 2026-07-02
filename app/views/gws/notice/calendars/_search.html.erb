@@ -1,17 +1,16 @@
 <%= jquery do %>
-(function ($) {
   $('.gws-schedule-box header .operations .btn-print').on('click', function() {
-    var viewName = $('#calendar').fullCalendar('getView').name;
-    var curDate = $('#calendar').fullCalendar('getDate');
+    var calendar = document.querySelector('#calendar')?.calendar;
+    var viewName = calendar?.view.type;
+    var curDate = calendar?.getDate();
     if (!viewName) {
-      viewName = $('#calendar-controller').fullCalendar('getView').name;
-      curDate = $('#calendar-controller').fullCalendar('getDate');
+      calendar = document.querySelector('#calendar-controller').calendar;
+      viewName = calendar.view.type;
+      curDate = calendar.getDate();
     }
+    curDate = sprintf("%d-%02d-%02d", curDate.getFullYear(), curDate.getMonth() + 1, curDate.getDate());
 
     var viewFormat = "default";
-    if ($('#calendar').find('.fc-withListView-button').hasClass("fc-state-active")) {
-      viewFormat = "list";
-    }
 
     var queryString = '';
     if (viewName) {
@@ -20,14 +19,13 @@
         queryParams.calendar = {};
       }
       queryParams.calendar.view = viewName;
-      queryParams.calendar.date = curDate.format();
+      queryParams.calendar.date = curDate;
       queryParams.calendar.viewFormat = viewFormat;
       queryString = '?' + $.param(queryParams);
     }
     var path = '<%= url_for({ action: :print }) %>' + queryString;
     location.href = path;
   });
-})($jQuery1);
 <% end %>
 
 <div class="operations">

@@ -21,7 +21,7 @@ module Gws::Schedule::CalendarFilter
     extend ActiveSupport::Concern
 
     def redirection_view
-      params.dig(:calendar, :view).presence || 'month'
+      params.dig(:calendar, :view).presence || 'dayGridMonth'
     end
 
     def redirection_date

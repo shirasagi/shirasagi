@@ -7,7 +7,7 @@
 //         return '';
 //       }
 //
-//       var commonPart = '<div class="fc-title">' + FC.htmlEscape('[' + event.title + ']');
+//       var commonPart = '<div class="fc-evnet-title">' + FC.htmlEscape('[' + event.title + ']');
 //       if (event.sanitizedHtml) {
 //         return commonPart + ' ' + FC.htmlEscape(event.sanitizedHtml) + '</div>';
 //       } else {
@@ -28,7 +28,7 @@
 //         var fullTimeText; // more verbose time text. for the print stylesheet
 //         var startTimeText; // just the start time text
 //
-//         classes.unshift('fc-time-grid-event', 'fc-v-event');
+//         classes.unshift('fc-timegrid-event', 'fc-v-event');
 //
 //         if (view.isMultiDayEvent(event)) { // if the event appears to span more than one day...
 //           // Don't display time text on segments that run entirely through a day.
@@ -56,7 +56,7 @@
 //               ''
 //           ) +
 //           '>' +
-//           '<div class="fc-content">' +
+//           '<div class="fc-event-main">' +
 //           (timeText ?
 //               '<div class="fc-time"' +
 //               ' data-start="' + FC.htmlEscape(startTimeText) + '"' +
@@ -87,7 +87,7 @@
 //       timeGridClass: SS_TimeGrid
 //     });
 //
-//     // FC.views.agendaDay = {
+//     // FC.views.timelineDay = {
 //     //   'class': SS_AgendaView,
 //     //   defaults: {
 //     //     allDaySlot: true,

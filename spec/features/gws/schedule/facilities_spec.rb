@@ -18,7 +18,7 @@ describe "gws_schedule_facilities", type: :feature, dbscope: :example do
       end
 
       #wait_for_js_ready
-      #within ".fc-title" do
+      #within ".fc-evnet-title" do
       #  expect(page).to have_content(item.name)
       #end
     end

@@ -110,7 +110,7 @@ class Gws::Discussion::TodosController < ApplicationController
     set_items
     @todos = @items.map do |todo|
       result = todo.calendar_format(@cur_user, @cur_site)
-      result[:restUrl] = gws_discussion_forum_todos_path(site: @cur_site.id)
+      result[:events] = gws_discussion_forum_todos_path(site: @cur_site.id, format: :json)
       result
     end
 

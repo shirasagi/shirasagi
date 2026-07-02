@@ -41,8 +41,8 @@ SS.ready(function() {
         }
         duplicateCheck.push(uniqueKey);
 
-        var cont = $('<span class="fc-content"></span>');
-        var title = $('<span class="fc-title"></span>');
+        var cont = $('<span class="fc-event-main"></span>');
+        var title = $('<span class="fc-evnet-title"></span>');
         var evEl = $('<a class="fc-event fc-event-point"></a>');
         var tippyOptions = { trigger: 'mouseenter', theme: 'light-border ss-tooltip', interactive: false };
 

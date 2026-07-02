@@ -40,7 +40,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example, js: true do
 
     it "click holiday" do
       visit index_path
-      first(".fc-content", text: item.name).click
+      first(".fc-event-main", text: item.name).click
       expect(current_path).to eq gws_schedule_holiday_path(site, item)
     end
   end

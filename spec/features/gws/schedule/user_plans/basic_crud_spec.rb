@@ -56,7 +56,7 @@ describe "gws_schedule_user_plans", type: :feature, dbscope: :example, js: true 
     it "#delete" do
       visit index_path
       wait_for_js_ready
-      first('span.fc-title', text: item.name).click
+      first('span.fc-evnet-title', text: item.name).click
       wait_for_js_ready
       expect(current_path).to eq show_path
       within ".nav-menu" do
@@ -119,7 +119,7 @@ describe "gws_schedule_user_plans", type: :feature, dbscope: :example, js: true 
         visit index_path
         wait_for_js_ready
 
-        first('span.fc-title', text: item.name).click
+        first('span.fc-evnet-title', text: item.name).click
         wait_for_js_ready
 
         expect(current_path).to eq show_path

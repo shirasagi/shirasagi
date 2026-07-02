@@ -34,7 +34,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
       wait_for_notice I18n.t('ss.notice.saved')
 
-      first(".fc-content", text: name).click
+      first(".fc-event-main", text: name).click
       wait_for_js_ready
       within "#addon-gws-agents-addons-member" do
         expect(page).to have_text(user.long_name)
@@ -57,7 +57,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
       wait_for_notice I18n.t('ss.notice.saved')
 
-      first(".fc-content", text: name).click
+      first(".fc-event-main", text: name).click
       wait_for_js_ready
       within "#addon-gws-agents-addons-member" do
         expect(page).to have_text(user.long_name)
@@ -88,7 +88,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
       wait_for_notice I18n.t('ss.notice.saved')
 
-      first(".fc-content", text: name).click
+      first(".fc-event-main", text: name).click
       wait_for_js_ready
       within "#addon-gws-agents-addons-member" do
         expect(page).to have_text(user.long_name)
@@ -111,7 +111,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
       wait_for_notice I18n.t('ss.notice.saved')
 
-      first(".fc-content", text: name).click
+      first(".fc-event-main", text: name).click
       wait_for_js_ready
       within "#addon-gws-agents-addons-member" do
         expect(page).to have_text(user.long_name)

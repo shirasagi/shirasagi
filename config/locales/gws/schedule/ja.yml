@@ -31,6 +31,11 @@ ja:
       manageable_todo: 他ユーザーのToDo
     calendar:
       buttonText:
+        allDay: 終日
+        today: 今日
+        month: 月
+        week: 週
+        day: 日
         listMonth: リスト
         withTodo: ToDo表示
         withAbsence: 欠席表示

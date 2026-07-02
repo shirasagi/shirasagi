@@ -58,26 +58,26 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
   context "schedule wday" do
     def first_wday_header
-      all("th.fc-day-header").first[:class]
+      all("th.fc-col-header-cell").first[:class]
     end
 
     def last_wday_header
-      all("th.fc-day-header").last[:class]
+      all("th.fc-col-header-cell").last[:class]
     end
 
     context "default sunday" do
       it "#index" do
         visit index_path
-        within ".fc-head-container" do
-          expect(first_wday_header).to include("fc-sun")
-          expect(last_wday_header).to include("fc-sat")
+        within ".fc-col-header" do
+          expect(first_wday_header).to include("fc-day-sun")
+          expect(last_wday_header).to include("fc-day-sat")
         end
         within "#calendar" do
           click_on I18n.t("gws/schedule.options.interval.weekly").downcase
         end
-        within ".fc-head-container" do
-          expect(first_wday_header).to include("fc-sun")
-          expect(last_wday_header).to include("fc-sat")
+        within ".fc-col-header" do
+          expect(first_wday_header).to include("fc-day-sun")
+          expect(last_wday_header).to include("fc-day-sat")
         end
       end
     end
@@ -90,16 +90,16 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
       it "#index" do
         visit index_path
-        within ".fc-head-container" do
+        within ".fc-col-header" do
           expect(first_wday_header).to include("fc-mon")
-          expect(last_wday_header).to include("fc-sun")
+          expect(last_wday_header).to include("fc-day-sun")
         end
         within "#calendar" do
           click_on I18n.t("gws/schedule.options.interval.weekly").downcase
         end
-        within ".fc-head-container" do
+        within ".fc-col-header" do
           expect(first_wday_header).to include("fc-mon")
-          expect(last_wday_header).to include("fc-sun")
+          expect(last_wday_header).to include("fc-day-sun")
         end
       end
     end
@@ -112,15 +112,15 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
       it "#index" do
         visit index_path
-        within ".fc-head-container" do
-          expect(first_wday_header).to include("fc-sat")
+        within ".fc-col-header" do
+          expect(first_wday_header).to include("fc-day-sat")
           expect(last_wday_header).to include("fc-fri")
         end
         within "#calendar" do
           click_on I18n.t("gws/schedule.options.interval.weekly").downcase
         end
-        within ".fc-head-container" do
-          expect(first_wday_header).to include("fc-sat")
+        within ".fc-col-header" do
+          expect(first_wday_header).to include("fc-day-sat")
           expect(last_wday_header).to include("fc-fri")
         end
       end
@@ -138,14 +138,14 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         fc_last = "fc-" + today.advance(days: 6).strftime("%a").downcase
 
         visit index_path
-        within ".fc-head-container" do
+        within ".fc-col-header" do
           expect(first_wday_header).to include(fc_first)
           expect(last_wday_header).to include(fc_last)
         end
         within "#calendar" do
           click_on I18n.t("gws/schedule.options.interval.weekly").downcase
         end
-        within ".fc-head-container" do
+        within ".fc-col-header" do
           expect(first_wday_header).to include(fc_first)
           expect(last_wday_header).to include(fc_last)
         end

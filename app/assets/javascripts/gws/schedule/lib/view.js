@@ -9,21 +9,22 @@ SS.ready(function() {
       if (cal.length === 0) {
         cal = $('#calendar');
       }
-      if (cal.fullCalendar('getView').calendar) {
+      if (cal.get(0).calendar) {
         return cal;
       }
       return null;
     };
 
     Gws_Schedule_View.getCalendarDate = function (selector) {
-      var cal;
+      var calendar;
       if (selector) {
-        cal = $(selector);
+        calendar = document.querySelector(selector).calendar;
       } else {
-        cal = Gws_Schedule_View.getCalendar();
+        calendar = Gws_Schedule_View.getCalendar();
       }
-      if (cal) {
-        return cal.fullCalendar('getDate').format('YYYY-MM-DD');
+      if (calendar) {
+        return Gws_Schedule_Calendar.dateToString(calendar.getDate());
+        // return cal.getDate().format('YYYY-MM-DD');
       }
       return null;
     };
@@ -49,7 +50,10 @@ SS.ready(function() {
         var date, name;
         name = "gws-schedule-tool-calendars";
         date = Gws_Schedule_View.getCalendarDate(selector);
-        date = $.fullCalendar.moment(date);
+
+        // date = $.fullCalendar.moment(date);
+        date = new Date(Date.parse(date))
+
         if ($("." + name).is(':hidden')) {
           $("." + name).remove();
         }
@@ -62,15 +66,15 @@ SS.ready(function() {
       });
     };
 
-    return Gws_Schedule_View;
+    Gws_Schedule_View.addMonths = function(date, months = 1) {
+      var resultDate = new Date(date.getTime());
+      resultDate.setMonth(date.getMonth() + months);
+      if (date.getDate() > date.getDate()) {
+        resultDate.setDate(0);
+      }
+      return resultDate;
+    }
 
-  })($jQuery1);
-
-  (function ($) {
-    // datetimepicker プラグイン は jQuery3 にだけ存在する。
-    // このプラグインを jQuery1 へ組み込んでも jQuery3 の側と競合するのかうまく動作しない。少なくとも言語が英語になってしまう。
-    // そこで、Gws_Schedule_View.crenderSideCalendars() のみ jQuery3 で動作させる。
-    // Gws_Schedule_View.crenderSideCalendars() は fullcalendar の機能を利用しないため、jQuery3 で動作させても問題ない。
     Gws_Schedule_View.crenderSideCalendars = function (name, date) {
       var h, i, j;
       h = $("<div />", { class: name })
@@ -80,7 +84,8 @@ SS.ready(function() {
       $('#menu').before(h);
       for (i = j = 0; j <= 3; i = ++j) {
         if (i > 0) {
-          date.add(1, 'months');
+          date = Gws_Schedule_View.addMonths(date, 1);
+          //date.add(1, 'months');
         }
         $("." + name).append($("<div />", { class: name + "-cal" + i }));
         $("." + name + "-cal" + i).datetimepicker({
@@ -90,7 +95,8 @@ SS.ready(function() {
           scrollInput: false,
           scrollMonth: false,
           inline: true,
-          defaultDate: date.format('YYYY-MM-DD'),
+          // defaultDate: date.format('YYYY-MM-DD'),
+          defaultDate: Gws_Schedule_Calendar.dateToString(date),
           defaultSelect: false,
           todayButton: false,
           onGenerate: function (_time, _el) {
@@ -99,7 +105,10 @@ SS.ready(function() {
           },
           onSelectDate: function (ct, _i) {
             date = sprintf("%d-%02d-%02d", ct.getFullYear(), ct.getMonth() + 1, ct.getDate());
-            return $jQuery1('.calendar').fullCalendar('gotoDate', date);
+
+            document.querySelectorAll('.calendar').forEach(el => {
+              el.calendar.gotoDate(date);
+            });
           }
         });
       }
@@ -122,5 +131,8 @@ SS.ready(function() {
         return results;
       });
     };
+
+    return Gws_Schedule_View;
+
   })($jQuery3);
 });

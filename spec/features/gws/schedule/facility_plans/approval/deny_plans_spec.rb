@@ -104,7 +104,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       login_user(user, to: gws_schedule_facilities_path(site: site))
 
       within ".fc-event:not(.fc-holiday)" do
-        first(".fc-title").click
+        first(".fc-evnet-title").click
       end
       within "#addon-gws-agents-addons-schedule-approval" do
         within "span[data-facility-id='#{facility.id}']" do
@@ -156,7 +156,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       login_user(user, to: gws_schedule_facilities_path(site: site))
 
       within ".fc-event:not(.fc-holiday)" do
-        first(".fc-title").click
+        first(".fc-evnet-title").click
       end
       within "#addon-gws-agents-addons-schedule-approval" do
         within "span[data-facility-id='#{facility.id}']" do

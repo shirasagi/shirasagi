@@ -12,9 +12,9 @@ SS.ready(function() {
 
         var head = '<tr><td class="fc-head-container fc-widget-header">'
         head += '<div class="fc-row fc-widget-header">'
-        head += '<table><thead><tr>'
+        head += '<table><thead role="presentation"><tr role="row">'
         for (i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]) {
-          head += '<th class="fc-day-header fc-widget-header fc-hour-' + i + '">' + i + '</th>'
+          head += '<th class="fc-col-header-cell fc-widget-header fc-hour-' + i + '">' + i + '</th>'
         }
         head += '</tr></thead></table>'
         head += '</div>'
@@ -30,7 +30,7 @@ SS.ready(function() {
       var width = right - left;
       if (width < 1) width = 1;
 
-      element.find('.fc-time').remove()
+      element.find('.fc-event-time').remove()
       element.css({
         'position': 'absolute',
         'top': '2px',

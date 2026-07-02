@@ -45,7 +45,7 @@ SS.ready(function() {
           var event = events[i];
           if (event.className.indexOf('fc-holiday') !== -1) continue;
 
-          var cont = $('<span class="fc-content"></span>').text(event.title);
+          var cont = $('<span class="fc-event-main"></span>').text(event.title);
           var evEl = $('<a class="fc-event fc-event-point"></a>').append(cont);
 
           evEl.addClass(event.className.join(' '));

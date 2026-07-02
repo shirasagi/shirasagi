@@ -44,7 +44,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       login_user(user2, to: gws_schedule_facilities_path(site: site))
 
       within ".fc-event:not(.fc-holiday)" do
-        first(".fc-title").click
+        first(".fc-evnet-title").click
       end
       wait_for_js_ready
       within "#addon-gws-agents-addons-schedule-approval" do
@@ -63,7 +63,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       login_user(user2, to: gws_schedule_facilities_path(site: site))
 
       within ".fc-event:not(.fc-holiday)" do
-        first(".fc-title").click
+        first(".fc-evnet-title").click
       end
       within "#menu" do
         expect(page).to have_link I18n.t("ss.links.edit")
@@ -86,7 +86,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       login_user(user1, to: gws_schedule_facilities_path(site: site))
 
       within ".fc-event:not(.fc-holiday)" do
-        first(".fc-title").click
+        first(".fc-evnet-title").click
       end
       wait_for_js_ready
       within "#menu" do
@@ -135,7 +135,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       login_user(user2, to: gws_schedule_facilities_path(site: site))
 
       within ".fc-event:not(.fc-holiday)" do
-        first(".fc-title").click
+        first(".fc-evnet-title").click
       end
       wait_for_js_ready
       within "#addon-gws-agents-addons-schedule-approval" do
@@ -154,7 +154,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       login_user(user2, to: gws_schedule_facilities_path(site: site))
 
       within ".fc-event:not(.fc-holiday)" do
-        first(".fc-title").click
+        first(".fc-evnet-title").click
       end
       wait_for_js_ready
       within "#menu" do
@@ -178,7 +178,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       login_user(user1, to: gws_schedule_facilities_path(site: site))
 
       within ".fc-event:not(.fc-holiday)" do
-        first(".fc-title").click
+        first(".fc-evnet-title").click
       end
       wait_for_js_ready
       within "#menu" do

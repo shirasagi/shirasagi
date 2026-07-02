@@ -28,39 +28,43 @@
 <div class="main-box gws-schedule-box <%= "with-tabs" if @portal.my_portal? %>">
   <div class="calendar calendar-controller"></div>
 
-  <% @portlet.find_schedule_members(@portal).each_with_index do |item, idx| %>
-    <div class="calendar-multiple-header">
-      <%= link_to gws_public_user_long_name(item.long_name), gws_schedule_user_plans_path(user: item.id), class: "calendar-name" %>
-      <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && item.id == @cur_user.id %>
-        <%= link_to t('gws/schedule.links.add_plan'), new_gws_schedule_user_plan_path(user: item.id), class: 'add-plan' %>
-      <% end %>
-      <%= render "gws/schedule/main/calendar_attr", user: item %>
-    </div>
-    <div class="calendar multiple cal-<%= item.id %>"></div>
+  <div class="calendar-multiple-container">
+    <% @portlet.find_schedule_members(@portal).each_with_index do |item, idx| %>
+      <div>
+        <div class="calendar-multiple-header">
+          <%= link_to gws_public_user_long_name(item.long_name), gws_schedule_user_plans_path(user: item.id), class: "calendar-name" %>
+          <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && item.id == @cur_user.id %>
+            <%= link_to t('gws/schedule.links.add_plan'), new_gws_schedule_user_plan_path(user: item.id), class: 'add-plan' %>
+          <% end %>
+          <%= render "gws/schedule/main/calendar_attr", user: item %>
+        </div>
+        <div class="calendar multiple cal-<%= item.id %>"></div>
 
-    <%
-      calendar_options = {
-        tapMenu: item.id == @cur_user.id,
-        restUrl: gws_schedule_user_plans_path(user: item.id),
-        eventSources: [{ url: "#{events_gws_schedule_user_plans_path(user: item.id, format: :json)}?#{search_query}" }],
-        useWorkload: use_workload?,
-        firstDay: @cur_site.schedule_first_day,
-        views: {
-          timelineDay: {
-            minTime: @cur_site.schedule_min_time,
-            maxTime: @cur_site.schedule_max_time
+        <%
+          calendar_options = {
+            tapMenu: item.id == @cur_user.id,
+            events: gws_schedule_user_plans_path(user: item.id, format: :json),
+            eventSources: [{ url: "#{events_gws_schedule_user_plans_path(user: item.id, format: :json)}?#{search_query}" }],
+            useWorkload: use_workload?,
+            firstDay: @cur_site.schedule_first_day,
+            views: {
+              timelineDay: {
+                minTime: @cur_site.schedule_min_time,
+                maxTime: @cur_site.schedule_max_time
+              }
+            }
           }
-        }
-      }
-      if @cur_site.schedule_drag_drop_denied?
-        calendar_options[:eventStartEditable] = false
-      end
-      init_options = params[:calendar] || {}
-    %>
-    <%= jquery do %>
-      $(document).on("gws:calendarInitialized", function() {
-        Gws_Schedule_Multiple_Calendar.render('<%== portlet_selector %> .cal-<%= item.id %>', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
-      });
+          if @cur_site.schedule_drag_drop_denied?
+            calendar_options[:eventStartEditable] = false
+          end
+          init_options = params[:calendar] || {}
+        %>
+        <%= jquery do %>
+          $(document).on("gws:calendarInitialized", function() {
+            Gws_Schedule_Multiple_Calendar.render('<%== portlet_selector %> .cal-<%= item.id %>', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+          });
+        <% end %>
+      </div>
     <% end %>
-  <% end %>
+  </div>
 </div>

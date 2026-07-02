@@ -62,7 +62,7 @@ describe "gws_schedule_facilities", type: :feature, dbscope: :example, js: true 
       within ".gws-schedule-box" do
         expect(page).to have_link facility1.name
         expect(page).to have_no_link facility2.name
-        expect(page).to have_css(".fc-content", text: name1)
+        expect(page).to have_css(".fc-event-main", text: name1)
       end
 
       # cate2
@@ -87,8 +87,8 @@ describe "gws_schedule_facilities", type: :feature, dbscope: :example, js: true 
       within ".gws-schedule-box" do
         expect(page).to have_no_link facility1.name
         expect(page).to have_link facility2.name
-        expect(page).to have_no_css(".fc-content", text: name1)
-        expect(page).to have_css(".fc-content", text: name2)
+        expect(page).to have_no_css(".fc-event-main", text: name1)
+        expect(page).to have_css(".fc-event-main", text: name2)
       end
     end
 

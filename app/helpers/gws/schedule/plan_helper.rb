@@ -69,7 +69,7 @@ module Gws::Schedule::PlanHelper
 
     @todos.map do |todo|
       result = todo.calendar_format(@cur_user, @cur_site)
-      result[:restUrl] = gws_schedule_todo_readables_path(category: Gws::Schedule::TodoCategory::ALL.id)
+      result[:events] = gws_schedule_todo_readables_path(category: Gws::Schedule::TodoCategory::ALL.id, format: :json)
       result
     end
   end
@@ -79,7 +79,7 @@ module Gws::Schedule::PlanHelper
 
     @works.map do |work|
       result = work.calendar_format(@cur_user, @cur_site)
-      result[:restUrl] = gws_workload_works_path
+      result[:events] = gws_workload_works_path(format: :json)
       result
     end
   end

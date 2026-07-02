@@ -20,7 +20,7 @@ describe "gws_schedule_custom_group_plans", type: :feature, dbscope: :example, j
           expect(page).to have_css("h2", text: custom_group.name)
           expect(page).to have_no_css(".group-creator", text: custom_group.user_long_name)
           expect(page).to have_css(".calendar-name", text: gws_user.long_name)
-          expect(page).to have_css(".fc-title", text: item.name)
+          expect(page).to have_css(".fc-evnet-title", text: item.name)
         end
       end
     end
@@ -37,7 +37,7 @@ describe "gws_schedule_custom_group_plans", type: :feature, dbscope: :example, j
           expect(page).to have_css("h2", text: custom_group.name)
           expect(page).to have_css(".group-creator", text: custom_group.user_long_name)
           expect(page).to have_css(".calendar-name", text: gws_user.long_name)
-          expect(page).to have_css(".fc-title", text: item.name)
+          expect(page).to have_css(".fc-evnet-title", text: item.name)
         end
       end
     end

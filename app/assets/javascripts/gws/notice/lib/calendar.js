@@ -18,30 +18,48 @@ SS.ready(function() {
         init = {};
       }
       params = this.defaultParams(selector, opts);
-      if (opts['restUrl']) {
+      if (opts['events']) {
         $.extend(true, params, this.editableParams(selector, opts));
       }
-      if (opts['restUrl']) {
+      if (opts['events']) {
         $.extend(true, params, this.tapMenuParams(selector, opts));
       }
       for (var i in opts.eventSources) {
         opts.eventSources[i]['error'] = function() { $(selector).data('resource-error', true); }
       }
       $.extend(true, params, opts);
-      Gws_Notice_Calendar.calendar = $(selector).fullCalendar(params);
-      this.renderInitialize(selector, init);
+
+      delete params.titleFormat // error
+      delete params.eventTimeFormat
+      delete params.slotLabelFormat
+      delete params.schedulerLicenseKey
+      delete params.timeFormat
+      delete params.eventRender
+      delete params.useWorkload
+      delete params.minTime
+      delete params.maxTime
+
+      // custom
+      delete params.tapMenu
+
+      var calendarEl = document.querySelector(selector);
+      var calendar = new FullCalendar.Calendar(calendarEl, params);
+      calendar.render();
+      calendarEl.calendar = calendar;
+
+      // Gws_Notice_Calendar.calendar = $(selector).fullCalendar(params);
+      // this.renderInitialize(selector, init);
     };
 
     Gws_Notice_Calendar.renderInitialize = function (selector, init) {
+      var calendarEl = document.querySelector(selector);
+      var calendar = calendarEl.calendar;
+
       if (init == null) {
         init = {};
       }
       if (init['date']) {
-        $(selector).fullCalendar('gotoDate', init['date']);
-      }
-      if (init['viewFormat'] === 'list') {
-        $.fullCalendar.toggleListFormat(selector);
-        $(selector).find('.fc-withListView-button').addClass("fc-state-active");
+        calendar.gotoDate(init['date']);
       }
       Gws_Schedule_View.renderSideCalendars(selector);
       return $(selector + "-header .calendar-text").each(function () {
@@ -59,44 +77,39 @@ SS.ready(function() {
       return {
         firstDay: 0,
         buttonText: {
-          listMonth: i18next.t('gws/schedule.calendar.buttonText.listMonth')
+          today: i18next.t('gws/schedule.calendar.buttonText.today'),
+          month: i18next.t('gws/schedule.calendar.buttonText.month'),
+          week: i18next.t('gws/schedule.calendar.buttonText.week'),
+          day: i18next.t('gws/schedule.calendar.buttonText.day'),
+          listMonth: i18next.t('gws/schedule.calendar.buttonText.listMonth'),
+          listWeek: i18next.t('gws/schedule.calendar.buttonText.listMonth')
         },
-        columnFormat: {
-          month: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.columnFormat.month')),
-          week: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.columnFormat.week'))
-        },
+        // columnHeaderFormat: {
+        //   month: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.columnFormat.month')),
+        //   week: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.columnFormat.week'))
+        // },
         customButtons: {
-          withListView: {
-            text: i18next.t('gws/schedule.calendar.buttonText.listMonth'),
-            click: function (_ev) {
-              $.fullCalendar.toggleListFormat(selector);
-              $(selector).fullCalendar('refetchEvents');
-              $(window).trigger('resize'); //for AgendaView
-
-              return $(this).toggleClass("fc-state-active");
-            }
-          },
           reload: {
             text: i18next.t('ss.buttons.reload'),
             icon: "gws-schedule-calendar-reload",
-            click: function (_ev) {
-              $(selector).fullCalendar('refetchEvents');
+            click: function (ev) {
+              ev.target.closest('.calendar').calendar.refetchEvents();
             }
           }
         },
         contentHeight: 'auto',
         displayEventEnd: {
           month: true,
-          basicWeek: true
+          timeGridWeek: true
         },
         endParam: 's[end]',
         fixedWeekCount: false,
         slotEventOverlap: false,
-        header: {
+        headerToolbar: {
           left: 'today prev next title reload',
-          right: 'month,basicWeek withListView'
+          right: 'dayGridMonth,dayGridWeek listMonth'
         },
-        lang: document.documentElement.lang || 'ja',
+        locale: document.documentElement.lang || 'ja',
         nextDayThreshold: '00:00:00', // 複数日表示の閾値
         schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
         slotLabelFormat: 'HH:mm',
@@ -111,6 +124,7 @@ SS.ready(function() {
           week: '(' + SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.week')) + ')'
         },
         loading: function (isLoading, _view) {
+          var calendar = document.querySelector(selector).calendar;
           var target = $(selector).hasClass("fc-list-format") ? $(this).find('.fc-view') : $(this).find('.fc-widget-content').eq(0)
 
           $(this).find('.fc-loading').remove();
@@ -121,10 +135,21 @@ SS.ready(function() {
             $(selector).data('resource-error', null);
             return target.prepend($('<span />', { class: "fc-loading" }).text(i18next.t("gws/schedule.errors.resource_error")));
           }
+
+          if (!isLoading) {
+            requestAnimationFrame(function() {
+              // eventAfterAllRender
+              if (opts.eventAfterAllRenderCallback) {
+                opts.eventAfterAllRenderCallback();
+              }
+              Gws_Notice_Calendar.updateNoPlanVisibility(calendar.el.closest(".fc"));
+              return Gws_Notice_Calendar.changePrintPreviewPortrait(calendar.view);
+            });
+          }
         },
         eventRender: function(event, element) {
           if (event.abbrTitle) {
-            var title = element.find('.fc-title');
+            var title = element.find('.fc-evnet-title');
             var tippyOptions = { trigger: 'mouseenter', theme: 'light-border ss-tooltip', interactive: false };
 
             tippyOptions["content"] = event.title;
@@ -132,9 +157,9 @@ SS.ready(function() {
             tippy(element[0], tippyOptions);
           }
 
-          var name = element.find('.fc-title').text();
+          var name = element.find('.fc-evnet-title').text();
           var span = $('<span class="fc-event-name"></span>').text(name);
-          element.find('.fc-title').html(span);
+          element.find('.fc-evnet-title').html(span);
 
           if (event.className.includes('fc-event-range')) {
             var fcClass = 'fc-datetime';
@@ -145,67 +170,55 @@ SS.ready(function() {
               format = 'MM/DD';
               end = end.add(-1, 'days')
             } else {
-              element.find('span.fc-time').remove();
+              element.find('span.fc-event-time').remove();
             }
             var content = (event.start.format(format) + ' - ' + end.format(format));
             if (event.start.format(format) === end.format(format)) {
               content = end.format(format);
             }
             span = $('<span></span>').addClass(fcClass).append(content);
-            element.find('.fc-title').before(span);
+            element.find('.fc-evnet-title').before(span);
           }
-          //if (event.categories) {
-          //  $(event.categories).each(function() {
-          //    span = $('<span class="fc-category" style=""></span>').append(this.name);
-          //    if (this.color) {
-          //      span.css("background-color", this.color);
-          //      span.css("color", this.text_color);
-          //    }
-          //    element.find('.fc-title').append(span);
-          //  });
-          //}
-        },
-        eventAfterAllRender: function (view) {
-          if (opts.eventAfterAllRenderCallback) {
-            opts.eventAfterAllRenderCallback();
-          }
-          Gws_Notice_Calendar.updateNoPlanVisibility(view.el.closest(".fc"));
-          return Gws_Notice_Calendar.changePrintPreviewPortrait(view);
         }
       };
     };
 
-    Gws_Notice_Calendar.viewStateQuery = function (view) {
-      var format = view.el.closest(".fc").hasClass('fc-list-format') ? 'list' : 'default';
-      return "calendar[path]=" + location.pathname + "&calendar[view]=" + view.name + "&calendar[viewFormat]=" + format;
+    Gws_Notice_Calendar.viewStateQuery = function (info) {
+      var format = $(info.el).closest(".fc").hasClass('fc-list-format') ? 'list' : 'default';
+      return "calendar[path]=" + location.pathname + "&calendar[view]=" + info.view.type + "&calendar[viewFormat]=" + format;
     };
 
     Gws_Notice_Calendar.tapMenuParams = function (_selector, _opts) {
       var $controller = $('#calendar-controller');
       return {
-        dayClick: function (date, event, view) {
+        dateClick: function (info) {
+          // var _event = info.event;
+          var jsEvent = info.jsEvent;
+          var view = info.view;
+          var date = info.date;
+
           var links = "";
-          var headerOptions = []
-          $.map(view.options.header, function(v) { headerOptions = headerOptions.concat(v.split(/\W/)) });
+          var headerOptions = [];
+          $.map(view.getOption('headerToolbar'), function(v) { headerOptions = headerOptions.concat(v.split(/\W/)) });
           if ($controller.length === 0) {
-            if (view.name !== 'month' && headerOptions.includes('month')) {
-              links += $('<a href="" data-view="month"/>').text(i18next.t("gws/schedule.links.show_month")).prop("outerHTML");
+            if (view.type !== 'dayGridMonth' && headerOptions.includes('dayGridMonth')) {
+              links += $('<a href="" data-view="dayGridMonth"/>').text(i18next.t("gws/schedule.links.show_month")).prop("outerHTML");
             }
-            if (view.name !== 'basicWeek' && headerOptions.includes('basicWeek')) {
-              links += $('<a href="" data-view="basicWeek"/>').text(i18next.t("gws/schedule.links.show_week")).prop("outerHTML");
+            if (view.type !== 'dayGridWeek' && headerOptions.includes('dayGridWeek')) {
+              links += $('<a href="" data-view="dayGridWeek"/>').text(i18next.t("gws/schedule.links.show_week")).prop("outerHTML");
             }
           }
           if (links) {
             $("body").append('<div class="tap-menu">' + links + '</div>');
-            if (event.pageX + $(".tap-menu").width() > $(window).width()) {
-              $(".tap-menu").css("top", event.pageY - 5).css("right", 5).show();
+            if (jsEvent.pageX + $(".tap-menu").width() > $(window).width()) {
+              $(".tap-menu").css("top", jsEvent.pageY - 5).css("right", 5).show();
             } else {
-              $(".tap-menu").css("top", event.pageY - 5).css("left", event.pageX - 5).show();
+              $(".tap-menu").css("top", jsEvent.pageY - 5).css("left", jsEvent.pageX - 5).show();
             }
             $(".tap-menu a").on("click", function () {
               var cal;
               if ($(this).data('view')) {
-                cal = view.calendar.getCalendar();
+                cal = view.calendar;
                 cal.changeView($(this).data('view'));
                 cal.gotoDate(date);
                 $(".tap-menu").remove();
@@ -221,26 +234,29 @@ SS.ready(function() {
     };
 
     Gws_Notice_Calendar.editableParams = function (selector, opts) {
-      var url = opts['restUrl'];
+      var url = opts['events'].replace(/\.json/, '');
       return {
         editable: true,
-        eventClick: function (event, jsEvent, view) {
-          if (event.noPopup) {
+        eventClick: function (info) {
+          var event = info.event;
+          var jsEvent = info.jsEvent;
+          var start = Gws_Schedule_Calendar.dateToString(event.start);
+
+          if (event.extendedProps?.noPopup) {
             return;
           }
-          var popup_url = event.restUrl ? event.restUrl : url;
-          var state = ("calendar[date]=" + (event.start.format('YYYY-MM-DD')) + "&") + Gws_Notice_Calendar.viewStateQuery(view);
+          var popup_url = event.extendedProps?.events ? event.extendedProps.events.replace(/\.json/, '') : url;
+          var state = ("calendar[date]=" + start + "&") + Gws_Notice_Calendar.viewStateQuery(info);
 
           jsEvent.preventDefault();
-          event.url = popup_url + "/" + event.id + "?" + state;
-          location.href = event.url;
+          location.href = popup_url + "/" + event.id + "?" + state;
         },
       };
     };
 
     Gws_Notice_Calendar.changePrintPreviewPortrait = function (view) {
       if ($('body').hasClass('print-preview')) {
-        if (view.type === 'agendaDay' || view.type === 'listMonth' || view.el.closest(".fc").hasClass("fc-list-format")) {
+        if (view.type === 'timeGridDay' || view.type === 'timeGridDay' || $(view.el).closest(".fc").hasClass("fc-list-format")) {
           $('body').removeClass('horizontal');
           return $('body').addClass('vertical');
         } else {
@@ -264,5 +280,5 @@ SS.ready(function() {
 
     return Gws_Notice_Calendar;
 
-  })($jQuery1);
+  })($jQuery3);
 });

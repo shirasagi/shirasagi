@@ -26,7 +26,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         expect(page).to have_css(".fc-event-approval-request", text: item.name)
       end
       within first(".fc-event") do
-        first(".fc-title").click
+        first(".fc-evnet-title").click
       end
 
       # unknown
@@ -96,7 +96,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         expect(page).to have_css(".fc-event-approval-request", text: item.name)
       end
       within first(".fc-event") do
-        first(".fc-title").click
+        first(".fc-evnet-title").click
       end
 
       # approve
@@ -167,7 +167,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         expect(page).to have_css(".fc-event-approval-request", text: item.name)
       end
       within first(".fc-event") do
-        first(".fc-title").click
+        first(".fc-evnet-title").click
       end
 
       # deny
