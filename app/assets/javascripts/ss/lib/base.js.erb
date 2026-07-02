@@ -12,6 +12,8 @@ this.SS = (function () {
 
   SS.noticeTimeoutId = null;
 
+  SS.noticeTimeoutDelay = <%= SS.config.ss.notice["timeout_delay"].to_json %>;
+
   SS.page = "";
 
   SS.pageName = null;
@@ -403,7 +405,7 @@ this.SS = (function () {
     }
     SS.noticeTimeoutId = setTimeout((function () {
       return $('#notice').slideUp('normal');
-    }), 1800);
+    }), SS.noticeTimeoutDelay);
 
     return SS.noticeTimeoutId;
   };
