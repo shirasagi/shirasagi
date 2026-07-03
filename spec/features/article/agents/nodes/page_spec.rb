@@ -25,6 +25,7 @@ describe "article_agents_nodes_page", type: :feature, dbscope: :example do
       visit node.url
       expect(page).to have_css(".article-pages")
       expect(page).to have_selector(".article-pages article")
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{node.full_url}\"]")
     end
 
     it "#index with kana", mecab: true do
@@ -32,13 +33,15 @@ describe "article_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_css(".article-pages")
       expect(page).to have_selector(".article-pages article")
       expect(page).to have_selector("a[href='/node/item.html']")
+      expect(page).to have_css("[rel=\"canonical\"][href=\"http://#{site.domain}#{SS.config.kana.location}#{node.url}\"]")
     end
 
     it "#index with mobile" do
       visit node.url.sub('/', site.mobile_location + '/')
       expect(page).to have_css(".article-pages")
       expect(page).to have_selector(".article-pages .tag-article")
-      expect(page).to have_selector("a[href='/mobile/node/item.html']")
+      expect(page).to have_selector("a[href='#{site.mobile_location}/node/item.html']")
+      expect(page).to have_no_css("[rel=\"canonical\"]")
     end
 
     it "#rss" do

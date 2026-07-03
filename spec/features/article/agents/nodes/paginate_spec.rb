@@ -30,6 +30,7 @@ describe "article_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_no_link item3.name
       expect(page).to have_no_link item4.name
       expect(page).to have_no_link item5.name
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{node.full_url}\"]")
       within ".pagination" do
         expect(page).to have_css(".page.current", text: "1")
         click_on I18n.t("views.pagination.next")
@@ -40,6 +41,7 @@ describe "article_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_link item3.name
       expect(page).to have_link item4.name
       expect(page).to have_no_link item5.name
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{node.full_url}index.p2.html\"]")
       within ".pagination" do
         expect(page).to have_css(".page.current", text: "2")
         click_on I18n.t("views.pagination.next")
@@ -50,6 +52,7 @@ describe "article_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_no_link item3.name
       expect(page).to have_no_link item4.name
       expect(page).to have_link item5.name
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{node.full_url}index.p3.html\"]")
       within ".pagination" do
         expect(page).to have_css(".page.current", text: "3")
         expect(page).to have_no_link I18n.t("views.pagination.next")
