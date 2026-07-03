@@ -5,7 +5,7 @@ plugins:
 
 AllCops:
   # be sure to set minimal support version
-  TargetRubyVersion: 3.2
+  TargetRubyVersion: 3.3
   NewCops: enable
   Exclude:
     - Gemfile
