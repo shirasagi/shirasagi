@@ -4,6 +4,10 @@
 <head>
 <meta charset="UTF-8" />
 <title><%= @window_name %></title>
+<% canonical_full_url = Cms.canonical_full_url(@cur_site, SS.request_path(request)) rescue nil %>
+<% if canonical_full_url %>
+  <link rel="canonical" href="<%= canonical_full_url %>" />
+<% end %>
 <%= stylesheet_link_tag "cms/public", media: "all" %>
 <%= stylesheet_link_tag "jplayer", media: "all" %>
 <%= javascript_include_tag "cms/compat" %>

@@ -447,4 +447,18 @@ module Cms
       contains_urls.include?(file.url_with_name) ||
       contains_urls.include?(file.url_with_filename)
   end
+
+  def self.canonical_full_url(site, request_path)
+    if request_path.end_with?("/index.html")
+      request_path = request_path[0..-11]
+    end
+
+    # 以下のコードで末尾の "/" が削除される。
+    # https://github.com/rails/rails/blob/v8.0.5/actionpack/lib/action_dispatch/routing/route_set.rb#L907
+    # ここでは末尾の "/" を復活させる。
+    if !request_path.end_with?("/") && ::File.extname(request_path).blank?
+      request_path += "/"
+    end
+    Addressable::URI.join(site.full_root_url, request_path).to_s
+  end
 end
