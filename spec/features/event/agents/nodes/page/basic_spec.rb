@@ -150,23 +150,44 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{node.full_url}table.html\"]")
     end
 
+    it "monthly canonical index" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      visit sprintf("#{node.full_url}%04d%02d/", year, month)
+      expect(status_code).to eq 200
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_css("div#event-list")
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{sprintf("#{node.full_url}%04d%02d/", year, month)}\"]")
+    end
+
     it "monthly index type1" do
       time = Time.zone.now
       year = time.year
       month = time.month
-      full_url = sprintf("#{node.full_url}%04d%02d.html", year, month)
-      visit full_url
+      visit sprintf("#{node.full_url}%04d%02d/index.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
-      expect(page).to have_css("[rel=\"canonical\"][href=\"#{full_url}\"]")
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{sprintf("#{node.full_url}%04d%02d/", year, month)}\"]")
     end
 
     it "monthly index type2" do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit sprintf("#{node.full_url}%04d%02d/index.html", year, month)
+      visit sprintf("#{node.full_url}%04d%02d", year, month)
+      expect(status_code).to eq 200
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_css("div#event-list")
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{sprintf("#{node.full_url}%04d%02d/", year, month)}\"]")
+    end
+
+    it "monthly index type3" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      visit sprintf("#{node.full_url}%04d%02d.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
@@ -230,25 +251,50 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{node.full_url}table.html\"]")
     end
 
-    it "monthly index type1" do
+    it "monthly canonical index" do
       time = Time.zone.now
       year = time.year
       month = time.month
-      full_url = sprintf("#{node.full_url}%04d%02d.html", year, month)
-      visit full_url
+      visit sprintf("#{node.full_url}%04d%02d/", year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
       expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
       expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
-      expect(page).to have_css("[rel=\"canonical\"][href=\"#{full_url}\"]")
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{sprintf("#{node.full_url}%04d%02d/", year, month)}\"]")
+    end
+
+    it "monthly index type1" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      visit sprintf("#{node.full_url}%04d%02d/index.html", year, month)
+      expect(status_code).to eq 200
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_css("div#event-table")
+      expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
+      expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{sprintf("#{node.full_url}%04d%02d/", year, month)}\"]")
     end
 
     it "monthly index type2" do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit sprintf("#{node.full_url}%04d%02d/index.html", year, month)
+      visit sprintf("#{node.full_url}%04d%02d", year, month)
+      expect(status_code).to eq 200
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_css("div#event-table")
+      expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
+      expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{sprintf("#{node.full_url}%04d%02d/", year, month)}\"]")
+    end
+
+    it "monthly index type3" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      visit sprintf("#{node.full_url}%04d%02d.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
@@ -308,16 +354,15 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(status_code).to eq 404
     end
 
-    it "monthly index type1" do
+    it "monthly canonical index" do
       time = Time.zone.now
       year = time.year
       month = time.month
-      full_url = sprintf("#{node.full_url}%04d%02d.html", year, month)
-      visit full_url
+      visit sprintf("#{node.full_url}%04d%02d/", year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
-      expect(page).to have_css("[rel=\"canonical\"][href=\"#{full_url}\"]")
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{sprintf("#{node.full_url}%04d%02d/", year, month)}\"]")
     end
 
     it "monthly index type1" do
@@ -325,6 +370,28 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       year = time.year
       month = time.month
       visit sprintf("#{node.full_url}%04d%02d/index.html", year, month)
+      expect(status_code).to eq 200
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_css("div#event-list")
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{sprintf("#{node.full_url}%04d%02d/", year, month)}\"]")
+    end
+
+    it "monthly index type2" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      visit sprintf("#{node.full_url}%04d%02d", year, month)
+      expect(status_code).to eq 200
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_css("div#event-list")
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{sprintf("#{node.full_url}%04d%02d/", year, month)}\"]")
+    end
+
+    it "monthly index type3" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      visit sprintf("#{node.full_url}%04d%02d.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
@@ -382,25 +449,50 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{node.full_url}table.html\"]")
     end
 
-    it "monthly index type1" do
+    it "monthly canonical index" do
       time = Time.zone.now
       year = time.year
       month = time.month
-      full_url = sprintf("#{node.full_url}%04d%02d.html", year, month)
-      visit full_url
+      visit sprintf("#{node.full_url}%04d%02d/", year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
       expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
       expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
-      expect(page).to have_css("[rel=\"canonical\"][href=\"#{full_url}\"]")
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{sprintf("#{node.full_url}%04d%02d/", year, month)}\"]")
+    end
+
+    it "monthly index type1" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      visit sprintf("#{node.full_url}%04d%02d/index.html", year, month)
+      expect(status_code).to eq 200
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_css("div#event-table")
+      expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
+      expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{sprintf("#{node.full_url}%04d%02d/", year, month)}\"]")
     end
 
     it "monthly index type2" do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit sprintf("#{node.full_url}%04d%02d/index.html", year, month)
+      visit sprintf("#{node.full_url}%04d%02d", year, month)
+      expect(status_code).to eq 200
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_css("div#event-table")
+      expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
+      expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{sprintf("#{node.full_url}%04d%02d/", year, month)}\"]")
+    end
+
+    it "monthly index type3" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      visit sprintf("#{node.full_url}%04d%02d.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
