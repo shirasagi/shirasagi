@@ -5,6 +5,12 @@ describe Workflow::Mailer, type: :mailer, dbscope: :example do
   let(:page) { create :cms_page }
   let(:user1) { create :ss_user, email: "user1@example.jp" }
   let(:user2) { create :ss_user, email: "user2@example.jp" }
+  let(:sender_email) { "#{unique_id}@example.jp" }
+
+  before do
+    site.sender_email = sender_email
+    site.save!
+  end
 
   describe "#request_mail" do
     let(:mail) do
@@ -19,7 +25,7 @@ describe Workflow::Mailer, type: :mailer, dbscope: :example do
     end
 
     it "mail attributes" do
-      expect(mail.from.first).to eq user1.email
+      expect(mail.from.first).to eq sender_email
       expect(mail.to.first).to eq user2.email
       expect(mail_subject(mail).to_s).not_to eq ""
       expect(mail.body.to_s).not_to eq ""
@@ -39,7 +45,7 @@ describe Workflow::Mailer, type: :mailer, dbscope: :example do
     end
 
     it "mail attributes" do
-      expect(mail.from.first).to eq user1.email
+      expect(mail.from.first).to eq sender_email
       expect(mail.to.first).to eq user2.email
       expect(mail_subject(mail).to_s).not_to eq ""
       expect(mail.body.to_s).not_to eq ""
@@ -60,7 +66,7 @@ describe Workflow::Mailer, type: :mailer, dbscope: :example do
     end
 
     it "mail attributes" do
-      expect(mail.from.first).to eq user1.email
+      expect(mail.from.first).to eq sender_email
       expect(mail.to.first).to eq user2.email
       expect(mail_subject(mail).to_s).not_to eq ""
       expect(mail.body.to_s).not_to eq ""

@@ -10,8 +10,11 @@ describe "member_photos", type: :feature, dbscope: :example, js: true do
   let!(:user) { create(:cms_test_user, group_ids: group_ids, cms_role_ids: role_ids) }
   let(:workflow_comment) { unique_id }
   let(:approve_comment) { unique_id }
+  let(:sender_email) { "#{unique_id}@example.jp" }
 
   before do
+    site.sender_email = sender_email
+    site.save!
     ActionMailer::Base.deliveries = []
   end
 
@@ -56,7 +59,7 @@ describe "member_photos", type: :feature, dbscope: :example, js: true do
       expect(Sys::MailLog.count).to eq 1
       expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
       ActionMailer::Base.deliveries.last.tap do |mail|
-        expect(mail.from.first).to eq cms_user.email
+        expect(mail.from.first).to eq sender_email
         expect(mail.to.first).to eq user.email
         expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
         expect(mail.body.multipart?).to be_falsey
@@ -79,14 +82,14 @@ describe "member_photos", type: :feature, dbscope: :example, js: true do
       expect(item.state).to eq "public"
       expect(item.workflow_approvers).to \
         include({
-          level: 1, user_id: user.id, editable: '', state: 'approve', comment: approve_comment, file_ids: nil,
-          created: be_within(30.seconds).of(Time.zone.now)
-        })
+                  level: 1, user_id: user.id, editable: '', state: 'approve', comment: approve_comment, file_ids: nil,
+                  created: be_within(30.seconds).of(Time.zone.now)
+                })
 
       expect(Sys::MailLog.count).to eq 2
       expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
       ActionMailer::Base.deliveries.last.tap do |mail|
-        expect(mail.from.first).to eq user.email
+        expect(mail.from.first).to eq sender_email
         expect(mail.to.first).to eq cms_user.email
         expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
         expect(mail.body.multipart?).to be_falsey

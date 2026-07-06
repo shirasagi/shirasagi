@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Workflow::ReminderJob, dbscope: :example do
   let!(:site) { cms_site }
+  let(:sender_email) { "#{unique_id}@example.jp" }
 
   before do
     ActionMailer::Base.deliveries = []
@@ -49,6 +50,7 @@ describe Workflow::ReminderJob, dbscope: :example do
 
     before do
       site.mypage_domain = unique_domain
+      site.sender_email = sender_email
       site.approve_remind_state = "enabled"
       site.approve_remind_later = "1.day"
       site.save!
@@ -158,7 +160,7 @@ describe Workflow::ReminderJob, dbscope: :example do
 
           expect(ActionMailer::Base.deliveries.length).to eq 1
           ActionMailer::Base.deliveries.first.tap do |mail|
-            expect(mail.from.first).to eq user1.email
+            expect(mail.from.first).to eq sender_email
             expect(mail.to.first).to eq user2.email
             expect(mail_subject(mail)).to eq I18n.t("workflow.notice.remind.subject", page_name: page1.name, site_name: site.name)
             expect(mail.body.multipart?).to be_falsey
@@ -268,7 +270,7 @@ describe Workflow::ReminderJob, dbscope: :example do
 
           expect(ActionMailer::Base.deliveries.length).to eq 1
           ActionMailer::Base.deliveries.first.tap do |mail|
-            expect(mail.from.first).to eq user1.email
+            expect(mail.from.first).to eq sender_email
             expect(mail.to.first).to eq user2.email
             expect(mail_subject(mail)).to eq I18n.t("workflow.notice.remind.subject", page_name: page1.name, site_name: site.name)
             expect(mail.body.multipart?).to be_falsey
@@ -344,7 +346,7 @@ describe Workflow::ReminderJob, dbscope: :example do
 
           expect(ActionMailer::Base.deliveries.length).to eq 1
           ActionMailer::Base.deliveries.first.tap do |mail|
-            expect(mail.from.first).to eq user1.email
+            expect(mail.from.first).to eq sender_email
             expect(mail.to.first).to eq user3.email
             expect(mail_subject(mail)).to eq I18n.t("workflow.notice.remind.subject", page_name: page1.name, site_name: site.name)
             expect(mail.body.multipart?).to be_falsey
