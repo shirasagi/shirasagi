@@ -154,24 +154,57 @@ SS.ready(function() {
           }
 
           // スマートフォンの表示対応
-          $(window).resize(function() {
-            if (window.matchMedia('(max-width: 768px)').matches) {
-              var calendarWidth = $('.gws-schedule-box').width();
-              var toolbarHeight = $('#calendar-controller>.fc-toolbar').outerHeight();
+          $(window).on('resize', function () {
+            var isSp = window.matchMedia('(max-width: 768px)').matches;
+            var minCellWidth = 80;
+            var $calendarWrap = $('.calendar-wrap');
+            var calendarWidth = $('.gws-schedule-box').width() || $calendarWrap.width();
+            var toolbarHeight = $('#calendar-controller > .fc-toolbar').outerHeight() || 0;
+            var hasScrollableCalendar = false;
 
-              $('#calendar-controller>.fc-view-container').css('padding-top', toolbarHeight);
+            $calendarWrap.removeClass('is-scrollable');
+            $('.calendar.fc').removeClass('is-scrollable');
+            $('#calendar-controller > .fc-view-container').css('padding-top', '');
+            $('.fc-toolbar').css('width', '');
+            $('.calendar-multiple-header').css('width', '');
+            $('.calendar-multiple-header + .fc-unthemed').css('padding-top', '');
+
+            if (!isSp) {
+              $('.calendar.fc .fc-scrollpane-inner').css('min-width', '');
+            }
+
+            $('.calendar-wrap .calendar.fc').each(function () {
+              var $calendar = $(this);
+              var headerCount = $calendar.find('.fc-head th.fc-widget-header[data-date]').length;
+              var minCalendarWidth = headerCount * minCellWidth;
+              var wrapWidth = $calendar.closest('.calendar-wrap').width();
+
+              if (!headerCount) {
+                return;
+              }
+              if (minCalendarWidth > wrapWidth) {
+                hasScrollableCalendar = true;
+
+                $calendar.addClass('is-scrollable');
+                $calendar.find('.fc-scrollpane-inner').css('min-width', minCalendarWidth);
+              }
+            });
+
+            if (isSp) {
+              hasScrollableCalendar = true;
+              $('.calendar-wrap .calendar.fc').addClass('is-scrollable');
+            }
+
+            if (hasScrollableCalendar) {
+              $calendarWrap.addClass('is-scrollable');
+
+              $('#calendar-controller > .fc-view-container').css('padding-top', toolbarHeight + 10);
               $('.fc-toolbar').css('width', calendarWidth);
               $('.calendar-multiple-header').css('width', calendarWidth);
-
-              $(".calendar-multiple-header").each(function(i, elem) {
-                var multipleHeaderHeight = $(this).outerHeight();
+              $('.calendar-multiple-header').each(function () {
+                var multipleHeaderHeight = $(this).outerHeight() || 0;
                 $(this).next('.fc-unthemed').css('padding-top', multipleHeaderHeight);
               });
-            } else {
-              $('#calendar-controller>.fc-view-container').css('padding-top', '');
-              $('.fc-toolbar').css('width', '');
-              $('.calendar-multiple-header').css('width', '');
-              $('.calendar-multiple-header+.fc-unthemed').css('padding-top','');
             }
           });
           $(window).trigger('resize');
