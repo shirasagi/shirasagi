@@ -15,6 +15,8 @@ class Cms::Column::CheckBox < Cms::Column::Base
       { values: /\A#{::Regexp.escape(value)}/ }
     when 'end_with'
       { values: /#{::Regexp.escape(value)}\z/ }
+    when 'in'
+      { values: { "$in" => value } }
     else
       { values: value }
     end

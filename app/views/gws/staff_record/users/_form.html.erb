@@ -2,10 +2,10 @@
   <dt><%= @model.t :year_id %></dt>
   <dd><%= @item.year.name %></dd>
 
-  <dt><%= @model.t :code %><%= @model.tt :code %></dt>
+  <dt><%= @model.t :code %><%= @model.tt :code %><%= required_mark %></dt>
   <dd><%= f.text_field :code, autofocus: pc_browser? %></dd>
 
-  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %><%= required_mark %></dt>
   <dd><%= f.text_field :name %></dd>
 
   <dt><%= @model.t :kana %><%= @model.tt :kana %></dt>
@@ -17,7 +17,7 @@
   <dt><%= @model.t :multi_section %><%= @model.tt :multi_section %></dt>
   <dd><%= f.select :multi_section, @item.multi_section_options %></dd>
 
-  <dt><%= @model.t :section_name %><%= @model.tt :section_name %></dt>
+  <dt><%= @model.t :section_name %><%= @model.tt :section_name %><%= required_mark %></dt>
   <dd><%= f.select :section_name, @item.section_name_options, include_blank: '' %></dd>
 
   <dt><%= @model.t :title_ids %><%= @model.tt :title_ids %></dt>
@@ -29,7 +29,7 @@
   <dt><%= @model.t :tel_ext %><%= @model.tt :tel_ext %></dt>
   <dd><%= f.text_field :tel_ext %></dd>
 
-  <dt><%= @model.t :charge_name %><%= @model.tt :charge_name %></dt>
+  <dt><%= @model.t :charge_name %><%= @model.tt :charge_name %><%= required_mark %></dt>
   <dd><%= f.text_field :charge_name %></dd>
 
   <dt><%= @model.t :charge_address %><%= @model.tt :charge_address %></dt>

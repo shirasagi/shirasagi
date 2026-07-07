@@ -14,7 +14,7 @@ en:
       update: Update
       delete: Delete
       disabled_items: Deleted
-      browsing_state: Participating groups
+      browsing_state: Target groups
       browsed: View
       type: Status
       mark_at: Date and time confirmed
@@ -171,7 +171,7 @@ en:
     addons:
       gws/monitor/category: Category
       gws/monitor/contributor: Contributors
-      gws/monitor/group: Participating groups
+      gws/monitor/group: Target groups
       gws/monitor/release: Publishing settings
       gws/monitor/group_setting: Inquiries and responses
 
@@ -252,7 +252,7 @@ en:
         release_date: Publishing start date and time (reservation)
         close_date: Publishing end date and time (reservation)
       gws/addon/monitor/group:
-        attend_group_ids: Participating groups
+        attend_group_ids: Target groups
       gws/monitor/postable:
         name: Title
         created: Date and time created
@@ -305,7 +305,7 @@ en:
           - Select the contributor name.
       gws/addon/monitor/group:
         group_name:
-          - Select the participating groups.
+          - Select the target groups.
           - "You can edit it by changing to Draft status in \"Publishing settings.”"
       gws/monitor/postable:
         name:

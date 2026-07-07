@@ -19,7 +19,7 @@ ja:
       unset_seen: 未読にする
       seen_at: 既読日時
       download: CSVに出力する
-      member: 参加者
+      member: 回覧先
       type: 区分
       update_at: 変更日時
       user: ユーザー
@@ -67,6 +67,7 @@ ja:
     addons:
       gws/circular/group_setting: 回覧板
       gws/circular/category: カテゴリー
+      gws/circular/member: 回覧先
   gws_role:
     use_gws_circular: 回覧板の利用
     read_other_gws_circular_posts: 回覧板の閲覧（全て）
@@ -107,7 +108,7 @@ ja:
     errors:
       models:
         gws/circular/post:
-          member_length: 参加者は%{max}人以下にしてください。
+          member_length: 回覧先は%{max}人以下にしてください。
           file_size_limit: 添付ファイルのサイズ（%{size}）が 最大サイズ（%{limit}）を超えました。
         gws/circular/category:
           too_deep: は%{max}階層以下にしてください。
@@ -122,6 +123,9 @@ ja:
         see_type: 既読にする形式
         deleted: 削除日時
         seen: 既読
+        member_ids: 回覧先ユーザー
+        member_group_ids: 回覧先グループ
+        member_custom_group_ids: 回覧先カスタムグループ
       gws/circular/comment:
         name: タイトル
         text: コメント
@@ -161,7 +165,7 @@ ja:
       circular_sort:
         - 表示する回覧板の並びを選択します。
       circular_max_member:
-        - 参加者の人数の上限を入力します。
+        - 回覧先の人数の上限を入力します。
         - 未指定である場合、制限されません。
         - 初期値は 未指定 です。
       circular_filesize_limit:

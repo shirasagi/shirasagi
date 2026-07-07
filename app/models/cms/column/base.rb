@@ -37,6 +37,8 @@ class Cms::Column::Base
       { value: /\A#{::Regexp.escape(value)}/ }
     when 'end_with'
       { value: /#{::Regexp.escape(value)}\z/ }
+    when 'in'
+      { value: { "$in" => value } }
     else
       { value: value }
     end
