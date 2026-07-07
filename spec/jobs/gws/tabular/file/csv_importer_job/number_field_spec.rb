@@ -87,21 +87,31 @@ describe Gws::Tabular::File::CsvImportJob, dbscope: :example do
           job.perform_now(space.id.to_s, form.id.to_s, form.current_release.id.to_s, ss_csv_file.id)
 
           expect(Gws::Job::Log.count).to eq 2
-          Gws::Job::Log.all.each do |log|
-            expect(log.state).to eq Gws::Job::Log::STATE_COMPLETED
-            expect(log.logs).to include(/INFO -- : .* Started Job/)
-            expect(log.logs).to include(/INFO -- : .* Completed Job/)
-            expect(log.logs).not_to include(include('WARN'))
-            expect(log.logs).not_to include(include('ERROR'))
+          Gws::Job::Log.all.reorder(_id: 1).tap do |logs|
+            logs[0].tap do |log|
+              expect(log.state).to eq Gws::Job::Log::STATE_COMPLETED
+              expect(log.logs).to include(/INFO -- : .* Started Job/)
+              expect(log.logs).to include(/INFO -- : .* Completed Job/)
+              expect(log.logs).to include(include('Gws::Tabular::FormPublishJob'))
+              expect(log.logs).not_to include(include('WARN'))
+              expect(log.logs).not_to include(include('ERROR'))
+            end
+            logs[1].tap do |log|
+              expect(log.state).to eq Gws::Job::Log::STATE_COMPLETED
+              expect(log.logs).to include(/INFO -- : .* Started Job/)
+              expect(log.logs).to include(/INFO -- : .* Completed Job/)
+              expect(log.logs).to include(include('Gws::Tabular::File::CsvImportJob'))
+              # [mongoid 9.1] 以下の修正により非数値文字列の動作が変わった；ActiveRecordに近くなった
+              # - https://jira.mongodb.org/browse/MONGOID-5842
+              # - https://github.com/mongodb/mongoid/pull/6108
+              expect(log.logs).to include(/WARN -- : .* インポートできませんでした。/)
+              error_message = SS.format_error(column1.name, :not_a_number)
+              expect(log.logs).to include(/#{::Regexp.escape(error_message)}/m)
+              expect(log.logs).not_to include(include('ERROR'))
+            end
           end
 
-          expect(file_model.all.count).to eq 1
-          file_model.all.first.tap do |file_data|
-            expect(file_data.site_id).to eq site.id
-            expect(file_data.space_id.to_s).to eq space.id.to_s
-            expect(file_data.form_id.to_s).to eq form.id.to_s
-            expect(file_data.read_tabular_value(column1)).to be_blank
-          end
+          expect(file_model.all.count).to eq 0
         end
       end
     end
