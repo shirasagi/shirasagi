@@ -19,7 +19,7 @@ en:
       unset_seen: Mark as unread
       seen_at: Date and time read
       download: Output to CSV
-      member: Participants
+      member: Recipients
       type: Category
       update_at: Change date and time
       user: User
@@ -67,6 +67,7 @@ en:
     addons:
       gws/circular/group_setting: Circular boards
       gws/circular/category: Category
+      gws/circular/member: Recipients
   gws_role:
     use_gws_circular: Use of circulars
     read_other_gws_circular_posts: View circulars (all)
@@ -107,7 +108,7 @@ en:
     errors:
       models:
         gws/circular/post:
-          member_length: Set the number of participants at no more than %{max}.
+          member_length: Set the number of recipients at no more than %{max}.
           file_size_limit: The size of the attachment (%{size}) has exceeded the maximum size (%{limit}).
         gws/circular/category:
           too_deep: The hierarchy is too deep and should be below %{max}.
@@ -122,6 +123,9 @@ en:
         see_type: Format to mark as read
         deleted: Deletion date and time
         seen: Read
+        member_ids: Recipient users
+        member_group_ids: Recipient groups
+        member_custom_group_ids: Recipient custom groups
       gws/circular/comment:
         name: Title
         text: Comments
@@ -161,7 +165,7 @@ en:
       circular_sort:
         - Select order of circular boards.
       circular_max_member:
-        - Enter the maximum number of participants.
+        - Enter the maximum number of recipients.
         - If unspecified, the number is not restricted.
         - The initial value is unspecified.
       circular_filesize_limit:

@@ -1,5 +1,5 @@
 <dl class="see gws-addon-monitor-group">
-  <dt><%= t("modules.addons.gws/monitor/group") %><%= @model.tt :group_name %></dt>
+  <dt><%= t("modules.addons.gws/monitor/group") %><%= @model.tt :group_name %><%= required_mark %></dt>
   <% if @item.new_record? || @item.state == "draft" %>
     <dd>
     <%= f.hidden_field "attend_group_ids[]", value: "", id: nil, class: "hidden-ids" %>

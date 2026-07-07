@@ -1,19 +1,9 @@
-<%
-  categories = []
-  @cur_node.st_parent_categories.each do |parent|
-    categories << parent
-    categories += Category::Node::Base.site(@cur_site).
-      where(filename: /^#{parent.filename}\//).entries
-  end
-  category_options = categories.map { |c| [c.name, c.id] }
-%>
-
-<div class="article-search">
+<div class="article-search search">
   <%= form_tag @url, multipart: true, method: "get" do |f| %>
-    <% if categories.present? %>
+    <% if category_options.present? %>
     <div class="category">
       <label for="category"><%= t('article.query.category') %></label>
-      <%= select_tag :category,  options_for_select(category_options, @category), include_blank: true, id: "category" %>
+      <%= select_tag :category, options_for_select(category_options, @category), include_blank: true, id: "category" %>
     </div>
     <% end %>
     <div class="keyword">

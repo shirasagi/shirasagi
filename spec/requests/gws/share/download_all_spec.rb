@@ -54,7 +54,7 @@ describe "gws/workflow/files", type: :request, dbscope: :example do
 
   context "when a user joined a site but has no permissions" do
     it do
-      params = { ids: (0..100).to_a }
+      params = { ids: SS::File.unscoped.pluck(:id) }
       post download_all_gws_share_files_path(site: site1, category: "-"), headers: @headers, params: params
       expect(response.status).to eq 400
     end
@@ -71,7 +71,7 @@ describe "gws/workflow/files", type: :request, dbscope: :example do
     end
 
     it do
-      params = { ids: (0..100).to_a }
+      params = { ids: SS::File.unscoped.pluck(:id) }
       post download_all_gws_share_files_path(site: site1, category: "-"), headers: @headers, params: params
       expect(response.status).to eq 400
     end
@@ -88,7 +88,7 @@ describe "gws/workflow/files", type: :request, dbscope: :example do
     end
 
     it do
-      params = { ids: (0..100).to_a }
+      params = { ids: SS::File.unscoped.pluck(:id) }
       post download_all_gws_share_files_path(site: site1, category: "-"), headers: @headers, params: params
       expect(response.status).to eq 200
       expect(response.content_type).to eq "application/zip"
@@ -110,7 +110,7 @@ describe "gws/workflow/files", type: :request, dbscope: :example do
 
   context "when a user doesn't join a site" do
     it do
-      params = { ids: (0..100).to_a }
+      params = { ids: SS::File.unscoped.pluck(:id) }
       post download_all_gws_share_files_path(site: site2, category: "-"), headers: @headers, params: params
       expect(response.status).to eq 403
     end

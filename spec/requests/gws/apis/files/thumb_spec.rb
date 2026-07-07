@@ -89,6 +89,8 @@ describe "gws/workflow/files", type: :request, dbscope: :example do
       get thumb_gws_apis_file_path(site: site1, id: item1, format: :json), headers: @headers
       expect(response.status).to eq 200
       expect(response.content_type).to include item1.content_type
+      expect(response.body.length).to be > 0
+      expect(SS::ImageConverter.image?(StringIO.new(response.body))).to be_truthy
     end
   end
 

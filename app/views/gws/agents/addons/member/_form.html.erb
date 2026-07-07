@@ -67,7 +67,7 @@
 
   <% if @model.member_include_member_ids? %>
   <dl class="see member-users">
-    <dt><%= @model.t :member_ids %><%= @model.tt :member_ids %></dt>
+    <dt><%= @model.t :member_ids %><%= @model.tt :member_ids %><%= required_mark if @model.member_ids_required? %></dt>
     <dd>
       <%= f.hidden_field "member_ids[]", value: "", id: nil, class: "hidden-ids" %>
       <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "btn ajax-box" %>

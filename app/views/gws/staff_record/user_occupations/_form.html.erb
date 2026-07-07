@@ -2,10 +2,10 @@
   <dt><%= @model.t :year_id %></dt>
   <dd><%= @item.year.name %></dd>
 
-  <dt><%= @model.t :code %><%= @model.tt :code %></dt>
+  <dt><%= @model.t :code %><%= @model.tt :code %><%= required_mark %></dt>
   <dd><%= f.text_field :code, autofocus: pc_browser? %></dd>
 
-  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %><%= required_mark %></dt>
   <dd><%= f.text_field :name %></dd>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>

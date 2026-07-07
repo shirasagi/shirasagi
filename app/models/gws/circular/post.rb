@@ -10,7 +10,7 @@ class Gws::Circular::Post
   include SS::Addon::Markdown
   include Gws::Addon::File
   include Gws::Addon::Circular::Category
-  include Gws::Addon::Member
+  include Gws::Addon::Circular::Member
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
