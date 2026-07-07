@@ -147,4 +147,58 @@ describe SS::OptionsForSelectComponent, type: :component, dbscope: :example do
       end
     end
   end
+
+  context "flat options and 2-layer options mixed" do
+    let(:options) do
+      # name is shuffled but ordered by id
+      [
+        [ "parent1", 1 ],
+        [ "parent2/child1", 2 ],
+        [ "parent2/child2", 3 ],
+        [ "parent3", 4 ],
+        [ "parent4/child3", 5 ],
+        [ "parent4/child4", 6 ],
+        [ "parent5", 7 ],
+      ]
+    end
+    let(:selected) { 5 }
+
+    it do
+      child_elements = subject.children.select { _1.type == Nokogiri::XML::Node::ELEMENT_NODE }
+      expect(child_elements).to have(5).items
+      child_elements[0].tap do |child_element|
+        expect(child_element.name).to eq "option"
+        expect(child_element.text).to eq "parent1"
+        expect(child_element["value"]).to eq "1"
+      end
+      child_elements[1].tap do |child_element|
+        expect(child_element.name).to eq "optgroup"
+        expect(child_element["label"]).to eq "parent2"
+        expect(child_element.css("option")).to have(2).items
+        expect(child_element.css("option")[0].text).to eq "child1"
+        expect(child_element.css("option")[0]["value"]).to eq "2"
+        expect(child_element.css("option")[1].text).to eq "child2"
+        expect(child_element.css("option")[1]["value"]).to eq "3"
+      end
+      child_elements[2].tap do |child_element|
+        expect(child_element.name).to eq "option"
+        expect(child_element.text).to eq "parent3"
+        expect(child_element["value"]).to eq "4"
+      end
+      child_elements[3].tap do |child_element|
+        expect(child_element.name).to eq "optgroup"
+        expect(child_element["label"]).to eq "parent4"
+        expect(child_element.css("option")).to have(2).items
+        expect(child_element.css("option")[0].text).to eq "child3"
+        expect(child_element.css("option")[0]["value"]).to eq "5"
+        expect(child_element.css("option")[1].text).to eq "child4"
+        expect(child_element.css("option")[1]["value"]).to eq "6"
+      end
+      child_elements[4].tap do |child_element|
+        expect(child_element.name).to eq "option"
+        expect(child_element.text).to eq "parent5"
+        expect(child_element["value"]).to eq "7"
+      end
+    end
+  end
 end
