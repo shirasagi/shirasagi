@@ -237,7 +237,7 @@ module SS
           var pickerInstance = SS_DateTimePicker.instance(element);
           pickerInstance.momentValue(value ? moment(value) : null);
 
-          $(element).datetimepicker("validate");
+          $(element).datetimepicker("validate").datetimepicker("hide");
           resolve(true);
         }
 
