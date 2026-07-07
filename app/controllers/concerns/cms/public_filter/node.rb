@@ -22,7 +22,7 @@ module Cms::PublicFilter::Node
     @cur_node = node
     controller = node.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
 
-    agent = new_agent controller
+    agent = new_agent(controller, node.url)
     agent.controller.request.path_parameters.merge! spec
     agent.controller.params.merge! spec
     agent.render spec[:action]

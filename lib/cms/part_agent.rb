@@ -23,7 +23,7 @@ class Cms::PartAgent < SS::Agent
     @part = part
     @options = options
 
-    super(controller)
+    super(controller, options[:cur_path])
 
     self.controller.params
     self.controller.request = ActionDispatch::Request.new(new_env)

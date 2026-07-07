@@ -11,7 +11,7 @@ module Cms::PublicFilter::Page
     @cur_page = page
     controller = page.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
 
-    agent = new_agent controller
+    agent = new_agent(controller, page.url)
     agent.controller.params.merge! spec
     agent.render spec[:action]
   end
@@ -36,7 +36,7 @@ module Cms::PublicFilter::Page
     @csrf_token    = false
     @generate_page = true
 
-    agent = SS::Agent.new self.class
+    agent = SS::Agent.new(self.class, @cur_path)
     self.params   = agent.controller.params
     self.request  = agent.controller.request
     self.response = agent.controller.response
