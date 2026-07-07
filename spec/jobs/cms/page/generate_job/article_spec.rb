@@ -71,11 +71,30 @@ describe Cms::Page::GenerateJob, dbscope: :example do
     it do
       expect(File.size(page1.path)).to be > 0
       expect(File.size(ss_file1.public_path)).to be > 0
+      Nokogiri::HTML5::Document.parse(File.read(page1.path)).tap do |doc|
+        title_elements = doc.css("title")
+        expect(title_elements).to have(1).items
+        expect(title_elements[0].text.strip).to include page1.name
+
+        canonical_elements = doc.css("[rel=\"canonical\"]")
+        expect(canonical_elements).to have(1).items
+        expect(canonical_elements[0]["href"]).to eq page1.full_url
+      end
 
       expect(File.size(page2.path)).to be > 0
       expect(File.size(ss_file2.public_path)).to be > 0
       expect(File.size(ss_file3.public_path)).to be > 0
       expect(File.size(ss_file4.public_path)).to be > 0
+      Nokogiri::HTML5::Document.parse(File.read(page2.path)).tap do |doc|
+        title_elements = doc.css("title")
+        expect(title_elements).to have(1).items
+        expect(title_elements[0].text.strip).to include page2.name
+
+        canonical_elements = doc.css("[rel=\"canonical\"]")
+        expect(canonical_elements).to have(1).items
+        expect(canonical_elements[0]["href"]).to eq page2.full_url
+      end
+
       expect(Cms::Task.count).to eq 2
       Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_pages').first.tap do |task|
         expect(task.state).to eq 'completed'
@@ -142,11 +161,29 @@ describe Cms::Page::GenerateJob, dbscope: :example do
     it do
       expect(File.size(page1.path)).to be > 0
       expect(File.size(ss_file1.public_path)).to be > 0
+      Nokogiri::HTML5::Document.parse(File.read(page1.path)).tap do |doc|
+        title_elements = doc.css("title")
+        expect(title_elements).to have(1).items
+        expect(title_elements[0].text.strip).to include page1.name
+
+        canonical_elements = doc.css("[rel=\"canonical\"]")
+        expect(canonical_elements).to have(1).items
+        expect(canonical_elements[0]["href"]).to eq page1.full_url
+      end
 
       expect(File.size(page2.path)).to be > 0
       expect(File.size(ss_file2.public_path)).to be > 0
       expect(File.size(ss_file3.public_path)).to be > 0
       expect(File.size(ss_file4.public_path)).to be > 0
+      Nokogiri::HTML5::Document.parse(File.read(page2.path)).tap do |doc|
+        title_elements = doc.css("title")
+        expect(title_elements).to have(1).items
+        expect(title_elements[0].text.strip).to include page2.name
+
+        canonical_elements = doc.css("[rel=\"canonical\"]")
+        expect(canonical_elements).to have(1).items
+        expect(canonical_elements[0]["href"]).to eq page2.full_url
+      end
 
       expect(Cms::Task.count).to eq 2
       Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_pages').first.tap do |task|

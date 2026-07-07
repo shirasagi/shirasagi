@@ -18,6 +18,15 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
     it do
       expect(File.exist?("#{node.path}/index.html")).to be_truthy
+      Nokogiri::HTML5::Document.parse(File.read("#{node.path}/index.html")).tap do |doc|
+        title_elements = doc.css("title")
+        expect(title_elements).to have(1).items
+        expect(title_elements[0].text.strip).to include node.name
+
+        canonical_elements = doc.css("[rel=\"canonical\"]")
+        expect(canonical_elements).to have(1).items
+        expect(canonical_elements[0]["href"]).to eq node.full_url
+      end
 
       expect(Cms::Task.count).to eq 2
       Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_nodes').first.tap do |task|
@@ -146,6 +155,15 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
     it do
       expect(File.exist?("#{node.path}/index.html")).to be_truthy
+      Nokogiri::HTML5::Document.parse(File.read("#{node.path}/index.html")).tap do |doc|
+        title_elements = doc.css("title")
+        expect(title_elements).to have(1).items
+        expect(title_elements[0].text.strip).to include node.name
+
+        canonical_elements = doc.css("[rel=\"canonical\"]")
+        expect(canonical_elements).to have(1).items
+        expect(canonical_elements[0]["href"]).to eq node.full_url
+      end
 
       expect(Cms::Task.count).to eq 2
       Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_nodes').first.tap do |task|
