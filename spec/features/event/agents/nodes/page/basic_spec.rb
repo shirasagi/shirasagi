@@ -310,7 +310,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       visit "#{node.full_url}list.html"
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-list")
-      canonical_url = format("%s%04d%02d/list.html", node.full_url, today.year, today.month, node.event_display)
+      canonical_url = format("%s%04d%02d/list.html", node.full_url, today.year, today.month)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -320,7 +320,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_css("div#event-table")
       expect(page).to have_css("td.#{today.strftime('%a').downcase}.today")
       expect(page).to have_css("td.#{tomorrow.strftime('%a').downcase}.future")
-      canonical_url = format("%s%04d%02d/table.html", node.full_url, today.year, today.month, node.event_display)
+      canonical_url = format("%s%04d%02d/table.html", node.full_url, today.year, today.month)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -518,7 +518,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_css("div#event-table")
       expect(page).to have_css("td.#{today.strftime('%a').downcase}.today")
       expect(page).to have_css("td.#{tomorrow.strftime('%a').downcase}.future")
-      canonical_url = format("%s%04d%02d/table.html", node.full_url, today.year, today.month, node.event_display)
+      canonical_url = format("%s%04d%02d/table.html", node.full_url, today.year, today.month)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 

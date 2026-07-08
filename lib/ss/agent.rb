@@ -15,9 +15,7 @@ class SS::Agent
     @controller.request  = ActionDispatch::Request.new(
       "rack.input" => "",
       "REQUEST_METHOD" => "GET",
-      "PATH_INFO" => request_path,
-      # "REQUEST_PATH" => request_path,
-      # "REQUEST_URI" => request_path,
+      "PATH_INFO" => request_path
     )
     @controller.response = ActionDispatch::Response.new.tap do |res|
       res.request = @controller.request
