@@ -78,11 +78,11 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d/", year, month)
+      visit format("%s%04d%02d/", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -90,11 +90,11 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d/index.html", year, month)
+      visit format("%s%04d%02d/index.html", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -102,11 +102,11 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d", year, month)
+      visit format("%s%04d%02d", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -114,11 +114,11 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d.html", year, month)
+      visit format("%s%04d%02d.html", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -126,7 +126,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      full_url = format("#{node.full_url}%04d%02d/list.html", year, month)
+      full_url = format("%s%04d%02d/list.html", node.full_url, year, month)
       visit full_url
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-list")
@@ -137,7 +137,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      full_url = format("#{node.full_url}%04d%02d/table.html", year, month)
+      full_url = format("%s%04d%02d/table.html", node.full_url, year, month)
       visit full_url
       expect(status_code).to eq 404
     end
@@ -147,11 +147,11 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       year = time.year
       month = time.month
       day = time.day
-      visit format("#{node.full_url}%04d%02d%02d/", year, month, day)
+      visit format("%s%04d%02d%02d/", node.full_url, year, month, day)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, day), format: :long)))
       expect(page).to have_css("div#event-list", text: '')
-      canonical_url = format("#{node.full_url}%04d%02d%02d/", year, month, day)
+      canonical_url = format("%s%04d%02d%02d/", node.full_url, year, month, day)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -160,11 +160,11 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       year = time.year
       month = time.month
       day = time.day
-      visit format("#{node.full_url}%04d%02d%02d/index.html", year, month, day)
+      visit format("%s%04d%02d%02d/index.html", node.full_url, year, month, day)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, day), format: :long)))
       expect(page).to have_css("div#event-list", text: '')
-      canonical_url = format("#{node.full_url}%04d%02d%02d/", year, month, day)
+      canonical_url = format("%s%04d%02d%02d/", node.full_url, year, month, day)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -173,11 +173,11 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       year = time.year
       month = time.month
       day = time.day
-      visit format("#{node.full_url}%04d%02d%02d", year, month, day)
+      visit format("%s%04d%02d%02d", node.full_url, year, month, day)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, day), format: :long)))
       expect(page).to have_css("div#event-list", text: '')
-      canonical_url = format("#{node.full_url}%04d%02d%02d/", year, month, day)
+      canonical_url = format("%s%04d%02d%02d/", node.full_url, year, month, day)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -186,11 +186,11 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       year = time.year
       month = time.month
       day = time.day
-      visit format("#{node.full_url}%04d%02d%02d.html", year, month, day)
+      visit format("%s%04d%02d%02d.html", node.full_url, year, month, day)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, day), format: :long)))
       expect(page).to have_css("div#event-list", text: '')
-      canonical_url = format("#{node.full_url}%04d%02d%02d/", year, month, day)
+      canonical_url = format("%s%04d%02d%02d/", node.full_url, year, month, day)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -229,11 +229,11 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d/", year, month)
+      visit format("%s%04d%02d/", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -241,11 +241,11 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d/index.html", year, month)
+      visit format("%s%04d%02d/index.html", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -253,11 +253,11 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d", year, month)
+      visit format("%s%04d%02d", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -265,11 +265,11 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d.html", year, month)
+      visit format("%s%04d%02d.html", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -277,7 +277,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      full_url = format("#{node.full_url}%04d%02d/list.html", year, month)
+      full_url = format("%s%04d%02d/list.html", node.full_url, year, month)
       visit full_url
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-list")
@@ -288,7 +288,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      full_url = format("#{node.full_url}%04d%02d/table.html", year, month)
+      full_url = format("%s%04d%02d/table.html", node.full_url, year, month)
       visit full_url
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
@@ -334,13 +334,13 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d/", year, month)
+      visit format("%s%04d%02d/", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
       expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
       expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -348,13 +348,13 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d/index.html", year, month)
+      visit format("%s%04d%02d/index.html", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
       expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
       expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -362,13 +362,13 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d", year, month)
+      visit format("%s%04d%02d", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
       expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
       expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -376,13 +376,13 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d.html", year, month)
+      visit format("%s%04d%02d.html", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
       expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
       expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -390,7 +390,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      full_url = format("#{node.full_url}%04d%02d/list.html", year, month)
+      full_url = format("%s%04d%02d/list.html", node.full_url, year, month)
       visit full_url
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-list")
@@ -401,7 +401,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      full_url = format("#{node.full_url}%04d%02d/table.html", year, month)
+      full_url = format("%s%04d%02d/table.html", node.full_url, year, month)
       visit full_url
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
@@ -441,11 +441,11 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d/", year, month)
+      visit format("%s%04d%02d/", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -453,11 +453,11 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d/index.html", year, month)
+      visit format("%s%04d%02d/index.html", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -465,11 +465,11 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d", year, month)
+      visit format("%s%04d%02d", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -477,11 +477,11 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d.html", year, month)
+      visit format("%s%04d%02d.html", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -489,7 +489,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      full_url = format("#{node.full_url}%04d%02d/list.html", year, month)
+      full_url = format("%s%04d%02d/list.html", node.full_url, year, month)
       visit full_url
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-list")
@@ -500,7 +500,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      full_url = format("#{node.full_url}%04d%02d/table.html", year, month)
+      full_url = format("%s%04d%02d/table.html", node.full_url, year, month)
       visit full_url
       expect(status_code).to eq 404
     end
@@ -540,13 +540,13 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d/", year, month)
+      visit format("%s%04d%02d/", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
       expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
       expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -554,13 +554,13 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d/index.html", year, month)
+      visit format("%s%04d%02d/index.html", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
       expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
       expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -568,13 +568,13 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d", year, month)
+      visit format("%s%04d%02d", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
       expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
       expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -582,13 +582,13 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit format("#{node.full_url}%04d%02d.html", year, month)
+      visit format("%s%04d%02d.html", node.full_url, year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
       expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
       expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
-      canonical_url = format("#{node.full_url}%04d%02d/#{node.event_display}.html", year, month)
+      canonical_url = format("%s%04d%02d/%s.html", node.full_url, year, month, node.event_display)
       expect(page).to have_css("[rel=\"canonical\"][href=\"#{canonical_url}\"]")
     end
 
@@ -596,7 +596,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      url = format("#{node.full_url}%04d%02d/list.html", year, month)
+      url = format("%s%04d%02d/list.html", node.full_url, year, month)
       visit url
       expect(status_code).to eq 404
     end
@@ -605,7 +605,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       time = Time.zone.now
       year = time.year
       month = time.month
-      full_url = format("#{node.full_url}%04d%02d/table.html", year, month)
+      full_url = format("%s%04d%02d/table.html", node.full_url, year, month)
       visit full_url
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
