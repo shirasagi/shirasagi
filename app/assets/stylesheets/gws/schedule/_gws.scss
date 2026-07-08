@@ -872,6 +872,40 @@
   }
 }
 
+// multiple calendar (mb scroller)
+.calendar-mb-scroller {
+  @include init.mb {
+    .fc-toolbar {
+      position: sticky;
+      left: 0;
+      width: 443px;
+    }
+    .calendar-multiple-header .header-wrap {
+      position: sticky;
+      left: 5px;
+      width: 420px;
+    }
+    .calendar-attr {
+      float: none;
+      margin-top: 3px;
+      span {
+        margin-left: 0px;
+      }
+    }
+  }
+  &[data-view="timelineDay"] {
+    overflow: auto;
+    .calendar-wrap {
+      min-width: 1200px;
+    }
+    @include init.mb {
+      .calendar-wrap {
+        min-width: 1600px;
+      }
+    }
+  }
+}
+
 // facility calendar
 .calendar.facility .fc-facility {
   display: none;
