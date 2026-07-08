@@ -74,7 +74,7 @@ SS.ready(function() {
             maxTime: '22:00'
           }
         },
-        viewRender: function(view, element) {
+        viewRender: function(view, _element) {
           $(selector).closest(".calendar-mb-scroller").attr("data-view", view.type);
         },
       };
