@@ -33,7 +33,7 @@
         <% if @mode == 'trash' %>
           <%= link_to t('ss.links.restore'), action: :undo_delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
           <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-        <% else %>
+        <% elsif @mode != 'readable' %>
           <%= link_to t('ss.links.delete'), action: :soft_delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
         <% end %>
 
