@@ -25,6 +25,12 @@ class Event::Agents::Nodes::PageController < ApplicationController
     raise SS::NotFoundError if @date.nil?
     raise SS::NotFoundError if !within_one_year?(@date) && !within_one_year?(@date.advance(months: 1, days: -1))
 
+    # set canonical url
+    # サブサイト対応のため #full_url を用いて join した後 request_uri でパスのみ取り出す
+    full_url = Addressable::URI.join(
+      @cur_node.full_url, format("%04d%02d", @date.year, @date.month) + "/", "#{@cur_display}.#{params[:format] || "html"}")
+    request.path_info = full_url.request_uri
+
     index_monthly
   end
 
@@ -35,6 +41,15 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @date  = Date.new(@year, @month, @day) rescue nil
     raise SS::NotFoundError if @date.nil?
     raise SS::NotFoundError if !within_one_year?(@date)
+
+    # set canonical url
+    # サブサイト対応のため #full_url を用いて join した後 request_uri でパスのみ取り出す
+    full_url = Addressable::URI.join(
+      @cur_node.full_url, format("%04d%02d%02d", @date.year, @date.month, @date.day) + "/")
+    if params[:format].present? && params[:format] != "html"
+      full_url = full_url.join("index.#{params[:format]}")
+    end
+    request.path_info = full_url.request_uri
 
     index_daily
   end

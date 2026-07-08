@@ -58,7 +58,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
             canonical_elements = doc.css("[rel=\"canonical\"]")
             expect(canonical_elements).to have(1).items
-            expect(canonical_elements[0]["href"]).to eq "#{node.full_url}#{cur_month.strftime("%Y%m")}/"
+            expect(canonical_elements[0]["href"]).to eq "#{node.full_url}#{cur_month.strftime("%Y%m")}/#{node.event_display}.html"
           end
           Nokogiri::HTML5::Document.parse(File.read("#{node.path}/#{cur_month.strftime("%Y%m")}/list.html")).tap do |doc|
             title_elements = doc.css("title")
@@ -145,7 +145,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
             canonical_elements = doc.css("[rel=\"canonical\"]")
             expect(canonical_elements).to have(1).items
-            expect(canonical_elements[0]["href"]).to eq "#{node.full_url}#{cur_month.strftime("%Y%m")}/"
+            expect(canonical_elements[0]["href"]).to eq "#{node.full_url}#{cur_month.strftime("%Y%m")}/#{node.event_display}.html"
           end
           Nokogiri::HTML5::Document.parse(File.read("#{node.path}/#{cur_month.strftime("%Y%m")}/list.html")).tap do |doc|
             title_elements = doc.css("title")
