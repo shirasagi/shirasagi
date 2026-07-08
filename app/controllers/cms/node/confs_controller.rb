@@ -29,6 +29,14 @@ class Cms::Node::ConfsController < ApplicationController
 
   def destroy
     raise "403" unless @item.allowed?(:delete, @cur_user)
+
+    if SS.config.cms.node_destroy_job.try(:[], 'enable').present?
+      Cms::Node::DestroyJob.bind(site_id: @cur_site.id, node_id: @cur_node.id, user_id: @cur_user.id).
+        perform_later([@item.id])
+      render_destroy true, location: redirect_url_on_destroy, notice: t('ss.notice.started_purge')
+      return
+    end
+
     render_destroy @item.destroy, location: redirect_url_on_destroy
   end
 

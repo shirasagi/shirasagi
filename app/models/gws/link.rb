@@ -14,13 +14,15 @@ class Gws::Link
 
   seqid :id
   field :name, type: String
+  field :order, type: Integer, default: 0
 
-  permit_params :name
+  permit_params :name, :order
 
   validates :name, presence: true, length: { maximum: 80 }
+  validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
 
   default_scope -> {
-    order_by released: -1
+    order_by order: 1, released: -1
   }
 
   class << self

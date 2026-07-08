@@ -72,7 +72,9 @@ Rails.application.routes.draw do
       get :frame_content, on: :member
     end
     resources :links, concerns: [:deletion]
-    resources :public_links, only: [:index, :show]
+    resources :public_links, only: [:index, :show] do
+      get :menu, on: :collection
+    end
     resources :histories, only: [:index]
     resources :histories, only: [:index, :show], path: 'histories/:ymd', as: :daily_histories do
       match :download, on: :collection, via: [:get, :post]

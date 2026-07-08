@@ -4,7 +4,7 @@
 <% end %>
 
 <dl class="see">
-  <dt class="required"><%= @model.t :name %></dt>
+  <dt><%= @model.t :name %><%= required_mark %></dt>
   <dd>
     <% if @item.depth.to_i >= 3 %>
       <%= @item.name %>

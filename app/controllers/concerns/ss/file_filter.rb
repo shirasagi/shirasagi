@@ -104,8 +104,16 @@ module SS::FileFilter
 
     send_enum converter.to_enum, type: @item.content_type, filename: @item.filename, disposition: :inline
     converter = nil
+  rescue Mongoid::Errors::DocumentNotFound, SS::NotFoundError
+    # 500 ではなく 404 を応答させる
+    raise
+  rescue SS::ForbiddenError
+    # 500 ではなく 403 を応答させる
+    raise
   rescue => e
     raise if e.to_s.numeric?
+
+    Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
     raise "500"
   ensure
     if converter

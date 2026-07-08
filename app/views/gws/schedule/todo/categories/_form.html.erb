@@ -1,5 +1,5 @@
 <dl class="see">
-  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %><%= required_mark %></dt>
   <dd><%= f.text_field :in_basename, autofocus: pc_browser?, value: @item.in_basename || @item.basename %></dd>
 
   <dt><%= @model.t :in_parent_id %></dt>

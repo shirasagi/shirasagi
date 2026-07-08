@@ -24,6 +24,7 @@ class Gws::Board::TopicsController < ApplicationController
   end
 
   def set_items
+    set_mode
     @items ||= begin
       base_criteria = @model.site(@cur_site).topic
       case @mode
@@ -37,7 +38,6 @@ class Gws::Board::TopicsController < ApplicationController
         conditions << @model.allow_condition(:read, @cur_user, site: @cur_site)
         base_criteria.and_public.without_deleted.where("$and" => [{ "$or" => conditions }])
       end
-      base_criteria
     end
   end
 

@@ -1,8 +1,51 @@
+<%= jquery do %>
+  // ドロップダウンの項目は開いた時に初めて生成する。
+  // 一覧ページにはツリーナビに同名のフォルダーリンクが既に存在するため、移動先項目を
+  // 常時サーバー描画するとフォルダー名のクリック対象が二重化する。共有ファイル系の
+  // feature spec は多くがスコープ無しの click_on folder.name でツリーナビを操作しており
+  // （ignore_hidden_elements = false 環境では非表示の項目も照合対象）、常設すると広範な
+  // 曖昧マッチを招く。バインドは DOM ready 時・生成はユーザーが開いた後のため本番でも安全。
+  $(".move-menu").each(function() {
+    var $menu = $(this);
+    var $list = $menu.find(".dropdown-menu");
+    $menu.on("ss:dropdownOpened", function() {
+      if ($list.data("populated")) { return; }
+      $list.data("populated", true);
+
+      var folders = $menu.data("folders") || [];
+      $.each(folders, function(_i, folder) {
+        var $a = $("<a/>", { href: "#", role: "menuitem", "data-folder-id": folder.id, text: folder.name });
+        $list.append($("<li/>", { role: "none" }).append($a));
+      });
+    });
+  });
+
+  $(".move-menu").on("click", ".dropdown-menu a", function() {
+    var folderId = $(this).attr("data-folder-id");
+    var form = Gws_Share_File.buildForm("<%= url_for(action: :move_all) %>", "<%= t('gws/share.links.confirm.move') %>");
+    if (!form) { return false; }
+    form.append($("<input/>", { name: "folder_id", value: folderId, type: "hidden" }));
+    form.appendTo(document.body)[0].requestSubmit();
+    return false;
+  });
+<% end %>
+
 <div class="list-head">
   <label class="check"><input type="checkbox" /></label>
 
   <div class="list-head-action">
     <%= ss_button_to t("gws/share.links.file_download"), url_for(action: :download_all), class: "download-all btn btn-list-head-action", method: "post", confirm: t('gws/share.links.confirm.download_all') %>
+
+    <% if @destination_folders.present? %>
+      <div class="dropdown dropdown-toggle gws-share-dropdown move-menu ml-2"
+           data-folders="<%= @destination_folders.map { |folder| { id: folder.id, name: folder.name } }.to_json %>">
+        <button type="button" class="btn" aria-haspopup="true" aria-expanded="false">
+          <%= t('gws/share.links.move') %> <i class="material-icons md-13">keyboard_arrow_down</i>
+        </button>
+        <ul class="dropdown-menu" role="menu"></ul>
+      </div>
+    <% end %>
+
     <%=
       if @deletable
         ss_button_to t("ss.links.delete"), url_for(action: :disable_all), class: "disable-all btn btn-red ml-2 btn-list-head-action", method: "post", confirm: t('ss.confirm.soft_delete')

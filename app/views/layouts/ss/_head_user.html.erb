@@ -4,6 +4,7 @@
   <% if @ss_mode == :webmail %>
     <%= render "layouts/ss/head_user_webmail_memo", local_assigns %>
   <% elsif @ss_mode == :gws %>
+    <%= render "layouts/ss/head_user_gws_links", local_assigns %>
     <%= render "layouts/ss/head_user_gws_bookmark", local_assigns %>
     <%= render "layouts/ss/head_user_gws_memo", local_assigns %>
   <% end %>

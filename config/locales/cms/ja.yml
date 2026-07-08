@@ -3798,6 +3798,7 @@ ja:
       cms/node/generate_job: CMS/フォルダー書き出し
       cms/node/import_job: CMS/フォルダーインポート
       cms/node/release_job: CMS/フォルダー公開
+      cms/node/destroy_job: CMS/フォルダー削除
       cms/page/generate_job: CMS/ページ書き出し
       cms/page/release_job: CMS/ページ公開
       cms/page/remove_job: CMS/ページ削除

@@ -25,6 +25,7 @@
 @use "elasticsearch/gws" as gws_elasticsearch;
 @use "tabular/gws" as gws_tabular;
 @use "group/gws" as gws_group;
+@use "public_links/menu" as gws_public_links;
 
 // File
 .gws-addon-file {

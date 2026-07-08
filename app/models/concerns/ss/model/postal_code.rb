@@ -3,6 +3,14 @@ module SS::Model::PostalCode
   extend SS::Translation
   include SS::Document
 
+  MAX_PREFECTURE_LENGTH = 40
+  MAX_PREFECTURE_KANA_LENGTH = 40
+  MAX_PREFECTURE_CODE_LENGTH = 40
+  MAX_CITY_LENGTH = 40
+  MAX_CITY_KANA_LENGTH = 40
+  MAX_TOWN_LENGTH = 80
+  MAX_TOWN_KANA_LENGTH = 80
+
   included do
     store_in collection: "ss_postal_codes"
 
@@ -19,13 +27,13 @@ module SS::Model::PostalCode
     permit_params :code, :prefecture, :prefecture_kana, :prefecture_code, :city, :city_kana, :town, :town_kana
 
     validates :code, presence: true, uniqueness: true
-    validates :prefecture, presence: true, length: { maximum: 40 }
-    validates :prefecture_kana, length: { maximum: 40 }
-    validates :prefecture_code, length: { maximum: 40 }
-    validates :city, length: { maximum: 40 }
-    validates :city_kana, length: { maximum: 40 }
-    validates :town, length: { maximum: 80 }
-    validates :town_kana, length: { maximum: 80 }
+    validates :prefecture, presence: true, length: { maximum: MAX_PREFECTURE_LENGTH }
+    validates :prefecture_kana, length: { maximum: MAX_PREFECTURE_KANA_LENGTH }
+    validates :prefecture_code, length: { maximum: MAX_PREFECTURE_CODE_LENGTH }
+    validates :city, length: { maximum: MAX_CITY_LENGTH }
+    validates :city_kana, length: { maximum: MAX_CITY_KANA_LENGTH }
+    validates :town, length: { maximum: MAX_TOWN_LENGTH }
+    validates :town_kana, length: { maximum: MAX_TOWN_KANA_LENGTH }
 
     index({ code: 1 }, { unique: true })
     index({ prefecture_code: 1, code: 1, _id: 1 })

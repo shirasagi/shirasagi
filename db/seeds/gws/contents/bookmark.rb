@@ -19,7 +19,7 @@ create_bookmark(
   folder: folder, bookmark_model: 'share'
 )
 create_bookmark(
-  cur_user: u('sys'), name: 'SHIRASAGI公式サイト', url: 'http://www.ss-proj.org/',
+  cur_user: u('sys'), name: 'SHIRASAGI公式サイト', url: 'https://www.ss-proj.org/',
   folder: folder, bookmark_model: 'other'
 )
 create_bookmark(

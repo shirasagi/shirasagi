@@ -48,6 +48,9 @@ class Cms::FormSearchParam
     when Hash
       operator = value[:op].presence
       value = value[:val].presence
+    when Array
+      operator = 'in'
+      value = value.select(&:present?)
     end
     operator ||= 'all'
 

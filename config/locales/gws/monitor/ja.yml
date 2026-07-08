@@ -14,7 +14,7 @@ ja:
       update: 更新
       delete: 削除
       disabled_items: 削除済み
-      browsing_state: 参加グループ
+      browsing_state: 照会対象グループ
       browsed: 閲覧
       type: 状態
       mark_at: 確認日時
@@ -171,7 +171,7 @@ ja:
     addons:
       gws/monitor/category: カテゴリー
       gws/monitor/contributor: 投稿者
-      gws/monitor/group: 参加グループ
+      gws/monitor/group: 照会対象グループ
       gws/monitor/release: 公開設定
       gws/monitor/group_setting: 照会・回答
 
@@ -252,7 +252,7 @@ ja:
         release_date: 公開開始日時(予約)
         close_date: 公開終了日時(予約)
       gws/addon/monitor/group:
-        attend_group_ids: 参加グループ
+        attend_group_ids: 照会対象グループ
       gws/monitor/postable:
         name: タイトル
         created: 作成日時
@@ -305,7 +305,7 @@ ja:
           - 投稿者名を選択します。
       gws/addon/monitor/group:
         group_name:
-          - 参加するグループを選択します。
+          - 照会対象グループを選択します。
           - 「公開設定」でステータスを下書きにすることで編集可能となります。
       gws/monitor/postable:
         name:
