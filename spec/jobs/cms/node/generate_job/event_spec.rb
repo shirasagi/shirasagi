@@ -7,6 +7,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
   let!(:page)  do
     create(:event_page, cur_site: cms_site, cur_node: node, layout_id: layout.id)
   end
+  let(:today) { Time.zone.today }
 
   before do
     Cms::Task.create!(site_id: site.id, node_id: node.id, name: 'cms:generate_nodes', state: 'ready')
@@ -42,12 +43,12 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
           canonical_elements = doc.css("[rel=\"canonical\"]")
           expect(canonical_elements).to have(1).items
-          expect(canonical_elements[0]["href"]).to eq node.full_url
+          expect(canonical_elements[0]["href"]).to eq "#{node.full_url}#{today.strftime("%Y%m")}/#{node.event_display}.html"
         end
 
-        this_month = Time.zone.now.beginning_of_month
-        cur_month = this_month - 1.year
-        while cur_month <= this_month + 1.year
+        cur_month = today - 1.year
+        last_month = today + 1.year
+        while cur_month <= last_month
           expect(File.exist?("#{node.path}/#{cur_month.strftime("%Y%m")}/index.html")).to be_truthy
           expect(File.exist?("#{node.path}/#{cur_month.strftime("%Y%m")}/list.html")).to be_truthy
           expect(File.exist?("#{node.path}/#{cur_month.strftime("%Y%m")}/table.html")).to be_truthy
@@ -129,12 +130,12 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
           canonical_elements = doc.css("[rel=\"canonical\"]")
           expect(canonical_elements).to have(1).items
-          expect(canonical_elements[0]["href"]).to eq node.full_url
+          expect(canonical_elements[0]["href"]).to eq "#{node.full_url}#{today.strftime("%Y%m")}/#{node.event_display}.html"
         end
 
-        this_month = Time.zone.now.beginning_of_month
-        cur_month = this_month - 1.year
-        while cur_month <= this_month + 1.year
+        cur_month = today - 1.year
+        last_month = today + 1.year
+        while cur_month <= last_month
           expect(File.exist?("#{node.path}/#{cur_month.strftime("%Y%m")}/index.html")).to be_truthy
           expect(File.exist?("#{node.path}/#{cur_month.strftime("%Y%m")}/list.html")).to be_truthy
           expect(File.exist?("#{node.path}/#{cur_month.strftime("%Y%m")}/table.html")).to be_falsey
