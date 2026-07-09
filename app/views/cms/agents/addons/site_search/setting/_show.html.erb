@@ -17,6 +17,12 @@
   <dt><%= @model.t :organization_state %></dt>
   <dd><%= @item.label(:organization_state) %></dd>
 
+  <dt><%= @model.t :sort_state %></dt>
+  <dd><%= @item.label(:sort_state) %></dd>
+
+  <dt><%= @model.t :sort_type %></dt>
+  <dd><%= @item.label(:sort_type) %></dd>
+
   <dt><%= t("cms.node_config") %></dt>
   <dd><%=br @item.ordered_st_article_nodes.pluck(:name) %></dd>
 </dl>

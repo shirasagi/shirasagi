@@ -78,6 +78,11 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
     end
 
     @s.sort = params[:sort]
+
+    if params[:sort].blank? && @cur_node.sort_type.present?
+      @s.sort = @cur_node.sort_type
+    end
+
     @s.field_name = %w(text_index content title)
     @s.from = (params[:page].to_i - 1) * @s.size if params[:page].present?
     @result = @s.search

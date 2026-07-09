@@ -39,18 +39,20 @@ document.addEventListener('DOMContentLoaded', () => {
     <%= I18n.t('gws/elasticsearch.format.search_results_count',
       count: count, from: @item.from + 1, to: @item.from + @item.size, took: @result['took'] / 1000.0) %>
   </div>
-  <div>
-    <%
-      sort_params = params.permit(:target, s: {})
-      options = %w(score released).map do |value|
-        name = t("cms.search_sort_options.#{value}")
-        [name, value, 'data-href': "#{@cur_node.url}?" + url_for(sort_params.merge(sort: value).to_query)]
-      end
-    %>
-    <%= t('cms.search_sort') %>
-    <%= select_tag 'sort', options_for_select(options, selected: params[:sort]), id: nil, "aria-label" => t('cms.search_sort'),
-      onchange: 'location.href = this.children[this.selectedIndex].getAttribute("data-href");' %>
-  </div>
+  <% if @cur_node.sort_state != 'hide' %>
+    <div>
+      <%
+        sort_params = params.permit(:target, s: {})
+        options = %w(score released).map do |value|
+          name = t("cms.search_sort_options.#{value}")
+          [name, value, 'data-href': "#{@cur_node.url}?" + url_for(sort_params.merge(sort: value).to_query)]
+        end
+      %>
+      <%= t('cms.search_sort') %>
+      <%= select_tag 'sort', options_for_select(options, selected: params[:sort].presence || @cur_node.sort_type), id: nil, "aria-label" => t('cms.search_sort'),
+        onchange: 'location.href = this.children[this.selectedIndex].getAttribute("data-href");' %>
+    </div>
+  <% end %>
 </div>
 
 <div class="cms-site-search-pages pages">
