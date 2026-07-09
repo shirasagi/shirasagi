@@ -24,7 +24,7 @@ SHIRASAGI is Contents Management System.
 - MongoDB 7.0 or 8.0
 - Unicorn / Puma
 - Node.js 24
-- Elasticsearch 7.1
+- Elasticsearch 8
 
 ## Installation (Auto)
 
