@@ -47,11 +47,20 @@
       </div>
     <% end %>
 
-    <% if @item.permit_comment? && (@item.allowed?(:edit, @cur_user, site: @cur_site) || @item.member_include?(@cur_user)) %>
+    <%
+      show_comment_menu = @item.permit_comment? && (@item.allowed?(:edit, @cur_user, site: @cur_site) || @item.member_include?(@cur_user))
+      show_read_menu = !@item.browsed?(@cur_user)
+    %>
+    <% if show_comment_menu || show_read_menu %>
       <div class="menu">
-        <%= link_to new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: "btn primary" do %>
-          <%= md_icons.outlined "reply", size: 15 %>
-          <span class="button-label"><%= t('gws/board.links.comment') %></span>
+        <% if show_comment_menu %>
+          <%= link_to new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: "btn primary" do %>
+            <%= md_icons.outlined "reply", size: 15 %>
+            <span class="button-label"><%= t('gws/board.links.comment') %></span>
+          <% end %>
+        <% end %>
+        <% if show_read_menu %>
+          <%= link_to tag.span(t('gws/board.topic.set_browsed'), class: "button-label"), { action: :read, id: @item }, method: :post, class: "btn" %>
         <% end %>
       </div>
     <% end %>
