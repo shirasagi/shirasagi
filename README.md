@@ -20,7 +20,7 @@ SHIRASAGI is Contents Management System.
 
 - AlmaLinux, RockyLinux, Ubuntu
 - Ruby 3.2 or 3.3
-- Ruby on Rails 8.0
+- Ruby on Rails 8.1
 - MongoDB 7.0 or 8.0
 - Unicorn / Puma
 - Node.js 24
