@@ -17,6 +17,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="refresh" content="0; URL=<%= @redirect_link %>">
   <title><%= @window_name %></title>
+  <%= Cms.canonical_link_tag(@cur_site, request) %>
 </head>
 <body></body>
 
