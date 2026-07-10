@@ -19,7 +19,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
     # サブサイト対応のため #full_url を用いて join した後 request_uri でパスのみ取り出す
     full_url = Addressable::URI.join(
       @cur_node.full_url, format("%04d%02d", @date.year, @date.month) + "/", "#{@cur_display}.#{params[:format] || "html"}")
-    request.path_info = full_url.request_uri
+    request.env["ss.canonical_path"] = full_url.request_uri
 
     index_monthly
   end
@@ -35,7 +35,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
     # サブサイト対応のため #full_url を用いて join した後 request_uri でパスのみ取り出す
     full_url = Addressable::URI.join(
       @cur_node.full_url, format("%04d%02d", @date.year, @date.month) + "/", "#{@cur_display}.#{params[:format] || "html"}")
-    request.path_info = full_url.request_uri
+    request.env["ss.canonical_path"] = full_url.request_uri
 
     index_monthly
   end
@@ -55,7 +55,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
     if params[:format].present? && params[:format] != "html"
       full_url = full_url.join("index.#{params[:format]}")
     end
-    request.path_info = full_url.request_uri
+    request.env["ss.canonical_path"] = full_url.request_uri
 
     index_daily
   end
