@@ -461,4 +461,17 @@ module Cms
     end
     Addressable::URI.join(site.full_root_url, request_path).to_s
   end
+
+  def self.canonical_link_tag(site, request)
+    canonical_path = request.env["ss.canonical_path"] || SS.request_path(request)
+    return if canonical_path.blank? || canonical_path == :none
+
+    canonical_full_url = Cms.canonical_full_url(site, canonical_path)
+    return if canonical_full_url.blank?
+
+    ApplicationController.helpers.tag.link(rel: "canonical", href: canonical_full_url)
+  rescue => e
+    Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+    nil
+  end
 end
