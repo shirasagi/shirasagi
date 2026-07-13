@@ -65,5 +65,33 @@ describe Cms, type: :model, dbscope: :example do
         end
       end
     end
+
+    context "with calendar" do
+      it do
+        "/calendar/".tap do |request_path|
+          request = ActionDispatch::Request.new(
+            "rack.input" => "",
+            "REQUEST_METHOD" => "GET",
+            "PATH_INFO" => request_path,
+            "ss.canonical_path" => "/calendar/202607/table.html"
+          )
+          expect(Cms.canonical_full_url(site, request)).to eq "#{site.full_root_url}calendar/202607/table.html"
+        end
+      end
+    end
+
+    context "with none" do
+      it do
+        "/news/".tap do |request_path|
+          request = ActionDispatch::Request.new(
+            "rack.input" => "",
+            "REQUEST_METHOD" => "GET",
+            "PATH_INFO" => request_path,
+            "ss.canonical_path" => :none
+          )
+          expect(Cms.canonical_full_url(site, request)).to be_blank
+        end
+      end
+    end
   end
 end
