@@ -1,10 +1,10 @@
 <%
   calendar_options = {
-    restUrl: gws_notice_readables_path,
+    events: gws_notice_readables_path(format: :json),
     eventSources: [{ url: "#{url_for(action: :events, format: :json)}?#{search_query}" }],
     firstDay: @cur_site.schedule_first_day,
-    minTime: @cur_site.schedule_min_time,
-    maxTime: @cur_site.schedule_max_time
+    slotMinTime: @cur_site.schedule_min_time,
+    slotMaxTime: @cur_site.schedule_max_time
   }
   if @cur_site.schedule_drag_drop_denied?
     calendar_options[:eventStartEditable] = false
