@@ -6,11 +6,11 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
   context "with article/page node" do
     let!(:node) { create :article_node_page, cur_site: site, layout: layout, limit: 2, sort: "name" }
-    let!(:item1) { create :article_page, cur_site: site, cur_node: node, layout: layout, basename: "page1", name: "a_#{unique_id}" }
-    let!(:item2) { create :article_page, cur_site: site, cur_node: node, layout: layout, basename: "page2", name: "b_#{unique_id}" }
-    let!(:item3) { create :article_page, cur_site: site, cur_node: node, layout: layout, basename: "page3", name: "c_#{unique_id}" }
-    let!(:item4) { create :article_page, cur_site: site, cur_node: node, layout: layout, basename: "page4", name: "d_#{unique_id}" }
-    let!(:item5) { create :article_page, cur_site: site, cur_node: node, layout: layout, basename: "page5", name: "e_#{unique_id}" }
+    let!(:item1) { create :article_page, cur_site: site, cur_node: node, layout: layout, basename: "page1", name: "a" }
+    let!(:item2) { create :article_page, cur_site: site, cur_node: node, layout: layout, basename: "page2", name: "b" }
+    let!(:item3) { create :article_page, cur_site: site, cur_node: node, layout: layout, basename: "page3", name: "c" }
+    let!(:item4) { create :article_page, cur_site: site, cur_node: node, layout: layout, basename: "page4", name: "d" }
+    let!(:item5) { create :article_page, cur_site: site, cur_node: node, layout: layout, basename: "page5", name: "e" }
 
     describe "#perform without node" do
       before do
@@ -49,11 +49,11 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
   context "with faq/page node" do
     let!(:node) { create :faq_node_page, cur_site: site, layout: layout, limit: 2, sort: "name" }
-    let!(:item1) { create :faq_page, cur_site: site, cur_node: node, layout: layout, basename: "page1", name: "a_#{unique_id}" }
-    let!(:item2) { create :faq_page, cur_site: site, cur_node: node, layout: layout, basename: "page2", name: "b_#{unique_id}" }
-    let!(:item3) { create :faq_page, cur_site: site, cur_node: node, layout: layout, basename: "page3", name: "c_#{unique_id}" }
-    let!(:item4) { create :faq_page, cur_site: site, cur_node: node, layout: layout, basename: "page4", name: "d_#{unique_id}" }
-    let!(:item5) { create :faq_page, cur_site: site, cur_node: node, layout: layout, basename: "page5", name: "e_#{unique_id}" }
+    let!(:item1) { create :faq_page, cur_site: site, cur_node: node, layout: layout, basename: "page1", name: "a" }
+    let!(:item2) { create :faq_page, cur_site: site, cur_node: node, layout: layout, basename: "page2", name: "b" }
+    let!(:item3) { create :faq_page, cur_site: site, cur_node: node, layout: layout, basename: "page3", name: "c" }
+    let!(:item4) { create :faq_page, cur_site: site, cur_node: node, layout: layout, basename: "page4", name: "d" }
+    let!(:item5) { create :faq_page, cur_site: site, cur_node: node, layout: layout, basename: "page5", name: "e" }
 
     describe "#perform without node" do
       before do
@@ -92,11 +92,11 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
   context "with cms/node node" do
     let!(:node) { create :cms_node_node, cur_site: site, layout: layout, limit: 2, sort: "name" }
-    let!(:item1) { create :cms_node_page, cur_site: site, cur_node: node, layout: layout, basename: "page1", name: "a_#{unique_id}" }
-    let!(:item2) { create :cms_node_page, cur_site: site, cur_node: node, layout: layout, basename: "page2", name: "b_#{unique_id}" }
-    let!(:item3) { create :cms_node_page, cur_site: site, cur_node: node, layout: layout, basename: "page3", name: "c_#{unique_id}" }
-    let!(:item4) { create :cms_node_page, cur_site: site, cur_node: node, layout: layout, basename: "page4", name: "d_#{unique_id}" }
-    let!(:item5) { create :cms_node_page, cur_site: site, cur_node: node, layout: layout, basename: "page5", name: "e_#{unique_id}" }
+    let!(:item1) { create :cms_node_page, cur_site: site, cur_node: node, layout: layout, basename: "page1", name: "a" }
+    let!(:item2) { create :cms_node_page, cur_site: site, cur_node: node, layout: layout, basename: "page2", name: "b" }
+    let!(:item3) { create :cms_node_page, cur_site: site, cur_node: node, layout: layout, basename: "page3", name: "c" }
+    let!(:item4) { create :cms_node_page, cur_site: site, cur_node: node, layout: layout, basename: "page4", name: "d" }
+    let!(:item5) { create :cms_node_page, cur_site: site, cur_node: node, layout: layout, basename: "page5", name: "e" }
 
     describe "#perform without node" do
       before do
