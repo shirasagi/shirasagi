@@ -139,7 +139,8 @@ jobs:
           if [ $? -ne 0 ]; then
             exit 1
           fi
-          echo $file_list | xargs bundle exec rspec --profile 10
+          set -o pipefail
+          echo $file_list | xargs bundle exec rspec --profile 10 | bundle exec ruby .travis.d/extract_spec_failures.rb
         env:
           TZ: "Asia/Tokyo"
           LANG: ja_JP.UTF-8
@@ -157,3 +158,15 @@ jobs:
           # driver: random
           # RSPEC_LOCALE: en
           GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+      - name: Create comment
+        if: ${{ failure() }}
+        run: |
+          if [ ! -e failures ]; then
+            exit 0
+          fi
+          echo "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> comment
+          echo "${{ github.job }}(${{ matrix.id }}) failed examples:" >> comment
+          cat failures >> comment
+          gh pr comment ${{ github.event.pull_request.number }} -F comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
