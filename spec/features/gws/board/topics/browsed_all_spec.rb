@@ -83,6 +83,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
 
       within ".nav-menu" do
         expect(page).to have_no_link I18n.t("ss.links.delete")
+        expect(page).to have_no_link I18n.t("ss.links.edit")
       end
       expect(page).to have_link I18n.t("gws/board.topic.set_browsed")
 
@@ -96,6 +97,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       click_on item.name
       within ".nav-menu" do
         expect(page).to have_link I18n.t("ss.links.delete")
+        expect(page).to have_link I18n.t("ss.links.edit")
       end
     end
   end
