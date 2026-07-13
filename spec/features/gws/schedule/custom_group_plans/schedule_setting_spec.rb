@@ -12,12 +12,14 @@ describe "gws_schedule_custom_group_plans", type: :feature, dbscope: :example, j
       it "#index" do
         visit index_path
         within "#calendar-controller" do
-          click_on I18n.t("datetime.prompts.day").downcase
-          expect(page).to have_no_css(".fc-widget-header[data-date*=\"00:00:00\"]")
-          expect(page).to have_no_css(".fc-widget-header[data-date*=\"06:00:00\"]")
-          expect(page).to have_css(".fc-widget-header[data-date*=\"12:00:00\"]")
-          expect(page).to have_css(".fc-widget-header[data-date*=\"18:00:00\"]")
-          expect(page).to have_no_css(".fc-widget-header[data-date*=\"23:00:00\"]")
+          click_on I18n.t("datetime.prompts.day")
+        end
+        within "#calendar-controller" do
+          expect(page).to have_no_css(".fc-timegrid-slot[data-time*=\"00:00:00\"]")
+          expect(page).to have_no_css(".fc-timegrid-slot[data-time*=\"06:00:00\"]")
+          expect(page).to have_css(".fc-timegrid-slot[data-time*=\"12:00:00\"]")
+          expect(page).to have_css(".fc-timegrid-slot[data-time*=\"18:00:00\"]")
+          expect(page).to have_no_css(".fc-timegrid-slot[data-time*=\"23:00:00\"]")
         end
       end
     end
@@ -32,12 +34,15 @@ describe "gws_schedule_custom_group_plans", type: :feature, dbscope: :example, j
       it "#index" do
         visit index_path
         within "#calendar-controller" do
-          click_on I18n.t("datetime.prompts.day").downcase
-          expect(page).to have_no_css(".fc-widget-header[data-date*=\"00:00:00\"]")
-          expect(page).to have_css(".fc-widget-header[data-date*=\"06:00:00\"]")
-          expect(page).to have_css(".fc-widget-header[data-date*=\"12:00:00\"]")
-          expect(page).to have_css(".fc-widget-header[data-date*=\"18:00:00\"]")
-          expect(page).to have_css(".fc-widget-header[data-date*=\"23:00:00\"]")
+          click_on I18n.t("datetime.prompts.day")
+        end
+
+        within "#calendar-controller" do
+          expect(page).to have_no_css(".fc-timegrid-slot[data-time*=\"00:00:00\"]")
+          expect(page).to have_css(".fc-timegrid-slot[data-time*=\"06:00:00\"]")
+          expect(page).to have_css(".fc-timegrid-slot[data-time*=\"12:00:00\"]")
+          expect(page).to have_css(".fc-timegrid-slot[data-time*=\"18:00:00\"]")
+          expect(page).to have_css(".fc-timegrid-slot[data-time*=\"23:00:00\"]")
         end
       end
     end
@@ -45,19 +50,19 @@ describe "gws_schedule_custom_group_plans", type: :feature, dbscope: :example, j
 
   context "schedule wday" do
     def first_wday_header
-      all("th.fc-day-header").first[:class]
+      all("th.fc-col-header-cell").first[:class]
     end
 
     def last_wday_header
-      all("th.fc-day-header").last[:class]
+      all("th.fc-col-header-cell").last[:class]
     end
 
     context "default sunday" do
       it "#index" do
         visit index_path
         within "#calendar-controller" do
-          expect(first_wday_header).to include("fc-sun")
-          expect(last_wday_header).to include("fc-sat")
+          expect(first_wday_header).to include("fc-day-sun")
+          expect(last_wday_header).to include("fc-day-sat")
         end
       end
     end
@@ -71,8 +76,8 @@ describe "gws_schedule_custom_group_plans", type: :feature, dbscope: :example, j
       it "#index" do
         visit index_path
         within "#calendar-controller" do
-          expect(first_wday_header).to include("fc-mon")
-          expect(last_wday_header).to include("fc-sun")
+          expect(first_wday_header).to include("fc-day-mon")
+          expect(last_wday_header).to include("fc-day-sun")
         end
       end
     end
@@ -86,8 +91,8 @@ describe "gws_schedule_custom_group_plans", type: :feature, dbscope: :example, j
       it "#index" do
         visit index_path
         within "#calendar-controller" do
-          expect(first_wday_header).to include("fc-sat")
-          expect(last_wday_header).to include("fc-fri")
+          expect(first_wday_header).to include("fc-day-sat")
+          expect(last_wday_header).to include("fc-day-fri")
         end
       end
     end
@@ -100,8 +105,8 @@ describe "gws_schedule_custom_group_plans", type: :feature, dbscope: :example, j
 
       it "#index" do
         today = Time.zone.today
-        fc_first = "fc-" + today.strftime("%a").downcase
-        fc_last = "fc-" + today.advance(days: 6).strftime("%a").downcase
+        fc_first = "fc-day-" + today.strftime("%a").downcase
+        fc_last = "fc-day-" + today.advance(days: 6).strftime("%a").downcase
 
         visit index_path
         within "#calendar-controller" do
