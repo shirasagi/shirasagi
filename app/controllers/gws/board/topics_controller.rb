@@ -107,6 +107,18 @@ class Gws::Board::TopicsController < ApplicationController
     end
   end
 
+  def unread
+    set_item
+    raise '403' unless readable?
+
+    @item.unset_browsed!(@cur_user) if @item.browsed?(@cur_user)
+
+    respond_to do |format|
+      format.html { redirect_to({ action: :show, toggled: 1 }, { notice: t('ss.notice.saved') }) }
+      format.json { render json: { _id: @item.id }, content_type: json_content_type }
+    end
+  end
+
   def print
     set_item
     raise '403' unless readable?

@@ -76,7 +76,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       site.set(board_browsed_delay: 3600)
     end
 
-    it "閲覧一覧経由の詳細は削除ボタンが無く編集ボタンは残る。既読ボタンで既読にできる" do
+    it "閲覧一覧経由の詳細は削除ボタンが無く編集ボタンは残る。既読/未読を切り替えられる" do
       expect(item.browsed?(gws_user)).to be_falsey
       visit readable_path
       click_on item.name
@@ -85,11 +85,19 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_link I18n.t("ss.links.delete")
         expect(page).to have_link I18n.t("ss.links.edit")
       end
-      expect(page).to have_link I18n.t("gws/board.topic.set_browsed")
 
+      # 未読 → 「既読にする」を押すと既読になる
+      expect(page).to have_link I18n.t("gws/board.topic.set_browsed")
       click_on I18n.t("gws/board.topic.set_browsed")
       wait_for_notice I18n.t("ss.notice.saved")
       expect(item.reload.browsed?(gws_user)).to be_truthy
+
+      # 既読 → ボタンが「未読にする」に変わり、押すと未読に戻る（トグル）
+      expect(page).to have_link I18n.t("gws/board.topic.unset_browsed")
+      click_on I18n.t("gws/board.topic.unset_browsed")
+      wait_for_notice I18n.t("ss.notice.saved")
+      expect(item.reload.browsed?(gws_user)).to be_falsey
+      expect(page).to have_link I18n.t("gws/board.topic.set_browsed")
     end
 
     it "管理一覧経由の詳細には削除ボタンがある" do
