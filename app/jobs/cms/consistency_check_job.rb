@@ -292,7 +292,7 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
     end
 
     body = "[#{@list_file.count} files]\n" + file_paths.join("\n")
-    ActionMailer::Base.mail(
+    ApplicationMailer.create_mail(
       from: site.sender_address,
       to: email,
       subject: "[#{site.name}] Removed #{@list_file.count} files, including html files and attachments",
