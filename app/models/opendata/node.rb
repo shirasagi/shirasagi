@@ -56,6 +56,7 @@ module Opendata::Node
     include Opendata::Addon::DatasetPageSetting
     include Opendata::Addon::CategorySetting
     include Opendata::Addon::EstatCategorySetting
+    include Opendata::Addon::Metadata::NodeSetting
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup

@@ -61,7 +61,7 @@ module Opendata::Addon::ExportPublicEntityFormat
           dataset = Opendata::Dataset.find(dataset_id) rescue nil
           next unless dataset
 
-          no = dataset.metadata_dataset_id.presence || format("%010d", dataset.id)
+          no = dataset.metadata_dataset_id.presence || dataset.uuid
 
           category_filenames = dataset.categories.pluck(:filename).map do |filename|
             parent = filename.index("/") ? ::File.dirname(filename) : nil
@@ -88,8 +88,8 @@ module Opendata::Addon::ExportPublicEntityFormat
           dataset.resources.each do |resource|
             row = []
             row << no
-            row << dataset.metadata_japanese_local_goverment_code
-            row << dataset.metadata_local_goverment_name
+            row << (dataset.metadata_japanese_local_goverment_code.presence || node.metadata_japanese_local_goverment_code)
+            row << (dataset.metadata_local_goverment_name.presence || node.metadata_local_goverment_name)
             row << dataset.name
             row << nil
             row << dataset.text
@@ -115,9 +115,10 @@ module Opendata::Addon::ExportPublicEntityFormat
             row << dataset.metadata_dataset_contact_form_url
             row << dataset.metadata_dataset_contact_remark
             row << dataset.metadata_dataset_remark
+            row << (resource.metadata_file_id.presence || resource.uuid)
             row << resource.name
-            row << resource.metadata_file_access_url
-            row << resource.metadata_file_download_url
+            row << (resource.metadata_file_access_url.presence || dataset.full_url)
+            row << (resource.metadata_file_download_url.presence || resource.download_full_url)
             row << resource.text
             row << resource.format
             row << resource.license.try(:name)

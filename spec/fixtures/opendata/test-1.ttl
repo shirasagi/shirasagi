@@ -13,7 +13,7 @@
 <http://localhost:3010/dataset/209/resource/106/にょー.csv#>
   rdfs:label "グラフ簡易版テスト用"@ja ;
   rdfs:comment "ぐらぐらぐらぐら"@ja ;
-  cc:license "表示（CC BY）" ;
+  cc:license "CC BY" ;
   dc:modified "2015-03-26"^^<http://www.w3.org/2001/XMLSchema#date> .
 
 ## 固有プロパティ ####
