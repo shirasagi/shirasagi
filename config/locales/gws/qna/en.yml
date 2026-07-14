@@ -44,6 +44,7 @@ en:
       browsed_state:
         read: Read
         unread: Unread
+        both: All
       severity:
         normal: Normal
         important: Important

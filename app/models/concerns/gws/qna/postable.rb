@@ -61,6 +61,9 @@ module Gws::Qna::Postable
       if params[:question_state].present?
         criteria = criteria.where(question_state: params[:question_state].to_s)
       end
+      if %w(read unread).include?(params[:browsed_state]) && params[:user].present?
+        criteria = criteria.exists("browsed_users_hash.#{params[:user].id}" => params[:browsed_state] == 'read')
+      end
       criteria
     }
   end

@@ -23,4 +23,8 @@ module Gws::Qna::BrowsingState
     # be careful, you must not use `#set` method. this method update hash totally.
     persist_atomic_operations('$unset' => { "browsed_users_hash.#{user.id}" => '' })
   end
+
+  def browsed_state_options
+    %w(both unread).map { |m| [I18n.t("gws/qna.options.browsed_state.#{m}"), m] }
+  end
 end

@@ -49,6 +49,10 @@ class Gws::Qna::TopicsController < ApplicationController
       params[:s][:category] = @category.name
     end
 
+    params[:s] ||= {}
+    params[:s][:user] = @cur_user
+    params[:s][:browsed_state] = (@mode == 'readable' ? 'unread' : 'both') if params[:s][:browsed_state].blank?
+
     @items = items.search(params[:s]).
       custom_order(params.dig(:s, :sort) || 'updated_desc').
       page(params[:page]).per(50)

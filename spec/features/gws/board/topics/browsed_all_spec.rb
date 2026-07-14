@@ -37,7 +37,9 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
 
   context "#set_browsed_all / #unset_browsed_all" do
     it "選択した項目を一括で既読/未読にできる" do
-      visit readable_path
+      # 既定は未読のみ表示。既読済みも扱うため全て表示で開く
+      both_path = "#{readable_path}?s[browsed_state]=both"
+      visit both_path
       expect(item.browsed?(gws_user)).to be_falsey
 
       within ".list-items" do
@@ -50,11 +52,10 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t("ss.notice.set_seen_all")
       expect(item.reload.browsed?(gws_user)).to be_truthy
+
+      visit both_path
       within ".list-items" do
         expect(page).to have_css(".list-item .meta .seen", text: I18n.t("gws/board.options.browsed_state.read"))
-      end
-
-      within ".list-items" do
         first("input[value='#{item.id}']").click
       end
       within ".list-head" do
@@ -64,9 +65,21 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t("ss.notice.unset_seen_all")
       expect(item.reload.browsed?(gws_user)).to be_falsey
+
+      visit both_path
       within ".list-items" do
         expect(page).to have_css(".list-item .meta .seen", text: I18n.t("gws/board.options.browsed_state.unread"))
       end
+    end
+  end
+
+  context "未読/全て表示フィルタ" do
+    it "既定は未読のみ表示。既読にすると既定一覧から消え、全て表示で再表示される" do
+      item.set_browsed!(gws_user)
+      visit readable_path
+      expect(page).to have_no_css(".list-item")
+      visit "#{readable_path}?s[browsed_state]=both"
+      expect(page).to have_css(".list-item", text: item.name)
     end
   end
 
