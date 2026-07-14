@@ -619,6 +619,9 @@ GEM
       declarative (< 0.1.0)
       trailblazer-option (>= 0.1.1, < 0.2.0)
       uber (< 0.2.0)
+    resolv (0.7.1)
+    resolv-replace (0.2.0)
+      resolv
     retriable (3.8.0)
     rexml (3.4.4)
     romaji (0.3.0)
@@ -816,12 +819,14 @@ PLATFORMS
 
 DEPENDENCIES
   addressable
+  base64
   bootsnap
   brakeman
   browser
   capybara
   clam_scan
   coffee-rails
+  csv
   dartsass-sprockets
   debug
   diff-lcs
@@ -893,6 +898,7 @@ DEPENDENCIES
   rdf-rdfxml
   rdf-turtle
   rdoc (~> 6.3.0)
+  resolv-replace
   retriable
   rexml
   romaji
