@@ -452,10 +452,13 @@ module Cms
     request_path = request.env["ss.canonical_path"] || SS.request_path(request)
     return if request_path.blank? || request_path == :none
 
-    request_basename = ::File.basename(request_path, ".*")
-    if request_basename.numeric? && Rack::Utils::HTTP_STATUS_CODES[request_basename.to_i]
-      # 404 ページに canonical を出力しないようにする
-      return
+    request_dirname = ::File.dirname(request_path)
+    if request_dirname == "/"
+      request_basename = ::File.basename(request_path, ".*")
+      if request_basename.numeric? && Rack::Utils::HTTP_STATUS_CODES[request_basename.to_i]
+        # 404 ページに canonical を出力しないようにする
+        return
+      end
     end
 
     if request_path.end_with?("/index.html")
