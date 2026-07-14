@@ -1,11 +1,10 @@
 <div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
   <div class="list-head-action">
     <%= render template: "_list_head_tags" %>
+    <%= ss_button_to t("gws/notice.links.set_seen"), { action: :toggle_browsed_all }, class: "set-seen-all btn btn-list-head-action", method: "post", confirm: t("gws/notice.confirm.set_seen") %>
   </div>
 
   <%= render template: "_search" %>
 </div>
-
-<%= jquery do %>
-  $('.list-items .list-item label.check').remove();
-<% end %>

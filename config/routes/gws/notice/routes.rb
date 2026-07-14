@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     scope path: ':folder_id/:category_id' do
       resources :readables, only: [:index, :show] do
         post :toggle_browsed, on: :member
+        post :toggle_browsed_all, on: :collection
         get :print, on: :member
       end
       resources :back_numbers, only: [:index, :show] do

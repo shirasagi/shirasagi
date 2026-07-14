@@ -93,6 +93,28 @@ module Gws::Notice::ReadableFilter
     render_update false, render: { template: :show, toggled: 1 }
   end
 
+  def toggle_browsed_all
+    ids = params[:ids]
+    if ids
+      ids = ids.map(&:to_i) rescue nil
+    end
+
+    @items = @items.in(id: ids)
+    @items.each do |item|
+      next if item.browsed?(@cur_user)
+      begin
+        item.set_browsed!(@cur_user)
+      rescue => e
+        Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      end
+    end
+
+    flash[:notice] = I18n.t("ss.notice.set_seen")
+    respond_to do |format|
+      format.html { redirect_to(action: :index) }
+    end
+  end
+
   def print
     render template: "print", layout: 'ss/print'
   end
