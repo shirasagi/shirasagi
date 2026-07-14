@@ -106,5 +106,18 @@ describe Cms, type: :model, dbscope: :example do
         end
       end
     end
+
+    context "with ad page" do
+      it do
+        "/ad/page30.html?redirect=/kurashi/".tap do |request_path|
+          request = ActionDispatch::Request.new(
+            "rack.input" => "",
+            "REQUEST_METHOD" => "GET",
+            "PATH_INFO" => request_path
+          )
+          expect(Cms.canonical_full_url(site, request)).to eq "#{site.full_root_url}ad/page30.html?redirect=/kurashi/"
+        end
+      end
+    end
   end
 end
