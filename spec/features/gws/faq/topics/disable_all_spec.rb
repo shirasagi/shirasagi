@@ -9,7 +9,8 @@ describe "gws_faq_topics", type: :feature, dbscope: :example, js: true do
 
   context "disable (soft delete) all" do
     it do
-      login_user user, to: gws_faq_topics_path(site: site, mode: '-', category: '-')
+      # 一括削除は閲覧一覧(readable)から除去したため、管理一覧(editable)で操作する
+      login_user user, to: gws_faq_topics_path(site: site, mode: 'editable', category: '-')
       wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm(I18n.t("ss.confirm.delete")) do
         within ".list-head-action" do
@@ -46,7 +47,8 @@ describe "gws_faq_topics", type: :feature, dbscope: :example, js: true do
     end
 
     it do
-      login_user user, to: gws_faq_topics_path(site: site, mode: '-', category: '-')
+      # 削除権限が無い場合、管理一覧(editable)でも一括削除ボタンは出ない
+      login_user user, to: gws_faq_topics_path(site: site, mode: 'editable', category: '-')
       expect(page).to have_css(".list-item", text: topic.name)
       expect(page).to have_no_css(".list-head-action")
     end

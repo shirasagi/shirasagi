@@ -82,4 +82,32 @@ class Gws::Faq::TopicsController < ApplicationController
       end
     end
   end
+
+  def unread
+    set_item
+    raise '403' unless readable?
+
+    @item.unset_browsed!(@cur_user) if @item.browsed?(@cur_user)
+
+    respond_to do |format|
+      format.html { redirect_to({ action: :show, toggled: 1 }, { notice: t('ss.notice.saved') }) }
+      format.json { render json: { _id: @item.id }, content_type: json_content_type }
+    end
+  end
+
+  def set_browsed_all
+    @items = items.in(id: params[:ids])
+    @items.each do |item|
+      item.set_browsed!(@cur_user) unless item.browsed?(@cur_user)
+    end
+    render_confirmed_all(true, notice: t("ss.notice.set_seen_all"))
+  end
+
+  def unset_browsed_all
+    @items = items.in(id: params[:ids])
+    @items.each do |item|
+      item.unset_browsed!(@cur_user) if item.browsed?(@cur_user)
+    end
+    render_confirmed_all(true, notice: t("ss.notice.unset_seen_all"))
+  end
 end

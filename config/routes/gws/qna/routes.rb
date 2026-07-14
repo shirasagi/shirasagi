@@ -17,6 +17,9 @@ Rails.application.routes.draw do
         end
         get :categories, on: :collection
         post :read, on: :member
+        post :unread, on: :member
+        post :set_browsed_all, on: :collection
+        post :unset_browsed_all, on: :collection
         get :resolve, on: :member, to: ->(_) { [200, {}, ['']] }
         post :resolve, on: :member
         get :unresolve, on: :member, to: ->(_) { [200, {}, ['']] }
