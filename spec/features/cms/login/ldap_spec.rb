@@ -53,7 +53,7 @@ describe "cms_login", type: :feature, dbscope: :example, js: true, ldap: true do
       auth_setting.save!
     end
 
-    after { ActiveSupport::CurrentAttributes.reset_all }
+    after { ActiveSupport::CurrentAttributes.clear_all }
 
     include_context "ldap user login on cms"
   end

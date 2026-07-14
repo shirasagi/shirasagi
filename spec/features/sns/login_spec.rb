@@ -211,7 +211,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
       auth_setting.save!
     end
 
-    after { ActiveSupport::CurrentAttributes.reset_all }
+    after { ActiveSupport::CurrentAttributes.clear_all }
 
     it "valid login" do
       visit sns_login_path

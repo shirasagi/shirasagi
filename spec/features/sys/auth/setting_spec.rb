@@ -4,7 +4,7 @@ describe "sys/auth/setting", type: :feature, dbscope: :example, js: true do
   let(:show_path) { sys_auth_setting_path }
 
   before { login_sys_user }
-  after { ActiveSupport::CurrentAttributes.reset_all }
+  after { ActiveSupport::CurrentAttributes.clear_all }
 
   context "basic" do
     let(:form_auth) { %w(enabled disabled).sample }

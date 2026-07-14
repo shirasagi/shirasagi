@@ -71,7 +71,7 @@ describe "cms_user_profiles", type: :feature, dbscope: :example, ldap: true, js:
       auth_setting.save!
     end
 
-    after { ActiveSupport::CurrentAttributes.reset_all }
+    after { ActiveSupport::CurrentAttributes.clear_all }
 
     it_behaves_like 'パスワード変更'
   end
