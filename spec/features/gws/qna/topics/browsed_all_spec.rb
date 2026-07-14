@@ -31,6 +31,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example, js: true do
       within ".list-head" do
         expect(page).to have_css(".soft-delete-all")
         expect(page).to have_no_css(".set-browsed-all")
+        expect(page).to have_no_css(".unset-browsed-all")
       end
     end
   end
