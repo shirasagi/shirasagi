@@ -41,8 +41,8 @@ jobs:
         uses: supercharge/mongodb-github-action@1.12.1
         with:
           mongodb-version: 8.0
-      #- name: Prepare Ldap
-      #  run: docker pull osixia/openldap
+      - name: Prepare Ldap
+        run: docker pull osixia/openldap
       - name: Start Shirasagi Mail
         run: |
           docker pull ghcr.io/shirasagi/mail:latest
@@ -145,7 +145,7 @@ jobs:
           LANG: ja_JP.UTF-8
           LC_ALL: ja_JP.UTF-8
           allow_open_jtalk: 1
-          LDAP_TEST: disable
+          LDAP_TEST: enable
           ES_CONTAINER_ID: ${{ steps.elasticsearch.outputs.CONTAINER_ID }}
           CKAN_CONTAINER_ID: ${{ steps.ckan.outputs.CONTAINER_ID }}
           RUBYOPT: "-W:deprecated"
