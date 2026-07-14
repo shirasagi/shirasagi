@@ -19,6 +19,8 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       end
       within ".list-items" do
         expect(page).to have_no_link I18n.t("ss.links.delete")
+        # 未読の項目には unread クラスが付く
+        expect(page).to have_css(".list-item.unread")
         # メタ情報に既読/未読ラベルを表示する（初期状態は未読）
         expect(page).to have_css(".list-item .meta .seen", text: I18n.t("gws/board.options.browsed_state.unread"))
       end

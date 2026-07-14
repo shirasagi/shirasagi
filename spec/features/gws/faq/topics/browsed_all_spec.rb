@@ -19,6 +19,7 @@ describe "gws_faq_topics", type: :feature, dbscope: :example, js: true do
       end
       within ".list-items" do
         expect(page).to have_no_link I18n.t("ss.links.delete")
+        expect(page).to have_css(".list-item.unread")
         expect(page).to have_css(".list-item .meta .seen", text: I18n.t("gws/faq.options.browsed_state.unread"))
       end
     end
