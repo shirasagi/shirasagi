@@ -51,7 +51,7 @@ class Gws::Faq::TopicsController < ApplicationController
 
     params[:s] ||= {}
     params[:s][:user] = @cur_user
-    params[:s][:browsed_state] = (@mode == 'readable' ? 'unread' : 'both') if params[:s][:browsed_state].blank?
+    params[:s][:browsed_state] = 'both' if params[:s][:browsed_state].blank?
 
     @items = items.search(params[:s]).
       custom_order(params.dig(:s, :sort) || 'updated_desc').

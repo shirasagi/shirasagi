@@ -76,12 +76,12 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
   end
 
   context "未読/全て表示フィルタ" do
-    it "既定は未読のみ表示。既読にすると既定一覧から消え、全て表示で再表示される" do
+    it "既定は全て表示。未読で絞り込むと既読は消える" do
       item.set_browsed!(gws_user)
       visit readable_path
-      expect(page).to have_no_css(".list-item")
-      visit "#{readable_path}?s[browsed_state]=both"
       expect(page).to have_css(".list-item", text: item.name)
+      visit "#{readable_path}?s[browsed_state]=unread"
+      expect(page).to have_no_css(".list-item")
     end
   end
 
