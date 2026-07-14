@@ -11,7 +11,7 @@
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
-    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) && @mode != 'trash' && @mode != 'readable' %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) && @mode != 'trash' %>
       <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
     <% end %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>

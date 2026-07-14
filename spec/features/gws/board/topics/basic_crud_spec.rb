@@ -142,7 +142,8 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
 
       describe "#soft_delete" do
         it do
-          visit index_path
+          # 削除ボタンは閲覧一覧(readable)から除去したため、管理一覧(editable)で操作する
+          visit gws_board_topics_path(site, 'editable', '-')
           click_on item.name
           within ".nav-menu" do
             click_on I18n.t("ss.links.delete")

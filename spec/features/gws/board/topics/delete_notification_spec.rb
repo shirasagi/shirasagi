@@ -21,7 +21,8 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
   context "soft_delete" do
     it do
       login_user(user)
-      visit gws_board_topic_path(site: site, mode: '-', category: '-', id: item2)
+      # 削除ボタンは閲覧一覧(readable)から除去したため、管理一覧(editable)で操作する
+      visit gws_board_topic_path(site: site, mode: 'editable', category: '-', id: item2)
 
       within "#menu" do
         expect(page).to have_link I18n.t("ss.links.edit")
@@ -57,7 +58,8 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
   context "soft_delete_all" do
     it do
       login_user(user)
-      visit gws_board_topics_path(site: site, mode: '-', category: '-')
+      # 削除ボタンは閲覧一覧(readable)から除去したため、管理一覧(editable)で操作する
+      visit gws_board_topics_path(site: site, mode: 'editable', category: '-')
 
       # check menu link
       within ".list-items" do
@@ -110,7 +112,8 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
   context "soft_delete_all with no permission case" do
     it do
       login_user(user1)
-      visit gws_board_topics_path(site: site, mode: '-', category: '-')
+      # 削除ボタンは閲覧一覧(readable)から除去したため、管理一覧(editable)で操作する
+      visit gws_board_topics_path(site: site, mode: 'editable', category: '-')
 
       # check menu link
       within ".list-items" do

@@ -76,14 +76,14 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       site.set(board_browsed_delay: 3600)
     end
 
-    it "閲覧一覧経由の詳細に既読ボタンがあり削除ボタンが無い。既読にできる" do
+    it "閲覧一覧経由の詳細は削除ボタンが無く編集ボタンは残る。既読ボタンで既読にできる" do
       expect(item.browsed?(gws_user)).to be_falsey
       visit readable_path
       click_on item.name
 
       within ".nav-menu" do
         expect(page).to have_no_link I18n.t("ss.links.delete")
-        expect(page).to have_no_link I18n.t("ss.links.edit")
+        expect(page).to have_link I18n.t("ss.links.edit")
       end
       expect(page).to have_link I18n.t("gws/board.topic.set_browsed")
 
@@ -97,7 +97,6 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       click_on item.name
       within ".nav-menu" do
         expect(page).to have_link I18n.t("ss.links.delete")
-        expect(page).to have_link I18n.t("ss.links.edit")
       end
     end
   end
