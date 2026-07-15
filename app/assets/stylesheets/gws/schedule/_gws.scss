@@ -509,9 +509,6 @@
   .fc-date {
     font-size: 13px;
   }
-  .fc-scrollgrid-section-header {
-    display: none;
-  }
   .fc-event-point {
     background-color: rgb(0 0 0 / 10%);
   }
@@ -952,7 +949,7 @@
     height: 35px;
     overflow: hidden;
   }
-  .fc-view-harness {
+  .fc-scrollgrid-section-body {
     display: none;
   }
 }
@@ -1022,11 +1019,18 @@
     border: none !important;
   }
 }
+.calendar-controller .fc-timeGridDay-view {
+  table.fc-scrollgrid {
+    display: none;
+  }
+}
 .calendar-multiple-container[data-view-type="timeGridDay"] {
   display: flex;
+  overflow-y: auto;
 
   > div {
-    min-width: 260px;
+    width: 250px;
+    min-width: 250px;
     border-top: 1px solid #ddd;
   }
   > div:nth-child(n+2) {
@@ -1051,7 +1055,7 @@
 
 // dayGridWeek
 .calendar-multiple-container[data-view-type="dayGridWeek"] {
-  border-top: 1px solid #ddd;
+  // border-top: 1px solid #ddd;
 }
 
 // facility calendar

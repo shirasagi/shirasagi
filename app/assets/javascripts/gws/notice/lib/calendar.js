@@ -75,11 +75,6 @@ SS.ready(function() {
         listMonth: i18next.t('gws/schedule.calendar.buttonText.listMonth'),
         listWeek: i18next.t('gws/schedule.calendar.buttonText.listMonth')
       },
-      // dayHeaderFormat: {
-      //   weekday: 'short', month: 'numeric', day: 'numeric'
-      //   // month: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.columnFormat.month')),
-      //   // week: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.columnFormat.week'))
-      // },
       customButtons: {
         reload: {
           text: i18next.t('ss.buttons.reload'),
@@ -105,27 +100,24 @@ SS.ready(function() {
       nextDayThreshold: '00:00:00', // 複数日表示の閾値
       slotLabelFormat: { hour: '2-digit', minute: '2-digit', meridiem: false, hour12: false },
       startParam: 's[start]',
-      titleFormat: {
-        year: 'numeric', month: 'short', day: 'numeric'
-        // month: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.month')),
-        // week: '(' + SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.week')) + ')'
-      },
       eventTimeFormat: {
         hour: '2-digit', minute: '2-digit', meridiem: false, hour12: false
       },
       views: {
         dayGridMonth: {
-          titleFormat: { year: 'numeric', month: 'long' }
+          titleFormat: i18next.t('gws/schedule.calendar.titleFormat.dayGridMonth', { returnObjects: true }),
         },
         dayGridWeek: {
-          titleFormat: { year: 'numeric', month: 'long', day: 'numeric', weekday: 'narrow' }
+          titleFormat: i18next.t('gws/schedule.calendar.titleFormat.dayGridWeek', { returnObjects: true }),
+          dayHeaderFormat: i18next.t('gws/schedule.calendar.dayHeaderFormat.dayGridWeek', { returnObjects: true }),
         },
         timeGridDay: {
-          titleFormat: { year: 'numeric', month: 'long', day: 'numeric', weekday: 'narrow' }
+          titleFormat: i18next.t('gws/schedule.calendar.titleFormat.timeGridDay', { returnObjects: true }),
+          dayHeaderFormat: i18next.t('gws/schedule.calendar.dayHeaderFormat.timeGridDay', { returnObjects: true }),
         },
         listMonth: {
-          titleFormat: { year: 'numeric', month: 'long' },
-          listDayFormat: { year: 'numeric', month: 'long', day: 'numeric', weekday: 'narrow' },
+          titleFormat: i18next.t('gws/schedule.calendar.titleFormat.listMonth', { returnObjects: true }),
+          listDayFormat: i18next.t('gws/schedule.calendar.dayHeaderFormat.listMonth', { returnObjects: true }),
           listDaySideFormat: false
         }
       },

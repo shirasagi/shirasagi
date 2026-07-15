@@ -225,13 +225,10 @@ SS.ready(function() {
         }
 
         if (el.className.includes('fc-event-work')) {
-          el.querySelector(".fc-date").remove();
-          el.querySelector(".fc-resizer").remove();
+          el.querySelector(".fc-date")?.remove();
+          el.querySelector(".fc-resizer")?.remove();
           el.classList.remove("fc-resizable");
         }
-        // if (view.type === 'basicHour') {
-        //   return BasicHourView.eventRender(event, element, view);
-        // }
       }
     };
   };

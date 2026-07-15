@@ -43,10 +43,14 @@ ja:
         month: "%Y年%1m月"
         week: "%Y年%1m月%1d日(%a)"
         day: "%Y年%1m月%1d日(%a)"
-      columnFormat:
-        month: "%a"
-        week: "%1m/%1d (%a)"
-        day: "%1m/%1d (%a)"
+        dayGridMonth: { year: 'numeric', month: 'long' }
+        dayGridWeek: { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' }
+        timeGridDay: { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' }
+        listMonth: { year: 'numeric', month: 'long' }
+      dayHeaderFormat:
+        dayGridWeek: { month: 'numeric', day: 'numeric', weekday: 'short' }
+        timeGridDay: { month: 'numeric', day: 'numeric', weekday: 'short' }
+        listMonth: { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' }
     links:
       add_plan: 予定を作成
       download: ダウンロード
