@@ -57,11 +57,7 @@ class Cms::Elasticsearch::Searcher
     query[:bool][:must] = []
 
     if keyword.present?
-      if field_name.is_a?(String)
-        query[:bool][:must] << { query_string: { query: keyword, default_operator: 'AND', default_field: field_name } }
-      else
-        query[:bool][:must] << { query_string: { query: keyword, default_operator: 'AND', fields: field_name } }
-      end
+      query[:bool][:must] << { simple_query_string: { query: keyword, fields: [field_name].flatten, default_operator: 'AND' } }
     end
 
     if type == 'page'

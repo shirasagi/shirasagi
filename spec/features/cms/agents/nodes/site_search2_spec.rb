@@ -60,13 +60,19 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
 
     it do
       visit site_search_node.url
-
       within '.search-form' do
         expect(page).to have_no_css(".site-search-type")
         expect(page).to have_no_css(".site-search-target")
         expect(page).to have_no_css(".site-search-article-node")
         expect(page).to have_no_css(".site-search-categories")
         expect(page).to have_no_css(".site-search-organization")
+      end
+      within '.search-form' do
+        fill_in 's[keyword]', with: 'page ()'
+        click_button I18n.t('ss.buttons.search')
+      end
+      within '.pages .item:nth-child(3)' do
+        expect(page).to have_css('.title')
       end
     end
   end
