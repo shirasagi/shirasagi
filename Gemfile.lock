@@ -695,7 +695,7 @@ GEM
       nokogiri (>= 1.13.10)
       rexml
     ruby2_keywords (0.0.5)
-    rubyzip (2.3.2)
+    rubyzip (2.4.1)
     sass-embedded (1.101.0)
       google-protobuf (~> 4.31)
       rake (>= 13)
@@ -911,7 +911,7 @@ DEPENDENCIES
   rubocop-rails (~> 2.26)
   rubocop-rspec
   ruby-saml
-  rubyzip (~> 2.3.0)
+  rubyzip (~> 2.4.0)
   sdoc
   selenium-webdriver
   shortuuid
