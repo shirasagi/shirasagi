@@ -5,7 +5,7 @@ describe "sys_users", type: :feature, dbscope: :example, js: true do
     login_sys_user
   end
 
-  after { ActiveSupport::CurrentAttributes.reset_all }
+  after { ActiveSupport::CurrentAttributes.clear_all }
 
   context "with MFA enabled" do
     context "when users' opt is already configured" do

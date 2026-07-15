@@ -4,7 +4,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
   let(:login_path) { sns_login_path }
   let(:guest_login_path) { sns_login_path + "?user=guest" }
 
-  after { ActiveSupport::CurrentAttributes.reset_all }
+  after { ActiveSupport::CurrentAttributes.clear_all }
 
   context "form_auth enabled" do
     before do

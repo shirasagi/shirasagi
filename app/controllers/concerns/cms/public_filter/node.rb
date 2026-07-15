@@ -52,6 +52,10 @@ module Cms::PublicFilter::Node
     @layout_cache.delete(cache_key) if @layout_cache
   end
 
+  def replace_canonical(html, full_url)
+    html.sub(/<link rel="canonical" href=".+?">/) { view_context.tag.link(rel: "canonical", href: full_url) }
+  end
+
   public
 
   def recognize_node(node, path)
@@ -97,6 +101,11 @@ module Cms::PublicFilter::Node
       html = render_to_string html: "", layout: "cms/redirect"
     elsif response.media_type == "text/html" && node.layout
       html = render_layout_with_pagination_cache(node.layout, opts[:cache])
+      page_index = opts.dig(:params, :page)
+      if page_index.numeric? && page_index > 1 # page_index は 1 から始まる
+        basename = opts[:file] ? File.basename(opts[:file]) : ""
+        html = replace_canonical(html, "#{node.full_url}#{basename}")
+      end
     else
       html = response.body
     end

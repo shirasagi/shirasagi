@@ -301,6 +301,43 @@ li.webmail-accounts {
       text-align: right;
     }
   }
+
+  // 個人設定「件名 → 差出人」: order で並びを入れ替える。件名は可変幅のまま広く保ち、
+  // ヘッダの差出人・件名幅をデータ行の値に合わせてラベルと列を揃える。
+  &.subject-first {
+    .list-item-head .head {
+      .title {
+        order: 1;
+        width: calc(100% - 400px);
+      }
+      .from,
+      .to {
+        order: 2;
+        width: 200px;
+      }
+      .datetime {
+        order: 3;
+      }
+      .size {
+        order: 4;
+      }
+    }
+    .info {
+      .title {
+        order: 1;
+      }
+      .from,
+      .to {
+        order: 2;
+      }
+      .datetime {
+        order: 3;
+      }
+      .size {
+        order: 4;
+      }
+    }
+  }
 }
 
 // show

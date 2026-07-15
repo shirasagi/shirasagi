@@ -4,9 +4,9 @@ $shirasagi-icons-font: "shirasagi-icons";
 
 @font-face {
     font-family: $shirasagi-icons-font;
-    src: url("/assets/font/shirasagi-icons.eot?354a08a890f52fbc2d1a15df131344c7#iefix") format("embedded-opentype"),
-url("/assets/font/shirasagi-icons.woff?354a08a890f52fbc2d1a15df131344c7") format("woff"),
-url("/assets/font/shirasagi-icons.woff2?354a08a890f52fbc2d1a15df131344c7") format("woff2");
+    src: url("/assets/font/shirasagi-icons.eot?ee46516f1ec151b2de71e23e1a8072a2#iefix") format("embedded-opentype"),
+url("/assets/font/shirasagi-icons.woff?ee46516f1ec151b2de71e23e1a8072a2") format("woff"),
+url("/assets/font/shirasagi-icons.woff2?ee46516f1ec151b2de71e23e1a8072a2") format("woff2");
 }
 
 span[class^="ss-icon-"]:before, span[class*=" ss-icon-"]:before {
@@ -21,36 +21,65 @@ span[class^="ss-icon-"]:before, span[class*=" ss-icon-"]:before {
 }
 
 $shirasagi-icons-map: (
-    "workload": "\f101",
-    "workflow2": "\f102",
-    "workflow": "\f103",
-    "todo": "\f104",
-    "tabular": "\f105",
-    "survey": "\f106",
-    "shared-address": "\f107",
-    "share": "\f108",
-    "schedule": "\f109",
-    "report": "\f10a",
-    "reminder": "\f10b",
-    "qna": "\f10c",
-    "presence": "\f10d",
-    "portal": "\f10e",
-    "personal-address": "\f10f",
-    "notice": "\f110",
-    "monitor": "\f111",
-    "memo": "\f112",
-    "faq": "\f113",
-    "elasticsearch": "\f114",
-    "discussion": "\f115",
-    "daily-report": "\f116",
-    "conf": "\f117",
-    "circular": "\f118",
-    "bookmark": "\f119",
-    "board": "\f11a",
-    "attendance": "\f11b",
-    "affair": "\f11d",
+    "zip": "\f101",
+    "xlsx": "\f102",
+    "xls": "\f103",
+    "workload": "\f104",
+    "workflow2": "\f105",
+    "workflow": "\f106",
+    "txt": "\f107",
+    "todo": "\f108",
+    "tabular": "\f109",
+    "svg": "\f10a",
+    "survey": "\f10b",
+    "shared-address": "\f10c",
+    "share": "\f10d",
+    "schedule": "\f10e",
+    "rtf": "\f10f",
+    "report": "\f110",
+    "reminder": "\f111",
+    "qna": "\f112",
+    "presence": "\f113",
+    "pptx": "\f114",
+    "ppt": "\f115",
+    "portal": "\f116",
+    "png": "\f117",
+    "personal-address": "\f118",
+    "pdf": "\f119",
+    "other": "\f11a",
+    "notice": "\f11b",
+    "monitor": "\f11c",
+    "memo": "\f11d",
+    "jpg": "\f11e",
+    "jpeg": "\f11f",
+    "gif": "\f120",
+    "faq": "\f121",
+    "eml": "\f122",
+    "elasticsearch": "\f123",
+    "docx": "\f124",
+    "doc": "\f125",
+    "discussion": "\f126",
+    "daily-report": "\f127",
+    "csv": "\f128",
+    "conf": "\f129",
+    "circular": "\f12a",
+    "bookmark": "\f12b",
+    "board": "\f12c",
+    "attendance": "\f12d",
+    "affair2": "\f12e",
+    "affair": "\f12f",
+    "7z": "\f130",
 );
 
+.ss-icon-zip:before {
+    content: map.get($shirasagi-icons-map, "zip");
+}
+.ss-icon-xlsx:before {
+    content: map.get($shirasagi-icons-map, "xlsx");
+}
+.ss-icon-xls:before {
+    content: map.get($shirasagi-icons-map, "xls");
+}
 .ss-icon-workload:before {
     content: map.get($shirasagi-icons-map, "workload");
 }
@@ -60,11 +89,17 @@ $shirasagi-icons-map: (
 .ss-icon-workflow:before {
     content: map.get($shirasagi-icons-map, "workflow");
 }
+.ss-icon-txt:before {
+    content: map.get($shirasagi-icons-map, "txt");
+}
 .ss-icon-todo:before {
     content: map.get($shirasagi-icons-map, "todo");
 }
 .ss-icon-tabular:before {
     content: map.get($shirasagi-icons-map, "tabular");
+}
+.ss-icon-svg:before {
+    content: map.get($shirasagi-icons-map, "svg");
 }
 .ss-icon-survey:before {
     content: map.get($shirasagi-icons-map, "survey");
@@ -78,6 +113,9 @@ $shirasagi-icons-map: (
 .ss-icon-schedule:before {
     content: map.get($shirasagi-icons-map, "schedule");
 }
+.ss-icon-rtf:before {
+    content: map.get($shirasagi-icons-map, "rtf");
+}
 .ss-icon-report:before {
     content: map.get($shirasagi-icons-map, "report");
 }
@@ -90,11 +128,26 @@ $shirasagi-icons-map: (
 .ss-icon-presence:before {
     content: map.get($shirasagi-icons-map, "presence");
 }
+.ss-icon-pptx:before {
+    content: map.get($shirasagi-icons-map, "pptx");
+}
+.ss-icon-ppt:before {
+    content: map.get($shirasagi-icons-map, "ppt");
+}
 .ss-icon-portal:before {
     content: map.get($shirasagi-icons-map, "portal");
 }
+.ss-icon-png:before {
+    content: map.get($shirasagi-icons-map, "png");
+}
 .ss-icon-personal-address:before {
     content: map.get($shirasagi-icons-map, "personal-address");
+}
+.ss-icon-pdf:before {
+    content: map.get($shirasagi-icons-map, "pdf");
+}
+.ss-icon-other:before {
+    content: map.get($shirasagi-icons-map, "other");
 }
 .ss-icon-notice:before {
     content: map.get($shirasagi-icons-map, "notice");
@@ -105,17 +158,38 @@ $shirasagi-icons-map: (
 .ss-icon-memo:before {
     content: map.get($shirasagi-icons-map, "memo");
 }
+.ss-icon-jpg:before {
+    content: map.get($shirasagi-icons-map, "jpg");
+}
+.ss-icon-jpeg:before {
+    content: map.get($shirasagi-icons-map, "jpeg");
+}
+.ss-icon-gif:before {
+    content: map.get($shirasagi-icons-map, "gif");
+}
 .ss-icon-faq:before {
     content: map.get($shirasagi-icons-map, "faq");
 }
+.ss-icon-eml:before {
+    content: map.get($shirasagi-icons-map, "eml");
+}
 .ss-icon-elasticsearch:before {
     content: map.get($shirasagi-icons-map, "elasticsearch");
+}
+.ss-icon-docx:before {
+    content: map.get($shirasagi-icons-map, "docx");
+}
+.ss-icon-doc:before {
+    content: map.get($shirasagi-icons-map, "doc");
 }
 .ss-icon-discussion:before {
     content: map.get($shirasagi-icons-map, "discussion");
 }
 .ss-icon-daily-report:before {
     content: map.get($shirasagi-icons-map, "daily-report");
+}
+.ss-icon-csv:before {
+    content: map.get($shirasagi-icons-map, "csv");
 }
 .ss-icon-conf:before {
     content: map.get($shirasagi-icons-map, "conf");
@@ -132,6 +206,12 @@ $shirasagi-icons-map: (
 .ss-icon-attendance:before {
     content: map.get($shirasagi-icons-map, "attendance");
 }
+.ss-icon-affair2:before {
+    content: map.get($shirasagi-icons-map, "affair2");
+}
 .ss-icon-affair:before {
     content: map.get($shirasagi-icons-map, "affair");
+}
+.ss-icon-7z:before {
+    content: map.get($shirasagi-icons-map, "7z");
 }

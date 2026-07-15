@@ -93,6 +93,22 @@ module Gws::Notice::ReadableFilter
     render_update false, render: { template: :show, toggled: 1 }
   end
 
+  def set_browsed_all
+    @items = @items.in(id: params[:ids])
+    @items.each do |item|
+      item.set_browsed!(@cur_user) unless item.browsed?(@cur_user)
+    end
+    redirect_to({ action: :index }, notice: t("ss.notice.set_seen_all"))
+  end
+
+  def unset_browsed_all
+    @items = @items.in(id: params[:ids])
+    @items.each do |item|
+      item.unset_browsed!(@cur_user) if item.browsed?(@cur_user)
+    end
+    redirect_to({ action: :index }, notice: t("ss.notice.unset_seen_all"))
+  end
+
   def print
     render template: "print", layout: 'ss/print'
   end

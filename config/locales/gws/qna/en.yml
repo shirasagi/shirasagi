@@ -13,6 +13,8 @@ en:
       delete: Delete
       browsing_state: Notification destination
       browsed: View
+      set_browsed: Mark as read
+      unset_browsed: Mark as unread
       list: To topic list
       confirm: Do you want to delete this?
       notice:
@@ -42,6 +44,7 @@ en:
       browsed_state:
         read: Read
         unread: Unread
+        both: All
       severity:
         normal: Normal
         important: Important
@@ -57,6 +60,8 @@ en:
     confirm:
       resolve: Are you sure you want to mark it as resolved?
       unresolve: Are you sure you want to revert it to unresolved?
+      set_browsed_all: Do you want to mark all selected items as read?
+      unset_browsed_all: Do you want to return all selected items to unread?
     errors:
       denied_comment: You are not allowed to post comments.
 

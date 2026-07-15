@@ -448,7 +448,19 @@ module Cms
       contains_urls.include?(file.url_with_filename)
   end
 
-  def self.canonical_full_url(site, request_path)
+  def self.canonical_full_url(site, request)
+    request_path = request.env["ss.canonical_path"] || SS.request_path(request)
+    return if request_path.blank? || request_path == :none
+
+    request_dirname = ::File.dirname(request_path)
+    if request_dirname == "/"
+      request_basename = ::File.basename(request_path, ".*")
+      if request_basename.numeric? && Rack::Utils::HTTP_STATUS_CODES[request_basename.to_i]
+        # 404 ページに canonical を出力しないようにする
+        return
+      end
+    end
+
     if request_path.end_with?("/index.html")
       request_path = request_path[0..-11]
     end
@@ -460,18 +472,5 @@ module Cms
       request_path += "/"
     end
     Addressable::URI.join(site.full_root_url, request_path).to_s
-  end
-
-  def self.canonical_link_tag(site, request)
-    canonical_path = request.env["ss.canonical_path"] || SS.request_path(request)
-    return if canonical_path.blank? || canonical_path == :none
-
-    canonical_full_url = Cms.canonical_full_url(site, canonical_path)
-    return if canonical_full_url.blank?
-
-    ApplicationController.helpers.tag.link(rel: "canonical", href: canonical_full_url)
-  rescue => e
-    Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
-    nil
   end
 end

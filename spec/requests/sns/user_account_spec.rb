@@ -9,7 +9,7 @@ describe 'sns_cur_user_account', type: :request, dbscope: :example do
       get sns_cur_user_account_path(format: "json"), headers: @headers
       expect(response.status).to eq 200
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["_id"]).to eq user.id
       expect(json["name"]).to eq user.name
       expect(json["email"]).to eq user.email
@@ -50,7 +50,7 @@ describe 'sns_cur_user_account', type: :request, dbscope: :example do
 
       post sns_login_oauth2_token_path, params: token_params
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       @headers = {
         "Authorization" => "Bearer #{json["access_token"]}"
       }
@@ -91,7 +91,7 @@ describe 'sns_cur_user_account', type: :request, dbscope: :example do
 
       post sns_login_oauth2_token_path, params: token_params
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       @headers = {
         "Authorization" => "Bearer #{json["access_token"]}"
       }
@@ -104,7 +104,7 @@ describe 'sns_cur_user_account', type: :request, dbscope: :example do
     before do
       # implicit flow の場合、まずはどうにかしてログインする
       get auth_token_path
-      auth_token = JSON.parse(response.body)["auth_token"]
+      auth_token = response.parsed_body["auth_token"]
       params = {
         'authenticity_token' => auth_token,
         'item[email]' => user.email,
@@ -146,7 +146,7 @@ describe 'sns_cur_user_account', type: :request, dbscope: :example do
     before do
       # authorization code flow の場合、まずはどうにかしてログインする
       get auth_token_path
-      auth_token = JSON.parse(response.body)["auth_token"]
+      auth_token = response.parsed_body["auth_token"]
       params = {
         'authenticity_token' => auth_token,
         'item[email]' => user.email,
@@ -187,7 +187,7 @@ describe 'sns_cur_user_account', type: :request, dbscope: :example do
       post sns_login_oauth2_token_path, params: authorization_code_params, headers: authorization_code_headers
 
       expect(response.status).to eq 200
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       @headers = {
         "Authorization" => "Bearer #{json["access_token"]}"
       }

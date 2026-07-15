@@ -47,14 +47,20 @@
       </div>
     <% end %>
 
-    <% if @item.permit_comment? && (@item.allowed?(:edit, @cur_user, site: @cur_site) || @item.member_include?(@cur_user)) %>
-      <div class="menu">
+    <% show_comment_menu = @item.permit_comment? && (@item.allowed?(:edit, @cur_user, site: @cur_site) || @item.member_include?(@cur_user)) %>
+    <div class="menu">
+      <% if show_comment_menu %>
         <%= link_to new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: "btn primary" do %>
           <%= md_icons.outlined "reply", size: 15 %>
           <span class="button-label"><%= t('gws/board.links.comment') %></span>
         <% end %>
-      </div>
-    <% end %>
+      <% end %>
+      <% if @item.browsed?(@cur_user) %>
+        <%= link_to tag.span(t('gws/board.topic.unset_browsed'), class: "button-label"), { action: :unread, id: @item }, method: :post, class: "btn gws-btn-pushed" %>
+      <% else %>
+        <%= link_to tag.span(t('gws/board.topic.set_browsed'), class: "button-label"), { action: :read, id: @item }, method: :post, class: "btn" %>
+      <% end %>
+    </div>
   </div>
 
   <%= yield if block_given? %>

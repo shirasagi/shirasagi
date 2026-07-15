@@ -40,7 +40,7 @@ describe "webapi", dbscope: :example, type: :request do
 
         get page_path
         expect(response.status).to eq 200
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(json["_id"]).to eq page.id
         expect(json["name"]).to eq page.name
         expect(json["filename"]).to eq page.filename

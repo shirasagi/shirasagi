@@ -23,6 +23,12 @@ class SS::OptionsForSelectComponent < ApplicationComponent
       label = option[1]
       remains = option[2..-1]
 
+      if group.blank?
+        overall_options = [ [ label, *remains ] ]
+        yield group, overall_options
+        next
+      end
+
       same_group_options = grouped_options.select { |option| option[0] == group }
       same_group_options.each { |option| grouped_options.delete(option) }
 

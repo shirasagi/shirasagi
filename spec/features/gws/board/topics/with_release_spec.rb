@@ -28,7 +28,8 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
     let(:close_date) { release_date + 1.day }
 
     it do
-      visit gws_board_topics_path(site: site, mode: '-', category: '-')
+      # 新規作成は閲覧一覧(readable)から除去したため、管理一覧(editable)で作成する
+      visit gws_board_topics_path(site: site, mode: 'editable', category: '-')
       within ".nav-menu" do
         click_on I18n.t("ss.links.new")
       end

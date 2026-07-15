@@ -40,7 +40,7 @@ describe Workflow::PagesController, type: :request, dbscope: :example do
         forced_update_option: "false"
       }
       post request_update_workflow_page_path( site: site.id, cid: node.id, id: item.id), params: params
-      @json = JSON.parse(response.body)
+      @json = response.parsed_body
       @item = assigns[:item]
     end
 
@@ -64,7 +64,7 @@ describe Workflow::PagesController, type: :request, dbscope: :example do
         forced_update_option: "true"
       }
       post request_update_workflow_page_path( site: site.id, cid: node.id, id: item.id), params: params
-      @json = JSON.parse(response.body)
+      @json = response.parsed_body
       @item = assigns[:item]
     end
 
@@ -97,7 +97,7 @@ describe Workflow::PagesController, type: :request, dbscope: :example do
         forced_update_option: "false"
       }
       post approve_update_workflow_page_path( site: site.id, cid: node.id, id: item.id), params: params
-      @json = JSON.parse(response.body)
+      @json = response.parsed_body
       @item = assigns[:item]
     end
 
@@ -131,7 +131,7 @@ describe Workflow::PagesController, type: :request, dbscope: :example do
         forced_update_option: "false"
       }
       post remand_update_workflow_page_path( site: site.id, cid: node.id, id: item.id), params: params
-      @json = JSON.parse(response.body)
+      @json = response.parsed_body
       @item = assigns[:item]
     end
 

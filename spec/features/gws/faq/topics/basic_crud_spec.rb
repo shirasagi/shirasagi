@@ -14,7 +14,8 @@ describe "gws_faq_topics", type: :feature, dbscope: :example, js: true do
     let(:text) { Array.new(2) { "text-#{unique_id}" } }
 
     it do
-      visit gws_faq_topics_path(site: site, mode: '-', category: '-')
+      # 新規作成は閲覧一覧(readable)から除去したため、管理一覧(editable)で作成する
+      visit gws_faq_topics_path(site: site, mode: 'editable', category: '-')
       wait_for_js_ready
 
       Timecop.freeze(now) do
@@ -74,7 +75,8 @@ describe "gws_faq_topics", type: :feature, dbscope: :example, js: true do
       expect(item.name).to eq name2
       expect(item.category_ids).to include(category1.id, category2.id)
 
-      visit gws_faq_topics_path(site: site, mode: '-', category: '-')
+      # 削除ボタンは閲覧一覧(readable)から除去したため、管理一覧(editable)で操作する
+      visit gws_faq_topics_path(site: site, mode: 'editable', category: '-')
       click_on item.name
       within ".nav-menu" do
         click_on I18n.t("ss.links.delete")

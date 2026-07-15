@@ -85,6 +85,7 @@ Rails.application.routes.draw do
       post :edit_password, on: :member, action: :update_password
     end
     resource :user_locale_setting, only: [:show, :edit, :update]
+    resource :user_message_display_setting, only: [:show, :edit, :update]
     resource :user_form, concerns: [:deletion] do
       resources :user_form_columns, only: %i[index create], path: '/columns' do
         post :reorder, on: :collection

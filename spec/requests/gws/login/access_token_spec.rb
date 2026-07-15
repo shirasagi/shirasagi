@@ -12,7 +12,7 @@ describe "Gws::LoginController#access_token", type: :request, dbscope: :example 
     before do
       # get and save  auth token
       get auth_token_path
-      @auth_token = JSON.parse(response.body)["auth_token"]
+      @auth_token = response.parsed_body["auth_token"]
 
       # login
       params = {

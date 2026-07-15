@@ -233,11 +233,13 @@ module SS
 
     FILL_DATETIME_SCRIPT = <<~SCRIPT.freeze
       (function(element, value, resolve) {
+        var $element = $(element);
         var setter = function() {
           var pickerInstance = SS_DateTimePicker.instance(element);
           pickerInstance.momentValue(value ? moment(value) : null);
 
-          $(element).datetimepicker("validate");
+          $element.datetimepicker("validate");
+          $element.datetimepicker("hide");
           resolve(true);
         }
 

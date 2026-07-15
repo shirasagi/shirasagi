@@ -33,7 +33,7 @@ describe "webapi body_layout", dbscope: :example, type: :request do
         get body_layout_path
         expect(response.status).to eq 200
 
-        json = JSON.parse(response.body)
+        json = response.parsed_body
         expect(json["_id"]).to eq item.id
         expect(json["name"]).to eq item.name
         expect(json["parts"]).to eq item.parts

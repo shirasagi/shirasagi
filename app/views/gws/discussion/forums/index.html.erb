@@ -7,7 +7,10 @@
   <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
   <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
   <%= link_to t('ss.links.copy'), action: :copy, id: item  if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-  <%= link_to t('ss.links.delete'), action: :soft_delete, id: item  if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.delete'), action: :soft_delete, id: item  if item.allowed?(:delete, @cur_user, site: @cur_site) && @mode != 'readable' %>
 <% end %>
+
+<%# 閲覧一覧(readable)では一括操作が無いため行チェックボックスを表示しない %>
+<% @index_check = proc { |item| } if @mode == 'readable' %>
 
 <%= render template: 'gws/crud/index' %>

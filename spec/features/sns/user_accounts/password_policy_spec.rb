@@ -169,7 +169,7 @@ describe "sns_cur_user_account", type: :feature, dbscope: :example, js: true, ld
       auth_setting.save!
     end
 
-    after { ActiveSupport::CurrentAttributes.reset_all }
+    after { ActiveSupport::CurrentAttributes.clear_all }
 
     it_behaves_like "password validation with password policy"
   end

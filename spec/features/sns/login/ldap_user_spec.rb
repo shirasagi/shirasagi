@@ -10,7 +10,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true, ldap: true do
       item.save!
     end
 
-    after { ActiveSupport::CurrentAttributes.reset_all }
+    after { ActiveSupport::CurrentAttributes.clear_all }
 
     context "by uid" do
       it do

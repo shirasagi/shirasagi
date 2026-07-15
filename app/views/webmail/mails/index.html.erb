@@ -54,7 +54,7 @@
 <div class="index">
   <%= render template: "_list_head" %>
 
-  <ul class="list-items ss-messages webmail-mails">
+  <ul class="list-items ss-messages webmail-mails<%= ' subject-first' if @cur_user.message_list_subject_first? %>">
     <li class="list-item-head">
       <div class="head">
         <% if @imap.sent_box?(@mailbox) || @imap.draft_box?(@mailbox) %>

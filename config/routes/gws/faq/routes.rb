@@ -17,6 +17,9 @@ Rails.application.routes.draw do
         end
         get :categories, on: :collection
         post :read, on: :member
+        post :unread, on: :member
+        post :set_browsed_all, on: :collection
+        post :unset_browsed_all, on: :collection
         match :soft_delete, on: :member, via: %i[get post]
         match :undo_delete, on: :member, via: %i[get post]
         post :soft_delete_all, on: :collection
