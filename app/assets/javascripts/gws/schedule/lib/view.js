@@ -106,7 +106,7 @@ SS.ready(function() {
           date = sprintf("%d-%02d-%02d", ct.getFullYear(), ct.getMonth() + 1, ct.getDate());
 
           document.querySelectorAll('.calendar').forEach(el => {
-            el.calendar.gotoDate(date);
+            el.calendar?.gotoDate(date);
           });
         }
       });

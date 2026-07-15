@@ -131,8 +131,8 @@ SS.ready(function() {
           return target.prepend($('<span />', { class: "fc-loading" }).text(i18next.t("gws/schedule.loading"))[0]);
         }
         if (target.dataset.resourceError) {
-          target.dataset.resourceError = null;
-          return target.prepend($('<span />', { class: "fc-loading" }).text(i18next.t("gws/schedule.errors.resource_error")));
+          delete target.dataset.resourceError;
+          return target.prepend($('<span />', { class: "fc-loading" }).text(i18next.t("gws/schedule.errors.resource_error"))[0]);
         }
 
         if (!isLoading) {
