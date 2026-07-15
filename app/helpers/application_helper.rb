@@ -270,7 +270,9 @@ module ApplicationHelper
   end
 
   def required_mark
-    %(<span class="required" title="#{I18n.t('ss.required')}">*</span>).html_safe
+    label = I18n.t('ss.required')
+    tooltip = %(<span class="required-tooltip" aria-hidden="true">#{label}</span>)
+    %(<span class="required required-mark" role="img" aria-label="#{label}">*#{tooltip}</span>).html_safe
   end
 
   def sanitizer_status(item)
