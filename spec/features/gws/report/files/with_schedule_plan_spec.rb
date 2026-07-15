@@ -79,7 +79,8 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t('ss.notice.saved')
-        within ".fc-view-container" do
+
+        within ".fc-view" do
           expect(page).to have_css(".fc-event-name", text: plan_name)
         end
 
@@ -120,7 +121,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t('ss.notice.saved')
-        within ".fc-view-container" do
+        within ".fc-view" do
           expect(page).to have_css(".fc-event-name", text: plan_name)
         end
 

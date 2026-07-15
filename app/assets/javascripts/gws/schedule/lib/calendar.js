@@ -39,6 +39,9 @@ SS.ready(function() {
     if (init && init["date"]) {
       params["initialDate"] = init["date"];
     }
+    if (init && init["view"]) {
+      params["initialView"] = init["view"];
+    }
 
     // custom params
     delete params.useWorkload
@@ -62,12 +65,6 @@ SS.ready(function() {
     }
 
     init['viewTodo'] || (init['viewTodo'] = 'active');
-    if (init['view']) {
-      calendar.changeView(init['view']);
-    }
-    if (init['date']) {
-      calendar.gotoDate(init['date']);
-    }
     if (init['viewTodo'] === 'active') {
       $(selector).find('.fc-withTodo-button').addClass("fc-state-active");
     }

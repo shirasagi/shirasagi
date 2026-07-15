@@ -11,7 +11,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       it "#index" do
         visit index_path
         within "#calendar" do
-          click_on I18n.t("gws/schedule.options.interval.daily").downcase
+          click_on I18n.t("gws/schedule.options.interval.daily").capitalize
         end
         within ".fc-timeGridDay-view" do
           expect(page).to have_no_css("td[data-time=\"00:00:00\"]")
@@ -38,7 +38,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       it "#index" do
         visit index_path
         within "#calendar" do
-          click_on I18n.t("gws/schedule.options.interval.daily").downcase
+          click_on I18n.t("gws/schedule.options.interval.daily").capitalize
         end
         within ".fc-timeGridDay-view" do
           expect(page).to have_no_css("td[data-time=\"00:00:00\"]")

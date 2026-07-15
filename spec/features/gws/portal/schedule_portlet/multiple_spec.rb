@@ -90,7 +90,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
 
         # next week
         within all(".portlet-model-schedule")[0] do
-          first(".fc-icon-right-single-arrow").click
+          first(".fc-icon-chevron-right").click
           wait_for_js_ready
 
           expect(page).to have_no_css(".fc-event-name", text: item1.name)
@@ -99,7 +99,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           expect(page).to have_no_css(".fc-event-name", text: item4.name)
         end
         within all(".portlet-model-schedule")[1] do
-          first(".fc-icon-right-single-arrow").click
+          first(".fc-icon-chevron-right").click
           wait_for_js_ready
 
           expect(page).to have_no_css(".fc-event-name", text: item1.name)

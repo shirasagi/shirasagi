@@ -27,6 +27,9 @@ SS.ready(function() {
       opts.eventSources[i]['error'] = function() { document.querySelector(selector).dataset.resourceError = true; }
     }
     $.extend(true, params, opts);
+    if (init && init["date"]) {
+      params["initialDate"] = init["date"];
+    }
 
     // custom params
     delete params.tapMenu
@@ -46,9 +49,6 @@ SS.ready(function() {
 
     if (init == null) {
       init = {};
-    }
-    if (init['date']) {
-      calendar.gotoDate(init['date']);
     }
     Gws_Schedule_View.renderSideCalendars(selector);
     return $(selector + "-header .calendar-text").each(function () {
