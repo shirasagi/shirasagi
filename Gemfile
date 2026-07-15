@@ -147,7 +147,6 @@ group :development, :test do
   gem 'selenium-webdriver', require: false
   gem 'simplecov', require: false
   gem 'simplecov-csv', require: false
-  gem 'simplecov-html', require: false
   gem 'simplecov-lcov', require: false
   gem 'test-queue', require: false
   gem 'timecop', require: false
