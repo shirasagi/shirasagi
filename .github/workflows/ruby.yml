@@ -157,3 +157,4 @@ jobs:
           # driver: random
           # RSPEC_LOCALE: en
           GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+          RUBYZIP_V3_API_WARN: true
