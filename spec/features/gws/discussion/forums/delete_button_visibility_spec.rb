@@ -8,15 +8,25 @@ describe "gws_discussion_forums", type: :feature, dbscope: :example, js: true do
 
   before { login_gws_user }
 
-  it "閲覧一覧(readable)では一括削除ボタンを表示しない" do
+  it "閲覧一覧(readable)では削除ボタン・新規作成・チェックボックスを表示しない" do
     visit readable_path
     expect(current_path).not_to eq sns_login_path
+    expect(page).to have_css(".list-item", text: forum.name)
     expect(page).to have_no_css(".soft-delete-all")
+    within ".nav-menu" do
+      expect(page).to have_no_link I18n.t("ss.links.new")
+    end
+    expect(page).to have_no_css(".list-items .list-item label.check")
   end
 
-  it "管理一覧(editable)では一括削除ボタンを表示する" do
+  it "管理一覧(editable)では削除ボタン・新規作成・チェックボックスを表示する" do
     visit editable_path
     expect(current_path).not_to eq sns_login_path
+    expect(page).to have_css(".list-item", text: forum.name)
     expect(page).to have_css(".soft-delete-all")
+    within ".nav-menu" do
+      expect(page).to have_link I18n.t("ss.links.new")
+    end
+    expect(page).to have_css(".list-items .list-item label.check")
   end
 end
