@@ -626,7 +626,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
 
           statuses = url_logs.select { _1["full_url"].start_with?("https://www.facebook.com/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)
-          statuses = url_logs.select { _1["full_url"].start_with?("https://twitter.com/") }.map { _1["type"] }.uniq
+          statuses = url_logs.select { _1["full_url"].start_with?("https://x.com/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)
           statuses = url_logs.select { _1["full_url"].start_with?("https://b.hatena.ne.jp/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)

@@ -227,7 +227,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           visit show_path
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_no_css("td", text: "https://twitter.com/")
+            expect(page).to have_no_css("td", text: "https://x.com/")
           end
           expect(capture.update.count).to eq 0
           expect(capture.update.tweet).to eq nil
@@ -250,7 +250,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
               expect(page).to have_css('dd', text: I18n.t('ss.options.state.public'))
             end
             within "#addon-cms-agents-addons-twitter_poster" do
-              expect(page).to have_css("td", text: "https://twitter.com/#{username}/status/#{tweet_id}")
+              expect(page).to have_css("td", text: "https://x.com/#{username}/status/#{tweet_id}")
             end
             expect(capture.update.count).to eq 1
             expect(capture.update.tweet).to include(item.name)
@@ -291,7 +291,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("td", text: "https://twitter.com/#{username}/status/#{tweet_id}")
+            expect(page).to have_css("td", text: "https://x.com/#{username}/status/#{tweet_id}")
           end
 
           expect(capture.update.count).to eq 1
@@ -369,7 +369,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("td", text: "https://twitter.com/#{username}/status/#{tweet_id}")
+            expect(page).to have_css("td", text: "https://x.com/#{username}/status/#{tweet_id}")
           end
 
           expect(capture.update.count).to eq 1
@@ -452,7 +452,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("td", text: "https://twitter.com/#{username}/status/#{tweet_id}")
+            expect(page).to have_css("td", text: "https://x.com/#{username}/status/#{tweet_id}")
           end
 
           expect(capture.update.count).to eq 1
@@ -538,7 +538,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("td", text: "https://twitter.com/#{username}/status/#{tweet_id}")
+            expect(page).to have_css("td", text: "https://x.com/#{username}/status/#{tweet_id}")
           end
           expect(capture.update.count).to eq 1
           expect(Cms::SnsPostLog::Twitter.count).to eq 1
@@ -556,7 +556,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
               expect(page).to have_css('dd', text: I18n.t('ss.options.state.public'))
             end
             within "#addon-cms-agents-addons-twitter_poster" do
-              expect(page).to have_css("td", text: "https://twitter.com/#{username}/status/#{tweet_id}")
+              expect(page).to have_css("td", text: "https://x.com/#{username}/status/#{tweet_id}")
             end
             expect(capture.update.count).to eq 2
             expect(Cms::SnsPostLog::Twitter.count).to eq 2

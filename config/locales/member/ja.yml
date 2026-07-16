@@ -470,10 +470,10 @@ ja:
         - 有効にした場合、X アカウントでログインすることができます。
       twitter2_client_id:
         - X でアプリケーションを作成した際に付与される Client ID を設定します。
-        - X でアプリケーションを作成するには、https://developer.twitter.com/apps にブラウザでアクセスします。
+        - X でアプリケーションを作成するには、https://developer.x.com/ にブラウザでアクセスします。
       twitter2_client_secret:
         - X でアプリケーションを作成した際に付与される Client Secret を設定します。
-        - X でアプリケーションを作成するには、https://developer.twitter.com/apps にブラウザでアクセスします。
+        - X でアプリケーションを作成するには、https://developer.x.com/ にブラウザでアクセスします。
     member/addon/facebook_oauth:
       facebook_oauth:
         - Facebook による OAuth 認証を有効にするかどうかを指定します。

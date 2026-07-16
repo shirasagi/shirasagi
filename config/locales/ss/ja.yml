@@ -1480,7 +1480,7 @@ ja:
         - Open Graph 形式を選択します。
         - それぞれのSNSでシェアした場合の表示確認を以下のURLからできます。
         - Facebook share debugger：https://developers.facebook.com/tools/debug/sharing/
-        - X(旧twitter) Card Validator：https://cards-dev.twitter.com/validator/
+        - X(旧twitter) Card Validator：https://cards-dev.x.com/validator/
         - LINE Page Poker：https://poker.line.naver.jp/
       opengraph_defaul_image_url:
         - 既定の画像のURL を設定します。
@@ -1492,7 +1492,7 @@ ja:
         - コンシューマーキーとアクセストークン、それぞれのシークレットキーを設定する必要があります。
       twitter_card:
         - X(旧twitter) のカード形式を選択します。
-        - X(旧twitter) でどのような見え方をするかは「X(旧twitter) Card Validator（https://cards-dev.twitter.com/validator）」で確認することができます。
+        - X(旧twitter) でどのような見え方をするかは「X(旧twitter) Card Validator（https://cards-dev.x.com/validator/）」で確認することができます。
       twitter_username:
         - X(旧twitter) のユーザー名を設定します。
         - 設定すると「X(旧twitter) Card Analytics」でアクセスを解析できるようになります。
