@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Cms::Addon
   module LinePoster
     extend ActiveSupport::Concern
@@ -146,7 +148,7 @@ module Cms::Addon
 
           res = site.line_client.broadcast(messages)
           res_code = res.code
-          res_body = res.body.force_encoding("utf-8")
+          res_body = res.body.dup.force_encoding("utf-8")
 
           log.response_code = res_code
           log.response_body = res_body

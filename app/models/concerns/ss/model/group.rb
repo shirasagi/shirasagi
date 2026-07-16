@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SS::Model::Group
   extend ActiveSupport::Concern
   extend SS::Translation
@@ -165,7 +167,7 @@ module SS::Model::Group
   def depth
     @depth ||= begin
       count = 0
-      full_name = ""
+      full_name = +""
       name.split('/').map do |part|
         full_name << "/" if full_name.present?
         full_name << part

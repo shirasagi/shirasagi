@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SS::Zip
   METHOD_STORED = 0
   VERSION_NEEDED_TO_EXTRACT_UNICODE_NAMES = 63
@@ -124,7 +126,7 @@ module SS::Zip
     end
 
     def pack_for_central
-      zip64_info = ''.force_encoding(::Encoding::ASCII_8BIT)
+      zip64_info = Fs.new_buffer(64)
 
       # central directory header には local file header のような制約はない。
       # 32bit で収まらない場合にのみ、ZIP64に設定する。

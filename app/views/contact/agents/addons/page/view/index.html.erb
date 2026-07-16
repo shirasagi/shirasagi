@@ -49,7 +49,7 @@
 
   if contact_address.present?
     if contact_postal_code.present? && contact_postal_code =~ /^\d{4}/
-      contact_postal_code.insert(3, "-")
+      contact_postal_code = contact_postal_code.dup.insert(3, "-")
     end
 
     contact_parts << content_tag(:p, class: "address-group") do
