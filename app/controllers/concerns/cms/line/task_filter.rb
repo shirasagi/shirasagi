@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Cms::Line::TaskFilter
   extend ActiveSupport::Concern
 
@@ -40,7 +42,7 @@ module Cms::Line::TaskFilter
         @task.log("broadcast to members")
         res = @site.line_client.broadcast(item.line_messages)
         res_code = res.code
-        res_body = res.body.force_encoding("utf-8")
+        res_body = res.body.dup.force_encoding("utf-8")
 
         log.messages = item.line_messages
         log.response_code = res_code
@@ -78,7 +80,7 @@ module Cms::Line::TaskFilter
           payload = multicast_payload(item)
           res = @site.line_client.multicast(user_ids, item.line_messages, payload: payload)
           res_code = res.code
-          res_body = res.body.force_encoding("utf-8")
+          res_body = res.body.dup.force_encoding("utf-8")
 
           log.messages = item.line_messages
           log.response_code = res_code

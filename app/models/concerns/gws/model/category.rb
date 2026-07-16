@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Gws::Model::Category
   extend ActiveSupport::Concern
   extend SS::Translation
@@ -56,7 +58,7 @@ module Gws::Model::Category
 
     @depth ||= begin
       count = 0
-      full_name = ""
+      full_name = +""
       name.to_s.split("/").map do |part|
         full_name << "/" if full_name.present?
         full_name << part

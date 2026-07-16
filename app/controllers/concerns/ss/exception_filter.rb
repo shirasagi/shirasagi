@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SS::ExceptionFilter
   extend ActiveSupport::Concern
 
@@ -51,7 +53,7 @@ module SS::ExceptionFilter
     trace = wrapper.application_trace
     trace = wrapper.framework_trace if trace.empty?
 
-    separator = "\n"
+    separator = +"\n"
     if logger.formatter && logger.formatter.respond_to?(:tags_text) && logger.formatter.tags_text.present?
       separator << logger.formatter.tags_text
     end
