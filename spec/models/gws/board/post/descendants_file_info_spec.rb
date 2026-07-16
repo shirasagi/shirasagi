@@ -37,7 +37,7 @@ RSpec.describe Gws::Board::Post, type: :model, dbscope: :example do
         let(:total_file_size) { files.sum(&:size) }
         subject { create :gws_board_topic, cur_user: user, file_ids: file_ids }
 
-        its(:file_ids) { is_expected.to include 1..10 }
+        its(:file_ids) { is_expected.to include(*(1..10).to_a) }
         its(:descendants_files_count) { is_expected.to eq files.length }
         its(:descendants_total_file_size) { is_expected.to eq total_file_size }
       end
