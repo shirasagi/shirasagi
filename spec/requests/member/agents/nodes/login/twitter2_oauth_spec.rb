@@ -18,10 +18,11 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
     let(:twitter_username) { unique_id }
 
     before do
-      # WebMock.disable_net_connect!
+      @net_connect_allowed = WebMock.net_connect_allowed?
+      WebMock.disable_net_connect!(allow_localhost: true)
       WebMock.reset!
 
-      stub_request(:post, "https://api.twitter.com/2/oauth2/token").to_return do |request|
+      stub_request(:post, "https://api.x.com/2/oauth2/token").to_return do |request|
         expect(request.headers["Authorization"]).to eq "Basic #{Base64.strict_encode64("#{client_id}:#{client_secret}")}"
         expect(request.url_encoded?).to be_truthy
         params = URI.decode_www_form(request.body)
@@ -40,7 +41,7 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
         }
         { status: 200, headers: { 'Content-Type' => 'application/json' }, body: body.to_json }
       end
-      stub_request(:get, /#{::Regexp.escape("https://api.twitter.com/2/users/me")}/).to_return do |request|
+      stub_request(:get, /#{::Regexp.escape("https://api.x.com/2/users/me")}/).to_return do |request|
         expect(request.headers["Authorization"]).to eq "Bearer #{access_token}"
         expect(request.body).to be_blank
 
@@ -57,6 +58,7 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
 
     after do
       WebMock.reset!
+      WebMock.allow_net_connect! if @net_connect_allowed
     end
 
     it do
@@ -64,7 +66,7 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
       expect(response.status).to eq 302
       expect(response.location).to be_present
       location = ::Addressable::URI.parse(response.location)
-      expect(location.origin).to eq "https://twitter.com"
+      expect(location.origin).to eq "https://x.com"
       expect(location.query).to be_present
       query_values = location.query_values
       expect(query_values["client_id"]).to eq client_id
