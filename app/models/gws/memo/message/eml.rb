@@ -705,7 +705,7 @@ class Gws::Memo::Message
 
     def serialize_multi_part(io, enumerator)
       boundary = "--==_mimepart_#{SecureRandom.hex(16)}"
-      buff = ""
+      buff = +""
 
       io.write "Content-Type: multipart/mixed;\r\n"
       io.write " boundary=\"#{boundary}\"\r\n"

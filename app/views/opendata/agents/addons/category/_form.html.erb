@@ -20,7 +20,7 @@ def cate_form(item)
   children = item.children.and_public.allow(:read, @cur_user).sort(order: 1)
   if children.size > 0
     cc = children.map { |c| c.children.size }.max != 0
-    h = %(<label class="parent">)
+    h = +%(<label class="parent">)
     if item.is_a?(Opendata::Node::Category)
       h << @f.check_box("category_ids[]", {}, item._id)
     end
@@ -30,7 +30,7 @@ def cate_form(item)
     h << %(</div>).html_safe
     @disallowed_categories.delete(item)
   else
-    h  = %(<label>)
+    h  = +%(<label>)
     if item.is_a?(Opendata::Node::Category)
       h << @f.check_box("category_ids[]", {}, item._id)
     end

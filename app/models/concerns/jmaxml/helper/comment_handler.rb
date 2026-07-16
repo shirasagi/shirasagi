@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module Jmaxml::Helper::CommentHandler
   extend ActiveSupport::Concern
 
   def body_comments_forecast_comment
-    comment = ''
+    comment = +''
 
     xpath = '/Report/Body/Comments/ForecastComment/Text/text()'
     REXML::XPath.each(xmldoc, xpath) do |forecast_comment|
@@ -16,7 +18,7 @@ module Jmaxml::Helper::CommentHandler
   end
 
   def body_comments_warning_comment
-    comment = ''
+    comment = +''
 
     xpath = '/Report/Body/Comments/WarningComment/Text/text()'
     REXML::XPath.each(xmldoc, xpath) do |warning_comment|
@@ -30,7 +32,7 @@ module Jmaxml::Helper::CommentHandler
   end
 
   def body_comments_free_form_comment
-    comment = ''
+    comment = +''
 
     REXML::XPath.each(xmldoc, '/Report/Body/Comments/FreeFormComment/text()') do |forecast_comment|
       c = REXML::XPath.first(forecast_comment, 'Text/text()').to_s.strip.presence

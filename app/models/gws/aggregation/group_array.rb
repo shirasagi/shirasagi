@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Gws::Aggregation
   class GroupArray
     def initialize(items)
@@ -17,7 +19,7 @@ module Gws::Aggregation
       @items.each do |item|
         item.depth = begin
           count = 0
-          full_name = ""
+          full_name = +""
           item.name.split('/').map do |part|
             full_name << "/" if full_name.present?
             full_name << part

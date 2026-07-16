@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Cms::NodeTreeList
   include Enumerable
 
@@ -40,7 +42,7 @@ class Cms::NodeTreeList
     private
 
     def part_order_array(items, item)
-      full_filename = ""
+      full_filename = +""
       item.filename.split('/').map do |part|
         full_filename << "/" if full_filename.present?
         full_filename << part

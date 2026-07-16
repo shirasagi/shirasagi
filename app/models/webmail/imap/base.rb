@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 require "net/imap"
+
 module Webmail::Imap
   class Proxy
     def initialize(imap)
@@ -76,7 +79,7 @@ module Webmail::Imap
 
     def authority
       @authority ||= begin
-        authority = ""
+        authority = +""
         if conf[:account]
           authority << "#{conf[:account]}@"
         end

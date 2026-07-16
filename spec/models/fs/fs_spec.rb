@@ -272,4 +272,10 @@ describe Fs do
       end
     end
   end
+
+  describe ".new_buffer" do
+    it do
+      expect(Fs.new_buffer(8).encoding).to eq Encoding::ASCII_8BIT
+    end
+  end
 end

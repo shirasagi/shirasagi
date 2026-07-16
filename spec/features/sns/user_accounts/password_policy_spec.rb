@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe "sns_cur_user_account", type: :feature, dbscope: :example, js: true, ldap: true do
@@ -44,7 +46,7 @@ describe "sns_cur_user_account", type: :feature, dbscope: :example, js: true, ld
       - setting.password_min_upcase_length - setting.password_min_downcase_length
       - setting.password_min_digit_length - setting.password_min_symbol_length
 
-      password = ""
+      password = +""
       password << (upcases - prohibited_chars).sample(setting.password_min_upcase_length).join
       password << (downcases - prohibited_chars).sample(setting.password_min_downcase_length).join
       password << (digits - prohibited_chars).sample(setting.password_min_digit_length).join
@@ -54,7 +56,7 @@ describe "sns_cur_user_account", type: :feature, dbscope: :example, js: true, ld
     end
     let(:insufficient_password) do
       prev_chars = password1.chars.uniq
-      password = ""
+      password = +""
       password << prev_chars.sample(setting.password_min_length - setting.password_min_change_char_count + 1).join
       password << (chars - prev_chars - prohibited_chars).sample(setting.password_min_change_char_count - 1).join
       password

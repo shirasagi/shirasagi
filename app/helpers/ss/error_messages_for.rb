@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SS::ErrorMessagesFor
   extend ActiveSupport::Concern
 
@@ -22,7 +24,7 @@ module SS::ErrorMessagesFor
         content_tag(:li, msg)
       end.join.html_safe
 
-      contents = ''
+      contents = +''
       contents << content_tag(:h2, header_message) if header_message.present?
       contents << content_tag(:p, message_body) if message_body.present?
       contents << content_tag(:ul, error_messages)

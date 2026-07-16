@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe "cms_preview", type: :feature, dbscope: :example, js: true do
@@ -21,15 +23,15 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
     let(:pc_preview_path) { cms_preview_path(site: site, path: node_root.url[1..-1]) }
 
     before do
-      layout_html = ''
-      layout_html << '<html><body>'
-      layout_html << "<title>#{cms_site.name}</title>"
-      layout_html << '<meta charset="shift_jis" />'
-      layout_html << "{{ part \"#{faq_part_search.url.sub(/^\//, '').sub(/.part.html$/, '')}\" }}"
-      layout_html << '{{ yield }}'
-      layout_html << "{{ part \"#{category_part_node.url.sub(/^\//, '').sub(/.part.html$/, '')}\" }}"
-      layout_html << '</body></html>'
-
+      layout_html = <<~HTML
+        <html><body>
+        <title>#{cms_site.name}</title>
+        <meta charset="shift_jis" />
+        {{ part "#{faq_part_search.url.sub(/^\//, '').sub(/.part.html$/, '')}" }}
+        {{ yield }}
+        {{ part "#{category_part_node.url.sub(/^\//, '').sub(/.part.html$/, '')}" }}
+        </body></html>
+      HTML
       layout = create(:cms_layout, html: layout_html)
       node_root.layout_id = layout.id
       node_root.save!
@@ -67,13 +69,13 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
     let(:pc_preview_path) { cms_preview_path(site: site, path: node_root.url[1..-1]) }
 
     before do
-      layout_html = ''
-      layout_html << '<html><body>'
-      layout_html << "<title>#{cms_site.name}</title>"
-      layout_html << '<meta charset="shift_jis" />'
-      layout_html << '{{ yield }}'
-      layout_html << '</body></html>'
-
+      layout_html = <<~HTML
+        <html><body>
+        <title>#{cms_site.name}</title>
+        <meta charset="shift_jis" />
+        {{ yield }}
+        </body></html>
+      HTML
       layout = create(:cms_layout, html: layout_html)
       node_root.layout_id = layout.id
       node_root.save!
@@ -105,13 +107,13 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
     let(:pc_preview_path) { cms_preview_path(site: site, path: node_root.url[1..-1]) }
 
     before do
-      layout_html = ''
-      layout_html << '<html><body>'
-      layout_html << "<title>#{cms_site.name}</title>"
-      layout_html << '<meta charset="shift_jis" />'
-      layout_html << '{{ yield }}'
-      layout_html << '</body></html>'
-
+      layout_html = <<~HTML
+        <html><body>
+        <title>#{cms_site.name}</title>
+        <meta charset="shift_jis" />
+        {{ yield }}
+        </body></html>
+      HTML
       layout = create(:cms_layout, html: layout_html)
       node_root.layout_id = layout.id
       node_root.save!

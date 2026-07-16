@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Chorg::Runner::Base
   extend ActiveSupport::Concern
 
@@ -176,7 +178,7 @@ module Chorg::Runner::Base
   end
 
   def entity_title(entity)
-    title = ''
+    title = +''
     if entity.respond_to?(:name)
       title << entity.name.to_s
     end

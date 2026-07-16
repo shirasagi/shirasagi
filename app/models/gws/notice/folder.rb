@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Gws::Notice::Folder
   include SS::Document
   include Gws::Model::Folder
@@ -12,7 +14,7 @@ class Gws::Notice::Folder
 
   class << self
     def create_my_folder!(site, group)
-      full_name = ''
+      full_name = +''
       depth = 0
       last_folder = nil
       group.name.split('/').each do |part|

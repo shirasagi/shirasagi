@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Kana::Converter
   @mecab = nil
 
@@ -43,7 +45,7 @@ module Kana::Converter
       text.gsub!(/[ -\/:-@\[-`{-~]+/m) { |m| "\r" * m.bytesize }
 
       byte = html.bytes
-      kana = ""
+      kana = +""
       pl   = 0
       retry_limit = 5
 
