@@ -93,6 +93,7 @@ GEM
       version_gem (~> 1.1, >= 1.1.14)
     base64 (0.3.0)
     bcp47_spec (0.2.1)
+    benchmark (0.5.0)
     bigdecimal (3.3.1)
     bindata (3.0.0)
     binding_of_caller (2.0.0)
@@ -820,6 +821,7 @@ PLATFORMS
 DEPENDENCIES
   addressable
   base64
+  benchmark
   bootsnap
   brakeman
   browser
