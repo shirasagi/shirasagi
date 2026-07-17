@@ -36,6 +36,7 @@ gem 'jquery-rails'
 # Additional (alphabetical order)
 gem 'addressable', require: 'addressable/uri'
 gem 'base64'
+gem 'benchmark'
 gem 'bootsnap', require: false
 gem 'browser'
 gem 'clam_scan'
