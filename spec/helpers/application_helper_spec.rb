@@ -70,7 +70,13 @@ describe ApplicationHelper, type: :helper, dbscope: :example do
 
     context "when non-string objects are given" do
       subject { helper.br(1, { a: 1 }, URI.parse("http://www.yahoo.co.jp/"), html_escape: false) }
-      it { is_expected.to eq "1<br />{:a=>1}<br />http://www.yahoo.co.jp/" }
+      it do
+        if RUBY_VERSION >= "3.4"
+          is_expected.to eq "1<br />{a: 1}<br />http://www.yahoo.co.jp/"
+        else
+          is_expected.to eq "1<br />{:a=>1}<br />http://www.yahoo.co.jp/"
+        end
+      end
       it { is_expected.to be_a ActiveSupport::SafeBuffer }
     end
   end
