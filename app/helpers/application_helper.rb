@@ -271,8 +271,10 @@ module ApplicationHelper
 
   def required_mark
     label = I18n.t('ss.required')
-    tooltip = %(<span class="required-tooltip" aria-hidden="true">#{label}</span>)
-    %(<span class="required required-mark" role="img" aria-label="#{label}">*#{tooltip}</span>).html_safe
+    tooltip = tag.span(label, class: "required-tooltip", aria: { hidden: true })
+    tag.span(class: "required required-mark", role: "img", aria: { label: label }) do
+      safe_join([ "*", tooltip ])
+    end
   end
 
   def sanitizer_status(item)
