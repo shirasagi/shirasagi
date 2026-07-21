@@ -4,7 +4,7 @@ module Workflow::ViewHelper
   def workflow_user_profile(user)
     return "#{user.long_name}(#{user.email})" if @ss_mode != :gws
 
-    ret = ""
+    ret = +""
     if @cur_site.user_profile_public?("uid")
       ret += user.long_name
     else

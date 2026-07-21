@@ -38,7 +38,7 @@ class Gws::Facility::Category
   def depth
     @depth ||= begin
       count = 0
-      full_name = ""
+      full_name = +""
       name.split("/").map do |part|
         full_name << "/" if full_name.present?
         full_name << part

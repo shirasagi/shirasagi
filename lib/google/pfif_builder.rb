@@ -21,7 +21,7 @@ module Google::PfifBuilder
       params[:person_record_id] = "#{domain_name}/#{params[:person_record_id]}"
     end
 
-    xml = ''
+    xml = +''
     builder = ::Builder::XmlMarkup.new(target: xml)
 
     builder.tag!('pfif', {'xmlns' => PFIF_NS}) do
