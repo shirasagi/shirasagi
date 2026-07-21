@@ -117,8 +117,15 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
   end
 
   context "with root cms page" do
-    let(:item) { create(:cms_page, filename: "404.html", cur_site: site, html: html) }
-    let(:html) { '<h2>見出し2</h2><p>内容が入ります。</p><h3>見出し3</h3><p>内容が入ります。内容が入ります。</p>' }
+    let(:item) do
+      html = <<~HTML
+        <h2>見出し2</h2>
+        <p>内容が入ります。</p>
+        <h3>見出し3</h3>
+        <p>内容が入ります。内容が入ります。</p>
+      HTML
+      create(:cms_page, cur_site: site, html: html)
+    end
 
     let(:pc_preview_path) { cms_preview_path(site: site, path: item.url[1..-1]) }
     let(:mobile_preview_path) { cms_preview_path(site: site, path: "#{site.mobile_location}#{item.url}"[1..-1]) }
