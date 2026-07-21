@@ -550,7 +550,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
         url_log_path = task.log_file_path.sub(".log", "") + "-extraction-log.json.gz"
         url_logs = Zlib::GzipReader.open(url_log_path) { _1.readlines }.map { JSON.parse(_1.chomp) }
         # puts url_logs.map { _1["full_url"] }.join("\n")
-        expect(url_logs.length).to eq 26
+        expect(url_logs.length).to eq 27
 
         next_month_url = "#{calendar.full_url}#{Time.zone.today.next_month.strftime("%Y%m")}/"
         expect(url_logs.select { _1["full_url"].start_with?(next_month_url) }.map { _1["type"] }.uniq).to eq %w(nofollow)
@@ -564,7 +564,15 @@ describe Cms::CheckLinksJob, dbscope: :example do
         expect(url_logs.select { _1["full_url"] == page1.full_url }.map { _1["type"] }.uniq).to eq %w(inner_yield)
 
         list_url = "#{calendar.full_url}#{Time.zone.today.strftime("%Y%m")}/list.html"
-        expect(url_logs.select { _1["full_url"] == list_url }.map { _1["type"] }.uniq).to eq %w(inner_yield)
+        url_logs.select { _1["full_url"] == list_url }.tap do |logs|
+          expect(logs).to have(3).items
+          expect(logs[0]["source"]).to eq calendar.full_url
+          expect(logs[0]["type"]).to eq "canonical"
+          expect(logs[1]["source"]).to eq calendar.full_url
+          expect(logs[1]["type"]).to eq "inner_yield"
+          expect(logs[2]["source"]).to eq list_url
+          expect(logs[2]["type"]).to eq "inner_yield"
+        end
 
         list_ics_url = "#{calendar.full_url}#{Time.zone.today.strftime("%Y%m")}/list.ics"
         expect(url_logs.select { _1["full_url"] == list_ics_url }.map { _1["type"] }.uniq).to eq %w(nofollow)

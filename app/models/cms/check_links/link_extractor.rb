@@ -5,6 +5,7 @@ class Cms::CheckLinks::LinkExtractor
 
   HYPERLINK_ELEMENT_TAG_NAMES = Set.new(%w(a area)).freeze
   IMAGE_ELEMENT_TAG_NAMES = Set.new(%w(img audio video source iframe)).freeze
+  CANONICAL_ELEMENT_TAG_NAMES = Set.new(%w(link)).freeze
 
   attr_accessor :cur_site, :base_url, :html
   attr_writer :fragment
@@ -17,6 +18,8 @@ class Cms::CheckLinks::LinkExtractor
         link = create_link_from_hyperlink(node, layout_yield)
       elsif image_element?(node)
         link = create_link_from_image(node, layout_yield)
+      elsif canonical_element?(node)
+        link = create_link_from_canonical(node, layout_yield)
       end
       next unless link
 
@@ -70,6 +73,12 @@ class Cms::CheckLinks::LinkExtractor
     IMAGE_ELEMENT_TAG_NAMES.include?(node.name)
   end
 
+  def canonical_element?(node)
+    return false if node["rel"].blank? || node["rel"] != "canonical"
+    return false if node["href"].blank?
+    CANONICAL_ELEMENT_TAG_NAMES.include?(node.name)
+  end
+
   def create_link_from_hyperlink(node, layout_yield)
     href = node["href"]
     rel = node["rel"].presence
@@ -121,5 +130,19 @@ class Cms::CheckLinks::LinkExtractor
 
     Cms::CheckLinks::Link.new(
       full_url: extracted_full_url, href: href, line: node.line, type: type, rel: nil, ss_rel: ss_rel)
+  end
+
+  def create_link_from_canonical(node, _layout_yield)
+    href = node["href"]
+    return if href.blank? || href == "#"
+
+    extracted_full_url = Addressable::URI.join(base_url, href) rescue nil
+    return unless extracted_full_url
+
+    extracted_full_url = extracted_full_url.normalize rescue nil
+    return unless extracted_full_url
+
+    Cms::CheckLinks::Link.new(
+      full_url: extracted_full_url, href: href, line: node.line, type: :canonical, rel: nil, ss_rel: nil)
   end
 end
