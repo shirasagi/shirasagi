@@ -192,7 +192,7 @@ class Cms::LinkChecker
     path = File.join(path, "index.html") if Fs.directory?(path)
     return path if Fs.file?(path)
 
-    path = Addressable::URI.unencode(path)
+    path = Addressable::URI.unencode(path).to_s
     return path if Fs.file?(path)
 
     nil
