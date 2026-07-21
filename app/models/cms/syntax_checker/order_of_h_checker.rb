@@ -4,8 +4,8 @@ class Cms::SyntaxChecker::OrderOfHChecker
   H_TAGS = %w(h1 h2 h3 h4 h5 h6).freeze
 
   def check(context, content)
-    code_first = ''
-    code_skip = ''
+    code_first = +''
+    code_skip = +''
     h_level_check = context.h_level_check
     header_check = context.header_check
     h_nodes = context.fragment.css(H_TAGS.join(","))

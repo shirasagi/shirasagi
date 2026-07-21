@@ -162,7 +162,7 @@ module Gws::Addon::Import::Affair
     # rubocop:enable Metrics/AbcSize
 
     def set_errors(item, index)
-      error = ""
+      error = +""
       item.errors.each do |n, e|
         error += "#{item.class.t(n)}#{e} "
       end
