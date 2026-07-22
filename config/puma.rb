@@ -33,6 +33,12 @@ port ENV.fetch("PORT", 3000)
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
 
+# Enable phased restart
+preload_app! ENV.fetch("PRELOAD_APP", false)
+
+# Reload gem file in phased restart
+prune_bundler ENV.fetch("PRUNE_BUNDLER", true)
+
 # Specify the PID file. Defaults to tmp/pids/server.pid in development.
 # In other environments, only set the PID file if requested.
 pidfile ENV.fetch("PIDFILE", "tmp/pids/server.pid")
