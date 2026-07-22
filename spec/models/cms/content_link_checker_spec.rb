@@ -6,6 +6,10 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
   let!(:layout) { create_cms_layout cur_site: site }
   let!(:node) { create :article_node_page, cur_site: site, layout: layout }
 
+  after do
+    expect(SS.current_user).to be_blank
+  end
+
   context "with several links" do
     let(:ss_file1) { create :ss_file, site: site, user: user }
     let(:ss_file2) { create :ss_file, site: site, user: user }

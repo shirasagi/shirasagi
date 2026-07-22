@@ -220,8 +220,11 @@ class Cms::LinkChecker
   def get_with_routing(site, full_url, redirection: nil)
     # Rails.application.call を利用すると、ログのタギングが解除されてしまうので、Rails.application.routes.call を利用する。
     # Rails.application.routes.call を利用すると Tempfile が自動で閉じられないので手動で閉じるようにする必要あり。
+    # Rails.application.routes.call を利用すると SS::Current のコンテキストがリセットされず、ユーザーがずっとログインしたままになるので注意する
     contents_env = build_env(site, full_url)
-    contents_status, contents_headers, contents_body = Rails.application.routes.call(contents_env)
+    contents_status, contents_headers, contents_body = SS::Current.with_scope do
+      Rails.application.routes.call(contents_env)
+    end
     if contents_status != 200
       return Result.error(error_code: :link_check_failed_not_found, redirection_count: redirection.count)
     end
