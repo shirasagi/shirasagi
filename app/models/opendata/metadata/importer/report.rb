@@ -5,7 +5,7 @@ class Opendata::Metadata::Importer
     include Cms::SitePermission
     include ActiveSupport::NumberHelper
 
-    set_permission_name "opendata_datasets"
+    set_permission_name "other_opendata_metadata", :edit
 
     belongs_to :importer, class_name: 'Opendata::Metadata::Importer'
     has_many :datasets, class_name: 'Opendata::Metadata::Importer::ReportDataset', dependent: :destroy, inverse_of: :report

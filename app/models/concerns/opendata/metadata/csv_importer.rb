@@ -36,6 +36,10 @@ module Opendata::Metadata::CsvImporter
           put_log('[Download] ' + tempfile.size.to_fs(:delimited) + ' bytes')
           put_log('[Import] start')
           SS::Csv.foreach_row(tempfile.path, headers: true) do |csv_row, idx|
+            @report_dataset = nil
+            @report_resource = nil
+            dataset = nil
+            resource = nil
             begin
               name = (csv_row['データセット_タイトル'].presence || csv_row['データ名称']).to_s.gsub(/\R|\s|\u00A0|　/, '')
 
@@ -125,6 +129,7 @@ module Opendata::Metadata::CsvImporter
 
               url = csv_row['ファイル_ダウンロードURL']
               if url.present?
+                resource_name = csv_row['ファイル_タイトル']
                 begin
                   resource = dataset.resources.select { |r| r.source_url == url }.first
 
@@ -133,15 +138,17 @@ module Opendata::Metadata::CsvImporter
                     dataset.resources << resource
                   end
 
-                  @report_resource = @report_dataset.resources.where(uuid: resource.uuid).first.presence || @report_dataset.new_resource
+                  @report_resource = @report_dataset.resources.where(uuid: resource.uuid).first.presence ||
+                                     @report_dataset.new_resource
 
                   filename = csv_row['ファイル_タイトル'].to_s + ::File.extname(url.to_s)
                   format = csv_row['ファイル_形式'].presence || csv_row['ファイル形式']
                   format = ::File.extname(url.to_s).delete(".").sub(/\?.*$/, "").downcase if format.blank?
                   format = "html" if format.blank?
+                  resource_name ||= filename
 
                   resource.source_url = url
-                  resource.name = csv_row['ファイル_タイトル'].presence || filename
+                  resource.name = resource_name
                   resource.text = csv_row['ファイル_説明']
                   resource.filename = filename
                   resource.format = format
@@ -183,11 +190,11 @@ module Opendata::Metadata::CsvImporter
                 rescue => e
                   message = "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
                   put_log(message)
-                  notice_body << "#{dataset.metadata_dataset_id}[#{resource.name}]：#{e.message}"
+                  notice_body << "#{dataset.metadata_dataset_id}[#{resource_name}]：#{e.message}"
                   error_dataset_names << dataset.name
                   error_metadata_dataset_ids << dataset.metadata_dataset_id
 
-                  @report_resource.add_error(message)
+                  @report_resource.add_error(message) if @report_resource.present?
                 ensure
                   @report_resource.save! if @report_resource.present?
                 end
@@ -253,7 +260,7 @@ module Opendata::Metadata::CsvImporter
       body << "２．更新あり　：#{updated_dataset_ids.count}件 #{updated_metadata_dataset_ids.uniq.compact}"
       body << "３．新規追加　：#{created_dataset_ids.count}件 #{created_metadata_dataset_ids.uniq.compact}"
       body << "４．削除　　　：#{deleted_dataset_ids.count}件 #{deleted_metadata_dataset_ids.uniq.compact}"
-      body << "５．更新エラー：#{error_dataset_names.count}件 #{error_metadata_dataset_ids.uniq.compact}"
+      body << "５．更新エラー：#{error_dataset_names.compact.uniq.count}件 #{error_metadata_dataset_ids.uniq.compact}"
       if error_dataset_names.present?
         body << ""
         body << "下記データセットについて更新エラーが発生しました。"

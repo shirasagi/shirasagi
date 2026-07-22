@@ -11,12 +11,12 @@
       <tr>
         <th><%= @dataset.t :resources %></th>
         <td>
-          <% @item.resources.map do |resource| %>
-            <% resource = @dataset.resources.where(uuid: resource.uuid).first %>
+          <% @item.resources.map do |report_resource| %>
+            <% resource = @dataset.resources.where(uuid: report_resource.uuid).first %>
             <% if resource.present? %>
               <%= link_to resource.name, opendata_dataset_resource_path(dataset_id: @dataset.id, id: resource.id), target: "_blank", rel: "noopener" %>
             <% else %>
-              <%= resource.name %>
+              <%= report_resource.name %>
             <% end %>
             <br />
           <% end %>
