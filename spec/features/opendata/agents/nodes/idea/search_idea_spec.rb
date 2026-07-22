@@ -1,45 +1,45 @@
 require 'spec_helper'
 
 describe "opendata_search_ideas", type: :feature, dbscope: :example, js: true do
-  let(:site) { cms_site }
-  let(:layout) { create_cms_layout }
-  let(:node_idea) { create :opendata_node_idea, cur_site: site, layout_id: layout.id }
-  let!(:node_idea_search) { create(:opendata_node_search_idea, cur_site: site, cur_node: node_idea, layout_id: layout.id) }
+  let!(:site) { cms_site }
+  let!(:layout) { create_cms_layout }
+  let!(:node_idea) { create :opendata_node_idea, cur_site: site, layout: layout }
+  let!(:node_idea_search) { create(:opendata_node_search_idea, cur_site: site, cur_node: node_idea, layout: layout) }
 
-  let(:index_path) { "#{node_idea_search.url}index.html" }
-  let(:rss_path) { "#{node_idea_search.url}rss.xml" }
-  let!(:node_category_folder) { create(:cms_node_node, cur_site: site, layout_id: layout.id) }
+  let(:index_path) { "#{node_idea_search.full_url}index.html" }
+  let(:rss_path) { "#{node_idea_search.full_url}rss.xml" }
+  let!(:node_category_folder) { create(:cms_node_node, cur_site: site, layout: layout) }
   let!(:node_category) do
     create(
-      :opendata_node_category, cur_site: site, cur_node: node_category_folder, layout_id: layout.id,
-      basename: "kurashi",
-      name: 'カテゴリー０１')
+      :opendata_node_category, cur_site: site, cur_node: node_category_folder, layout: layout,
+      basename: "kurashi", name: 'カテゴリー０１')
   end
-  let!(:node_area) { create :opendata_node_area, cur_site: site, layout_id: layout.id, name: '地域Ａ' }
+  let!(:node_area) { create :opendata_node_area, cur_site: site, layout: layout, name: '地域Ａ' }
 
   before do
-    params = {
+    base_params = {
       cur_site: site,
       cur_node: node_idea,
-      layout_id: layout.id,
+      layout: layout,
       category_ids: [ node_category.id ],
       area_ids: [ node_area.id ]
     }
 
     10.times.each do |index|
+      params = {}
       params[:issue] = "issue#{index}"
       params[:text] = "text#{index}"
       params[:data] = "data#{index}"
       params[:note] = "note#{index}"
-      params[:tags] = [ "tag#{index}" ]
-      create :opendata_idea, params
+      params[:tags] = %W(tag#{index})
+      create :opendata_idea, **base_params, **params
     end
   end
 
   context "search_idea" do
     it "#index" do
       visit index_path
-      expect(current_path).to eq index_path
+      expect(current_path).to eq Addressable::URI.parse(index_path).request_uri
 
       expect(page).to have_css('.opendata-search-ideas-form')
       expect(page).to have_css('.opendata-search-ideas article', count: 10)
@@ -55,7 +55,7 @@ describe "opendata_search_ideas", type: :feature, dbscope: :example, js: true do
 
     it "#index released" do
       visit "#{index_path}?&sort=released"
-      expect(current_path).to eq index_path
+      expect(current_path).to eq Addressable::URI.parse(index_path).request_uri
 
       expect(page).to have_css('.opendata-search-ideas-form')
       expect(page).to have_css('.opendata-search-ideas article', count: 10)
@@ -71,7 +71,7 @@ describe "opendata_search_ideas", type: :feature, dbscope: :example, js: true do
 
     it "#index popular" do
       visit "#{index_path}?&sort=popular"
-      expect(current_path).to eq index_path
+      expect(current_path).to eq Addressable::URI.parse(index_path).request_uri
 
       expect(page).to have_css('.opendata-search-ideas-form')
       expect(page).to have_css('.opendata-search-ideas article', count: 10)
@@ -87,7 +87,7 @@ describe "opendata_search_ideas", type: :feature, dbscope: :example, js: true do
 
     it "#index attention" do
       visit "#{index_path}?&sort=attention"
-      expect(current_path).to eq index_path
+      expect(current_path).to eq Addressable::URI.parse(index_path).request_uri
 
       expect(page).to have_css('.opendata-search-ideas-form')
       expect(page).to have_css('.opendata-search-ideas article', count: 10)
@@ -103,8 +103,13 @@ describe "opendata_search_ideas", type: :feature, dbscope: :example, js: true do
 
     it "#keyword_input" do
       visit index_path
-      fill_in "s_keyword", with: "アイデア"
-      click_button I18n.t('ss.buttons.search')
+      wait_for_js_ready
+      within '.opendata-search-ideas-form' do
+        fill_in "s_keyword", with: "アイデア"
+        click_button I18n.t('ss.buttons.search')
+      end
+
+      expect(page).to have_css('.opendata-search-ideas article', count: 1)
       within first('.opendata-search-ideas article') do
         expect(page).to have_css('h2', text: 'アイデアは見つかりませんでした。')
       end
@@ -112,9 +117,13 @@ describe "opendata_search_ideas", type: :feature, dbscope: :example, js: true do
 
     it "#keyword_input" do
       visit index_path
-      fill_in "s_keyword", with: "text3"
-      click_button I18n.t('ss.buttons.search')
+      wait_for_js_ready
+      within '.opendata-search-ideas-form' do
+        fill_in "s_keyword", with: "text3"
+        click_button I18n.t('ss.buttons.search')
+      end
 
+      expect(page).to have_css('.opendata-search-ideas article', count: 1)
       page_idea = Opendata::Idea.find_by(text: 'text3')
       within first('.opendata-search-ideas article') do
         expect(page).to have_css('time', text: I18n.l(page_idea.date.to_date, format: :long))
@@ -128,26 +137,36 @@ describe "opendata_search_ideas", type: :feature, dbscope: :example, js: true do
 
     it "multiple keywords_input" do
       visit index_path
-      fill_in "s_keyword", with: "text3 text7"
-      select "すべてのキーワードを含む"
-      click_button I18n.t('ss.buttons.search')
+      wait_for_js_ready
+      within '.opendata-search-ideas-form' do
+        fill_in "s_keyword", with: "text3 text7"
+        select "すべてのキーワードを含む"
+        click_button I18n.t('ss.buttons.search')
+      end
 
       expect(page).to have_css('.opendata-search-ideas article', count: 1)
       within first('.opendata-search-ideas article') do
         expect(page).to have_css('h2', text: 'アイデアは見つかりませんでした。')
       end
 
-      select "いずれかのキーワードを含む"
-      click_button I18n.t('ss.buttons.search')
+      wait_for_js_ready
+      within '.opendata-search-ideas-form' do
+        select "いずれかのキーワードを含む"
+        click_button I18n.t('ss.buttons.search')
+      end
 
       expect(page).to have_css('.opendata-search-ideas article', count: 2)
     end
 
     it "#category_select" do
       visit index_path
-      select node_category.name
-      click_button I18n.t('ss.buttons.search')
+      wait_for_js_ready
+      within '.opendata-search-ideas-form' do
+        select node_category.name
+        click_button I18n.t('ss.buttons.search')
+      end
 
+      expect(page).to have_css('.opendata-search-ideas article', count: 10)
       page_idea = Opendata::Idea.site(site).search(site: site, category_id: node_category.id).order_by(released: -1).first
       within first('.opendata-search-ideas article') do
         expect(page).to have_css('time', text: I18n.l(page_idea.date.to_date, format: :long))
@@ -161,9 +180,13 @@ describe "opendata_search_ideas", type: :feature, dbscope: :example, js: true do
 
     it "#area_select" do
       visit index_path
-      select node_area.name
-      click_button I18n.t('ss.buttons.search')
+      wait_for_js_ready
+      within '.opendata-search-ideas-form' do
+        select node_area.name
+        click_button I18n.t('ss.buttons.search')
+      end
 
+      expect(page).to have_css('.opendata-search-ideas article', count: 10)
       page_idea = Opendata::Idea.site(site).search(site: site, area_id: node_area.id).order_by(released: -1).first
       within first('.opendata-search-ideas article') do
         expect(page).to have_css('time', text: I18n.l(page_idea.date.to_date, format: :long))
@@ -177,9 +200,13 @@ describe "opendata_search_ideas", type: :feature, dbscope: :example, js: true do
 
     it "#tag_input" do
       visit index_path
-      select "tag5"
-      click_button I18n.t('ss.buttons.search')
+      wait_for_js_ready
+      within '.opendata-search-ideas-form' do
+        select "tag5"
+        click_button I18n.t('ss.buttons.search')
+      end
 
+      expect(page).to have_css('.opendata-search-ideas article', count: 1)
       page_idea = Opendata::Idea.find_by(tags: 'tag5')
       within first('.opendata-search-ideas article') do
         expect(page).to have_css('time', text: I18n.l(page_idea.date.to_date, format: :long))
@@ -193,26 +220,36 @@ describe "opendata_search_ideas", type: :feature, dbscope: :example, js: true do
 
     it "keyword and tag input" do
       visit index_path
-      fill_in "s_keyword", with: "text3"
-      select "tag5"
-      select "すべてのキーワードを含む"
-      click_button I18n.t('ss.buttons.search')
+      wait_for_js_ready
+      within '.opendata-search-ideas-form' do
+        fill_in "s_keyword", with: "text3"
+        select "tag5"
+        select "すべてのキーワードを含む"
+        click_button I18n.t('ss.buttons.search')
+      end
 
       expect(page).to have_css('.opendata-search-ideas article', count: 1)
       within first('.opendata-search-ideas article') do
         expect(page).to have_css('h2', text: 'アイデアは見つかりませんでした。')
       end
 
-      select "いずれかのキーワードを含む"
-      click_button I18n.t('ss.buttons.search')
+      wait_for_js_ready
+      within '.opendata-search-ideas-form' do
+        select "いずれかのキーワードを含む"
+        click_button I18n.t('ss.buttons.search')
+      end
 
       expect(page).to have_css('.opendata-search-ideas article', count: 1)
       within first('.opendata-search-ideas article') do
         expect(page).to have_css('h2', text: 'アイデアは見つかりませんでした。')
       end
 
-      select "すべてをOR条件で検索する"
-      click_button I18n.t('ss.buttons.search')
+      wait_for_js_ready
+      within '.opendata-search-ideas-form' do
+        select "すべてをOR条件で検索する"
+        click_button I18n.t('ss.buttons.search')
+      end
+
       expect(page).to have_css('.opendata-search-ideas article', count: 2)
     end
 
@@ -261,7 +298,7 @@ describe "opendata_search_ideas", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       visit index_path
-      expect(current_path).to eq index_path
+      expect(current_path).to eq Addressable::URI.parse(index_path).request_uri
 
       expect(page).to have_css('.opendata-search-ideas-form')
       expect(page).to have_css('.opendata-search-ideas article', count: 10)
