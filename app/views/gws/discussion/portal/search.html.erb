@@ -1,5 +1,5 @@
 <%= jquery do %>
-  Gws_Discussion_Thread.render(<%= @cur_user.id %>);
+  Gws_Discussion_Thread.render(<%= @cur_user.id %>, <%== { 'linkClass' => SS::DownloadPolicy.html_class }.to_json %>);
 <% end %>
 
 <%= render partial: "header" %>

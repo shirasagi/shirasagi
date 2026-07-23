@@ -2,8 +2,12 @@
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to t('ss.links.new'), { action: :new }, class: :new %>
-      <%= link_to t('ss.links.download'), { action: :download }, method: :post, class: :download %>
-      <%= link_to t('ss.links.import'), { action: :import }, class: :import %>
+      <% if SS::DownloadPolicy.download_allowed? %>
+        <%= link_to t('ss.links.download'), { action: :download }, method: :post, class: :download %>
+      <% end %>
+      <% if SS::UploadPolicy.upload_allowed? %>
+        <%= link_to t('ss.links.import'), { action: :import }, class: :import %>
+      <% end %>
     <% end %>
   <% elsif params[:action] =~ /new|create|lock|import|download|destroy_all/ %>
     <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>

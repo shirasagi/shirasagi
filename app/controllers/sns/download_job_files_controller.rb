@@ -8,6 +8,8 @@ class Sns::DownloadJobFilesController < ApplicationController
   private
 
   def set_item
+    raise "404" if SS::DownloadPolicy.download_disallowed?
+
     @item = @model.find(@cur_user, params[:filename])
     raise "404" unless @item
   end

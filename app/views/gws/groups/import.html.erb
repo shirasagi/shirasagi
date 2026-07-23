@@ -14,7 +14,9 @@
 </section>
 
 <footer class="send">
-  <%= f.submit t("ss.buttons.import"), class: :save, data: { confirm: t("ss.confirm.import"), disable_with: t("ss.buttons.importing") } %>
+  <% if SS::UploadPolicy.upload_allowed? %>
+    <%= f.submit t("ss.buttons.import"), class: :save, data: { confirm: t("ss.confirm.import"), disable_with: t("ss.buttons.importing") } %>
+  <% end %>
   <%= f.button t("ss.buttons.cancel"), onclick: "location.href='#{url_for(action: :index)}'; return false;", class: "btn-default" %>
 </footer>
 <% end %>

@@ -16,7 +16,9 @@
 
   <dt class="depth-1"><%= t("mongoid.models.chorg/changeset") %></dt>
   <dd class="depth-1">
-    <%= link_to t('ss.links.download_csv'), url_for(action: :download_changesets, id: @item), method: :post, class: "btn btn-download" %>
+    <% if SS::DownloadPolicy.download_allowed? %>
+      <%= link_to t('ss.links.download_csv'), url_for(action: :download_changesets, id: @item), method: :post, class: "btn btn-download" %>
+    <% end %>
     <%=
       import_changesets_path = url_for(action: :import_changesets, id: @item) rescue nil
       if import_changesets_path

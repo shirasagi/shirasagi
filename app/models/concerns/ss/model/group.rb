@@ -25,6 +25,7 @@ module SS::Model::Group
     field :expiration_date, type: DateTime
     field :domains, type: SS::Extensions::Words
     field :gws_use, type: String
+    field :download_policy, type: String
     field :upload_policy, type: String
     # 書き出しパスのID; public/gws/ 以下のフォルダー名Add commentMore actions
     field :path_id, type: String
@@ -63,6 +64,7 @@ module SS::Model::Group
     def root
       "#{Rails.public_path}/gws"
     end
+
     def in_group(group)
       all.where("$and" => [{ name: /^#{::Regexp.escape(group.name)}(\/|$)/ }])
     end
@@ -199,9 +201,8 @@ module SS::Model::Group
     gws_use.blank? || gws_use != "disabled"
   end
 
-  def upload_policy_options
-    SS::UploadPolicy.upload_policy_options
-  end
+  delegate :download_policy_options, to: :'SS::DownloadPolicy'
+  delegate :upload_policy_options, to: :'SS::UploadPolicy'
 
   # Cast
   def cms_group

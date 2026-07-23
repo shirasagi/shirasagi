@@ -46,7 +46,7 @@ module ApplicationHelper
 
   def snip(str, opt = {})
     len = opt[:length] || 80
-    "#{str.to_s[0..len-1]}#{str.to_s.size > len ? ".." : ""}".html_safe
+    "#{str.to_s[0..len-1]}#{".." if str.to_s.size > len}".html_safe
   end
 
   def sanitize_with(html, options = {})
@@ -215,7 +215,7 @@ module ApplicationHelper
 
     content_tag(:div, class: "file-view", data: { "file-id" => file.id }) do
       output_buffer << sanitizer_status(file)
-      output_buffer << link_to(file.url, target: "_blank", rel: "noopener") do
+      output_buffer << link_to(file.url, target: "_blank", rel: "noopener", class: SS::DownloadPolicy.html_class) do
         output_buffer << content_tag(:div, class: "thumb") do
           if file.image?
             image_tag(file.thumb_url, alt: file.basename)

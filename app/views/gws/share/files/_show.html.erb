@@ -11,7 +11,7 @@
 <dl class="see">
   <% if @item.image? %>
   <dt><%= @model.t :image %></dt>
-  <dd><%= link_to image_tag(url_for(action: :thumb, _: @item.updated.to_i), alt: ""), { action: :view }, { target: "_blank", rel: "noopener" } %></dd>
+  <dd><%= link_to image_tag(url_for(action: :thumb, _: @item.updated.to_i), alt: ""), { action: :view }, { target: "_blank", rel: "noopener", class: SS::DownloadPolicy.html_class } %></dd>
   <% end %>
 
   <dt><%= @model.t :filename %></dt>
@@ -23,8 +23,10 @@
   <dt><%= @model.t :folder %></dt>
   <dd><%= tryb { @item.folder.name } %></dd>
 
-  <dt><%= @model.t :download %></dt>
-  <dd><%= link_to t('ss.links.download'), { action: :download }, { class: "btn" } %></dd>
+  <% if SS::DownloadPolicy.download_allowed? %>
+    <dt><%= @model.t :download %></dt>
+    <dd><%= link_to t('ss.links.download'), { action: :download }, { class: "btn" } %></dd>
+  <% end %>
 
   <dt><%= @model.t :url_copy %></dt>
   <dd><span class="btn clipboard-copy-button"><%= I18n.t('gws/share.url_copy') %></span></dd>

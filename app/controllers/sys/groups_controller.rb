@@ -11,7 +11,7 @@ class Sys::GroupsController < ApplicationController
   private
 
   def permit_fields
-    super + [:upload_policy]
+    super + [:download_policy, :upload_policy]
   end
 
   def set_crumbs

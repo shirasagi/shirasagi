@@ -1,6 +1,12 @@
 <%= jquery do %>
   var pdfviewer = new SS_Pdfjs("#pdf-viewer-warp");
   pdfviewer.render();
+  <% if SS::DownloadPolicy.download_disallowed? %>
+    $("#pdf-viewer-warp").find('iframe').on("load", function () {
+      $(this).contents().find("#download").hide();
+      $(".open-pdf").hide();
+    });
+  <% end %>
 <% end %>
 
 <div class="addon-view" id="addon-basic">
@@ -34,7 +40,7 @@
       <div class="files">
         <% @item.files.each do |file| %>
         <p id="file-<%= file.id %>">
-          <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname} ext-#{file.extname}", target: '_blank', rel: "noopener" %>
+          <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname} ext-#{file.extname} #{SS::DownloadPolicy.html_class}", target: '_blank', rel: "noopener" %>
         </p>
         <% end %>
       </div>

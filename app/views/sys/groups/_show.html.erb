@@ -25,6 +25,11 @@
   <dd><%= @item.label :gws_use %></dd>
   <% end %>
 
+  <% if @item.root? && SS.config.ss.download_policy.present? %>
+  <dt><%= @model.t :download_policy %></dt>
+  <dd><%= @item.label :download_policy %></dd>
+  <% end %>
+
   <% if @item.root? && SS.config.ss.upload_policy.present? %>
   <dt><%= @model.t :upload_policy %></dt>
   <dd><%= @item.label :upload_policy %></dd>

@@ -6,8 +6,12 @@
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.new'), action: :new %>
     <% end %>
-    <%= link_to t('ss.links.download'), action: :download %>
-    <%= link_to t('ss.links.import'), action: :import %>
+    <% if SS::DownloadPolicy.download_allowed? %>
+      <%= link_to t('ss.links.download'), action: :download %>
+    <% end %>
+    <% if SS::UploadPolicy.upload_allowed? %>
+      <%= link_to t('ss.links.import'), action: :import %>
+    <% end %>
   <% elsif params[:action] =~ /new|create|lock|download|import/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete/ %>

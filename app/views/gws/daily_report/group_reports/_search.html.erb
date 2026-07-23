@@ -1,5 +1,7 @@
 <div class="operations">
-  <%= ss_button_to t("ss.buttons.csv"), url_for(action: :download_all), model: @model, class: "btn btn-download btn-list-head-action", method: "get" %>
+  <% if SS::DownloadPolicy.download_allowed? %>
+    <%= ss_button_to t("ss.buttons.csv"), url_for(action: :download_all), model: @model, class: "btn btn-download btn-list-head-action", method: "get" %>
+  <% end %>
   <%= ss_button_to t('ss.buttons.print'), url_for(action: :print), model: @model, class: "btn btn-print btn-list-head-action", method: "get" %>
 </div>
 

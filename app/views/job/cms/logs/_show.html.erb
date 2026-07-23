@@ -40,7 +40,9 @@
     <% if ::File.exist?(@item.file_path) %>
       <%= t('job.log_notice', count: Fs::DEFAULT_HEAD_LOGS) %>
       <%= text_area_tag :logs, safe_join(Fs.head_lines(@item.file_path), "\n"), readonly: true, style: "height: 400px" %>
-      <%= link_to(t('job.download_log'), { action: :download }, { class: :btn }) %>
+      <% if SS::DownloadPolicy.download_allowed? %>
+        <%= link_to(t('job.download_log'), { action: :download }, { class: :btn }) %>
+      <% end %>
     <% else %>
       <%= text_area_tag :logs, @item.logs.blank? ? "" : safe_join(@item.logs, "\n"), readonly: true, style: "height: 400px" %>
     <% end %>

@@ -22,7 +22,7 @@
   </dl>
 
   <div class="controller">
-    <% if @item.respond_to?(:log_file_path) && SS::User.allowed?(:edit, @cur_user) %>
+    <% if @item.respond_to?(:log_file_path) && SS::User.allowed?(:edit, @cur_user) && SS::DownloadPolicy.download_allowed? %>
       <%= link_to(t('job.download_log'), download_job_sys_task_path(id: @item), { class: "btn", target: "_blank", rel: "noopener" }) %>
     <% end %>
   </div>

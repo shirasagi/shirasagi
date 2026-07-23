@@ -58,9 +58,9 @@ this.SS_AjaxFile = (function () {
         },
         error: function(xhr, _status, _data) {
           if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
-            alert(["== Error(AjaxFile) =="].concat(xhr.responseJSON).join("\n"));
+            alert(xhr.responseJSON);
           } else {
-            alert(["== Error(AjaxFile) =="].concat(xhr.statusText).join("\n"));
+            alert(xhr.statusText);
           }
         }
       }));
@@ -194,12 +194,12 @@ this.SS_AjaxFile = (function () {
   SS_AjaxFile.prototype.submitError = function(xhr) {
     var self = this;
     if (xhr.status === 413) {
-      alert(["== Error(AjaxFile) =="].concat(SS_AjaxFile.errors.entityTooLarge).join("\n"));
+      alert(SS_AjaxFile.errors.entityTooLarge);
     } else {
       try {
-        alert(["== Error(AjaxFile) =="].concat(xhr.responseJSON).join("\n"));
+        alert(xhr.responseJSON);
       } catch(_error) {
-        alert(["== Error(AjaxFile) =="].concat(xhr.statusText).join("\n"));
+        alert(xhr.statusText);
       }
     }
 
@@ -265,7 +265,7 @@ this.SS_AjaxFile = (function () {
         });
       },
       error: function (data, _status) {
-        alert(["== Error(AjaxFile) =="].concat(data.responseJSON).join("\n"));
+        alert(data.responseJSON);
       }
     });
   };

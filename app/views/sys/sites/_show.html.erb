@@ -32,6 +32,11 @@
   <dt><%= @model.t :chorg_site_ids %></dt>
   <dd><%=br @item.chorg_sites.reorder(id: 1).pluck(:name) %></dd>
 
+  <% if SS.config.ss.download_policy.present? %>
+  <dt><%= @model.t :download_policy %></dt>
+  <dd><%= @item.label :download_policy %></dd>
+  <% end %>
+
   <% if SS.config.ss.upload_policy.present? %>
   <dt><%= @model.t :upload_policy %></dt>
   <dd><%= @item.label :upload_policy %></dd>
