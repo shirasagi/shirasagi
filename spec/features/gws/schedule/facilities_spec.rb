@@ -16,11 +16,6 @@ describe "gws_schedule_facilities", type: :feature, dbscope: :example do
       within ".calendar-name" do
         expect(page).to have_content(facility.name)
       end
-
-      #wait_for_js_ready
-      #within ".fc-title" do
-      #  expect(page).to have_content(item.name)
-      #end
     end
   end
 end

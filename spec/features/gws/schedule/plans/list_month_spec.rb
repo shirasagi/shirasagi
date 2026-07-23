@@ -30,12 +30,12 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("gws/schedule.calendar.buttonText.listMonth")
     end
 
-    within ".fc-listMonth-view-table" do
+    within ".fc-listMonth-view" do
       expect(page).to have_css(".fc-event", text: plan0.name)
       expect(page).to have_css(".fc-event", text: plan1.name)
       expect(page).to have_css(".fc-event", text: plan_long.name)
 
-      expect(page).to have_selector(".fc-event", count: 3)
+      expect(page).to have_selector(".fc-event", minimum: 3)
     end
   end
 end

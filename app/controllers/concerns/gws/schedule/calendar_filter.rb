@@ -21,7 +21,7 @@ module Gws::Schedule::CalendarFilter
     extend ActiveSupport::Concern
 
     def redirection_view
-      params.dig(:calendar, :view).presence || 'month'
+      params.dig(:calendar, :view).presence || 'dayGridMonth'
     end
 
     def redirection_date
@@ -35,7 +35,7 @@ module Gws::Schedule::CalendarFilter
       end
 
       # Timecop で today / now が変更されている可能性があるので、現在年月日を明示する
-      I18n.l(Time.zone.today, format: :iso)
+      I18n.l(Time.zone.today, format: :iso, locale: :ja)
     end
 
     def redirection_view_format
