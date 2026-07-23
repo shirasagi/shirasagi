@@ -71,7 +71,7 @@
     "stylelint-config-property-sort-order-smacss": "^11.2.0",
     "stylelint-config-recommended-scss": "^17.0.1",
     "stylelint-scss": "^7.2.0",
-    "webpack": "^5.104.1",
+    "webpack": "^5.108.4",
     "webpack-cli": "^7.2.1",
     "webpack-remove-empty-scripts": "^1.1.1"
   }
