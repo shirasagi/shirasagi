@@ -69,6 +69,15 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css'
-    })
-  ]
+    }),
+    new webpack.NormalModuleReplacementPlugin(
+      /^node:/,
+      (resource) => { resource.request = resource.request.replace(/^node:/, ''); })
+  ],
+  resolve: {
+    fallback: {
+      fs: false,
+      path: false
+    }
+  }
 }
