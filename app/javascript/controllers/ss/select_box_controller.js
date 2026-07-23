@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import i18next from 'i18next'
 import {dispatchEvent, appendChildren, replaceChildren} from "../../ss/tool"
 import Dialog from "../../ss/dialog";
-import ejs from 'ejs/ejs';
+import ejs from 'ejs';
 
 const DEFAULT_TEMPLATE = `
   <% if (selectedItems.length > 0) { %>
