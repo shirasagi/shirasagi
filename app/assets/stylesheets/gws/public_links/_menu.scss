@@ -12,10 +12,10 @@ $gws-public-links-link-row-height: 37px;
   position: static;
   vertical-align: bottom;
 
-  &:has(.gws-public-links-dropdown-menu.active) 
-  .gws-public-links-toggle::after {
-      display: block;
-    }
+  &:has(.gws-public-links-dropdown-menu.active)
+    .gws-public-links-toggle::after {
+    display: block;
+  }
 
   .gws-public-links-toggle {
     display: block;
@@ -74,14 +74,11 @@ $gws-public-links-link-row-height: 37px;
   .gws-public-links-dropdown-menu {
     right: 0;
     // With absolute positioning + right:0, width:auto collapses to one box.
-    // Follow the content instead: the boxes container caps itself at 4 columns
-    // (see .gws-public-links-boxes max-width), and max-content lets the browser
-    // add frame padding and border automatically, so 3 columns always fit.
-
+    // Reserve the toggle/icon area on the right (210px) so the 3-column box
+    // grid fits within the remaining panel width.
     width: calc(100% - 210px);
 
-    // leave a gap above for the speech-bubble pointer
-
+    // sit just below the toggle; the speech-bubble pointer lives on the toggle itself
     margin-top: 1px;
 
     padding: 0;
@@ -243,7 +240,7 @@ $gws-public-links-link-row-height: 37px;
 
 // the no-url case renders the name as a bare span directly in the list item
 // (scoped so it does NOT add extra padding to the name span inside a link)
-.gws-public-links-list-item>.gws-public-links-link-name {
+.gws-public-links-list-item > .gws-public-links-link-name {
   display: block;
   padding: 8px 12px;
   overflow: hidden;
