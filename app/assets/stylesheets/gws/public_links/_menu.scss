@@ -2,7 +2,6 @@
 // Public links dropdown (header menu)
 @use "ss/init";
 
-$gws-public-links-box-width: 230px;
 $gws-public-links-box-gap: 15px;
 $gws-public-links-frame-padding: 15px;
 // one link row ≈ 8px+8px padding + line + 1px divider; show up to 6, then scroll
@@ -10,12 +9,17 @@ $gws-public-links-link-row-height: 37px;
 
 .gws-public-links {
   display: inline-block;
-  vertical-align: bottom;
-  // change_add
   position: static;
+  vertical-align: bottom;
+
+  &:has(.gws-public-links-dropdown-menu.active) 
+  .gws-public-links-toggle::after {
+      display: block;
+    }
 
   .gws-public-links-toggle {
     display: block;
+    position: relative;
     margin: 0;
     padding: 12px;
     border: 0;
@@ -23,6 +27,24 @@ $gws-public-links-link-row-height: 37px;
     color: init.$white;
     line-height: 1;
     cursor: pointer;
+
+    // speech-bubble pointer aimed at the toggle icon (panel is right-aligned to it).
+    &::after {
+      content: "";
+      display: none;
+      position: absolute;
+      right: 18px;
+      bottom: -2px;
+      width: 12px;
+      height: 12px;
+      margin-bottom: -6px;
+      transform: rotate(45deg);
+      border-top: 1px solid;
+      border-left: 1px solid;
+      // follow the panel border color so the contrast theme recolors it
+      border-color: inherit;
+      background-color: #fff !important;
+    }
 
     &:hover {
       background-color: #424242;
@@ -53,21 +75,12 @@ $gws-public-links-link-row-height: 37px;
     // With absolute positioning + right:0, width:auto collapses to one box.
     // Follow the content instead: the boxes container caps itself at 4 columns
     // (see .gws-public-links-boxes max-width), and max-content lets the browser
-    // add frame padding and border automatically, so 4 columns always fit.
+    // add frame padding and border automatically, so 3 columns always fit.
 
-    // change_disable
-    // width: max-content;
-    // max-width: 90vw;
-
-    // change_add
     width: calc(100% - 210px);
 
     // leave a gap above for the speech-bubble pointer
 
-    // change_disable
-    // margin-top: 10px;
-
-    // change_add
     margin-top: 1px;
 
     padding: 0;
@@ -75,39 +88,6 @@ $gws-public-links-link-row-height: 37px;
     background-color: init.$white;
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
     color: init.$black;
-
-    // speech-bubble pointer aimed at the toggle icon (panel is right-aligned to it).
-    // Use a rotated square whose fill is background-color so it follows the
-    // contrast theme (which overrides background-color on `body *:after`).
-    &::after {
-      content: "";
-      position: absolute;
-
-      // change_disable
-      // right: 18px;
-
-      // change_add
-      right: 374px;
-
-      bottom: 100%;
-      width: 12px;
-      height: 12px;
-      margin-bottom: -6px;
-      transform: rotate(45deg);
-      border-top: 1px solid;
-      border-left: 1px solid;
-      // follow the panel border color so the contrast theme recolors it
-      border-color: inherit;
-      background-color: inherit;
-
-      // change_add ===========================
-      @media screen and (max-width: 407px) {
-        right: unset;
-        left: 20px;
-      }
-
-      // ======================================
-    }
 
     // the lazy turbo-frame is inline by default; make it a block so its
     // contents can lay out across the full panel width.
@@ -175,47 +155,20 @@ $gws-public-links-link-row-height: 37px;
   display: flex;
   flex-wrap: wrap;
   gap: $gws-public-links-box-gap;
-  // cap the row at 4 boxes; the 5th wraps to the next line
-
-  // change_disable =============
-  // max-width: $gws-public-links-box-width * 4 + $gws-public-links-box-gap * 3;
-
-  // @include init.mb {
-  //   max-width: none;
-  // }
-  // ============================
+  // cap the row at 3 boxes; the 4th wraps to the next line
 }
 
 .gws-public-links-box {
   display: flex;
-  // box-sizing keeps the 1px borders inside the fixed width so 4 boxes fit the row
+  // box-sizing keeps the 1px borders inside the fixed width so 3 boxes fit the row
   box-sizing: border-box;
-
-  // change_disable
-  // flex: 0 0 $gws-public-links-box-width;
-
   flex-direction: column;
 
-  // change_disable
-  // width: $gws-public-links-box-width;
-
-  // change_add
-  width: calc((100% - 45px) / 4);
+  width: calc((100% - $gws-public-links-box-gap * 2) / 3);
 
   overflow: hidden;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
-
-  // change_add ================
-  @media screen and (max-width: 1280px) {
-    width: calc((100% - 30px) / 3);
-  }
-
-  @media screen and (max-width: 1024px) {
-    width: calc((100% - 15px) / 2);
-  }
-
-  // ===========================
 
   @include init.mb {
     flex-basis: 100%;
