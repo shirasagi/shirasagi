@@ -11,6 +11,8 @@ $gws-public-links-link-row-height: 37px;
 .gws-public-links {
   display: inline-block;
   vertical-align: bottom;
+  // change_add
+  position: static;
 
   .gws-public-links-toggle {
     display: block;
@@ -52,10 +54,22 @@ $gws-public-links-link-row-height: 37px;
     // Follow the content instead: the boxes container caps itself at 4 columns
     // (see .gws-public-links-boxes max-width), and max-content lets the browser
     // add frame padding and border automatically, so 4 columns always fit.
-    width: max-content;
-    max-width: 90vw;
+
+    // change_disable
+    // width: max-content;
+    // max-width: 90vw;
+
+    // change_add
+    width: calc(100% - 210px);
+
     // leave a gap above for the speech-bubble pointer
-    margin-top: 10px;
+
+    // change_disable
+    // margin-top: 10px;
+
+    // change_add
+    margin-top: 1px;
+
     padding: 0;
     border: init.$border-gray4;
     background-color: init.$white;
@@ -68,7 +82,13 @@ $gws-public-links-link-row-height: 37px;
     &::after {
       content: "";
       position: absolute;
-      right: 18px;
+
+      // change_disable
+      // right: 18px;
+
+      // change_add
+      right: 374px;
+
       bottom: 100%;
       width: 12px;
       height: 12px;
@@ -79,6 +99,14 @@ $gws-public-links-link-row-height: 37px;
       // follow the panel border color so the contrast theme recolors it
       border-color: inherit;
       background-color: inherit;
+
+      // change_add ===========================
+      @media screen and (max-width: 407px) {
+        right: unset;
+        left: 20px;
+      }
+
+      // ======================================
     }
 
     // the lazy turbo-frame is inline by default; make it a block so its
@@ -148,23 +176,46 @@ $gws-public-links-link-row-height: 37px;
   flex-wrap: wrap;
   gap: $gws-public-links-box-gap;
   // cap the row at 4 boxes; the 5th wraps to the next line
-  max-width: $gws-public-links-box-width * 4 + $gws-public-links-box-gap * 3;
 
-  @include init.mb {
-    max-width: none;
-  }
+  // change_disable =============
+  // max-width: $gws-public-links-box-width * 4 + $gws-public-links-box-gap * 3;
+
+  // @include init.mb {
+  //   max-width: none;
+  // }
+  // ============================
 }
 
 .gws-public-links-box {
   display: flex;
   // box-sizing keeps the 1px borders inside the fixed width so 4 boxes fit the row
   box-sizing: border-box;
-  flex: 0 0 $gws-public-links-box-width;
+
+  // change_disable
+  // flex: 0 0 $gws-public-links-box-width;
+
   flex-direction: column;
-  width: $gws-public-links-box-width;
+
+  // change_disable
+  // width: $gws-public-links-box-width;
+
+  // change_add
+  width: calc((100% - 45px) / 4);
+
   overflow: hidden;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
+
+  // change_add ================
+  @media screen and (max-width: 1280px) {
+    width: calc((100% - 30px) / 3);
+  }
+
+  @media screen and (max-width: 1024px) {
+    width: calc((100% - 15px) / 2);
+  }
+
+  // ===========================
 
   @include init.mb {
     flex-basis: 100%;
@@ -238,7 +289,7 @@ $gws-public-links-link-row-height: 37px;
 
 // the no-url case renders the name as a bare span directly in the list item
 // (scoped so it does NOT add extra padding to the name span inside a link)
-.gws-public-links-list-item > .gws-public-links-link-name {
+.gws-public-links-list-item>.gws-public-links-link-name {
   display: block;
   padding: 8px 12px;
   overflow: hidden;
