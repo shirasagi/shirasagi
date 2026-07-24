@@ -18,6 +18,11 @@ class Cms::Elasticsearch::PageConverter
     @html = Fs.exist?(item.path) ? Fs.read(item.path) : item.try(:html)
     @content_html = nil
 
+    categories = item.categories.and_public
+    contact_sub_groups = item.try(:contact_sub_groups) || []
+    groups = contact_sub_groups.pluck(:id).push(item.try(:contact_group_id)).uniq.compact
+    groups.delete_if { |g| g[:elasticsearch_state] == 'disabled' }
+
     doc = {}
     doc[:site_id] = @site.id
     doc[:url] = item.url
@@ -26,11 +31,10 @@ class Cms::Elasticsearch::PageConverter
     doc[:text] = item_text
     doc[:filename] = item.path
     doc[:state] = item.state
-    doc[:category_ids] = item.category_ids
-    doc[:categories] = item.categories.pluck(:name)
-    contact_sub_groups = item.try(:contact_sub_groups) || []
-    doc[:group_ids] = contact_sub_groups.pluck(:id).push(item.try(:contact_group_id)).uniq.compact
-    doc[:groups] = contact_sub_groups.pluck(:name).push(item.try(:contact_group).try(:name)).uniq.compact
+    doc[:categories] = categories.map(&:name)
+    doc[:category_ids] = categories.map(&:id)
+    doc[:groups] = groups.map(&:name).uniq
+    doc[:group_ids] = groups.map(&:id).uniq
     doc[:group_names] = doc[:groups].map { |n| n.split('/') }.flatten.uniq
     doc[:keywords] = item.try(:keywords).try(:join, "\n")
     doc[:description] = item.try(:description)
@@ -118,6 +122,11 @@ class Cms::Elasticsearch::PageConverter
   def convert_file_to_doc(file)
     @file_html = parse_file_html(file)
 
+    categories = item.categories.and_public
+    contact_sub_groups = item.try(:contact_sub_groups) || []
+    groups = contact_sub_groups.pluck(:id).push(item.try(:contact_group_id)).uniq.compact
+    groups.delete_if { |g| g[:elasticsearch_state] == 'disabled' }
+
     doc = {}
     doc[:site_id] = @site.id
     doc[:name] = file_name || file.name
@@ -129,11 +138,10 @@ class Cms::Elasticsearch::PageConverter
     doc[:file][:extname] = file.extname.upcase
     doc[:file][:size] = file.size
     doc[:state] = item.state
-    doc[:category_ids] = item.category_ids
-    doc[:categories] = item.categories.pluck(:name)
-    contact_sub_groups = item.try(:contact_sub_groups) || []
-    doc[:group_ids] = contact_sub_groups.pluck(:id).push(item.try(:contact_group_id)).uniq.compact
-    doc[:groups] = contact_sub_groups.pluck(:name).push(item.try(:contact_group).try(:name)).uniq.compact
+    doc[:categories] = categories.map(&:name)
+    doc[:category_ids] = categories.map(&:id)
+    doc[:groups] = groups.map(&:name).uniq
+    doc[:group_ids] = groups.map(&:id).uniq
     doc[:group_names] = doc[:groups].map { |n| n.split('/') }.flatten.uniq
     doc[:released] = item.released.try(:iso8601)
     doc[:updated] = file.updated.try(:iso8601)

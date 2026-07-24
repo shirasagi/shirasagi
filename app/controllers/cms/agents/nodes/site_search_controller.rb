@@ -65,7 +65,7 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
 
     if @cur_site.elasticsearch_sites.present?
       @s.index = @cur_site.elasticsearch_sites.collect { |site| "s#{site.id}" }.join(",")
-      # @aggregation.index = @s.index
+      # @aggregation.index = @s.index # 複数サイトを検索するなら設定する
     end
 
     if params[:target] == 'outside' && @cur_site.elasticsearch_outside_enabled?
