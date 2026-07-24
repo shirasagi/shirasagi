@@ -33,6 +33,7 @@ $gws-public-links-link-row-height: 37px;
       content: "";
       display: none;
       position: absolute;
+      z-index: 600;
       right: 18px;
       bottom: -2px;
       width: 12px;
@@ -43,7 +44,7 @@ $gws-public-links-link-row-height: 37px;
       border-left: 1px solid;
       // follow the panel border color so the contrast theme recolors it
       border-color: inherit;
-      background-color: #fff !important;
+      background-color: #fff;
     }
 
     &:hover {
