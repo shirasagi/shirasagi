@@ -10,7 +10,7 @@ const RAILS_ENV = process.env.RAILS_ENV || Config.environment.RAILS_ENV
 module.exports = {
   mode: RAILS_ENV === "production" ? "production" : "development",
   // see: https://webpack.js.org/configuration/devtool/
-  devtool: "inline-source-map",
+  devtool: RAILS_ENV === "production" ? "source-map" : "eval-source-map",
   entry: {
     application: "./app/javascript/application.js",
     choices: "./app/javascript/choices.js",
@@ -64,6 +64,10 @@ module.exports = {
       cleanOnceBeforeBuildPatterns: [ "**/*.js", "**/*.css" ]
     }),
     new RemoveEmptyScriptsPlugin(),
+    new webpack.SourceMapDevToolPlugin({
+      // https://github.com/webpack/webpack/issues/9732
+      filename: '[file].map[query]'
+    }),
     new MiniCssExtractPlugin({
       filename: '[name].css'
     }),
