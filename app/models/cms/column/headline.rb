@@ -9,11 +9,13 @@ class Cms::Column::Headline < Cms::Column::Base
 
   field :min_headline_level, type: String
   field :max_headline_level, type: String
+  field :enable_anchor, type: String
 
-  permit_params :min_headline_level, :max_headline_level
+  permit_params :min_headline_level, :max_headline_level, :enable_anchor
 
   validates :min_headline_level, inclusion: { in: MIN_BOUNDARY_LEVELS, allow_blank: true }
   validates :max_headline_level, inclusion: { in: MAX_BOUNDARY_LEVELS, allow_blank: true }
+  validates :enable_anchor, inclusion: { in: %w(enabled disabled), allow_blank: true }
 
   after_initialize :apply_new_column_defaults, if: :new_record?
 
@@ -39,6 +41,14 @@ class Cms::Column::Headline < Cms::Column::Base
 
   def effective_max_headline_level
     max_headline_level.presence || LEGACY_MAX_HEADLINE_LEVEL
+  end
+
+  def enable_anchor_options
+    %w(disabled enabled).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
+  end
+
+  def anchor_enabled?
+    enable_anchor == 'enabled'
   end
 
   def form_options(type = nil)
