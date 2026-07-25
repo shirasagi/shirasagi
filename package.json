@@ -14,7 +14,7 @@
     "chartjs-plugin-datalabels": "^2.2.0",
     "choices.js": "^11.1.0",
     "compass-mixins": "^0.12.12",
-    "cropperjs": "2.1.1",
+    "cropperjs": "1.6.2",
     "crypto-js": "4.2.0",
     "datatables.net": "2.3.8",
     "datatables.net-dt": "2.3.8",
