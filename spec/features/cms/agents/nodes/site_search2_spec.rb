@@ -5,8 +5,8 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
   let!(:site2) { create :cms_site_subdir, parent_id: site.id }
   let!(:user) { cms_user }
   let!(:layout) { create_cms_layout }
-  let!(:node) { create :article_node_page, layout_id: layout.id, filename: "node" }
-  let!(:site_search_node) { create :cms_node_site_search, cur_site: site, cur_node: node }
+  let!(:node) { create :article_node_page, cur_site: site, layout: layout }
+  let!(:site_search_node) { create :cms_node_site_search, cur_site: site, cur_node: node, layout: layout }
 
   let!(:group1) { create :cms_group, name: "#{cms_group.name}/#{unique_id}" }
   let!(:group2) { create :cms_group, name: "#{cms_group.name}/#{unique_id}" }
@@ -15,9 +15,9 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
   let!(:file1) { create :ss_file, site_id: site.id, user_id: user.id }
   let!(:file2) { create :ss_file, site_id: site.id, user_id: user.id }
 
-  let!(:item1) { create :cms_page, cur_node: node, layout: layout, name: 'page1' }
+  let!(:item1) { create :cms_page, cur_site: site, cur_node: node, layout: layout, name: 'page1' }
   let!(:item2) do
-    create :article_page, cur_node: node, layout: layout, name: 'page2',
+    create :article_page, cur_site: site, cur_node: node, layout: layout, name: 'page2',
       file_ids: [file1.id], category_ids: [cate1.id], contact_sub_group_ids: [group1.id],
       html: '<img src="' + file1.url + '" alt="alt" title="title">'
   end
@@ -31,7 +31,7 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
       name: 'image'
   end
   let!(:item3) do
-    create :article_page, cur_node: node, layout: layout, form: form, name: 'page3',
+    create :article_page, cur_site: site, cur_node: node, layout: layout, form: form, name: 'page3',
       file_ids: [file2.id], category_ids: [cate2.id], contact_sub_group_ids: [group2.id],
       column_values: [
         column.value_type.new(column: column, file_id: file2.id, image_html_type: 'image')
@@ -59,7 +59,7 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
     end
 
     it do
-      visit site_search_node.url
+      visit site_search_node.full_url
       within '.search-form' do
         expect(page).to have_no_css(".site-search-type")
         expect(page).to have_no_css(".site-search-target")
@@ -82,121 +82,158 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
       site_search_node.update st_article_node_ids: [node.id], st_category_ids: [cate1.id]
     end
 
-    it do
-      visit site_search_node.url
-      within '.search-form' do
-        expect(page.all("select[name='s[article_node_ids][]'] option").count).to eq 2
-        expect(page.all("select[name='s[category_names][]'] option").count).to eq 2
-        select I18n.t("cms.options.site_search_type.page"), from: "s[type]"
-        click_button I18n.t('ss.buttons.search')
-      end
-      within '.pages .item:nth-child(1)' do
-        expect(page).to have_no_selector('img')
-      end
-      within '.pages .item:nth-child(2)' do
-        expect(page).to have_css('.title')
-        expect(page).to have_css('.summary .image')
-        expect(page).to have_css('.summary .text')
-        expect(page).to have_css('.meta .url')
-        expect(page).to have_css('.meta .date')
-        expect(page).to have_css('.meta .category-list')
-      end
-      within '.pages .item:nth-child(3)' do
-        expect(page).to have_css('.title')
-        expect(page).to have_css('.summary .image')
-        expect(page).to have_css('.summary .text')
-        expect(page).to have_css('.meta .url')
-        expect(page).to have_css('.meta .date')
-        expect(page).to have_css('.meta .category-list')
-      end
-
-      ## article_node
-      within '.search-form' do
-        find("select[name='s[article_node_ids][]'] option[value='#{node.id}']").select_option
-        click_button I18n.t('ss.buttons.search')
-      end
-      within '.pages' do
-        expect(page.all('.item').count).to eq 3
-      end
-
-      ## category
-      within '.search-form' do
-        find("select[name='s[article_node_ids][]'] option[value='']").select_option
-        within '.site-search-categories.style-select' do
-          find('.choices').click
-          find(".choices__item[data-value='#{cate1.name}']").click
+    context "when 'page' is given to s[type]" do
+      it do
+        visit site_search_node.full_url
+        expect(page).to have_no_css(".pages") # テストを安定的に成功させるには .pages が存在しないことが前提
+        within '.search-form' do
+          expect(page.all("select[name='s[article_node_ids][]'] option").count).to eq 2
+          expect(page.all("select[name='s[category_names][]'] option").count).to eq 2
+          select I18n.t("cms.options.site_search_type.page"), from: "s[type]"
+          click_button I18n.t('ss.buttons.search')
         end
-        click_button I18n.t('ss.buttons.search')
+        within '.pages .item:nth-child(1)' do
+          expect(page).to have_no_selector('img')
+        end
+        within '.pages .item:nth-child(2)' do
+          expect(page).to have_css('.title')
+          expect(page).to have_css('.summary .image')
+          expect(page).to have_css('.summary .text')
+          expect(page).to have_css('.meta .url')
+          expect(page).to have_css('.meta .date')
+          expect(page).to have_css('.meta .category-list')
+        end
+        within '.pages .item:nth-child(3)' do
+          expect(page).to have_css('.title')
+          expect(page).to have_css('.summary .image')
+          expect(page).to have_css('.summary .text')
+          expect(page).to have_css('.meta .url')
+          expect(page).to have_css('.meta .date')
+          expect(page).to have_css('.meta .category-list')
+        end
       end
-      within '.pages' do
-        expect(page.all('.item').count).to eq 1
-      end
+    end
 
-      ## click on cateogry in the results
-      visit site_search_node.url
-      within '.search-form' do
-        find("select[name='s[type]'] option[value='page']").select_option
-        click_button I18n.t('ss.buttons.search')
+    context "when an actual node is given to s[article_node_ids][]" do
+      it do
+        ## article_node
+        visit site_search_node.full_url
+        expect(page).to have_no_css(".pages") # テストを安定的に成功させるには .pages が存在しないことが前提
+        within '.search-form' do
+          find("select[name='s[article_node_ids][]'] option[value='#{node.id}']").select_option
+          click_button I18n.t('ss.buttons.search')
+        end
+        within '.pages' do
+          expect(page.all('.item').count).to eq 3
+        end
       end
-      within '.pages .item:nth-child(2)' do
-        find('.category-name:nth-child(1)').click
+    end
+
+    context "when an empty is given to s[article_node_ids][] and a actual category is selected" do
+      it do
+        ## category
+        visit site_search_node.full_url
+        expect(page).to have_no_css(".pages") # テストを安定的に成功させるには .pages が存在しないことが前提
+        within '.search-form' do
+          find("select[name='s[article_node_ids][]'] option[value='']").select_option
+          within '.site-search-categories.style-select' do
+            find('.choices').click
+            find(".choices__item[data-value='#{cate1.name}']").click
+          end
+          click_button I18n.t('ss.buttons.search')
+        end
+        within '.pages' do
+          expect(page.all('.item').count).to eq 1
+        end
       end
-      expect(page.all('.item').count).to eq 1
-      expect(find('.site-search-categories select').value).to eq [cate1.name]
+    end
+
+    context "when a category is clicked in search results" do
+      it do
+        ## click on category in the results
+        visit site_search_node.full_url
+        expect(page).to have_no_css(".pages") # テストを安定的に成功させるには .pages が存在しないことが前提
+        within '.search-form' do
+          select I18n.t("cms.options.site_search_type.page"), from: "s[type]"
+          click_button I18n.t('ss.buttons.search')
+        end
+        expect(page).to have_css(".pages .item", count: 3)
+
+        within '.pages .item:nth-child(2)' do
+          find('.category-name:nth-child(1)').click
+        end
+        expect(page).to have_css('.site-search-categories', text: cate1.name)
+        expect(page.all('.item').count).to eq 1
+        expect(find('.site-search-categories select').value).to eq [cate1.name]
+      end
     end
   end
 
   context 'one site without settings' do
-    it do
-      visit site_search_node.url
-
-      within '.search-form' do
-        find("select[name='s[type]'] option[value='page']").select_option
-        click_button I18n.t('ss.buttons.search')
-      end
-      within '.pages .item:nth-child(1)' do
-        expect(page).to have_no_selector('img')
-      end
-      within '.pages .item:nth-child(2)' do
-        expect(page).to have_css('.title')
-        expect(page).to have_css('.summary .image')
-        expect(page).to have_css('.summary .text')
-        expect(page).to have_css('.meta .url')
-        expect(page).to have_css('.meta .date')
-        expect(page).to have_css('.meta .category-list')
-      end
-      within '.pages .item:nth-child(3)' do
-        expect(page).to have_css('.title')
-        expect(page).to have_css('.summary .image')
-        expect(page).to have_css('.summary .text')
-        expect(page).to have_css('.meta .url')
-        expect(page).to have_css('.meta .date')
-        expect(page).to have_css('.meta .category-list')
-      end
-
-      ## category
-      within '.search-form' do
-        within '.site-search-categories.style-select' do
-          find('.choices').click
-          find(".choices__item[data-value='#{cate1.name}']").click
+    context "when 'page' is given to s[type]" do
+      it do
+        visit site_search_node.full_url
+        expect(page).to have_no_css(".pages") # テストを安定的に成功させるには .pages が存在しないことが前提
+        within '.search-form' do
+          select I18n.t("cms.options.site_search_type.page"), from: "s[type]"
+          click_button I18n.t('ss.buttons.search')
         end
-        click_button I18n.t('ss.buttons.search')
-      end
-      within '.pages' do
-        expect(page.all('.item').count).to eq 1
-      end
-
-      ## group
-      within '.search-form' do
-        find('.site-search-categories.style-select .choices__button').click
-        within '.site-search-organization.style-select' do
-          find('.choices').click
-          find(".choices__item[data-value='#{group1.id}']").click
+        within '.pages .item:nth-child(1)' do
+          expect(page).to have_no_selector('img')
         end
-        click_button I18n.t('ss.buttons.search')
+        within '.pages .item:nth-child(2)' do
+          expect(page).to have_css('.title')
+          expect(page).to have_css('.summary .image')
+          expect(page).to have_css('.summary .text')
+          expect(page).to have_css('.meta .url')
+          expect(page).to have_css('.meta .date')
+          expect(page).to have_css('.meta .category-list')
+        end
+        within '.pages .item:nth-child(3)' do
+          expect(page).to have_css('.title')
+          expect(page).to have_css('.summary .image')
+          expect(page).to have_css('.summary .text')
+          expect(page).to have_css('.meta .url')
+          expect(page).to have_css('.meta .date')
+          expect(page).to have_css('.meta .category-list')
+        end
       end
-      within '.pages' do
-        expect(page.all('.item').count).to eq 1
+    end
+
+    context "when an actual category is selected" do
+      it do
+        ## category
+        visit site_search_node.full_url
+        expect(page).to have_no_css(".pages") # テストを安定的に成功させるには .pages が存在しないことが前提
+        within '.search-form' do
+          within '.site-search-categories.style-select' do
+            find('.choices').click
+            find(".choices__item[data-value='#{cate1.name}']").click
+          end
+          click_button I18n.t('ss.buttons.search')
+        end
+        within '.pages' do
+          expect(page.all('.item').count).to eq 1
+        end
+      end
+    end
+
+    context "when an actual group is selected" do
+      it do
+        ## group
+        visit site_search_node.full_url
+        expect(page).to have_no_css(".pages") # テストを安定的に成功させるには .pages が存在しないことが前提
+        within '.search-form' do
+          # find('.site-search-categories.style-select .choices__button').click
+          within '.site-search-organization.style-select' do
+            find('.choices').click
+            find(".choices__item[data-value='#{group1.id}']").click
+          end
+          click_button I18n.t('ss.buttons.search')
+        end
+        within '.pages' do
+          expect(page.all('.item').count).to eq 1
+        end
       end
     end
   end
@@ -210,7 +247,7 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
     end
 
     it do
-      visit site_search_node.url
+      visit site_search_node.full_url
 
       within '.search-form' do
         click_button I18n.t('ss.buttons.search')
@@ -223,7 +260,7 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
 
   context 'search for attachment' do
     it do
-      visit site_search_node.url
+      visit site_search_node.full_url
 
       within '.search-form' do
         find("select[name='s[type]'] option[value='file']").select_option
@@ -248,7 +285,7 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
 
     context 'search for target' do
       it do
-        visit site_search_node.url
+        visit site_search_node.full_url
 
         within '.search-form' do
           expect(page).to have_css('.site-search-article-nodes.style-select', visible: true)
@@ -286,7 +323,7 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
 
     context 'search for target' do
       it do
-        visit site_search_node.url
+        visit site_search_node.full_url
 
         within '.search-form' do
           expect(page).to have_no_css('.site-search-article-nodes.style-select', visible: true)
@@ -306,58 +343,74 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
     end
 
     context 'text field is placed' do
-      it do
-        visit site_search_node.url
-        within '.search-form' do
-          find("select[name='s[type]'] option[value='page']").select_option
-          click_button I18n.t('ss.buttons.search')
+      context "when 'page' is given to s[type]" do
+        it do
+          visit site_search_node.full_url
+          expect(page).to have_no_css(".pages") # テストを安定的に成功させるには .pages が存在しないことが前提
+          within '.search-form' do
+            select I18n.t("cms.options.site_search_type.page"), from: "s[type]"
+            click_button I18n.t('ss.buttons.search')
+          end
+          within '.pages .item:nth-child(1)' do
+            expect(page).to have_no_selector('img')
+          end
+          within '.pages .item:nth-child(2)' do
+            expect(page).to have_css('.title')
+            expect(page).to have_css('.summary .image')
+            expect(page).to have_css('.summary .text')
+            expect(page).to have_css('.meta .url')
+            expect(page).to have_css('.meta .date')
+            expect(page).to have_css('.meta .category-list')
+          end
+          within '.pages .item:nth-child(3)' do
+            expect(page).to have_css('.title')
+            expect(page).to have_css('.summary .image')
+            expect(page).to have_css('.summary .text')
+            expect(page).to have_css('.meta .url')
+            expect(page).to have_css('.meta .date')
+            expect(page).to have_css('.meta .category-list')
+          end
         end
-        within '.pages .item:nth-child(1)' do
-          expect(page).to have_no_selector('img')
-        end
-        within '.pages .item:nth-child(2)' do
-          expect(page).to have_css('.title')
-          expect(page).to have_css('.summary .image')
-          expect(page).to have_css('.summary .text')
-          expect(page).to have_css('.meta .url')
-          expect(page).to have_css('.meta .date')
-          expect(page).to have_css('.meta .category-list')
-        end
-        within '.pages .item:nth-child(3)' do
-          expect(page).to have_css('.title')
-          expect(page).to have_css('.summary .image')
-          expect(page).to have_css('.summary .text')
-          expect(page).to have_css('.meta .url')
-          expect(page).to have_css('.meta .date')
-          expect(page).to have_css('.meta .category-list')
-        end
+      end
 
-        ## category
-        within '.search-form' do
-          fill_in 's[category_name]', with: "#{cate1.name} etc"
-          fill_in 's[group_name]', with: ''
-          click_button I18n.t('ss.buttons.search')
+      context "when a category name is given to s[category]" do
+        it do
+          ## category
+          visit site_search_node.full_url
+          expect(page).to have_no_css(".pages") # テストを安定的に成功させるには .pages が存在しないことが前提
+          within '.search-form' do
+            fill_in 's[category_name]', with: "#{cate1.name} etc"
+            fill_in 's[group_name]', with: ''
+            click_button I18n.t('ss.buttons.search')
+          end
+          within '.pages' do
+            expect(page.all('.item').count).to eq 1
+          end
         end
-        within '.pages' do
+      end
+
+      context "when a last group name is given to s[group_name] and then a category is clicked in search results" do
+        it do
+          ## group
+          visit site_search_node.full_url
+          expect(page).to have_no_css(".pages") # テストを安定的に成功させるには .pages が存在しないことが前提
+          within '.search-form' do
+            fill_in 's[category_name]', with: ''
+            fill_in 's[group_name]', with: "#{group1.name.split('/').last} etc"
+            click_button I18n.t('ss.buttons.search')
+          end
+          within '.pages' do
+            expect(page.all('.item').count).to eq 1
+          end
+
+          ## click on cateogry in the results
+          within '.pages .item:nth-child(1)' do
+            find('.category-name:nth-child(1)').click
+          end
+          expect(page).to have_css('.site-search-categories', text: cate1.name)
           expect(page.all('.item').count).to eq 1
+          expect(find('.site-search-categories.style-input input').value).to eq cate1.name
         end
-
-        ## group
-        within '.search-form' do
-          fill_in 's[category_name]', with: ''
-          fill_in 's[group_name]', with: "#{group1.name.split('/').last} etc"
-          click_button I18n.t('ss.buttons.search')
-        end
-        within '.pages' do
-          expect(page.all('.item').count).to eq 1
-        end
-
-        ## click on cateogry in the results
-        within '.pages .item:nth-child(1)' do
-          find('.category-name:nth-child(1)').click
-        end
-        expect(page.all('.item').count).to eq 1
-        expect(find('.site-search-categories.style-input input').value).to eq cate1.name
       end
     end
   end
