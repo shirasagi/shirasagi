@@ -99,6 +99,7 @@
 //= require map/reference
 //= require webmail/lib/mail
 //= require webmail/lib/address
+//= require cropperjs/dist/cropper.js
 //= require service/lib/quota.js
 //= require flexibility/flexibility.js
 //= require cms/lib/readable_setting
