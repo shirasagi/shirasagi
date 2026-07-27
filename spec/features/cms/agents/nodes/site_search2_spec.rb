@@ -163,7 +163,9 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
           find('.category-name:nth-child(1)').click
         end
         expect(page).to have_css('.site-search-categories', text: cate1.name)
-        expect(page.all('.item').count).to eq 1
+        within '.pages' do
+          expect(page.all('.item').count).to eq 1
+        end
         expect(find('.site-search-categories select').value).to eq [cate1.name]
       end
     end
@@ -408,7 +410,9 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
             find('.category-name:nth-child(1)').click
           end
           expect(page).to have_css('.site-search-categories', text: cate1.name)
-          expect(page.all('.item').count).to eq 1
+          within '.pages' do
+            expect(page.all('.item').count).to eq 1
+          end
           expect(find('.site-search-categories.style-input input').value).to eq cate1.name
         end
       end
