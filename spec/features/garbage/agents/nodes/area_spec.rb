@@ -44,6 +44,8 @@ describe "garbage_agents_nodes_area_lists", type: :feature, dbscope: :example, j
       fill_in "item[garbage_type][][value]", with: "月"
       fill_in "item[garbage_type][][view]", with: "毎週月曜日"
       click_button I18n.t('ss.buttons.save')
+      wait_for_notice I18n.t('ss.notice.saved')
+
       item.reload
 
       visit item.url
