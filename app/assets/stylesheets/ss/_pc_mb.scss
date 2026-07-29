@@ -1697,6 +1697,11 @@ _:future,
     a:not(.no-margin) {
       margin-right: 16px;
     }
+    // ドロップダウン内の項目には矢印グリフを表示しない
+    // （背景画像時代は webmail/_ss.scss の background-image: none で打ち消されていたが、::before グリフには効かないため）
+    .dropdown-menu a::before {
+      content: none;
+    }
     .dropdown-toggle {
       &::after {
         content: "";
