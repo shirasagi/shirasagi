@@ -35,7 +35,6 @@ end
 if analyze_coverage?
   require 'simplecov'
   require 'simplecov-csv'
-  require 'simplecov-html'
 
   formatters = [
     SimpleCov::Formatter::CSVFormatter,
@@ -55,8 +54,8 @@ if analyze_coverage?
 
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(formatters)
   SimpleCov.start do
-    add_filter 'spec/'
-    add_filter 'vendor/bundle'
+    skip 'spec/'
+    skip 'vendor/bundle'
   end
 end
 

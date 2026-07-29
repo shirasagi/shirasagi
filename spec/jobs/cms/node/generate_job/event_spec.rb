@@ -7,6 +7,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
   let!(:page)  do
     create(:event_page, cur_site: cms_site, cur_node: node, layout_id: layout.id)
   end
+  let(:today) { Time.zone.today }
 
   before do
     Cms::Task.create!(site_id: site.id, node_id: node.id, name: 'cms:generate_nodes', state: 'ready')
@@ -35,13 +36,49 @@ describe Cms::Node::GenerateJob, dbscope: :example do
         expect(File.exist?("#{node.path}/index.ics")).to be_truthy
         expect(File.exist?("#{node.path}/table.html")).to be_falsey
         expect(File.exist?("#{node.path}/list.html")).to be_falsey
+        Nokogiri::HTML5::Document.parse(File.read("#{node.path}/index.html")).tap do |doc|
+          title_elements = doc.css("title")
+          expect(title_elements).to have(1).items
+          expect(title_elements[0].text.strip).to include node.name
 
-        this_month = Time.zone.now.beginning_of_month
-        cur_month = this_month - 1.year
-        while cur_month <= this_month + 1.year
+          canonical_elements = doc.css("[rel=\"canonical\"]")
+          expect(canonical_elements).to have(1).items
+          expect(canonical_elements[0]["href"]).to eq "#{node.full_url}#{today.strftime("%Y%m")}/#{node.event_display}.html"
+        end
+
+        cur_month = today - 1.year
+        last_month = today + 1.year
+        while cur_month <= last_month
           expect(File.exist?("#{node.path}/#{cur_month.strftime("%Y%m")}/index.html")).to be_truthy
           expect(File.exist?("#{node.path}/#{cur_month.strftime("%Y%m")}/list.html")).to be_truthy
           expect(File.exist?("#{node.path}/#{cur_month.strftime("%Y%m")}/table.html")).to be_truthy
+          Nokogiri::HTML5::Document.parse(File.read("#{node.path}/#{cur_month.strftime("%Y%m")}/index.html")).tap do |doc|
+            title_elements = doc.css("title")
+            expect(title_elements).to have(1).items
+            expect(title_elements[0].text.strip).to include node.name
+
+            canonical_elements = doc.css("[rel=\"canonical\"]")
+            expect(canonical_elements).to have(1).items
+            expect(canonical_elements[0]["href"]).to eq "#{node.full_url}#{cur_month.strftime("%Y%m")}/#{node.event_display}.html"
+          end
+          Nokogiri::HTML5::Document.parse(File.read("#{node.path}/#{cur_month.strftime("%Y%m")}/list.html")).tap do |doc|
+            title_elements = doc.css("title")
+            expect(title_elements).to have(1).items
+            expect(title_elements[0].text.strip).to include node.name
+
+            canonical_elements = doc.css("[rel=\"canonical\"]")
+            expect(canonical_elements).to have(1).items
+            expect(canonical_elements[0]["href"]).to eq "#{node.full_url}#{cur_month.strftime("%Y%m")}/list.html"
+          end
+          Nokogiri::HTML5::Document.parse(File.read("#{node.path}/#{cur_month.strftime("%Y%m")}/table.html")).tap do |doc|
+            title_elements = doc.css("title")
+            expect(title_elements).to have(1).items
+            expect(title_elements[0].text.strip).to include node.name
+
+            canonical_elements = doc.css("[rel=\"canonical\"]")
+            expect(canonical_elements).to have(1).items
+            expect(canonical_elements[0]["href"]).to eq "#{node.full_url}#{cur_month.strftime("%Y%m")}/table.html"
+          end
 
           cur_month += 1.month
         end
@@ -86,13 +123,40 @@ describe Cms::Node::GenerateJob, dbscope: :example do
         expect(File.exist?("#{node.path}/index.ics")).to be_truthy
         expect(File.exist?("#{node.path}/table.html")).to be_falsey
         expect(File.exist?("#{node.path}/list.html")).to be_falsey
+        Nokogiri::HTML5::Document.parse(File.read("#{node.path}/index.html")).tap do |doc|
+          title_elements = doc.css("title")
+          expect(title_elements).to have(1).items
+          expect(title_elements[0].text.strip).to include node.name
 
-        this_month = Time.zone.now.beginning_of_month
-        cur_month = this_month - 1.year
-        while cur_month <= this_month + 1.year
+          canonical_elements = doc.css("[rel=\"canonical\"]")
+          expect(canonical_elements).to have(1).items
+          expect(canonical_elements[0]["href"]).to eq "#{node.full_url}#{today.strftime("%Y%m")}/#{node.event_display}.html"
+        end
+
+        cur_month = today - 1.year
+        last_month = today + 1.year
+        while cur_month <= last_month
           expect(File.exist?("#{node.path}/#{cur_month.strftime("%Y%m")}/index.html")).to be_truthy
           expect(File.exist?("#{node.path}/#{cur_month.strftime("%Y%m")}/list.html")).to be_truthy
           expect(File.exist?("#{node.path}/#{cur_month.strftime("%Y%m")}/table.html")).to be_falsey
+          Nokogiri::HTML5::Document.parse(File.read("#{node.path}/#{cur_month.strftime("%Y%m")}/index.html")).tap do |doc|
+            title_elements = doc.css("title")
+            expect(title_elements).to have(1).items
+            expect(title_elements[0].text.strip).to include node.name
+
+            canonical_elements = doc.css("[rel=\"canonical\"]")
+            expect(canonical_elements).to have(1).items
+            expect(canonical_elements[0]["href"]).to eq "#{node.full_url}#{cur_month.strftime("%Y%m")}/#{node.event_display}.html"
+          end
+          Nokogiri::HTML5::Document.parse(File.read("#{node.path}/#{cur_month.strftime("%Y%m")}/list.html")).tap do |doc|
+            title_elements = doc.css("title")
+            expect(title_elements).to have(1).items
+            expect(title_elements[0].text.strip).to include node.name
+
+            canonical_elements = doc.css("[rel=\"canonical\"]")
+            expect(canonical_elements).to have(1).items
+            expect(canonical_elements[0]["href"]).to eq "#{node.full_url}#{cur_month.strftime("%Y%m")}/list.html"
+          end
 
           cur_month += 1.month
         end

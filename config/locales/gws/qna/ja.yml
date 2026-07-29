@@ -13,6 +13,8 @@ ja:
       delete: 削除
       browsing_state: 通知先
       browsed: 閲覧
+      set_browsed: 既読にする
+      unset_browsed: 未読にする
       list: トピック一覧へ
       confirm: 削除しますか？
       notice:
@@ -42,6 +44,7 @@ ja:
       browsed_state:
         read: 既読
         unread: 未読
+        both: 全て表示
       severity:
         normal: 通常
         important: 重要
@@ -57,6 +60,8 @@ ja:
     confirm:
       resolve: 解決済みにしてよろしいですか？
       unresolve: 未解決に戻してよろしいですか？
+      set_browsed_all: 選択した項目を全て既読にしますか？
+      unset_browsed_all: 選択した項目を全て未読に戻しますか？
     errors:
       denied_comment: コメントの投稿は許可されていません。
 

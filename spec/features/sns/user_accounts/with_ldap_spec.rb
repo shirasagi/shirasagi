@@ -16,7 +16,7 @@ describe "ldap_pass_change", type: :feature, dbscope: :example, ldap: true, js: 
   end
 
   after do
-    ActiveSupport::CurrentAttributes.reset_all
+    ActiveSupport::CurrentAttributes.clear_all
 
     # ldap password を変更したのでldap serviceを削除（ldapデータベースを削除する方法を探したが見つからなかった）
     stop_ldap_service

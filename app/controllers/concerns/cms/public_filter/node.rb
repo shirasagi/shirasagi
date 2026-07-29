@@ -22,7 +22,7 @@ module Cms::PublicFilter::Node
     @cur_node = node
     controller = node.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
 
-    agent = new_agent controller
+    agent = new_agent(controller, node.url)
     agent.controller.request.path_parameters.merge! spec
     agent.controller.params.merge! spec
     agent.render spec[:action]
@@ -50,6 +50,10 @@ module Cms::PublicFilter::Node
 
   def delete_layout_cache(cache_key)
     @layout_cache.delete(cache_key) if @layout_cache
+  end
+
+  def replace_canonical(html, full_url)
+    html.sub(/<link rel="canonical" href=".+?">/) { view_context.tag.link(rel: "canonical", href: full_url) }
   end
 
   public
@@ -97,6 +101,11 @@ module Cms::PublicFilter::Node
       html = render_to_string html: "", layout: "cms/redirect"
     elsif response.media_type == "text/html" && node.layout
       html = render_layout_with_pagination_cache(node.layout, opts[:cache])
+      page_index = opts.dig(:params, :page)
+      if page_index.numeric? && page_index > 1 # page_index は 1 から始まる
+        basename = opts[:file] ? File.basename(opts[:file]) : ""
+        html = replace_canonical(html, "#{node.full_url}#{basename}")
+      end
     else
       html = response.body
     end

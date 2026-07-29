@@ -13,8 +13,8 @@ class ApplicationController < ActionController::Base
     before_action :set_received_by
   end
 
-  def new_agent(controller_name)
-    agent = SS::Agent.new controller_name
+  def new_agent(controller_name, request_path)
+    agent = SS::Agent.new(controller_name, request_path)
     agent.controller.params  = params
     agent.controller.request = request
     agent.controller.instance_variable_set :@controller, self

@@ -1480,7 +1480,7 @@ en:
         - Select the Open Graph format.
         - "You can see what it looks like:"
         - "Facebook share debugger: https://developers.facebook.com/tools/debug/sharing/"
-        - "X(formerly Twitter) Card Validator: https://cards-dev.twitter.com/validator/"
+        - "X(formerly Twitter) Card Validator: https://cards-dev.x.com/validator/"
         - "LINE Page Poker: https://poker.line.naver.jp/"
       opengraph_defaul_image_url:
         - Set the default image URL.
@@ -1492,7 +1492,7 @@ en:
         - A consumer key and an access token, each with its own secret key, must be set.
       twitter_card:
         - Select the X(formerly Twitter) card format.
-        - "You can see what it looks like on X(formerly Twitter)with “X(formerly Twitter) Card Validator”: https://cards-dev.twitter.com/validator ."
+        - "You can see what it looks like on X(formerly Twitter)with “Card Validator”: https://cards-dev.x.com/validator ."
       twitter_username:
         - Set your X(formerly Twitter) username.
         - Once set, you can analyze access with X(formerly Twitter) Card Analytics.

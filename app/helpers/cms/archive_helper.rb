@@ -7,7 +7,7 @@ module Cms::ArchiveHelper
 
     if enable && within_one_year?(date)
       path = opts[:path].present? ? opts[:path] : @cur_node.try(:url).to_s
-      path = sprintf("#{path}%04d%02d", year, month)
+      path = format("%s%04d%02d/", path, year, month)
       data = {}
       if opts[:nofollow]
         data[:ss_rel] = "nofollow"
@@ -28,7 +28,7 @@ module Cms::ArchiveHelper
 
     if enable && within_one_year?(date)
       path = opts[:path].present? ? opts[:path] : @cur_node.try(:url).to_s
-      path = sprintf("#{path}%04d%02d%02d", year, month, day)
+      path = format("%s%04d%02d%02d/", path, year, month, day)
       data = {}
       if opts[:nofollow]
         data[:ss_rel] = "nofollow"

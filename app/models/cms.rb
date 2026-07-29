@@ -447,4 +447,30 @@ module Cms
       contains_urls.include?(file.url_with_name) ||
       contains_urls.include?(file.url_with_filename)
   end
+
+  def self.canonical_full_url(site, request)
+    request_path = request.env["ss.canonical_path"] || SS.request_path(request)
+    return if request_path.blank? || request_path == :none
+
+    request_dirname = ::File.dirname(request_path)
+    if request_dirname == "/"
+      request_basename = ::File.basename(request_path, ".*")
+      if request_basename.numeric? && Rack::Utils::HTTP_STATUS_CODES[request_basename.to_i]
+        # 404 ページに canonical を出力しないようにする
+        return
+      end
+    end
+
+    if request_path.end_with?("/index.html")
+      request_path = request_path[0..-11]
+    end
+
+    # 以下のコードで末尾の "/" が削除される。
+    # https://github.com/rails/rails/blob/v8.0.5/actionpack/lib/action_dispatch/routing/route_set.rb#L907
+    # ここでは末尾の "/" を復活させる。
+    if !request_path.end_with?("/") && ::File.extname(request_path).blank?
+      request_path += "/"
+    end
+    Addressable::URI.join(site.full_root_url, request_path).to_s
+  end
 end

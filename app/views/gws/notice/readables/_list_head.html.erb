@@ -1,11 +1,11 @@
 <div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
   <div class="list-head-action">
     <%= render template: "_list_head_tags" %>
+    <%= ss_button_to t("gws/notice.links.unset_seen"), { action: :unset_browsed_all }, class: "unset-browsed-all btn btn-list-head-action", method: "post", confirm: t("gws/notice.confirm.unset_seen") %>
+    <%= ss_button_to t("gws/notice.links.set_seen"), { action: :set_browsed_all }, class: "set-browsed-all btn btn-list-head-action", method: "post", confirm: t("gws/notice.confirm.set_seen") %>
   </div>
 
   <%= render template: "_search" %>
 </div>
-
-<%= jquery do %>
-  $('.list-items .list-item label.check').remove();
-<% end %>

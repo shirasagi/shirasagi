@@ -18,18 +18,27 @@ sudo dnf -y groupinstall "Development tools" --setopt=group_package_types=mandat
 sudo dnf -y install epel-release openssl-devel
 sudo dnf config-manager --disable epel
 sudo dnf --enablerepo=epel -y update epel-release
-sudo dnf -y --enablerepo=epel,powertools install ImageMagick ImageMagick-devel git wget libyaml-devel
+# CodeReady Builder (CRB) repo name differs by EL version: EL8=powertools, EL9+=crb
+source /etc/os-release
+if [ "${VERSION_ID%%.*}" -ge 9 ]; then
+  CRB_REPO=crb
+else
+  CRB_REPO=powertools
+fi
+# libxml2-devel/libxslt-devel/zlib-devel は AL8 で nokogiri をネイティブビルドする際に使用
+# (AL8 は glibc 2.28 のためプリコンパイル gem の GLIBC_2.29 要求を満たせない)。AL9+ では無害。
+sudo dnf -y --enablerepo=epel,${CRB_REPO} install ImageMagick ImageMagick-devel git wget libyaml-devel mecab mecab-devel mecab-ipadic libxml2-devel libxslt-devel zlib-devel
 
-cat <<EOS | sudo tee -a /etc/yum.repos.d/mongodb-org-7.0.repo
-[mongodb-org-7.0]
+cat <<EOS | sudo tee /etc/yum.repos.d/mongodb-org-8.0.repo > /dev/null
+[mongodb-org-8.0]
 name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/7.0/x86_64/
+baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/8.0/x86_64/
 gpgcheck=1
 enabled=0
-gpgkey=https://www.mongodb.org/static/pgp/server-7.0.asc
+gpgkey=https://www.mongodb.org/static/pgp/server-8.0.asc
 EOS
 
-sudo dnf install -y --enablerepo=mongodb-org-7.0 mongodb-org
+sudo dnf install -y --enablerepo=mongodb-org-8.0 mongodb-org
 sudo systemctl enable mongod.service --now
 
 # asdf のパスを確認する関数
@@ -46,7 +55,7 @@ check_asdf_installed() {
 # asdf のインストール（すでにクローン済みかチェック）
 if [ ! -d /usr/local/asdf ]; then
   echo "Cloning asdf..."
-  sudo git clone https://github.com/asdf-vm/asdf.git /usr/local/asdf
+  sudo git clone --branch v0.15.0 https://github.com/asdf-vm/asdf.git /usr/local/asdf
   if [ $? -ne 0 ]; then
     echo "asdf のクローンに失敗しました。"
     exit 1
@@ -98,7 +107,7 @@ else
   echo "/etc/profile.d/asdf.sh は既に存在しています。"
 fi
 
-source /etc/profile/asdf.sh
+source /etc/profile.d/asdf.sh
 
 export SS_HOSTNAME=${1:-"example.jp"}
 export SS_USER=${2:-"$USER"}
@@ -152,48 +161,13 @@ fi
 
 echo "すべてのインストールが完了しました。"
 
-cd
-wget -O mecab-0.996.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7cENtOXlicTFaRUE"
-wget -O mecab-ipadic-2.7.0-20070801.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7MWVlSDBCSXZMTXM"
-wget -O mecab-ruby-0.996.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7VUNlczBWVDZJbE0"
-wget https://raw.githubusercontent.com/shirasagi/shirasagi/stable/vendor/mecab/mecab-ipadic-2.7.0-20070801.patch
-
-cd
-tar xvzf mecab-0.996.tar.gz
-cd mecab-0.996
-./configure --enable-utf8-only
-make
-sudo make install
-#cd
-#sudo mv mecab-0.996 /usr/local/src
-
-cd
-tar xvzf mecab-ipadic-2.7.0-20070801.tar.gz
-cd mecab-ipadic-2.7.0-20070801
-patch -p1 <../mecab-ipadic-2.7.0-20070801.patch
-./configure --with-charset=UTF-8
-make
-sudo make install
-#cd
-#sudo mv mecab-ipadic-2.7.0-20070801 /usr/local/src
-
-cd
-tar xvzf mecab-ruby-0.996.tar.gz
-cd mecab-ruby-0.996
-ruby extconf.rb
-make
-make install
-#cd
-#sudo mv mecab-ruby-0.996 /usr/local/src
-
-echo "/usr/local/lib" | sudo tee -a /etc/ld.so.conf
-sudo ldconfig
+# MeCab本体・辞書はパッケージで導入済み(上部の dnf install: mecab mecab-devel mecab-ipadic)。
+# ふりがな用の Ruby 拡張(mecab-ruby)は SHIRASAGI クローン後に同梱 vendor から構築する(後述)。
 
 #### Voice
 
 cd
 wget http://downloads.sourceforge.net/hts-engine/hts_engine_API-1.08.tar.gz \
-  wget http://downloads.sourceforge.net/hts-engine/hts_engine_API-1.08.tar.gz \
   http://downloads.sourceforge.net/open-jtalk/open_jtalk-1.07.tar.gz \
   http://downloads.sourceforge.net/lame/lame-3.99.5.tar.gz \
   http://downloads.sourceforge.net/sox/sox-14.4.1.tar.gz
@@ -295,6 +269,14 @@ if ! check_asdf_installed; then
   exec bash -lc "source /etc/profile.d/asdf.sh && echo '再度確認: $(command -v asdf)'"
 fi
 
+# AlmaLinux 8 (glibc 2.28) では nokogiri 等のプリコンパイル gem が GLIBC_2.29 を要求し
+# 起動できないため、ネイティブビルド(ruby platform)を強制する。EL9+ (glibc>=2.34) は不要。
+source /etc/os-release
+if [ "${VERSION_ID%%.*}" -lt 9 ]; then
+  echo "AlmaLinux ${VERSION_ID}: force_ruby_platform を有効化（プリコンパイル gem の glibc 非互換を回避）"
+  $(asdf which bundle) config set --local force_ruby_platform true
+fi
+
 # 絶対パスで bundle install を実行（リトライ付き）
 for i in $(seq 1 5); do
   # Bundler を使って依存関係をインストール
@@ -316,6 +298,20 @@ done
 
 echo "セットアップが完了しました。"
 
+# ふりがな(MeCab Ruby拡張): 同梱 vendor から構築。MeCab本体/辞書はパッケージ導入済み。
+# 共有ディレクトリ(/usr/local/src)を777にせず、専用の一時ディレクトリでビルドする。
+MECAB_BUILD_DIR=$(mktemp -d)
+cp -arp "${SS_DIR}/vendor/mecab/mecab-ruby-0.996.tar.gz" "${MECAB_BUILD_DIR}/"
+cd "${MECAB_BUILD_DIR}" || exit 1
+tar xvzf mecab-ruby-0.996.tar.gz
+cd mecab-ruby-0.996 || exit 1
+$(asdf which ruby) extconf.rb && make && make install || exit 1
+cd "${SS_DIR}" || exit 1
+rm -rf "${MECAB_BUILD_DIR}"
+cp config/defaults/kana.yml config/
+sed -i "s#/usr/local/libexec/mecab/mecab-dict-index#/usr/libexec/mecab/mecab-dict-index#" config/kana.yml
+sed -i "s#/usr/local/lib/mecab/dic/ipadic#/usr/lib64/mecab/dic/ipadic#" config/kana.yml
+
 # asdf reshim を実行
 echo "asdf reshim を実行しています..."
 asdf reshim
@@ -327,16 +323,34 @@ else
   echo "エラー: asdf reshim の実行に失敗しました。"
   exit 1
 fi
-# change secret
-# 資格情報の編集
-echo "Editing Rails credentials using cat <<EOF"
-
-# 資格情報ファイルの暗号化
-echo "Encrypting the credentials file"
-$(asdf which rails) credentials:edit --environment=production
+# secret_key_base の credentials 化
+# 開発ドキュメントに準拠: config 直下のデフォルト credentials
+# （config/master.key + config/credentials.yml.enc）へ格納する。
+# --environment は指定しない（指定すると config/credentials/production.* が作られてしまうため）。
+# secret_key_base の値は rails secret でランダム生成する（secrets.yml のサンプル固定値は使わない）。
+# ref: https://shirasagi.github.io/trouble-shootings/secret_key_base.html
+# credentials:edit は対話エディタを起動するため、非対話の一時 EDITOR で
+# secret_key_base のみを設定/更新し、無人実行でも失敗しないようにする。
+echo "Configuring Rails credentials (secret_key_base)"
+SS_SECRET_KEY_BASE=$($(asdf which rails) secret)
+export SS_SECRET_KEY_BASE
+CRED_EDITOR=$(mktemp)
+cat > "${CRED_EDITOR}" <<'CRED_EOF'
+#!/usr/bin/env bash
+# 既存の credentials 内容を保持し、secret_key_base のみ設定/更新する。
+# ($1 は credentials:edit が渡す復号済み YAML の一時ファイルパス)
+cred_tmp="$1.new"
+grep -v '^secret_key_base:' "$1" > "${cred_tmp}" 2>/dev/null || true
+printf 'secret_key_base: %s\n' "${SS_SECRET_KEY_BASE}" >> "${cred_tmp}"
+mv "${cred_tmp}" "$1"
+CRED_EOF
+chmod +x "${CRED_EDITOR}"
+EDITOR="${CRED_EDITOR}" $(asdf which rails) credentials:edit
+CRED_STATUS=$?
+rm -f "${CRED_EDITOR}"
 
 # エラーチェック
-if [ $? -ne 0 ]; then
+if [ ${CRED_STATUS} -ne 0 ]; then
   echo "Error: Encryption of credentials file failed"
   exit 1
 else
@@ -390,6 +404,7 @@ sudo mkdir -p /var/cache/nginx/proxy_cache
 
 cat <<EOF | sudo tee /etc/nginx/conf.d/http.conf
 server_tokens off;
+charset utf-8;
 server_name_in_redirect off;
 etag on;
 client_max_body_size 100m;
@@ -601,27 +616,19 @@ cd /etc/ImageMagick-6 && cat <<EOF | sudo patch
  </policymap>
 EOF
 
-cat <<EOF | sudo tee /etc/systemd/system/shirasagi-unicorn.service
-[Unit]
-Description=Shirasagi Unicorn Server
-After=mongod.service
-[Service]
-User=${SS_USER}
-WorkingDirectory=${SS_DIR}
-Environment=RAILS_ENV=production
-SyslogIdentifier=unicorn
-PIDFile=${SS_DIR}/tmp/pids/unicorn.pid
-Type=forking
-TimeoutSec=300
-ExecStart=/bin/bash -lc 'bundle exec unicorn_rails -c config/unicorn.rb -D'
-ExecStop=/usr/bin/kill -QUIT $MAINPID
-ExecReload=/usr/bin/kill -USR2 $MAINPID
-[Install]
-WantedBy=multi-user.target
-EOF
-sudo chown root: /etc/systemd/system/shirasagi-unicorn.service
-sudo chmod 644 /etc/systemd/system/shirasagi-unicorn.service
+# Puma を SHIRASAGI 標準の方法で自動起動設定する（開発マニュアル installation/puma.html 準拠）。
+# 公式同梱の bin/puma.service をそのまま /etc/systemd/system/puma.service へ配置し、
+# User のみ実行ユーザに調整する。WorkingDirectory/PIDFile は /var/www/shirasagi 前提で一致。
+# WEB_CONCURRENCY / RAILS_MAX_THREADS / PUMA_RAM / PUMA_ROLLING_RESTART_FREQUENCY 等の
+# チューニング用 Environment（一部コメントアウト）は公式ユニットのまま保持し、マニュアルの
+# 性能調整手順（コメント解除で調整）がそのまま使えるようにする。
+sudo cp -n "${SS_DIR}/bin/puma.service" /etc/systemd/system/puma.service
+sudo sed -i "s/^User=.*/User=${SS_USER}/" /etc/systemd/system/puma.service
+# 公式サンプルの ExecStop シグナル名の誤字 TERN を TERM に修正（systemctl stop を有効にする）
+sudo sed -i "s/kill -TERN /kill -TERM /" /etc/systemd/system/puma.service
+sudo chown root: /etc/systemd/system/puma.service
+sudo chmod 644 /etc/systemd/system/puma.service
 sudo systemctl daemon-reload
-sudo systemctl enable shirasagi-unicorn.service --now
+sudo systemctl enable puma --now
 
 exit

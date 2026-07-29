@@ -79,7 +79,7 @@ module Gws::Board::Postable
     end
 
     def search_browsed_state(params)
-      return all if params.blank? || params[:browsed_state].blank?
+      return all if params.blank? || params[:browsed_state].blank? || params[:browsed_state] == 'both'
 
       case params[:browsed_state]
       when 'read'
@@ -87,7 +87,7 @@ module Gws::Board::Postable
       when 'unread'
         all.exists("browsed_users_hash.#{params[:user].id}" => 0)
       else
-        none
+        all
       end
     end
   end

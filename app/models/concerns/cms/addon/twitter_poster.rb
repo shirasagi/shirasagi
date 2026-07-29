@@ -7,6 +7,8 @@ module Cms::Addon
     # see: https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
     TWITTER_MAX_MEDIA_COUNT = 4
 
+    DEFAULT_BASE_URL = "https://api.x.com/2/".freeze
+
     included do
       attr_accessor :skip_twitter_post
 
@@ -40,7 +42,7 @@ module Cms::Addon
     end
 
     def twitter_url(post_id, user_id)
-      "https://twitter.com/#{user_id}/status/#{post_id}" if
+      "https://x.com/#{user_id}/status/#{post_id}" if
         use_twitter_post? && user_id.present? && post_id.present?
     end
 
@@ -68,7 +70,7 @@ module Cms::Addon
         access_token: self.site.twitter_access_token,
         access_token_secret: self.site.twitter_access_token_secret,
       }
-      X::Client.new(**credentials)
+      X::Client.new(base_url: DEFAULT_BASE_URL, **credentials)
     end
 
     def post_to_twitter(execute: :inline)

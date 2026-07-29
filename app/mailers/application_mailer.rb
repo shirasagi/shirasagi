@@ -45,4 +45,8 @@ class ApplicationMailer < ActionMailer::Base
       end
     end
   end
+
+  def create_mail(...)
+    mail(...)
+  end
 end

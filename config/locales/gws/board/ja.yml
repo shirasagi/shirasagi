@@ -4,6 +4,9 @@ ja:
     #descendants_num: コメント数
     #descendants_updated: 更新日時
     no_authority: 権限がありません
+    confirm:
+      set_browsed_all: 選択した項目を全て既読にしますか？
+      unset_browsed_all: 選択した項目を全て未読に戻しますか？
     topic:
       comment: コメント
       new: 新規作成
@@ -14,6 +17,8 @@ ja:
       browsing_state: 通知先
       browsed_state: 状態
       browsed: 閲覧
+      set_browsed: 既読にする
+      unset_browsed: 未読にする
       list: トピック一覧へ
       confirm: 削除しますか？
       browsed_user_info:

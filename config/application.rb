@@ -75,7 +75,7 @@ module SS
 
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 8.0
+    config.load_defaults 8.1
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
@@ -86,7 +86,7 @@ module SS
     config.action_dispatch.rescue_responses["SS::NotFoundError"] = :not_found # 404
 
     # see: https://til.toshimaru.net/2023-03-30
-    config.action_controller.raise_on_open_redirects = false
+    config.action_controller.action_on_open_redirect = :log
 
     config.middleware.delete ActionDispatch::HostAuthorization
 

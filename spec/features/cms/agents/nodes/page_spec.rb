@@ -26,6 +26,7 @@ describe "cms_agents_nodes_page", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       expect(page).to have_css(".pages")
       expect(page).to have_selector("article")
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{node.full_url}\"]")
     end
 
     it "#index with kana", mecab: true do
@@ -34,6 +35,7 @@ describe "cms_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_css(".pages")
       expect(page).to have_selector("article")
       expect(page).to have_selector("a[href='/node/item.html']")
+      expect(page).to have_css("[rel=\"canonical\"][href=\"http://#{site.domain}#{SS.config.kana.location}#{node.url}\"]")
     end
 
     it "#index with mobile" do
@@ -42,6 +44,7 @@ describe "cms_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_css(".pages")
       expect(page).to have_selector(".tag-article")
       expect(page).to have_selector("a[href='/mobile/node/item.html']")
+      expect(page).to have_no_css("[rel=\"canonical\"]")
     end
 
     it "#rss" do

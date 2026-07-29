@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe "event_agents_nodes_search", type: :feature, dbscope: :example do
-  let(:site) { cms_site }
-  let(:layout) { create_cms_layout }
-  let(:node) { create :event_node_search, layout_id: layout.id, filename: "node" }
+  let!(:site) { cms_site }
+  let!(:layout) { create_cms_layout cur_site: site }
+  let!(:node) { create :event_node_search, cur_site: site, layout: layout }
   let!(:event_recur1) do
     { kind: "date", start_at: Time.zone.today - 3.days, frequency: "daily", until_on: Time.zone.today - 2.days }
   end
@@ -13,9 +13,9 @@ describe "event_agents_nodes_search", type: :feature, dbscope: :example do
   let!(:event_recur3) do
     { kind: "date", start_at: Time.zone.today + 2.days, frequency: "daily", until_on: Time.zone.today + 3.days }
   end
-  let!(:item1) { create :event_page, cur_node: node, event_recurrences: [event_recur1] }
-  let!(:item2) { create :event_page, cur_node: node, event_recurrences: [event_recur2] }
-  let!(:item3) { create :event_page, cur_node: node, event_recurrences: [event_recur3] }
+  let!(:item1) { create :event_page, cur_site: site, cur_node: node, layout: layout, event_recurrences: [event_recur1] }
+  let!(:item2) { create :event_page, cur_site: site, cur_node: node, layout: layout, event_recurrences: [event_recur2] }
+  let!(:item3) { create :event_page, cur_site: site, cur_node: node, layout: layout, event_recurrences: [event_recur3] }
 
   before do
     # 書き出しテストの後に本テストが実行されると失敗する場合があるので、念のため書き出し済みのファイルを削除
@@ -33,6 +33,7 @@ describe "event_agents_nodes_search", type: :feature, dbscope: :example do
       expect(page).to have_css("article:nth-child(1) a", text: item3.name)
       expect(page).to have_css("article:nth-child(2) a", text: item2.name)
       expect(page).to have_css("article:nth-child(3) a", text: item1.name)
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{node.full_url}\"]")
     end
   end
 
@@ -45,6 +46,7 @@ describe "event_agents_nodes_search", type: :feature, dbscope: :example do
       expect(page).to have_selector('article', count: 2)
       expect(page).to have_css("article:nth-child(1) a", text: item2.name)
       expect(page).to have_css("article:nth-child(2) a", text: item3.name)
+      expect(page).to have_css("[rel=\"canonical\"][href=\"#{node.full_url}\"]")
     end
   end
 end

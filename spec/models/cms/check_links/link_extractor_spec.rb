@@ -199,8 +199,17 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
       extractor = described_class.new(cur_site: site, base_url: node.full_url, html: html)
       links = extractor.to_a
       # puts links.map(&:href).join("\n")
-      expect(links).to have(6).items
+      expect(links).to have(7).items
       links[0].tap do |link|
+        path = "#{today.strftime("%Y%m")}/list.html"
+        expect(link.full_url).to eq Addressable::URI.parse("#{node.full_url}#{path}")
+        expect(link.href).to eq link.full_url.to_s
+        expect(link.line).to be < 30
+        expect(link.type).to eq :canonical
+        expect(link.rel).to be_blank
+        expect(link.ss_rel).to be_blank
+      end
+      links[1].tap do |link|
         path = "#{today.strftime("%Y%m")}/list.html"
         expect(link.full_url).to eq Addressable::URI.parse("#{node.full_url}#{path}")
         expect(link.href).to eq "#{node.url}#{path}"
@@ -209,7 +218,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
         expect(link.rel).to be_blank
         expect(link.ss_rel).to be_blank
       end
-      links[1].tap do |link|
+      links[2].tap do |link|
         path = "#{today.strftime("%Y%m")}/list.ics"
         expect(link.full_url).to eq Addressable::URI.parse("#{node.full_url}#{path}")
         expect(link.href).to eq "#{node.url}#{path}"
@@ -218,7 +227,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
         expect(link.rel).to be_blank
         expect(link.ss_rel).to eq "nofollow"
       end
-      links[2].tap do |link|
+      links[3].tap do |link|
         path = "#{today.prev_month.strftime("%Y%m")}/index.html"
         expect(link.full_url).to eq Addressable::URI.parse("#{node.full_url}#{path}")
         expect(link.href).to eq "#{node.url}#{path}"
@@ -227,7 +236,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
         expect(link.rel).to be_blank
         expect(link.ss_rel).to eq "nofollow"
       end
-      links[3].tap do |link|
+      links[4].tap do |link|
         path = "#{today.next_month.strftime("%Y%m")}/index.html"
         expect(link.full_url).to eq Addressable::URI.parse("#{node.full_url}#{path}")
         expect(link.href).to eq "#{node.url}#{path}"
@@ -236,12 +245,36 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
         expect(link.rel).to be_blank
         expect(link.ss_rel).to eq "nofollow"
       end
-      links[4].tap do |link|
+      links[5].tap do |link|
         path = "#{today.strftime("%Y%m%d")}/"
         expect(link.full_url).to eq Addressable::URI.parse("#{node.full_url}#{path}")
         expect(link.href).to eq "#{node.url}#{path}"
         expect(link.line).to be > 30
         expect(link.type).to eq :inner_yield
+        expect(link.rel).to be_blank
+        expect(link.ss_rel).to be_blank
+      end
+    end
+  end
+
+  context "with canonical" do
+    let(:canonical_url) { unique_url }
+
+    it do
+      html = <<~HTML
+        <link rel="canonical" href="#{canonical_url}"/>
+      HTML
+
+      extractor = described_class.new(cur_site: site, base_url: site.full_url, html: html)
+      links = extractor.to_a
+      expect(links).to have(1).items
+
+      links[0].tap do |link|
+        expect(link.full_url).to be_a(Addressable::URI)
+        expect(link.full_url).to eq Addressable::URI.parse(canonical_url)
+        expect(link.href).to eq canonical_url
+        expect(link.line).to eq 1
+        expect(link.type).to eq :canonical
         expect(link.rel).to be_blank
         expect(link.ss_rel).to be_blank
       end

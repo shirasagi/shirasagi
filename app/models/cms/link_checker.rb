@@ -192,7 +192,7 @@ class Cms::LinkChecker
     path = File.join(path, "index.html") if Fs.directory?(path)
     return path if Fs.file?(path)
 
-    path = Addressable::URI.unencode(path)
+    path = Addressable::URI.unencode(path).to_s
     return path if Fs.file?(path)
 
     nil
@@ -229,7 +229,7 @@ class Cms::LinkChecker
     content_type = contents_headers["content-type"]
     content = nil
     if fetch_content && content_type.include?(TEXT_HTML_MIME_TYPE)
-      content = ""
+      content = +""
       contents_body.each { content += _1 }
     end
     Result.success(

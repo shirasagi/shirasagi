@@ -54,7 +54,7 @@ module Cms::PublicFilter::Layout
         @cur_part = part
         controller = part.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
 
-        agent = new_agent controller
+        agent = new_agent(controller, request.path)
         agent.controller.params.merge! spec
         agent.controller.request = ActionDispatch::Request.new(request.env.merge("REQUEST_METHOD" => "GET"))
         resp = agent.render spec[:action]

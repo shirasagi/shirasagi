@@ -19,7 +19,7 @@
     <% @items.each do |item| %>
     <%
       css_classes = %w(list-item)
-      css_classes << (item.browsed?(@cur_user) ? 'read' : 'unread')
+      css_classes << 'unread' unless item.browsed?(@cur_user)
       if item.severity.present?
         css_classes << item.severity
       end
@@ -33,7 +33,7 @@
         <% if @mode == 'trash' %>
           <%= link_to t('ss.links.restore'), action: :undo_delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
           <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-        <% else %>
+        <% elsif @mode != 'readable' %>
           <%= link_to t('ss.links.delete'), action: :soft_delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
         <% end %>
 
@@ -52,6 +52,7 @@
         <div class="meta">
           <span class="id">#<%= item.id %></span>
           <span class="datetime"><%= ss_time_tag item.descendants_updated %></span>
+          <span class="seen"><%= item.browsed?(@cur_user) ? t('gws/board.options.browsed_state.read') : t('gws/board.options.browsed_state.unread') %></span>
           <span class="user"><%= gws_public_user_long_name(item.contributor_name.presence || item.user_long_name) %></span>
           <span class="categories">
             <% item.categories.readable(@cur_user, site: @cur_site).each do |category| %>

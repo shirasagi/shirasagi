@@ -1697,6 +1697,11 @@ _:future,
     a:not(.no-margin) {
       margin-right: 16px;
     }
+    // ドロップダウン内の項目には矢印グリフを表示しない
+    // （背景画像時代は webmail/_ss.scss の background-image: none で打ち消されていたが、::before グリフには効かないため）
+    .dropdown-menu a::before {
+      content: none;
+    }
     .dropdown-toggle {
       &::after {
         content: "";
@@ -2132,6 +2137,31 @@ footer.send {
 .required {
   color: #e00;
   font-weight: bold;
+}
+
+// 必須マーク: ホバー時に「必須入力」ツールチップを表示（読み上げは aria-label 側で対応）
+// 配色はコントラスト機能に追従させるため background/color は固定指定しない（境界は border のみ）
+.required-mark {
+  position: relative;
+}
+.required-mark .required-tooltip {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  top: 100%;
+  left: 50%;
+  margin-top: 4px;
+  padding: 3px 8px;
+  transform: translateX(-50%);
+  border: 1px solid;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.required-mark:hover .required-tooltip {
+  display: block;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -4315,6 +4345,6 @@ table.check-links-erros {
 // フォントアイコン用スタイル設定クラス
 span[class^="ss-icon-"]::before,
 span[class*=" ss-icon-"]::before {
-  margin-right: 5px !important;
-  font-size: 32px !important;
+  margin-right: 5px;
+  font-size: 32px;
 }

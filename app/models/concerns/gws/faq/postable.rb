@@ -58,6 +58,9 @@ module Gws::Faq::Postable
         category_ids = Gws::Faq::Category.site(params[:site]).and_name_prefix(params[:category]).pluck(:id)
         criteria = criteria.in(category_ids: category_ids)
       end
+      if %w(read unread).include?(params[:browsed_state]) && params[:user].present?
+        criteria = criteria.exists("browsed_users_hash.#{params[:user].id}" => params[:browsed_state] == 'read')
+      end
       criteria
     }
   end

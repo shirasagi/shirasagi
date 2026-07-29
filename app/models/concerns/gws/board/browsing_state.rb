@@ -36,7 +36,7 @@ module Gws::Board::BrowsingState
   end
 
   def browsed_state_options
-    %w(unread read).map { |m| [I18n.t("gws/board.options.browsed_state.#{m}"), m] }
+    %w(both unread).map { |m| [I18n.t("gws/board.options.browsed_state.#{m}"), m] }
   end
 
   def browsed_user_ids

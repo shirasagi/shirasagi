@@ -12,7 +12,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
       auth_setting.save!
     end
 
-    after { ActiveSupport::CurrentAttributes.reset_all }
+    after { ActiveSupport::CurrentAttributes.clear_all }
 
     context "when users' opt is not configured" do
       context "with 'always' as mfa_otp_use_state" do

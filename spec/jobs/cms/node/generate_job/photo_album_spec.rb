@@ -54,6 +54,21 @@ describe Cms::Node::GenerateJob, dbscope: :example do
         expect(File.exist?("#{photo_album_node.path}/index.html")).to be_truthy
         # cms/photo には RSS を応答する公開アクションはないので rss.xml が作成されていないことを確認する
         expect(File.exist?("#{photo_album_node.path}/rss.xml")).to be_falsey
+        Nokogiri::HTML5::Document.parse(File.read("#{photo_album_node.path}/index.html")).tap do |doc|
+          title_elements = doc.css("title")
+          expect(title_elements).to have(1).items
+          expect(title_elements[0].text.strip).to include photo_album_node.name
+
+          doc.css(".photos .photo").tap do |photos|
+            expect(photos).to have(2).items
+            expect(photos[0].css(".title").text.strip).to eq page1.name
+            expect(photos[1].css(".title").text.strip).to eq page2.name
+          end
+
+          canonical_elements = doc.css("[rel=\"canonical\"]")
+          expect(canonical_elements).to have(1).items
+          expect(canonical_elements[0]["href"]).to eq photo_album_node.full_url
+        end
 
         expect(Cms::Task.count).to eq 1
         Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_nodes').first.tap do |task|
@@ -76,14 +91,6 @@ describe Cms::Node::GenerateJob, dbscope: :example do
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
-        end
-
-        html = File.read("#{photo_album_node.path}/index.html")
-        html = Nokogiri::HTML5::Document.parse(html)
-        html.css(".photos .photo").tap do |photos|
-          expect(photos).to have(2).items
-          expect(photos[0].css(".title").text.strip).to eq page1.name
-          expect(photos[1].css(".title").text.strip).to eq page2.name
         end
       end
     end
@@ -99,6 +106,19 @@ describe Cms::Node::GenerateJob, dbscope: :example do
         expect(File.exist?("#{photo_album_node.path}/index.html")).to be_truthy
         # cms/photo には RSS を応答する公開アクションはないので rss.xml が作成されていないことを確認する
         expect(File.exist?("#{photo_album_node.path}/rss.xml")).to be_falsey
+        Nokogiri::HTML5::Document.parse(File.read("#{photo_album_node.path}/index.html")).tap do |doc|
+          title_elements = doc.css("title")
+          expect(title_elements).to have(1).items
+          expect(title_elements[0].text.strip).to include photo_album_node.name
+
+          doc.css(".photos .photo").tap do |photos|
+            expect(photos).to be_blank
+          end
+
+          canonical_elements = doc.css("[rel=\"canonical\"]")
+          expect(canonical_elements).to have(1).items
+          expect(canonical_elements[0]["href"]).to eq photo_album_node.full_url
+        end
 
         expect(Cms::Task.count).to eq 1
         Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_nodes').first.tap do |task|
@@ -121,12 +141,6 @@ describe Cms::Node::GenerateJob, dbscope: :example do
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
-        end
-
-        html = File.read("#{photo_album_node.path}/index.html")
-        html = Nokogiri::HTML5::Document.parse(html)
-        html.css(".photos .photo").tap do |photos|
-          expect(photos).to be_blank
         end
       end
     end
@@ -155,10 +169,18 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
         expect(File.size("#{photo_album_node.path}/index.html")).to be > 0
 
-        html = File.read("#{photo_album_node.path}/index.html")
-        html = Nokogiri::HTML.fragment(html)
-        expect(html.css(".inquiry-form")).to have(1).items
-        expect(html.css(".member-photos")).to have(1).items
+        Nokogiri::HTML5::Document.parse(File.read("#{photo_album_node.path}/index.html")).tap do |doc|
+          title_elements = doc.css("title")
+          expect(title_elements).to have(1).items
+          expect(title_elements[0].text.strip).to include photo_album_node.name
+
+          expect(doc.css(".inquiry-form")).to have(1).items
+          expect(doc.css(".member-photos")).to have(1).items
+
+          canonical_elements = doc.css("[rel=\"canonical\"]")
+          expect(canonical_elements).to have(1).items
+          expect(canonical_elements[0]["href"]).to eq photo_album_node.full_url
+        end
       end
     end
   end

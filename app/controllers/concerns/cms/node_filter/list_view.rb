@@ -84,6 +84,10 @@ module Cms::NodeFilter::ListView
     @all_pages ||= SS::SortEmulator.new(pages, @cur_node.sort_hash)
   end
 
+  def replace_canonical(html, full_url)
+    html.sub(/<link rel="canonical" href=".+?">/) { view_context.tag.link(rel: "canonical", href: full_url) }
+  end
+
   public
 
   def index
@@ -143,6 +147,7 @@ module Cms::NodeFilter::ListView
         basename = "index.html"
       else
         basename = "index.p#{page_index + 1}.html"
+        html = replace_canonical(html, "#{@cur_node.full_url}#{basename}")
       end
 
       if Fs.write_data_if_modified("#{@cur_node.path}/#{basename}", html)

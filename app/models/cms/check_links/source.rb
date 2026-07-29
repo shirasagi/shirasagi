@@ -1,7 +1,7 @@
 class Cms::CheckLinks::Source
   include ActiveModel::Model
 
-  attr_accessor :full_url, :links, :referrers, :status, :elapsed
+  attr_accessor :full_url, :links, :referrers, :status, :elapsed, :canonical_url
   attr_reader :sequence
 
   def initialize(*args, **kwargs)

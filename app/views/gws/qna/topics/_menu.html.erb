@@ -13,12 +13,12 @@
 <% end %>
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <% if @mode != 'trash' %>
+    <% if @mode != 'trash' && @mode != 'readable' %>
       <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
         <%= link_to t('ss.links.new'), action: :new %>
       <% end %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|lock|categories|destroy_all/ %>
+  <% elsif params[:action] =~ /new|create|lock|categories|destroy_all|browsed_all/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete|move/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
@@ -35,7 +35,7 @@
       <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
         <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
       <% end %>
-      <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+      <% if @item.allowed?(:delete, @cur_user, site: @cur_site) && @mode != 'readable' %>
         <%= link_to t('ss.links.delete'), action: :soft_delete, id: @item %>
       <% end %>
       <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>

@@ -1,7 +1,10 @@
 <% actions = [] %>
 
 <%
-  if @model.allowed?(:delete, @cur_user, site: @cur_site)
+  if @mode == 'readable'
+    actions << ss_button_to(t('gws/faq.topic.unset_browsed'), url_for(action: :unset_browsed_all), class: "btn unset-browsed-all btn-list-head-action", method: "post", confirm: t('gws/faq.confirm.unset_browsed_all'))
+    actions << ss_button_to(t('gws/faq.topic.set_browsed'), url_for(action: :set_browsed_all), class: "btn set-browsed-all btn-list-head-action", method: "post", confirm: t('gws/faq.confirm.set_browsed_all'))
+  elsif @model.allowed?(:delete, @cur_user, site: @cur_site)
     actions << tag.div(class: "list-head-action-destroy") do
       if @mode == 'trash'
         ss_button_to(t("ss.links.delete"), "", class: "destroy-all btn btn-red btn-list-head-action", method: "delete", confirm: t('ss.confirm.hard_delete'))

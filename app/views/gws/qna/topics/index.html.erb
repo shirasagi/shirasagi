@@ -19,9 +19,7 @@
     <% @items.each do |item| %>
     <%
       css_classes = %w(list-item)
-      if item.subscribed_users.where(id: @cur_user.id).present?
-        css_classes << (item.browsed?(@cur_user) ? 'read' : 'unread')
-      end
+      css_classes << 'unread' unless item.browsed?(@cur_user)
       if item.severity.present?
         css_classes << item.severity
       end
@@ -34,7 +32,9 @@
           <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
         <% else %>
           <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <%= link_to t('ss.links.delete'), action: :soft_delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+          <% if @mode != 'readable' %>
+            <%= link_to t('ss.links.delete'), action: :soft_delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+          <% end %>
         <% end %>
 
         <% if item.try(:image) %>
@@ -52,6 +52,7 @@
         <div class="meta">
           <span class="id">#<%= item.id %></span>
           <span class="datetime"><%= ss_time_tag item.descendants_updated %></span>
+          <span class="seen"><%= item.browsed?(@cur_user) ? t('gws/qna.options.browsed_state.read') : t('gws/qna.options.browsed_state.unread') %></span>
           <span class="user"><%= gws_public_user_long_name(item.contributor_name.presence || item.user_long_name) %></span>
           <span class="categories">
             <% item.categories.compact.each do |category| %>

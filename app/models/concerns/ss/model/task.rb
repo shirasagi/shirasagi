@@ -331,7 +331,7 @@ module SS::Model::Task
     if !controller.is_a?(String)
       controller = controller.name.underscore.sub('_controller', '')
     end
-    SS::Agent.invoke_action(controller, action, params.merge(task: self))
+    SS::Agent.invoke_action(controller, action, nil, task: self, **params)
   end
 
   def performance

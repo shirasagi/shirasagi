@@ -1,4 +1,4 @@
-<% if !@item.browsed?(@cur_user) %>
+<% if !@item.browsed?(@cur_user) && params[:toggled].blank? %>
   <%= jquery do %>
     var formatDate = function(browsedAt) {
       var disp = 'YYYY/MM/DD hh:mm';

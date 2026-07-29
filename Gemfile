@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
-gem 'rails', '~> 8.0.0'
+gem 'rails', '~> 8.1.0'
 gem 'sprockets'
 gem 'jsbundling-rails'
 gem 'sprockets-rails' # Rails 7.1 以降では明示的な組み込みが必要
@@ -74,7 +74,7 @@ gem 'roo'
 gem 'rotp'
 gem 'rqrcode'
 gem 'rss'
-gem 'rubyzip', '~> 2.3.0'
+gem 'rubyzip', '~> 2.4.0'
 gem 'shortuuid'
 gem 'thinreports'
 gem 'ungarbled'
@@ -147,7 +147,6 @@ group :development, :test do
   gem 'selenium-webdriver', require: false
   gem 'simplecov', require: false
   gem 'simplecov-csv', require: false
-  gem 'simplecov-html', require: false
   gem 'simplecov-lcov', require: false
   gem 'test-queue', require: false
   gem 'timecop', require: false

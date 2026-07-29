@@ -20,6 +20,7 @@
 @use "workflow/gws" as gws_workflow;
 @use "notice/gws" as gws_notice;
 @use "share/gws" as gws_share;
+@use "share/file-icons" as gws_share_file_icons;
 @use "affair/gws" as gws_affair;
 @use "workload/gws" as gws_workload;
 @use "elasticsearch/gws" as gws_elasticsearch;

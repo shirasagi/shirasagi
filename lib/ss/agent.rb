@@ -1,7 +1,7 @@
 class SS::Agent
   attr_accessor :controller
 
-  def initialize(controller_or_name)
+  def initialize(controller_or_name, request_path)
     if controller_or_name.is_a?(String)
       controller = "#{controller_or_name}_controller".camelize.constantize
       controller_name = controller_or_name
@@ -12,7 +12,11 @@ class SS::Agent
     @controller_name = controller_name
     @controller = controller.new
     @controller.params   = ActionController::Parameters.new
-    @controller.request  = ActionDispatch::Request.new("rack.input" => "", "REQUEST_METHOD" => "GET")
+    @controller.request  = ActionDispatch::Request.new(
+      "rack.input" => "",
+      "REQUEST_METHOD" => "GET",
+      "PATH_INFO" => request_path
+    )
     @controller.response = ActionDispatch::Response.new.tap do |res|
       res.request = @controller.request
     end
@@ -22,8 +26,8 @@ class SS::Agent
   end
 
   class << self
-    def invoke_action(controller_name, action, variables)
-      agent = SS::Agent.new(controller_name) rescue nil
+    def invoke_action(controller_name, action, request_path, **variables)
+      agent = SS::Agent.new(controller_name, request_path) rescue nil
       return if agent.blank?
       return unless agent.controller.respond_to?(action)
 

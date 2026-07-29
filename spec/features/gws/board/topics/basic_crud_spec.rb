@@ -28,7 +28,8 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
     describe "#new" do
       it do
         Timecop.freeze(now) do
-          visit index_path
+          # 新規作成は閲覧一覧(readable)から除去したため、管理一覧(editable)で作成する
+          visit gws_board_topics_path(site, 'editable', '-')
           click_on I18n.t("ss.links.new")
           wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
           within_cbox do
@@ -142,7 +143,8 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
 
       describe "#soft_delete" do
         it do
-          visit index_path
+          # 削除ボタンは閲覧一覧(readable)から除去したため、管理一覧(editable)で操作する
+          visit gws_board_topics_path(site, 'editable', '-')
           click_on item.name
           within ".nav-menu" do
             click_on I18n.t("ss.links.delete")
@@ -270,7 +272,8 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
 
       describe "#soft_delete_all" do
         it do
-          visit index_path
+          # 削除ボタンは閲覧一覧(readable)から除去したため、管理一覧(editable)で操作する
+          visit gws_board_topics_path(site, 'editable', '-')
           within ".list-items" do
             first("input[value='#{item.id}']").click
           end

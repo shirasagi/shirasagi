@@ -52,6 +52,7 @@ class Cms::ContentLinkChecker
     extractor = Cms::CheckLinks::LinkExtractor.new(
       cur_site: cur_site, base_url: root_full_url, fragment: document)
     extractor.each do |link|
+      next if link.type == :canonical
       next if link.href == "#"
       next if extracted_urls[link.href]
 

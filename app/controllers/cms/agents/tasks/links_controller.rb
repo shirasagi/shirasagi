@@ -67,6 +67,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
         status: source.status,
         elapsed: source.elapsed
       }
+      json[:canonical_url] = source.canonical_url.to_s if source.canonical_url
       io.puts(json.to_json)
     end
 
@@ -275,6 +276,17 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     extractor.each do |link|
       if IGNORE_LINK_TYPES.include?(link.type)
         @extraction_log.add(source, link)
+        next
+      end
+      if link.type == :canonical
+        if source.full_url != link.full_url
+          @extraction_log.add(source, link, :canonical)
+          source.canonical_url = link.full_url
+
+          # link_source = Cms::CheckLinks::Source.new(full_url: link.full_url)
+          # @full_url_to_source[link_source.full_url.to_s] = link_source
+          # @queue << link_source
+        end
         next
       end
       if link.href[0] == "#"

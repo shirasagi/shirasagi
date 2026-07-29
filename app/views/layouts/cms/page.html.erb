@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8" />
 <title><%= @window_name %></title>
+<%= Cms.canonical_full_url(@cur_site, request).try { tag.link(rel: "canonical", href: _1) } %>
 <%= stylesheet_link_tag "cms/public", media: "all" %>
 <%= stylesheet_link_tag "jplayer", media: "all" %>
 <%= javascript_include_tag "cms/compat" %>

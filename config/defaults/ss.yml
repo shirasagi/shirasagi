@@ -84,6 +84,9 @@ production: &production
 
   dc_guard_timeout_millis: 5000
 
+  notice:
+    timeout_delay: 3600
+
 test:
   <<: *production
   disable: false

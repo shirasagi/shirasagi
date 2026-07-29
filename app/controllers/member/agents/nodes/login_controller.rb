@@ -106,6 +106,7 @@ class Member::Agents::Nodes::LoginController < ApplicationController
     unless request.post?
       @error = flash[:alert]
       flash[:ref] = params[:ref]
+      request.env["ss.canonical_path"] = @cur_node.url
       return
     end
 
@@ -113,6 +114,7 @@ class Member::Agents::Nodes::LoginController < ApplicationController
     member = Cms::Member.site(@cur_site).and_enabled.where(email: @item.email, password: SS::Crypto.crypt(@item.password)).first
     unless member
       @error = t "sns.errors.invalid_login"
+      request.env["ss.canonical_path"] = @cur_node.url
       return
     end
 
