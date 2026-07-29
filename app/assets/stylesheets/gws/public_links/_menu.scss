@@ -93,7 +93,12 @@ $gws-public-links-link-row-height: 37px;
       display: block;
     }
 
+    // The header wraps at this width, so the toggle no longer sits at the head's
+    // right edge. Stretch the panel across the whole head (left:0 + right:0) so
+    // the speech-bubble pointer on the toggle always lands on the panel, and so
+    // the panel does not shrink-to-fit (the boxes are sized in % of the panel).
     @include init.mb {
+      left: 0;
       width: auto;
       max-width: 100vw;
     }
