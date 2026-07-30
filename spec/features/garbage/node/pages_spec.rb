@@ -51,6 +51,7 @@ describe "garbage_node_pages", type: :feature, dbscope: :example, js: true do
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(current_path).to eq index_path
     end
 
