@@ -80,6 +80,10 @@ namespace :gws do
       ::Tasks::Gws::Es.feed_all_notices
     end
 
+    task feed_all_discussions: :environment do
+      ::Tasks::Gws::Es.feed_all_discussions
+    end
+
     namespace :ingest do
       task drop: :environment do
         ::Tasks::Gws::Es::Ingest.drop

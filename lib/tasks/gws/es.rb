@@ -113,8 +113,9 @@ module Tasks
           end
 
           %i[
-            feed_all_memos feed_all_boards feed_all_faqs feed_all_qnas feed_all_surveys feed_all_circulars
-            feed_all_monitors feed_all_reports feed_all_workflows feed_all_workflows2 feed_all_files feed_all_notices
+            feed_all_memos feed_all_boards feed_all_faqs feed_all_qnas feed_all_surveys
+            feed_all_circulars feed_all_monitors feed_all_reports feed_all_workflows
+            feed_all_workflows2 feed_all_files feed_all_notices feed_all_discussions
           ].each do |method|
             ::Tasks::Gws::Es.send(method)
           end
@@ -358,6 +359,33 @@ module Tasks
       #    job.perform_now(action: 'index', id: :all)
       #  end
       #end
+
+      def feed_all_discussions
+        ::Tasks::Gws::Base.with_site(ENV['site']) do |site|
+          if !site.menu_elasticsearch_visible?
+            puts 'elasticsearch was not enabled'
+            break
+          end
+
+          if site.elasticsearch_client.nil?
+            puts 'elasticsearch was not configured'
+            break
+          end
+
+          puts 'gws/discussion/topic and gws/discussion/post'
+          topic_ids = ::Gws::Discussion::Post.site(site).without_deleted.pluck(:topic_id).uniq
+          ::Tasks::Gws::Base.each_item(::Gws::Discussion::Topic.site(site).without_deleted.in(id: topic_ids)) do |topic|
+            puts "- #{topic.name}"
+            job = ::Gws::Elasticsearch::Indexer::DiscussionTopicJob.bind(site_id: site)
+            job.perform_now(action: 'index', id: topic.id.to_s)
+            ::Tasks::Gws::Base.each_item(topic.children.without_deleted) do |post|
+              puts "-- #{post.name}"
+              job = ::Gws::Elasticsearch::Indexer::DiscussionPostJob.bind(site_id: site)
+              job.perform_now(action: 'index', id: post.id.to_s)
+            end
+          end
+        end
+      end
 
       module Ingest
         module_function

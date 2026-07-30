@@ -16,6 +16,10 @@ class Gws::Discussion::Post
 
   validates :text, presence: true
 
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::DiscussionPostJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::DiscussionPostJob.callback
+
   def save_clone(new_forum, new_topic)
     item = self.class.new
     item.attributes = self.attributes.select { |k| self.fields.key?(k) }

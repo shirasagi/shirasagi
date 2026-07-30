@@ -89,3 +89,5 @@ en:
       gws/elasticsearch/indexer/workflow2_file_job: GWS Full-text search/Workflow2 Application data indexer
       gws/elasticsearch/indexer/notice_post_job: GWS Full-text search/Announcements indexer
       gws/elasticsearch/indexer/workload_work_job: GWS Full-text search/Workload works indexer
+      gws/elasticsearch/indexer/discussion_topic_job: GWS Full-text search/Discussion indexer
+      gws/elasticsearch/indexer/discussion_post_job: GWS Full-text search/Discussion indexer

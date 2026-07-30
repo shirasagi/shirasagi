@@ -89,3 +89,5 @@ ja:
       gws/elasticsearch/indexer/workflow2_file_job: GWS全文検索/ワークフロー2 申請データ インデクサー
       gws/elasticsearch/indexer/notice_post_job: GWS全文検索/お知らせインデクサー
       gws/elasticsearch/indexer/workload_work_job: GWS全文検索/担当業務インデクサー
+      gws/elasticsearch/indexer/discussion_topic_job: GWS全文検索/電子会議室インデクサー
+      gws/elasticsearch/indexer/discussion_post_job: GWS全文検索/電子会議室インデクサー

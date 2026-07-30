@@ -4,10 +4,10 @@ class Gws::Elasticsearch::Searcher
 
   DEFAULT_FIELD_NAME = 'text_index'.freeze
   WELL_KNOWN_TYPES = %w(
-    all notice board faq qna report workflow workflow_form workflow2 circular monitor survey share memo
+    all notice board faq qna discussion report workflow workflow_form workflow2 circular monitor survey share memo
   ).freeze
 
-  attr_accessor :setting, :index, :type, :field_name, :keyword, :from, :size
+  attr_accessor :setting, :index, :type, :field_name, :keyword, :from, :size, :sort
 
   permit_params :keyword
 
@@ -39,6 +39,16 @@ class Gws::Elasticsearch::Searcher
     @filters ||= setting.search_settings.map { |s| s.build_filter }
   end
 
+  def sort
+    @sort ||= 'default'
+  end
+
+  def sort_hash
+    return nil if sort.blank? || sort == "default"
+    field, order = sort.split("_")
+    { field => { "order" => order } }
+  end
+
   def search
     query = {}
     query[:bool] = {}
@@ -51,6 +61,7 @@ class Gws::Elasticsearch::Searcher
 
     search_params = { index: index, from: from, size: size, body: { query: query } }
     #search_params[:type] = type if type.present?
+    search_params[:body][:sort] = sort_hash if sort_hash.present?
 
     begin
       client.search(search_params)
