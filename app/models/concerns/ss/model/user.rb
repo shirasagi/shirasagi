@@ -258,7 +258,7 @@ module SS::Model::User
   end
 
   def tel_label
-    str = ""
+    str = +""
     str += "TEL:#{tel}" if tel.present?
     str += "(#{t(:tel_ext_short)}:#{tel_ext})" if tel_ext.present?
     str

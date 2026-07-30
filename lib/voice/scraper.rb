@@ -1,4 +1,4 @@
-require 'nokogiri'
+# frozen_string_literal: true
 
 class Voice::Scraper
   def initialize(config = {})
@@ -12,6 +12,7 @@ class Voice::Scraper
   def extract_text(html)
     # extract main chunk
     html = extract_body(html)
+    html = html.dup
 
     # delete unnecessary chunk
     if html =~ /<!--[^>]*?\s#{@skip_marks[0]}\s[^>]*?-->/i
@@ -59,7 +60,7 @@ class Voice::Scraper
     elsif html =~ /<\s*body[^>]*>(.*)<\/\s*body\s*>/im
       $1
     else
-      html.clone
+      html
     end
   end
 

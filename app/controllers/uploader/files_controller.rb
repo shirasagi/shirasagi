@@ -305,7 +305,7 @@ class Uploader::FilesController < ApplicationController
   end
 
   def check
-    message = ''
+    message = +''
     item_files = params[:item_files]
     original_filename = item_files.split('\\').last
     path = ::File.join(@cur_site.path, @item.filename, original_filename)

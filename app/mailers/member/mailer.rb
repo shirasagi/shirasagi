@@ -58,6 +58,7 @@ class Member::Mailer < ApplicationMailer
       sender: sender,
       recipent: recipent)
     return if body.blank?
+    body = body.dup if body.frozen?
     if node.group_invitation_signature.present?
       body << "\n"
       body << node.group_invitation_signature
@@ -80,6 +81,7 @@ class Member::Mailer < ApplicationMailer
       sender: sender,
       recipent: recipent)
     return if body.blank?
+    body = body.dup if body.frozen?
     if node.member_invitation_signature.present?
       body << "\n"
       body << node.member_invitation_signature

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SS::TreeList
   include Enumerable
 
@@ -40,7 +42,7 @@ class SS::TreeList
     private
 
     def part_order_array(items, item)
-      full_name = ""
+      full_name = +""
       item.name.split('/').map do |part|
         full_name << "/" if full_name.present?
         full_name << part

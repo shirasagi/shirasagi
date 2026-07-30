@@ -133,6 +133,10 @@ RSpec.configure do |config|
 
   config.after(:example) do |example|
     Rails.cache.clear if Rails.cache
+
+    # GWSのテスト後にCMSの公開画面のテストを実行するとロケールが英語になってしまいうまく行かない。
+    # テスト後にロケールをリセットする。
+    I18n.locale = I18n.default_locale
   end
 
   config.after(:example, type: :feature) do

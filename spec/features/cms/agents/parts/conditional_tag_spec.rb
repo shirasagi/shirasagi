@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Cms::PublicFilter::ConditionalTag, type: :feature, dbscope: :example do
@@ -6,27 +8,28 @@ describe Cms::PublicFilter::ConditionalTag, type: :feature, dbscope: :example do
   let!(:item) { create(:article_page, cur_site: site, cur_node: node, layout_id: layout.id) }
 
   context 'When upper_html have condition tags' do
-    html = ''
-    html << '<div class="condition">'
-    html << '#{if is_page()}'
-    html << '#{page_name}'
-    html << '#{elsif is_node()}'
-    html << '#{parent_name}'
-    html << '#{else}'
-    html << '<time>#{page_released.long}</time>'
-    html << '#{end}'
-    html << '</div>'
-    html << '<div class="condition">'
-    html << '#{if is_page(\'dummy\')}'
-    html << '#{parent_name}'
-    html << '#{end}'
-    html << "\#{if in_node('node')}"
-    html << '<p>in_node</p>'
-    html << '#{end}'
-    html << "\#{if has_pages()}"
-    html << '<p>has_pages</p>'
-    html << '#{end}'
-    html << '</div>'
+    html = <<~HTML
+      <div class="condition">
+        \#{if is_page()}
+          \#{page_name}
+        \#{elsif is_node()}
+          \#{parent_name}
+        \#{else}
+          <time>\#{page_released.long}</time>
+        \#{end}
+        </div>
+        <div class="condition">
+          \#{if is_page('dummy')}
+            \#{parent_name}
+          \#{end}
+          \#{if in_node('node')}
+            <p>in_node</p>
+          \#{end}
+          \#{if has_pages()}
+            <p>has_pages</p>
+          \#{end}
+      </div>
+    HTML
     let(:part) { create :cms_part_page, upper_html: html }
     let(:layout) { create_cms_layout [part] }
 
@@ -59,20 +62,20 @@ describe Cms::PublicFilter::ConditionalTag, type: :feature, dbscope: :example do
     let(:layout) { create_cms_layout }
 
     before do
-      html = []
-      html << '<html><body><br><br><br>'
-      html << '<div class="condition">'
-      html << '#{if is_page()}'
-      html << ' foo&#39;s manual'
-      html << '#{elsif is_node()}'
-      html << ' bar&#39;s manual'
-      html << '#{else}'
-      html << ' baz&#39;s manual'
-      html << '#{end}'
-      html << '</div>'
-      html << '</body></html>'
-
-      layout.html = html.join("\n")
+      html = <<~HTML
+        <html><body><br><br><br>
+        <div class="condition">
+          \#{if is_page()}
+            foo&#39;s manual
+          \#{elsif is_node()}
+            bar&#39;s manual
+          \#{else}
+            baz&#39;s manual
+          \#{end}
+        </div>
+        </body></html>
+      HTML
+      layout.html = html
       layout.save!
       FileUtils.rm_f(item.path)
     end

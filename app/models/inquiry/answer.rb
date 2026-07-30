@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Inquiry::Answer
   include SS::Document
   include SS::Reference::Site
@@ -5,7 +7,7 @@ class Inquiry::Answer
   include Inquiry::Addon::KintoneApp::Answer
   include Cms::Addon::GroupPermission
 
-  DEFAULT_STATE = "open".freeze
+  DEFAULT_STATE = "open"
 
   attr_accessor :cur_node, :save_mode, :section_ids
 
@@ -148,7 +150,7 @@ class Inquiry::Answer
   end
 
   def data_summary
-    summary = ""
+    summary = +""
     data.each do |d|
       summary << "#{d.value} "
     end

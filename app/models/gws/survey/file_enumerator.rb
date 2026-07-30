@@ -52,7 +52,7 @@ class Gws::Survey::FileEnumerator < Enumerator
         next
       end
 
-      term = ""
+      term = +""
       case column
       when Gws::Column::TextArea
         term << "#{column.prefix_label}\n" if column.prefix_label

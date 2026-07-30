@@ -4,8 +4,8 @@ class Cms::SyntaxChecker::Column::OrderOfHChecker
   attr_accessor :context, :contents
 
   def check
-    code_first = ''
-    code_skip = ''
+    code_first = +''
+    code_skip = +''
     first_content_for_first = nil
     first_content_for_skip = nil
     h_level_check = context.h_level_check

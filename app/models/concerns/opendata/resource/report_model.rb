@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Opendata::Resource::ReportModel
   extend ActiveSupport::Concern
   extend SS::Translation
@@ -9,7 +11,7 @@ module Opendata::Resource::ReportModel
   # 削除日が不明なレコードの deleted にセットされている日時
   UNCERTAIN_DELETED_TIME = Time.at(0).in_time_zone
 
-  DAY_COUNT_FIELDS = Array.new(31) { |i| "day#{i}_count".freeze }.freeze
+  DAY_COUNT_FIELDS = Array.new(31) { |i| "day#{i}_count" }.freeze
 
   included do
     index({ site_id: 1, year_month: 1 })
@@ -258,7 +260,7 @@ module Opendata::Resource::ReportModel
     end
 
     def format_name_with_id(item_id, item_name)
-      ret = ""
+      ret = +""
 
       if item_id.present?
         ret << "[#{item_id}]"

@@ -57,7 +57,9 @@ class Translate::Api::MicrosoftTranslator
       http.request(request)
     end
 
-    result = response.body.force_encoding("utf-8")
+    result = response.body
+                     .then { _1.frozen? ? _1.dup : _1 }
+                     .then { _1.force_encoding("utf-8") }
     json = JSON.parse(result)
 
     if response["x-metered-usage"].present?
