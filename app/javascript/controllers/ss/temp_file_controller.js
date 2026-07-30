@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
-import ejs from "ejs/ejs";
+import ejs from "ejs";
 import {prependChildren, csrfToken, dispatchEvent, LOADING} from "../../ss/tool";
 import i18next from 'i18next';
 import DropArea from "../../ss/drop_area";

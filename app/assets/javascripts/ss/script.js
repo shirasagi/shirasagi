@@ -106,7 +106,7 @@
 //= require cms/lib/michecker
 //= require cms/lib/condition_forms
 //= require ss/lib/usage
-//= require datatables.net/js/jquery.dataTables.js
+//= require datatables.net/js/dataTables.js
 
 //#
 //  $(".js-date").datetimepicker { lang: "ja", timepicker: false, format: "Y/m/d" }

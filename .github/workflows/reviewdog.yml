@@ -19,9 +19,9 @@ jobs:
         with:
           ruby-version: '3.4'
           bundler-cache: true
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
       - name: ruby -v
         run: ruby -v

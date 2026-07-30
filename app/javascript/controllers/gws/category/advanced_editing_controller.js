@@ -2,7 +2,7 @@ import {Controller} from "@hotwired/stimulus"
 import {smoothDnD} from 'smooth-dnd';
 import {dispatchEvent, objecToUrlSafeBase64, urlSafeBase64ToObject} from "../../../ss/tool";
 import Dialog from "../../../ss/dialog";
-import ejs from 'ejs/ejs';
+import ejs from 'ejs';
 
 const DEFAULT_OVERALL_OPERATOR = "all";
 const DEFAULT_INDIVIDUAL_OPERATOR = "all";
