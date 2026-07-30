@@ -194,9 +194,9 @@ module Opendata::Metadata::CsvImporter
                   error_dataset_names << dataset.name
                   error_metadata_dataset_ids << dataset.metadata_dataset_id
 
-                  @report_resource.add_error(message) if @report_resource.present?
+                  @report_resource&.add_error(message)
                 ensure
-                  @report_resource.save! if @report_resource.present?
+                  @report_resource&.save!
                 end
               end
 
@@ -210,9 +210,9 @@ module Opendata::Metadata::CsvImporter
               notice_body << "#{idx + 2}行目 #{dataset.name} : #{e.message}"
               error_dataset_names << dataset.name
 
-              @report_dataset.add_error(message) if @report_dataset.present?
+              @report_dataset&.add_error(message)
             ensure
-              @report_dataset.save! if @report_dataset.present?
+              @report_dataset&.save!
             end
           end
           put_log('[Import] finished')
