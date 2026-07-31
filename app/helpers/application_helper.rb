@@ -46,7 +46,7 @@ module ApplicationHelper
 
   def snip(str, opt = {})
     len = opt[:length] || 80
-    "#{str.to_s[0..len-1]}#{".." if str.to_s.size > len}".html_safe
+    "#{str.to_s[0..(len-1)]}#{".." if str.to_s.size > len}".html_safe
   end
 
   def sanitize_with(html, options = {})
