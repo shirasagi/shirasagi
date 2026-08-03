@@ -19,6 +19,8 @@ module Guide::Addon
       permit_params :remarks
       permit_params :order
 
+      validates :link_url, url: { absolute_path: true, allow_blank: true }
+
       template_variable_handler(:id, :template_variable_handler_name)
       template_variable_handler(:name, :template_variable_handler_name)
       template_variable_handler(:link_url, :template_variable_handler_name)

@@ -12,7 +12,7 @@ describe "guide_agents_nodes_guide", type: :feature, dbscope: :example, js: true
             <div class="procedure__wrap">
               <dl class="procedure item-{{item.id}}">
                 <dt>リンク URL</dt>
-                <dd><a href="{{item.link_url}}">{{item.link_url}}</a></dd>
+                <dd><a href="{{item.link_url | escape_once}}">{{item.link_url}}</a></dd>
                 <dt>実施場所</dt>
                 <dd>{{item.procedure_location}}</dd>
                 <dt>必要なもの</dt>
@@ -34,11 +34,13 @@ describe "guide_agents_nodes_guide", type: :feature, dbscope: :example, js: true
 
   let(:xss_text) { "xss-#{unique_id}" }
   let!(:procedure1) do
+    procedure = create(
+      :guide_procedure, cur_site: site, cur_node: node, name: "procedure1", id_name: "0.procedure1", order: 10)
+
     xss_link = %Q(#" onclick="console.log('#{xss_text}')" data-dummy=")
-    create(
-      :guide_procedure, cur_site: site, cur_node: node, name: "procedure1", id_name: "0.procedure1", order: 10,
-      link_url: xss_link
-    )
+    procedure.set(link_url: xss_link)
+
+    procedure
   end
   let!(:question1) do
     edges = [
