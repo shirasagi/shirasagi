@@ -80,8 +80,27 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
       expect(page).to have_css('td', text: column1.name)
       expect(page).to have_css('td', text: column2.name)
 
+      click_link I18n.t("ss.links.back")
+      expect(current_path).to eq page_path
+
+      within "[data-id='#{backup_item.id}']" do
+        click_link I18n.t('ss.links.show')
+      end
+      expect(current_path).not_to eq sns_login_path
+      expect(page).to have_css('th', text: page_item.t(:name))
+      expect(page).to have_css('th', text: page_item.t(:state))
+      expect(page).to have_css('th', text: page_item.t(:file_ids))
+      # expect(page).to have_css('th', text: page_item.t(:index_name))
+      # expect(page).to have_no_css('th', text: page_item.t(:column_values))
+      expect(page).to have_css('td', text: column1.name)
+      expect(page).to have_css('td', text: column2.name)
+
       click_link I18n.t('history.restore')
       expect(current_path).to eq restore_path
+      expect(page).to have_css('dd', text: I18n.l(page_item.updated))
+      expect(page).to have_css('dd', text: SS.version)
+      expect(page).to have_css('dd', text: I18n.l(backup_item.updated))
+      expect(page).to have_css('dd', text: backup_item.version)
 
       click_button I18n.t('history.buttons.restore')
       expect(current_path).to eq show_path

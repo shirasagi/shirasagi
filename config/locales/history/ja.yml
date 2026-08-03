@@ -5,6 +5,8 @@ ja:
     target: 操作対象
     action: アクション
     backup: バックアップ
+    current_data: 現在のデータ
+    backup_data: 復元するデータ
     current_version: 現在のバージョン
     backup_version: バックアップ時のバージョン
     compare_to_state_html: 比較した履歴%{version}
