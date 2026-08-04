@@ -59,15 +59,11 @@ this.SS_EditLock = (function () {
 
   SS_EditLock.prototype.releaseLock = function () {
     this.unloading = true;
-    $.ajax({
-      type: "POST",
-      url: this.unlock_url,
-      dataType: "json",
-      data: {
-        _method: "delete"
-      },
-      timeout: 5000
-    });
+    var token = $('meta[name="csrf-token"]').attr('content');
+    var data = new FormData();
+    data.append("authenticity_token", token);
+    data.append("_method", "delete");
+    navigator.sendBeacon(this.unlock_url, data)
   };
 
   SS_EditLock.prototype.releaseLockOnCancel = function () {
