@@ -1,7 +1,7 @@
 module Gws::ApiFilter
   extend ActiveSupport::Concern
   include Gws::BaseFilter
-  include SS::CrudFilter
+  include Gws::CrudFilter
   include SS::AjaxFilter
 
   private

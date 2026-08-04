@@ -1,7 +1,7 @@
 module Cms::ApiFilter
   extend ActiveSupport::Concern
   include Cms::BaseFilter
-  include SS::CrudFilter
+  include Cms::CrudFilter
   include SS::AjaxFilter
 
   private
