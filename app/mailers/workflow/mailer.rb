@@ -10,7 +10,7 @@ class Workflow::Mailer < ApplicationMailer
     @url       = make_full_url(args[:url])
     @comment   = args[:comment]
 
-    from_email = site_sender(@site) || Cms::DEFAULT_SENDER_ADDRESS
+    from_email = from_email(site: @site, user: @from_user)
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
@@ -35,7 +35,7 @@ class Workflow::Mailer < ApplicationMailer
     @subject   = "[#{I18n.t('workflow.mail.subject.approve')}]#{@page.name} - #{@site.name}"
     @url       = make_full_url(args[:url])
 
-    from_email = site_sender(@site) || Cms::DEFAULT_SENDER_ADDRESS
+    from_email = from_email(site: @site, user: @from_user)
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
@@ -61,7 +61,7 @@ class Workflow::Mailer < ApplicationMailer
     @url       = make_full_url(args[:url])
     @comment   = args[:comment]
 
-    from_email = site_sender(@site) || Cms::DEFAULT_SENDER_ADDRESS
+    from_email = from_email(site: @site, user: @from_user)
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
@@ -81,7 +81,7 @@ class Workflow::Mailer < ApplicationMailer
   def remind_mail(site:, page:, user:)
     @from_user = page.workflow_user
     @to_user   = user
-    from_email = site_sender(site) || Cms::DEFAULT_SENDER_ADDRESS
+    from_email = from_email(site: @site, user: @from_user)
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
@@ -105,6 +105,12 @@ class Workflow::Mailer < ApplicationMailer
   def site_sender(site)
     return if site.blank?
     site.sender_address
+  end
+
+  def from_email(site:, user:)
+    return format_email(user) if SS.config.workflow.enable_user_email_from
+
+    site_sender(site) || Cms::DEFAULT_SENDER_ADDRESS
   end
 
   def make_full_url(url)

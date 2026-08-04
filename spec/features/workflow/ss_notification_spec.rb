@@ -116,7 +116,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         expect(notifiction.group_id).to be_blank
         expect(notifiction.member_ids).to eq [ user1.id ]
         expect(notifiction.user_id).to eq cms_user.id
-        I18n.t("workflow.ss_notification.request.subject", name: "[#{site.name}][#{node.name}]「#{item.name}」").tap do |subject|
+        I18n.t("workflow.ss_notification.subject.request", name: "[#{site.name}][#{node.name}]「#{item.name}」").tap do |subject|
           expect(notifiction.subject).to eq subject
         end
         expect(notifiction.text).to be_blank

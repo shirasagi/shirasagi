@@ -51,10 +51,15 @@ class Workflow::PagesController < ApplicationController
     notification.format = "text"
     notification.url = url
     notification.send_date = Time.zone.now
+    name = []
+    name << "[#{@cur_site.name}]" if @cur_site.present?
+    name << "[#{@cur_node.name}]" if @cur_node.present?
+    name << "「#{@item.name}」" if @item.present?
+    name = name.join
 
     notification.subject = I18n.t(
-      "workflow.ss_notification.request.subject",
-      name: "[#{@cur_site.name}]#{"[#{@cur_node.name}]" if @cur_node.present?}「#{@item.name}」"
+      "workflow.ss_notification.subject.request",
+      name: name
     )
     unless notification.save
       Rails.logger.warn { notification.errors.full_messages.join("\n") }
@@ -279,12 +284,33 @@ class Workflow::PagesController < ApplicationController
 
     if @item.workflow_state == @model::WORKFLOW_STATE_APPROVE
       # finished workflow
-      url = merged ? @item.private_show_path : params[:url].to_s
+      url = @item.private_show_path
+      url ||= params[:url].to_s if Sys::TrustedUrlValidator.myself_url?(params[:url].to_s)
       Workflow::Mailer.send_approve_mails(
         f_uid: @cur_user._id, t_uids: [ @item.workflow_user_id ],
         site: @cur_site, page: @item,
         url: url, comment: params[:remand_comment]
       )
+
+      notification = SS::Notification.new
+      notification.cur_user = @cur_user
+      notification.member_ids = [@item.workflow_user_id]
+      notification.format = "text"
+      notification.url = url
+      notification.send_date = Time.zone.now
+      name = []
+      name << "[#{@cur_site.name}]" if @cur_site.present?
+      name << "[#{@cur_node.name}]" if @cur_node.present?
+      name << "「#{@item.name}」" if @item.present?
+      name = name.join
+
+      notification.subject = I18n.t(
+        "workflow.ss_notification.subject.approve",
+        name: name
+      )
+      unless notification.save
+        Rails.logger.warn { notification.errors.full_messages.join("\n") }
+      end
     end
 
     flash[:notice] = t("workflow.notice.approved")
@@ -316,6 +342,8 @@ class Workflow::PagesController < ApplicationController
 
     begin
       recipients = []
+      url = @item.private_show_path
+      url ||= params[:url].to_s if Sys::TrustedUrlValidator.myself_url?(params[:url].to_s)
       if @item.workflow_state == @model::WORKFLOW_STATE_REMAND
         recipients << @item.workflow_user_id
       else
@@ -326,8 +354,28 @@ class Workflow::PagesController < ApplicationController
       Workflow::Mailer.send_remand_mails(
         f_uid: @cur_user._id, t_uids: recipients,
         site: @cur_site, page: @item,
-        url: params[:url], comment: params[:remand_comment]
+        url: url, comment: params[:remand_comment]
       )
+
+      notification = SS::Notification.new
+      notification.cur_user = @cur_user
+      notification.member_ids = recipients
+      notification.format = "text"
+      notification.url = url
+      notification.send_date = Time.zone.now
+      name = []
+      name << "[#{@cur_site.name}]" if @cur_site.present?
+      name << "[#{@cur_node.name}]" if @cur_node.present?
+      name << "「#{@item.name}」" if @item.present?
+      name = name.join
+
+      notification.subject = I18n.t(
+        "workflow.ss_notification.subject.remand",
+        name: name
+      )
+      unless notification.save
+        Rails.logger.warn { notification.errors.full_messages.join("\n") }
+      end
     end
 
     flash[:notice] = t("workflow.notice.remanded")
