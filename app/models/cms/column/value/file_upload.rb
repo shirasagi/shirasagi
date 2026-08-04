@@ -12,6 +12,8 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   permit_values :file_id, :file_name, :file_label, :text, :image_html_type, :link_url
 
+  validates :link_url, url: { absolute_path: true, allow_blank: true }
+
   before_parent_save :before_save_file
   after_parent_destroy :destroy_file
 
@@ -21,7 +23,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     export :file_label
     export :text
     export :image_html_type
-    export :link_url
+    export :effective_link_url, as: :link_url
     export as: :file_type do
       column.try(:file_type)
     end
@@ -52,6 +54,12 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     return if file.owner_item_id != _parent.id
     return if file.owner_item_type != _parent.class.name
     file.remove_public_file
+  end
+
+  def effective_link_url
+    if link_url.present? && UrlValidator.valid?(link_url, absolute_path: true)
+      link_url
+    end
   end
 
   def import_csv(values)
@@ -288,10 +296,8 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     alt = file_label.presence.try { |l| ApplicationController.helpers.sanitize(l, tags: []) }
     alt ||= file.humanized_name
     html = ApplicationController.helpers.image_tag(file.url, alt: alt)
-    if link_url.present?
-      html = ApplicationController.helpers.link_to(link_url) do
-        html
-      end
+    if link_url.present? && UrlValidator.valid?(link_url, absolute_path: true)
+      html = ApplicationController.helpers.link_to(html, link_url)
     end
     html
   end
