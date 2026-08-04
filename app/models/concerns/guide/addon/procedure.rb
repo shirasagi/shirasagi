@@ -35,7 +35,7 @@ module Guide::Addon
         export :id
         export :name
         export :link_url do
-          if link_url.present? && valid?
+          if link_url.present? && UrlValidator.valid?(link_url, absolute_path: true)
             link_url # CGI.escapeHTML が欲しい場合は escape_once を組み合わせる
           end
         end
@@ -60,7 +60,7 @@ module Guide::Addon
     end
 
     def template_variable_handler_link(name, issuer)
-      if link_url.present? && valid?
+      if link_url.present? && UrlValidator.valid?(link_url, absolute_path: true)
         ApplicationController.helpers.link_to(self.name, link_url)
       else
         self.name
@@ -68,7 +68,7 @@ module Guide::Addon
     end
 
     def template_variable_handler_link_url(name, issuer)
-      if link_url.present? && valid?
+      if link_url.present? && UrlValidator.valid?(link_url, absolute_path: true)
         CGI.escapeHTML(link_url)
       end
     end
