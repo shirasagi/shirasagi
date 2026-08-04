@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "garbage_node_areas", type: :feature, dbscope: :example, js: true do
-  let(:site) { cms_site }
+  let!(:site) { cms_site }
 
   let!(:search_node) do
     create(
@@ -70,6 +70,7 @@ describe "garbage_node_areas", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: "modify"
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
     end
@@ -79,6 +80,7 @@ describe "garbage_node_areas", type: :feature, dbscope: :example, js: true do
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
 
     it "#download" do
@@ -107,6 +109,8 @@ describe "garbage_node_areas", type: :feature, dbscope: :example, js: true do
         fill_in "item[garbage_type][][view]", with: "毎週月曜日"
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t('ss.notice.saved')
+
       item.reload
       expect(item.garbage_type.length).to eq 1
       expect(page).to have_content item.garbage_type.first[:field]

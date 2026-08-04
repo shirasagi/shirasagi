@@ -10,7 +10,9 @@ const RAILS_ENV = process.env.RAILS_ENV || Config.environment.RAILS_ENV
 module.exports = {
   mode: RAILS_ENV === "production" ? "production" : "development",
   // see: https://webpack.js.org/configuration/devtool/
-  devtool: RAILS_ENV === "production" ? "source-map" : "eval-source-map",
+  devtool: [
+    { type: "all", use: RAILS_ENV === "production" ? "source-map" : "eval-source-map" }
+  ],
   entry: {
     application: "./app/javascript/application.js",
     choices: "./app/javascript/choices.js",
@@ -48,7 +50,7 @@ module.exports = {
   },
   output: {
     filename: "[name].js",
-    sourceMapFilename: "[name].js.map",
+    sourceMapFilename: "[file].map[query]",
     path: path.resolve(__dirname, "app/assets/builds"),
   },
   plugins: [
@@ -64,11 +66,17 @@ module.exports = {
       cleanOnceBeforeBuildPatterns: [ "**/*.js", "**/*.css" ]
     }),
     new RemoveEmptyScriptsPlugin(),
-    new webpack.SourceMapDevToolPlugin({
-      filename: '[name][ext].map'
-    }),
     new MiniCssExtractPlugin({
-      filename: '[name].css'
-    })
-  ]
+      filename: "[name].css"
+    }),
+    new webpack.NormalModuleReplacementPlugin(
+      /^node:/,
+      (resource) => { resource.request = resource.request.replace(/^node:/, ''); })
+  ],
+  resolve: {
+    fallback: {
+      fs: false,
+      path: false
+    }
+  }
 }
