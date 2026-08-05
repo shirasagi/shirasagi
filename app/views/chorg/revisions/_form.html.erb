@@ -2,10 +2,12 @@
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <% if @ss_mode == :gws %>
+  <% if @ss_mode == :gws && SS::UploadPolicy.upload_allowed? %>
     <dt><%= @model.t :revision_csv_file_id %><%= @model.tt :revision_csv_file_id %></dt>
     <dd><%= f.file_field :in_revision_csv_file %></dd>
-    <dd><%= link_to t("ss.links.download_sample_csv"), { action: :download_sample_csv } %></dd>
+    <% if SS::DownloadPolicy.download_allowed? %>
+      <dd><%= link_to t("ss.links.download_sample_csv"), { action: :download_sample_csv } %></dd>
+    <% end %>
   <% end %>
 
   <% if @model == ::Chorg::Revision %>

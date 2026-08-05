@@ -1,4 +1,4 @@
-<%= jquery do %>Gws_Discussion_Thread.render(<%= @cur_user.id %>);<% end %>
+<%= jquery do %>Gws_Discussion_Thread.render(<%= @cur_user.id %>, <%== { 'linkClass' => SS::DownloadPolicy.html_class }.to_json %>);<% end %>
 
 <div class="gws-discussion-topic">
   <h2><%= @forum.name %></h2>
@@ -52,7 +52,7 @@
             <% item.files.each do |file| %>
               <span id="file-<%= file.id %>">
                 <img src="/assets/img/gws/ic-file.png" alt="" />
-                <span><%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank', rel: "noopener" %></span>
+                <span><%= link_to file.humanized_name, file.url, class: "icon-#{file.extname} #{SS::DownloadPolicy.html_class}", target: '_blank', rel: "noopener" %></span>
                 <%= sanitizer_status(file) %>
               </span>
             <% end %>

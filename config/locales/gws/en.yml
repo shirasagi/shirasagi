@@ -91,6 +91,10 @@ en:
         user_occupation: Occupation
         email: E-mail address
         tel: Phone number
+      menu_state:
+        show: Show
+        show_if_ip_address_matched: Show if IP address matched
+        hide: Hide
 
     links:
       back_to_portal: Back to portal
@@ -415,6 +419,7 @@ en:
         menu_tabular_state: Display general purpose database
         menu_conf_label: Display site settings
         menu_conf_state: Display site settings
+        menu_display_ip_addresses: Menu display ip addresses
       gws/addon/system/notice_setting:
         notice_schedule_state: Schedule
         notice_todo_state: ToDo
@@ -588,6 +593,11 @@ en:
         - "When sending an e-mail from the system, the URL in the e-mail will be the domain set here."
       trash_threshold:
         - You can set the retention period for the trash can.
+    gws/addon/system/menu_setting:
+      menu_display_ip_addresses:
+        - Set the IP address of the access source from which you want to display a specific menu.
+        - To set multiple IP addresses, separate them with a new line.
+        - "You can also set network addresses such as \"192.168.10.0/24\" or \"192.168.10.0/255.255.255.0\"."
     gws/addon/group_permission:
       custom_group_ids:
         - Select the custom group allowed to edit.

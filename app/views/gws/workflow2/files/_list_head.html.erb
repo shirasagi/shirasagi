@@ -10,8 +10,10 @@
       <% end %>
       <% allow_unchecked = params[:state] == 'all' ? '' : 'allow-unchecked' %>
       <%= ss_button_to t("ss.links.delete"), url_for(action: :soft_delete_all), class: "soft-delete-all btn btn-list-head-action", method: "post", confirm: t('ss.confirm.soft_delete') %>
-      <%= ss_button_to t("ss.buttons.csv"), url_for(action: :download_all_comments), class: "btn btn-download btn-list-head-action #{allow_unchecked}", method: "post", confirm: t("ss.confirm.download") %>
-      <%= ss_button_to t("gws/survey.buttons.zip_all_files"), url_for(action: :download_all_attachments), class: "btn btn-download btn-list-head-action", method: "post", confirm: t("ss.confirm.download") %>
+      <% if SS::DownloadPolicy.download_allowed? %>
+        <%= ss_button_to t("ss.buttons.csv"), url_for(action: :download_all_comments), class: "btn btn-download btn-list-head-action #{allow_unchecked}", method: "post", confirm: t("ss.confirm.download") %>
+        <%= ss_button_to t("gws/survey.buttons.zip_all_files"), url_for(action: :download_all_attachments), class: "btn btn-download btn-list-head-action", method: "post", confirm: t("ss.confirm.download") %>
+      <% end %>
     </div>
   </div>
 

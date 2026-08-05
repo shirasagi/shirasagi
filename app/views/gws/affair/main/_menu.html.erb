@@ -5,10 +5,10 @@
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.new'), action: :new %>
     <% end %>
-    <% if @model.allowed?(:read, @cur_user, site: @cur_site) %>
+    <% if @model.allowed?(:read, @cur_user, site: @cur_site) && SS::DownloadPolicy.download_allowed? %>
       <%= link_to t('ss.links.download'), action: :download %>
     <% end %>
-    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && SS::UploadPolicy.upload_allowed? %>
       <%= link_to t('ss.links.import'), action: :import %>
     <% end %>
   <% elsif params[:action] =~ /new|create|lock|download|import/ %>

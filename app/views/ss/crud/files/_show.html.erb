@@ -23,8 +23,10 @@
   <dt><%= @model.t :geo_location %></dt>
   <dd><%= @item.geo_location %></dd>
 
-  <dt><%= @model.t :download %></dt>
-  <dd><%= link_to t('ss.links.download'), { action: :download }, { class: "btn" } %></dd>
+  <% if SS::DownloadPolicy.download_allowed? %>
+    <dt><%= @model.t :download %></dt>
+    <dd><%= link_to t('ss.links.download'), { action: :download }, { class: "btn" } %></dd>
+  <% end %>
 </dl>
 
 <%= jquery do %>

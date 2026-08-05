@@ -591,10 +591,17 @@ en:
       gws_use:
         disabled: Do not use
         enabled: Use
+      download_policy:
+        default_none: Default (unrestricted)
+        default_disallowed: Default (download disallowed)
+        disallowed: Download disallowed
+        none: Unrestricted
       upload_policy:
         default_none: Default (unrestricted)
+        default_disallowed: Default (upload disallowed)
         default_sanitizer: Default (sanitization)
         default_restricted: Default (upload denied)
+        disallowed: Upload disallowed
         sanitizer: Sanitization
         restricted: Upload denied
       sanitizer_state:
@@ -806,6 +813,7 @@ en:
         mypage_domain: My Page domain
         group_ids: Group
         domains_with_subdir: Domain with subdirectory
+        download_policy: Download restrictions
         upload_policy: Upload restrictions
       ss/model/user:
         name: Name
@@ -871,6 +879,7 @@ en:
         expiration_date: Validity period (end)
         domains: Domain
         gws_use: Use of groupware
+        download_policy: Download restrictions
         upload_policy: Upload restrictions
         path_id: Path ID
       ss/user_group_history:
@@ -1186,6 +1195,8 @@ en:
         state: State
   tooltip:
     ss/model/site:
+      download_policy:
+        - Set behavior when downloading files.
       upload_policy:
         - Set behavior when uploading files.
     ss/model/user:
@@ -1257,6 +1268,8 @@ en:
       gws_use:
         - Specifies whether groupware is used.
         - Groupware is used by default.
+      download_policy:
+        - Set behavior when downloading files.
       upload_policy:
         - Set behavior when uploading files.
       path_id:

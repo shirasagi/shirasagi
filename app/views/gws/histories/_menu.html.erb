@@ -1,6 +1,8 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <%= link_to t('ss.links.download'), url_for(action: :download) %>
+    <% if SS::DownloadPolicy.download_allowed? %>
+      <%= link_to t('ss.links.download'), url_for(action: :download) %>
+    <% end %>
   <% else %>
     <%= link_to t('ss.links.back_to_index'), url_for(action: :index) %>
   <% end %>

@@ -2,8 +2,12 @@
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.new'), url_for(action: :new) %>
-      <%= link_to t('ss.links.download'), url_for(action: :download_all) %>
-      <%= link_to t('ss.links.import'), url_for(action: :import) %>
+      <% if SS::DownloadPolicy.download_allowed? %>
+        <%= link_to t('ss.links.download'), url_for(action: :download_all) %>
+      <% end %>
+      <% if SS::UploadPolicy.upload_allowed? %>
+        <%= link_to t('ss.links.import'), url_for(action: :import) %>
+      <% end %>
     <% end %>
   <% elsif params[:action] =~ /new|create|destroy_all|download_all/ %>
     <%= link_to t('ss.links.back_to_index'), url_for(action: :index) %>
@@ -14,11 +18,17 @@
     <%= link_to t('ss.links.back_to_index'), url_for(action: :index) %>
   <% elsif params[:action] =~ /webmail_import/ %>
     <%= link_to t('ss.links.back'), url_for(action: :import) %>
-    <%= link_to t('ss.links.download'), url_for(action: :download_all, webmail_support: true) %>
+    <% if SS::DownloadPolicy.download_allowed? %>
+      <%= link_to t('ss.links.download'), url_for(action: :download_all, webmail_support: true) %>
+    <% end %>
   <% elsif params[:action] =~ /import/ %>
     <%= link_to t('ss.links.back_to_index'), url_for(action: :index) %>
-    <%= link_to t('ss.links.download'), url_for(action: :download_all) %>
-    <%= link_to t("gws.links.webmail_user_import"), url_for(action: :webmail_import) %>
+    <% if SS::DownloadPolicy.download_allowed? %>
+      <%= link_to t('ss.links.download'), url_for(action: :download_all) %>
+    <% end %>
+    <% if SS::UploadPolicy.upload_allowed? %>
+      <%= link_to t("gws.links.webmail_user_import"), url_for(action: :webmail_import) %>
+    <% end %>
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.edit'), url_for(action: :edit, id: @item) %>

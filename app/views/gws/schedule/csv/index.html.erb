@@ -12,17 +12,21 @@
           <%= f.hidden_field_tag "import_mode", "save" %>
           <%= f.file_field :in_file %>
         </dd>
-        <dd class="wide">
-          <%= link_to(t('ss.links.download_template'), { action: :download_template }, class: "download-csv-template") %>
-          (
-          <%= link_to("項目の解説", "#csv-description-body", class: "show-csv-description") %>
-          )
-        </dd>
+        <% if SS::DownloadPolicy.download_allowed? %>
+          <dd class="wide">
+            <%= link_to(t('ss.links.download_template'), { action: :download_template }, class: "download-csv-template") %>
+            (
+            <%= link_to("項目の解説", "#csv-description-body", class: "show-csv-description") %>
+            )
+          </dd>
+        <% end %>
       </dl>
 
       <footer class="send text-left">
-        <%= f.button t("ss.buttons.confirm"), class: 'btn-default import-confirm' %>
-        <%= f.submit t("ss.buttons.import"), class: 'save import-save', data: { confirm: t("ss.confirm.import"), disable_with: t("ss.buttons.importing") } %>
+        <% if SS::UploadPolicy.upload_allowed? %>
+          <%= f.button t("ss.buttons.confirm"), class: 'btn-default import-confirm' %>
+          <%= f.submit t("ss.buttons.import"), class: 'save import-save', data: { confirm: t("ss.confirm.import"), disable_with: t("ss.buttons.importing") } %>
+        <% end %>
       </footer>
     <% end %>
   <% end %>

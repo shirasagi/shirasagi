@@ -16,7 +16,7 @@ module Gws::Addon::System::MenuSetting
     define_menu_setting('attendance', 'modules.gws/attendance')
     define_menu_setting('bookmark', 'modules.gws/bookmark')
     define_menu_setting('memo', 'modules.gws/memo')
-    define_menu_setting('board','modules.gws/board')
+    define_menu_setting('board', 'modules.gws/board')
     define_menu_setting('faq', 'modules.gws/faq')
     define_menu_setting('qna', 'modules.gws/qna')
     define_menu_setting('workload', 'modules.gws/workload')
@@ -36,6 +36,10 @@ module Gws::Addon::System::MenuSetting
     define_menu_setting('elasticsearch', 'modules.gws/elasticsearch', default_state: 'hide')
     define_menu_setting('workflow', 'modules.gws/workflow', default_state: 'hide')
     define_menu_setting('conf', 'gws.site_config')
+
+    field :menu_display_ip_addresses, type: SS::Extensions::Lines
+    permit_params :menu_display_ip_addresses
+    validates :menu_display_ip_addresses, ip_address: true
   end
 
   module ClassMethods
@@ -52,17 +56,34 @@ module Gws::Addon::System::MenuSetting
       define_method("menu_#{name}_effective_label") do
         send("menu_#{name}_label").presence || send("menu_#{name}_default_label")
       end
-      define_method("menu_#{name}_visible?") do
-        menu_visible?(name)
+      define_method("menu_#{name}_visible?") do |request = nil|
+        menu_visible?(name, request)
       end
     end
   end
 
   def menu_state_options
-    %w(show hide).map { |k| [I18n.t("ss.options.state.#{k}"), k] }
+    %w(show show_if_ip_address_matched hide).map { |k| [I18n.t("gws.options.menu_state.#{k}"), k] }
   end
 
-  def menu_visible?(name)
+  def menu_visible?(name, request = nil)
+    if try("menu_#{name}_state") == 'show_if_ip_address_matched'
+      remote_addr = SS.remote_addr(request)
+
+      return true unless remote_addr
+
+      visible = menu_display_ip_addresses.any? do |addr|
+        next false if addr.blank? || addr.start_with?("#")
+
+        addr = IPAddr.new(addr) rescue nil
+        next false unless addr
+
+        addr.include?(remote_addr)
+      end
+
+      return visible
+    end
+
     try("menu_#{name}_state") != 'hide'
   end
 end

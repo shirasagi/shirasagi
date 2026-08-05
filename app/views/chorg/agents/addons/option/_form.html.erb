@@ -1,3 +1,5 @@
+<% return if SS::UploadPolicy.upload_disallowed? %>
+
 <dl class="see">
   <dt><%= @model.t :user_csv_file_id %><%= @model.tt :user_csv_file_id %></dt>
   <dd><%= f.file_field :in_user_csv_file %></dd>

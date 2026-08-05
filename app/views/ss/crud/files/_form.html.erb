@@ -1,13 +1,17 @@
 <dl class="see">
   <% if params[:action] =~ /new|create/ %>
-    <dt><%= @model.t :in_files %><span style="margin-left: 13px;"><%= @model.tt :in_files %></span></dt>
-    <dd>
-      <%= hidden_field_tag "item[files]" %>
-      <%= f.file_field :in_files, multiple: :multiple %>
-    </dd>
+    <% if SS::UploadPolicy.upload_allowed? %>
+      <dt><%= @model.t :in_files %><span style="margin-left: 13px;"><%= @model.tt :in_files %></span></dt>
+      <dd>
+        <%= hidden_field_tag "item[files]" %>
+        <%= f.file_field :in_files, multiple: :multiple %>
+      </dd>
+    <% end %>
   <% else %>
-    <dt><%= @model.t :in_file %><span style="margin-left: 13px;"><%= @model.tt :in_file %></span></dt>
-    <dd><%= f.file_field :in_file %></dd>
+    <% if SS::UploadPolicy.upload_allowed? %>
+      <dt><%= @model.t :in_file %><span style="margin-left: 13px;"><%= @model.tt :in_file %></span></dt>
+      <dd><%= f.file_field :in_file %></dd>
+    <% end %>
 
     <dt><%= @model.t :name %><%= @model.tt :name %></dt>
     <dd><%= f.text_field :name %></dd>

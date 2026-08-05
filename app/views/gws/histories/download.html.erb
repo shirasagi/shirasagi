@@ -35,7 +35,9 @@
     </section>
 
     <footer class="send">
-      <%= f.submit t("ss.download"), class: :save %>
+      <% if SS::DownloadPolicy.download_allowed? %>
+        <%= f.submit t("ss.download"), class: :save %>
+      <% end %>
       <%= f.button t("ss.buttons.cancel"), type: :reset, class: 'btn-default', onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
     </footer>
 <% end %>

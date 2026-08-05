@@ -1,3 +1,5 @@
 <nav class="nav-menu">
-  <%= link_to(t('ss.links.download'), url_for(action: :download, s: params.to_unsafe_h[:s]), method: :post) %>
+  <% if SS::DownloadPolicy.download_allowed? %>
+    <%= link_to(t('ss.links.download'), url_for(action: :download, s: params.to_unsafe_h[:s]), method: :post) %>
+  <% end %>
 </nav>

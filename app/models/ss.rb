@@ -163,6 +163,9 @@ module SS
 
   def remote_addr(request = nil)
     request ||= Rails.application.current_request
+
+    return unless request
+
     request.env["HTTP_X_REAL_IP"].presence || request.remote_addr
   end
 

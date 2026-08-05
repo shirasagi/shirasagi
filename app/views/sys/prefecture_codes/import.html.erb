@@ -5,16 +5,20 @@
     <header><h2><%= t "ss.import"%></h2></header>
 
     <dl class="see">
-      <dt><%= t "ss.file"%><%= @model.tt :in_file %></dt>
-      <dd>
-        <%= f.hidden_field "item[in_file]", value: "" %>
-        <%= f.file_field :in_file %>
-      </dd>
+      <% if SS::UploadPolicy.upload_allowed? %>
+        <dt><%= t "ss.file"%><%= @model.tt :in_file %></dt>
+        <dd>
+          <%= f.hidden_field "item[in_file]", value: "" %>
+          <%= f.file_field :in_file %>
+        </dd>
+      <% end %>
     </dl>
   </section>
 
   <footer class="send">
-    <%= f.submit t("ss.buttons.import"), class: :save, data: { disable_with: t("ss.buttons.importing") } %>
+    <% if SS::UploadPolicy.upload_allowed? %>
+      <%= f.submit t("ss.buttons.import"), class: :save, data: { disable_with: t("ss.buttons.importing") } %>
+    <% end %>
     <%= f.button t("ss.buttons.cancel"), onclick: "location.href='#{url_for(action: :index)}'; return false;", class: "btn btn-default" %>
   </footer>
 <% end %>

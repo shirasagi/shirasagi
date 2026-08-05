@@ -5,6 +5,8 @@
   <dt><%= @model.t :client_secret %><%= @model.tt :client_secret %></dt>
   <dd><%= f.text_field :in_client_secret %></dd>
 
-  <dt><%= @model.t :in_discovery_file %><%= @model.tt :in_discovery_file %></dt>
-  <dd><%= f.file_field :in_discovery_file %></dd>
+  <% if SS::UploadPolicy.upload_allowed? %>
+    <dt><%= @model.t :in_discovery_file %><%= @model.tt :in_discovery_file %></dt>
+    <dd><%= f.file_field :in_discovery_file %></dd>
+  <% end %>
 </dl>

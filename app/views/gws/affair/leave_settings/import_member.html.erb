@@ -13,18 +13,24 @@
           <% end %>
         </dd>
 
-        <dt><%= t "ss.file" %><%= @model.tt :in_file %></dt>
-        <dd>
-          <%= f.hidden_field "item[in_file]", value: "" %>
-          <%= f.file_field :in_file %>
-        </dd>
-        <dd><%= link_to t("gws/affair.links.download_member"), download_member_gws_affair_leave_settings_path %></dd>
+        <% if SS::UploadPolicy.upload_allowed? %>
+          <dt><%= t "ss.file" %><%= @model.tt :in_file %></dt>
+          <dd>
+            <%= f.hidden_field "item[in_file]", value: "" %>
+            <%= f.file_field :in_file %>
+          </dd>
+          <% if SS::DownloadPolicy.download_allowed? %>
+            <dd><%= link_to t("gws/affair.links.download_member"), download_member_gws_affair_leave_settings_path %></dd>
+          <% end %>
+        <% end %>
       </dl>
     </div>
   </section>
 
   <footer class="send">
-    <%= f.submit t("ss.import"), class: :save, data: { confirm: I18n.t("ss.confirm.import") } %>
+    <% if SS::UploadPolicy.upload_allowed? %>
+      <%= f.submit t("ss.import"), class: :save, data: { confirm: I18n.t("ss.confirm.import") } %>
+    <% end %>
     <%= f.button t("ss.buttons.cancel"), onclick: "location.href='#{gws_affair_capital_years_path}'; return false;", class: "btn-default" %>
   </footer>
 <% end %>

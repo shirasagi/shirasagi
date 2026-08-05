@@ -32,8 +32,10 @@
   <div class="main">
     <div class="head">
       <div class="operations">
-        <%= link_to t("gws/workload.links.work_csv"), url_for(action: :download_works), class: "btn btn-csv" %>
-        <%= link_to t("gws/workload.links.work_comment_csv"), url_for(action: :download_work_comments), class: "btn btn-csv" %>
+        <% if SS::DownloadPolicy.download_allowed? %>
+          <%= link_to t("gws/workload.links.work_csv"), url_for(action: :download_works), class: "btn btn-csv" %>
+          <%= link_to t("gws/workload.links.work_comment_csv"), url_for(action: :download_work_comments), class: "btn btn-csv" %>
+        <% end %>
       </div>
     </div>
     <div class="graphs">

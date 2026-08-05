@@ -5,7 +5,9 @@
   <dt><%= @model.t :filename %></dt>
   <dd>
     <%= @item.filename %>
-    <%= link_to(t('ss.links.download'), @item.url, class: :btn) %>
+    <% if SS::DownloadPolicy.download_allowed? %>
+      <%= link_to(t('ss.links.download'), @item.url, class: :btn) %>
+    <% end %>
   </dd>
 
   <dt><%= @model.t :size %></dt>
