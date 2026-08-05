@@ -1,7 +1,7 @@
 module Cms::ApiFilter
   extend ActiveSupport::Concern
   include Cms::BaseFilter
-  include Cms::CrudFilter
+  include SS::CrudFilter
   include SS::AjaxFilter
 
   private
@@ -14,6 +14,11 @@ module Cms::ApiFilter
     else
       raise e
     end
+  end
+
+  def set_items
+    @items ||= @model.site(@cur_site).
+      allow(:read, @cur_user, site: @cur_site)
   end
 
   public

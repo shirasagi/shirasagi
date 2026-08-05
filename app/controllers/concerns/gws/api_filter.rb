@@ -1,7 +1,7 @@
 module Gws::ApiFilter
   extend ActiveSupport::Concern
   include Gws::BaseFilter
-  include Gws::CrudFilter
+  include SS::CrudFilter
   include SS::AjaxFilter
 
   private
@@ -13,6 +13,16 @@ module Gws::ApiFilter
       end
     else
       raise e
+    end
+  end
+
+  def set_items
+    @items ||= begin
+      if @model.respond_to?(:site)
+        @model.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
+      else
+        @model.allow(:read, @cur_user, site: @cur_site)
+      end
     end
   end
 
