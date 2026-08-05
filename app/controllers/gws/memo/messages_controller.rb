@@ -1,6 +1,7 @@
 class Gws::Memo::MessagesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+
   helper Gws::Memo::MessageHelper
 
   model Gws::Memo::Message
@@ -459,5 +460,31 @@ class Gws::Memo::MessagesController < ApplicationController
       end
     }
     render json: resp.to_json
+  end
+
+  def download_attachment
+    set_item
+
+    files = @item.files
+    if files.blank?
+      redirect_to({ action: :show }, { notice: t("gws/workflow.notice.no_files") })
+      return
+    end
+
+    filename = "memo_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip"
+    name = "#{@item.name}.zip"
+    zip = Gws::Compressor.new(@cur_user, model: SS::File, items: files, filename: filename, name: name)
+    zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename, name: name)
+
+    if zip.deley_download?
+      job = Gws::CompressJob.bind(site_id: @cur_site, user_id: @cur_user)
+      job.perform_later(zip.serialize)
+
+      flash[:notice_options] = { timeout: 0 }
+      redirect_to({ action: :show }, { notice: zip.delay_message })
+    else
+      raise '500' unless zip.save
+      send_file(zip.path, type: zip.type, filename: zip.name, disposition: 'attachment', x_sendfile: true)
+    end
   end
 end

@@ -7,6 +7,8 @@ module Gws::Notice::ReadableFilter
     before_action :set_folder
     before_action :set_categories
     before_action :set_category
+    before_action :set_groups
+    before_action :set_group
     before_action :set_search_params
     before_action :set_items
   end
@@ -36,6 +38,15 @@ module Gws::Notice::ReadableFilter
     raise '403' unless @category.readable?(@cur_user) || @category.allowed?(:read, @cur_user, site: @cur_site)
   end
 
+  def set_groups
+    @groups ||= Gws::Group.active.site(@cur_site)
+  end
+
+  def set_group
+    return if params[:group_id].blank? || params[:group_id] == '-'
+    @group ||= @groups.where(id: @s[:group_id]).first
+  end
+
   def set_search_params
     @s = OpenStruct.new(params[:s])
     @s[:site] = @cur_site
@@ -45,6 +56,7 @@ module Gws::Notice::ReadableFilter
       @s[:folder_ids] += @folder.folders.for_post_reader(@cur_site, @cur_user).pluck(:id)
     end
     @s[:category_id] = @category.id if @category.present?
+    @s[:group_id] = @group.id if @group.present?
     @s[:browsed_state] = @cur_site.notice_browsed_state if @s[:browsed_state].nil?
     @s[:severity] = @cur_site.notice_severity if @s[:severity].nil?
   end
@@ -111,5 +123,31 @@ module Gws::Notice::ReadableFilter
 
   def print
     render template: "print", layout: 'ss/print'
+  end
+
+  def download_attachment
+    set_item
+
+    files = @item.files
+    if files.blank?
+      redirect_to({ action: :show }, { notice: t("gws/workflow.notice.no_files") })
+      return
+    end
+
+    filename = "notice_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip"
+    name = "#{@item.name}.zip"
+    zip = Gws::Compressor.new(@cur_user, model: SS::File, items: files, filename: filename, name: name)
+    zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename, name: name)
+
+    if zip.deley_download?
+      job = Gws::CompressJob.bind(site_id: @cur_site, user_id: @cur_user)
+      job.perform_later(zip.serialize)
+
+      flash[:notice_options] = { timeout: 0 }
+      redirect_to({ action: :show }, { notice: zip.delay_message })
+    else
+      raise '500' unless zip.save
+      send_file(zip.path, type: zip.type, filename: zip.name, disposition: 'attachment', x_sendfile: true)
+    end
   end
 end

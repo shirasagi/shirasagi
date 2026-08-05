@@ -39,6 +39,29 @@
   .action-thumb {
     display: none !important;
   }
+  .menu {
+    text-align: right;
+  }
+  .btn-download {
+    position: relative;
+    padding: 6px 12px 6px 31px;
+
+    &::before {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      font-family: "Material Icons Outlined";
+      font-size: 169%;
+      content: "\e2c4";
+      display: inline;
+      vertical-align: -3px;
+      transform: translateY(-50%);
+    }
+
+    &:hover {
+      opacity: .9;
+    }
+  }
 }
 
 .gws-list-item--deleted {

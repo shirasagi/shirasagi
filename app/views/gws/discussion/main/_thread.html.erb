@@ -31,6 +31,11 @@
       <% end %>
     </div>
     <% end %>
+    <div class="menu">
+      <% if topic.files.present? && SS::DownloadPolicy.download_allowed? %>
+        <%= link_to t("gws/notice.links.download_attachment"), download_attachment_path_proc.call(@forum, topic, topic), class: 'btn btn-download' %>
+      <% end %>
+    </div>
   </div>
 
   <% children = topic.children.reorder(id: 1) %>
@@ -73,6 +78,9 @@
       </div>
       <% end %>
       <div class="menu">
+        <% if comment.files.present? && SS::DownloadPolicy.download_allowed? %>
+          <%= link_to t("gws/notice.links.download_attachment"), download_attachment_path_proc.call(@forum, topic, comment), class: 'btn btn-download' %>
+        <% end %>
         <% if !topic.permanently? %>
           <% if comment.allowed?(:edit, @cur_user, site: @cur_site) %>
             <%= link_to t("ss.links.edit"), edit_path_proc.call(@forum, topic, comment), class: 'btn primary' %>
