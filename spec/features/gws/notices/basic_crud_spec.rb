@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_notices", type: :feature, dbscope: :example do
+describe "gws_notices", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:folder) { create(:gws_notice_folder) }
   let!(:item) { create :gws_notice_post, folder: folder }
@@ -53,6 +53,44 @@ describe "gws_notices", type: :feature, dbscope: :example do
       within "#content-navi-core" do
         expect(page).to have_css(".ss-tree-item", text: folder.name)
       end
+    end
+  end
+
+  context "edit public notice" do
+    let(:name) { "name-#{unique_id}" }
+
+    before do
+      expect(item.state).to eq "public"
+      login_gws_user
+    end
+
+    it do
+      visit gws_notice_main_path(site: site)
+      within ".current-navi" do
+        click_on I18n.t('ss.navi.editable')
+      end
+      within ".list-items" do
+        click_on item.name
+      end
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.edit")
+      end
+      within "form#item-form" do
+        fill_in "item[name]", with: name
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+
+      find("#addon-gws-agents-addons-history").click
+      scroll_to_bottom
+      wait_for_turbo_frame "#gws-addon-history-frame"
+      within "#addon-gws-agents-addons-history table tbody" do
+        expect(page.all("tr").count).to be >= 2
+      end
+
+      item.reload
+      expect(item.name).to eq name
+      expect(item.folder_id).to eq folder.id
     end
   end
 end

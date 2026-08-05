@@ -172,6 +172,13 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         expect(memo.text).to eq ""
       end
 
+      find("#addon-gws-agents-addons-history").click
+      scroll_to_bottom
+      wait_for_turbo_frame "#gws-addon-history-frame"
+      within "#addon-gws-agents-addons-history tbody tr:nth-child(1)" do
+        expect(page).to have_content( I18n.t("mongoid.attributes.workflow/approver.workflow_circulations"))
+      end
+
       #
       # user3: 申請を確認する
       #
