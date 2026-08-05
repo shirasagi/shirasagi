@@ -1,5 +1,27 @@
 @use "ss/init";
 
+.gws-presence-list-search {
+  form {
+    float: none;
+    >select {
+      margin-bottom: 5px;
+    }
+    .search-inner {
+      display: flex;
+      input[type="submit"] {
+        margin: 0 5px;
+      }
+      .limit {
+        margin-left: auto;
+        white-space: nowrap;
+      }
+    }
+    #s_keyword {
+      width: 100% !important;
+      max-width: 724px;
+    }
+  }
+}
 .presence-groups {
   .all-groups {
     margin-bottom: 5px;
@@ -65,8 +87,14 @@
     color: #f25a38;
     cursor: pointer;
   }
+  .lead-scroll {
+    margin-bottom: 10px;
+    padding: 0 10px;
+  }
   .data-table-wrap {
+    width: 100%;
     padding: 0 10px 10px;
+    overflow-x: auto;
   }
   table.data-table {
     table-layout: fixed;
@@ -157,6 +185,66 @@
     width: 100% !important;
     .portlet-title {
       display: flex;
+    }
+  }
+}
+.presence-user-search {
+  table.data-table {
+    width: 1220px;
+    table-layout: auto;
+    thead {
+      tr {
+        th {
+          white-space: nowrap;
+          /* 在籍状態 */
+          &:nth-child(1) {
+            width: 80px;
+          }
+          /* 備考 */
+          &:nth-child(2) {
+            width: 120px;
+          }
+          /* 役職（補職） */
+          &:nth-child(5) {
+            width: 60px;
+          }
+          /* 所属, 担当（係）名, 職員名, 職員名（カナ）, 内線番号, 所属部班（災害時） */
+          &:nth-child(3),
+          &:nth-child(4),
+          &:nth-child(6),
+          &:nth-child(7),
+          &:nth-child(8),
+          &:nth-child(9) {
+            width: 150px;
+          }
+          /* メッセージ */
+          &:nth-child(10) {
+            width: 60px;
+            text-align: center;
+          }
+        }
+      }
+    }
+    tbody {
+      tr {
+        td {
+          &:nth-child(1),
+          &:nth-child(10) {
+            text-align: center;
+          }
+          &:nth-child(10) {
+            a {
+              color: #000;
+              &:hover {
+                color: #f25a38;
+              }
+            }
+          }
+          .group-name {
+            width: 100%;
+          }
+        }
+      }
     }
   }
 }

@@ -6,10 +6,15 @@ en:
       register_reminder: Register reminders
     links:
       all_groups: All users
+    search:
+      group_id: Affiliation, group
+      title_id: Post
+      keyword: "Keyword : Manager name, staff name, staff kana, extension number, department"
 
   modules:
     gws/presence: Presence management
     gws/presence/users: Presence status
+    gws/presence/user_searches: Search
     gws/presence/management/users: Management
     addons:
       gws/presence/delegator_setting: Presence management
@@ -28,7 +33,14 @@ en:
         state: Status
         plan: Situation
         memo: Remarks
+        manager_name: Manager name
+        department: Department
         send_message: Message
+        presence_status: Presense status
+        affiliation: Affiliation
+        title_id: Post
+        staff_name: Staff name
+        staff_kana: Staff kana
         sync_available_state: Present
         sync_unavailable_state: Away
         sync_timecard_state: Timecard status

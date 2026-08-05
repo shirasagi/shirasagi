@@ -54,7 +54,35 @@ SS_Clipboard.renderCopy();
         <% end %>
       <% end %>
     </dd>
-  </dl>
+
+  <% user_presence = @item.user_presence(@cur_site) %>
+  <dt><%= user_presence.t :presence_status %></dt>
+  <dd>
+    <span class="presence-state <%= user_presence.state_style %>">
+      <%= user_presence.label :state %>
+    </span>
+  </dd>
+
+  <% if user_presence.plan.present? %>
+    <dt><%= user_presence.t :plan %></dt>
+    <dd><%= user_presence.plan %></dd>
+  <% end %>
+
+  <% if user_presence.memo.present? %>
+    <dt><%= user_presence.t :memo %></dt>
+    <dd><%= user_presence.memo %></dd>
+  <% end %>
+
+  <% if user_presence.manager_name.present? %>
+    <dt><%= user_presence.t :manager_name %></dt>
+    <dd><%= user_presence.manager_name %></dd>
+  <% end %>
+
+  <% if user_presence.department.present? %>
+    <dt><%= user_presence.t :department %></dt>
+    <dd><%= user_presence.department %></dd>
+  <% end %>
+</dl>
 
   <footer class="send">
     <%= button_tag t("ss.buttons.close"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>

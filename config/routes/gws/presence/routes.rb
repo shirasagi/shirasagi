@@ -15,6 +15,9 @@ Rails.application.routes.draw do
     namespace :custom_group, path: 'c-:group' do
       resources :users, only: [:index], concerns: [:portlet]
     end
+    resources :user_searches, only: [:index, :show] do
+      match :user_edit, on: :collection, via: %i[get put]
+    end
 
     namespace "apis" do
       resources :users, only: [:index, :show, :update] do

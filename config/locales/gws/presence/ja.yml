@@ -6,10 +6,15 @@ ja:
       register_reminder: リマインダーを登録
     links:
       all_groups: 全てのユーザー
+    search:
+      group_id: グループ（所属）
+      title_id: 役職
+      keyword: キーワード　：　担当（係）名、職員名、職員名（カナ）、内線番号、所属部班（災害時）など
 
   modules:
     gws/presence: 在席管理
     gws/presence/users: 在席状況
+    gws/presence/user_searches: 検索
     gws/presence/management/users: 管理
     addons:
       gws/presence/delegator_setting: 在席管理
@@ -28,7 +33,14 @@ ja:
         state: ステータス
         plan: 状況
         memo: 備考
+        manager_name: 担当（係）名
+        department: 所属部班（災害時）
         send_message: メッセージ
+        presence_status: 在席状態
+        affiliation: 所属
+        title_id: 役職（補職）
+        staff_name: 職員名
+        staff_kana: 職員名（カナ）
         sync_available_state: 在席
         sync_unavailable_state: 離席
         sync_timecard_state: タイムカードの打刻
