@@ -25,7 +25,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
     let(:node) { create(:article_node_page, cur_site: site, layout_id: layout.id) }
     let!(:item) do
       create(
-        :article_page, cur_site: site, cur_node: node, layout_id: layout.id, state: 'public', released_type: 'same_as_updated'
+        :article_page, cur_site: site, cur_node: node, layout_id: layout.id, state: 'closed', released_type: 'same_as_updated'
       )
     end
     let(:show_path) { article_page_path(site, node, item) }
@@ -39,6 +39,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
       #
       login_cms_user
       visit show_path
+      expect(SS::Notification.all.count).to eq 0
 
       within ".mod-workflow-request" do
         select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
@@ -55,12 +56,13 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
       end
 
       expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+      expect(SS::Notification.all.count).to eq 1
 
       item.reload
       expect(item.workflow_user_id).to eq cms_user.id
       expect(item.workflow_state).to eq "request"
-      expect(item.workflow_kind).to eq "closed"
-      expect(item.state).to eq "public"
+      expect(item.workflow_kind).to eq "public"
+      expect(item.state).to eq "closed"
       expect(item.workflow_comment).to eq workflow_comment
       expect(item.workflow_approvers.count).to eq 1
       expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
@@ -90,11 +92,12 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
       end
 
       expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
+      expect(SS::Notification.all.count).to eq 2
 
       item.reload
       expect(item.workflow_state).to eq "approve"
-      expect(item.workflow_kind).to eq "closed"
-      expect(item.state).to eq "closed"
+      expect(item.workflow_kind).to eq "public"
+      expect(item.state).to eq "public"
       expect(item.workflow_approvers).to include({
         level: 1, user_id: user1.id, editable: '', state: 'approve',
         comment: approve_comment1, file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
@@ -110,6 +113,44 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
         expect(mail.body.multipart?).to be_falsey
         expect(mail_body(mail)).to include(item.name)
+      end
+
+      SS::Notification.all.first.tap do |notifiction|
+        expect(notifiction.group_id).to be_blank
+        expect(notifiction.member_ids).to eq [ cms_user.id ]
+        expect(notifiction.user_id).to eq user1.id
+        I18n.t("workflow.ss_notification.subject.approve", name: "[#{site.name}][#{node.name}]「#{item.name}」").tap do |subject|
+          expect(notifiction.subject).to eq subject
+        end
+        expect(notifiction.text).to be_blank
+        expect(notifiction.html).to be_blank
+        expect(notifiction.format).to eq "text"
+        expect(notifiction.user_settings).to be_blank
+        expect(notifiction.state).to eq "public"
+        expect(notifiction.send_date).to be_present
+        expect(notifiction.url).to eq show_path
+        expect(notifiction.reply_module).to be_blank
+        expect(notifiction.reply_model).to be_blank
+        expect(notifiction.reply_item_id).to be_blank
+      end
+
+      SS::Notification.all.last.tap do |notifiction|
+        expect(notifiction.group_id).to be_blank
+        expect(notifiction.member_ids).to eq [ user1.id ]
+        expect(notifiction.user_id).to eq cms_user.id
+        I18n.t("workflow.ss_notification.subject.request", name: "[#{site.name}][#{node.name}]「#{item.name}」").tap do |subject|
+          expect(notifiction.subject).to eq subject
+        end
+        expect(notifiction.text).to be_blank
+        expect(notifiction.html).to be_blank
+        expect(notifiction.format).to eq "text"
+        expect(notifiction.user_settings).to be_blank
+        expect(notifiction.state).to eq "public"
+        expect(notifiction.send_date).to be_present
+        expect(notifiction.url).to eq show_path
+        expect(notifiction.reply_module).to be_blank
+        expect(notifiction.reply_model).to be_blank
+        expect(notifiction.reply_item_id).to be_blank
       end
     end
   end

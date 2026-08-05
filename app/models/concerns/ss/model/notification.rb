@@ -87,6 +87,10 @@ module SS::Model::Notification
     member_include?(user)
   end
 
+  def allowed?(action, user, opts = {})
+    readable?(user, opts = {})
+  end
+
   def destroy_from_member(user)
     self.member_ids = (member_ids - [user.id]).select(&:present?)
     if member_ids.blank?
@@ -114,6 +118,10 @@ module SS::Model::Notification
 
     def unseens(user, opts = {})
       criteria.member(user).unseen(user)
+    end
+
+    def allow(action, user, opts = {})
+      criteria.member(user).undeleted(user)
     end
 
     def search(params = {})
