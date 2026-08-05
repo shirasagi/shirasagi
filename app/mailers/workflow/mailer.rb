@@ -81,11 +81,11 @@ class Workflow::Mailer < ApplicationMailer
   def remind_mail(site:, page:, user:)
     @from_user = page.workflow_user
     @to_user   = user
+    @site = site
     from_email = from_email(site: @site, user: @from_user)
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
-    @site = site
     @page = page
     mail from: from_email, to: to_email, message_id: Cms.generate_message_id(site)
   end
@@ -108,7 +108,10 @@ class Workflow::Mailer < ApplicationMailer
   end
 
   def from_email(site:, user:)
-    return format_email(user) if SS.config.workflow.enable_user_email_from
+    if SS.config.workflow.enable_user_email_from
+      email = format_email(user)
+      return email if email.present?
+    end
 
     site_sender(site) || Cms::DEFAULT_SENDER_ADDRESS
   end

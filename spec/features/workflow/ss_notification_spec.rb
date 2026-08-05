@@ -9,8 +9,11 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
   let!(:user1) { create(:cms_test_user, group_ids: group_ids, cms_role_ids: role_ids) }
   let(:workflow_comment) { unique_id }
   let(:approve_comment1) { unique_id }
+  let(:sender_email) { "#{unique_id}@example.jp" }
 
   before do
+    site.sender_email = sender_email
+    site.save!
     ActionMailer::Base.deliveries = []
   end
 
@@ -69,7 +72,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
       expect(Sys::MailLog.count).to eq 1
       expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
       ActionMailer::Base.deliveries.last.tap do |mail|
-        expect(mail.from.first).to eq cms_user.email
+        expect(mail.from.first).to eq sender_email
         expect(mail.to.first).to eq user1.email
         expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
         expect(mail.body.multipart?).to be_falsey
@@ -89,7 +92,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
       end
 
       expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
-      expect(SS::Notification.all.count).to eq 1
+      expect(SS::Notification.all.count).to eq 2
 
       item.reload
       expect(item.workflow_state).to eq "approve"
@@ -105,7 +108,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
       expect(Sys::MailLog.count).to eq 2
       expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
       ActionMailer::Base.deliveries.last.tap do |mail|
-        expect(mail.from.first).to eq user1.email
+        expect(mail.from.first).to eq sender_email
         expect(mail.to.first).to eq cms_user.email
         expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
         expect(mail.body.multipart?).to be_falsey
@@ -113,6 +116,25 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
       end
 
       SS::Notification.all.first.tap do |notifiction|
+        expect(notifiction.group_id).to be_blank
+        expect(notifiction.member_ids).to eq [ cms_user.id ]
+        expect(notifiction.user_id).to eq user1.id
+        I18n.t("workflow.ss_notification.subject.approve", name: "[#{site.name}][#{node.name}]「#{item.name}」").tap do |subject|
+          expect(notifiction.subject).to eq subject
+        end
+        expect(notifiction.text).to be_blank
+        expect(notifiction.html).to be_blank
+        expect(notifiction.format).to eq "text"
+        expect(notifiction.user_settings).to be_blank
+        expect(notifiction.state).to eq "public"
+        expect(notifiction.send_date).to be_present
+        expect(notifiction.url).to eq show_path
+        expect(notifiction.reply_module).to be_blank
+        expect(notifiction.reply_model).to be_blank
+        expect(notifiction.reply_item_id).to be_blank
+      end
+
+      SS::Notification.all.last.tap do |notifiction|
         expect(notifiction.group_id).to be_blank
         expect(notifiction.member_ids).to eq [ user1.id ]
         expect(notifiction.user_id).to eq cms_user.id
