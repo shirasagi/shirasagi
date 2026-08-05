@@ -8,6 +8,11 @@ class Opendata::Metadata::Importer::ReportsController < ApplicationController
 
   private
 
+  def set_items
+    @items ||= @model.site(@cur_site).
+      allow(:read, @cur_user, site: @cur_site, node: @cur_node)
+  end
+
   def st_categories
     @cur_node.st_categories.presence || @cur_node.default_st_categories
   end

@@ -44,8 +44,8 @@ describe "public_entity", type: :feature, dbscope: :example, js: true do
   let(:resource) do
     dataset.resources.new(
       attributes_for(
-        :opendata_resource, license_id: license.id, metadata_file_access_url: unique_id,
-        metadata_file_download_url: unique_id,
+        :opendata_resource, license_id: license.id, metadata_file_id: unique_id,
+        metadata_file_access_url: unique_id, metadata_file_download_url: unique_id,
         metadata_imported_attributes: { 'ファイル_サイズ': unique_id },
         metadata_file_terms_of_service: unique_id, metadata_file_related_document: unique_id,
         metadata_file_follow_standards: unique_id, metadata_file_copyright: unique_id
@@ -101,22 +101,23 @@ describe "public_entity", type: :feature, dbscope: :example, js: true do
           expect(row[25]).to eq dataset.metadata_dataset_contact_form_url
           expect(row[26]).to eq dataset.metadata_dataset_contact_remark
           expect(row[27]).to eq dataset.metadata_dataset_remark
-          expect(row[28]).to eq resource.name
-          expect(row[29]).to eq resource.metadata_file_access_url
-          expect(row[30]).to eq resource.metadata_file_download_url
-          expect(row[31]).to eq resource.text
-          expect(row[32]).to eq resource.format
-          expect(row[33]).to eq license.name
-          expect(row[34]).to eq '配信中'
-          expect(row[35]).to eq resource.metadata_imported_attributes['ファイル_サイズ']
-          expect(row[36]).to eq resource.created.strftime("%Y-%m-%d")
-          expect(row[37]).to eq resource.updated.strftime("%Y-%m-%d")
-          expect(row[38]).to eq resource.metadata_file_terms_of_service
-          expect(row[39]).to eq resource.metadata_file_related_document
-          expect(row[40]).to eq I18n.locale.to_s
-          expect(row[41]).to eq resource.metadata_file_follow_standards
-          expect(row[42]).to eq dataset.label(:api_state)
-          expect(row[43]).to eq resource.metadata_file_copyright
+          expect(row[28]).to eq resource.metadata_file_id
+          expect(row[29]).to eq resource.name
+          expect(row[30]).to eq resource.metadata_file_access_url
+          expect(row[31]).to eq resource.metadata_file_download_url
+          expect(row[32]).to eq resource.text
+          expect(row[33]).to eq resource.format
+          expect(row[34]).to eq license.name
+          expect(row[35]).to eq '配信中'
+          expect(row[36]).to eq resource.metadata_imported_attributes['ファイル_サイズ']
+          expect(row[37]).to eq resource.created.strftime("%Y-%m-%d")
+          expect(row[38]).to eq resource.updated.strftime("%Y-%m-%d")
+          expect(row[39]).to eq resource.metadata_file_terms_of_service
+          expect(row[40]).to eq resource.metadata_file_related_document
+          expect(row[41]).to eq I18n.locale.to_s
+          expect(row[42]).to eq resource.metadata_file_follow_standards
+          expect(row[43]).to eq dataset.label(:api_state)
+          expect(row[44]).to eq resource.metadata_file_copyright
         end
       end
     end
