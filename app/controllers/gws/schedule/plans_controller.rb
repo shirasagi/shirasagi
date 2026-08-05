@@ -46,14 +46,30 @@ class Gws::Schedule::PlansController < ApplicationController
   end
 
   def download
+    @s ||= OpenStruct.new(params[:s])
+    @s[:encoding] ||= 'UTF-8'
+    @s[:period] ||= 'period'
+    @s[:start_at] ||= Time.zone.now.beginning_of_month
+    @s[:end_at] ||= Time.zone.now.end_of_month
+
+    if request.get? || request.head?
+      return
+    end
+
     # @items = Gws::Schedule::Plan.site(@cur_site).
     #   member(@cur_user).
     #   search(params[:s])
 
+    safe_params = params.require(:s).permit(:encoding, :period, :start_at, :end_at)
+    encoding = safe_params[:encoding]
+    if safe_params[:period] == 'period'
+      @items = @items.gte(end_at: safe_params[:start_at]) if safe_params[:start_at].present?
+      @items = @items.lte(start_at: safe_params[:end_at]) if safe_params[:end_at].present?
+    end
     filename = "gws_schedule_plans_#{Time.zone.now.to_i}.csv"
     response.status = 200
     send_enum(
-      Gws::Schedule::PlanCsv::Exporter.enum_csv(@items, site: @cur_site, user: @cur_user, truncate: true),
+      Gws::Schedule::PlanCsv::Exporter.enum_csv(@items, site: @cur_site, user: @cur_user, encoding: encoding, truncate: true),
       type: 'text/csv; charset=Shift_JIS', filename: filename
     )
   end

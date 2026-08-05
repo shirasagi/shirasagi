@@ -37,12 +37,16 @@ Rails.application.routes.draw do
 
     # get '/' => redirect { |p, req| "#{req.path}/plans" }, as: :main
     get '/', to: "main#index", as: :main
-    resources :plans, concerns: [:plans, :export], except: [:destroy]
+    resources :plans, concerns: [:plans, :export], except: [:destroy] do
+      get :download, on: :collection
+    end
     resources :list_plans, concerns: :plans
     resources :user_plans, path: 'users/:user/plans', concerns: :plans
     resources :group_plans, path: 'groups/:group/plans', concerns: :plans
     resources :custom_group_plans, path: 'custom_groups/:group/plans', concerns: :plans
-    resources :facility_plans, path: 'facilities/:facility/plans', concerns: [:plans, :export]
+    resources :facility_plans, path: 'facilities/:facility/plans', concerns: [:plans, :export] do
+      get :download, on: :collection
+    end
     resources :facility_approval_plans, path: 'facilities/approval_plans' do
       match :soft_delete, on: :member, via: [:get, :post]
       post :soft_delete_all, on: :collection
