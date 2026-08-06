@@ -68,6 +68,7 @@ class Gws::Elasticsearch::Searcher
     rescue Elastic::Transport::Transport::Errors::BadRequest
       query[:bool][:must] = { simple_query_string: { query: keyword, fields: [field_name], default_operator: 'AND' } }
       search_params = { index: index, from: from, size: size, body: { query: query } }
+      search_params[:body][:sort] = sort_hash if sort_hash.present?
       client.search(search_params)
     end
   end

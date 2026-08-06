@@ -18,12 +18,4 @@ class Gws::Elasticsearch::Setting::Discussion
 
     super
   end
-
-  def translate_category(es_type, cate_name, opts = {})
-    @categories ||= Gws::Discussion::Category.site(cur_site).to_a
-    cate = @categories.find { |cate| cate.name == cate_name }
-    return if cate.blank?
-
-    [ cate, url_helpers.gws_discussion_topics_path(site: cur_site, mode: '-', category: cate) ]
-  end
 end

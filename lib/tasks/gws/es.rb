@@ -373,17 +373,8 @@ module Tasks
           end
 
           puts 'gws/discussion/topic and gws/discussion/post'
-          topic_ids = ::Gws::Discussion::Post.site(site).without_deleted.pluck(:topic_id).uniq
-          ::Tasks::Gws::Base.each_item(::Gws::Discussion::Topic.site(site).without_deleted.in(id: topic_ids)) do |topic|
-            puts "- #{topic.name}"
-            job = ::Gws::Elasticsearch::Indexer::DiscussionTopicJob.bind(site_id: site)
-            job.perform_now(action: 'index', id: topic.id.to_s)
-            ::Tasks::Gws::Base.each_item(topic.children.without_deleted) do |post|
-              puts "-- #{post.name}"
-              job = ::Gws::Elasticsearch::Indexer::DiscussionPostJob.bind(site_id: site)
-              job.perform_now(action: 'index', id: post.id.to_s)
-            end
-          end
+          job = ::Gws::Elasticsearch::Indexer::DiscussionTopicJob.bind(site_id: site)
+          job.perform_now(action: 'index', id: :all)
         end
       end
 
