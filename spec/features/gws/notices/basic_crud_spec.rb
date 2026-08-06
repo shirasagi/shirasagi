@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_notices", type: :feature, dbscope: :example, js: true do
+describe "gws_notices", type: :feature, dbscope: :example do
   let(:site) { gws_site }
   let(:folder) { create(:gws_notice_folder) }
   let!(:item) { create :gws_notice_post, folder: folder }
@@ -56,7 +56,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
     end
   end
 
-  context "edit public notice" do
+  context "edit public notice", js: true do
     let(:name) { "name-#{unique_id}" }
 
     before do
