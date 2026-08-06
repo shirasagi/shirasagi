@@ -197,6 +197,12 @@ class Gws::Schedule::PlanCsv::Importer
   end
 
   def define_importer_schedule_approval(drawer)
+    drawer.simple_column :approval_state do |row, item, head, value|
+      next unless item.allowed?(:import_approval, @cur_user, site: @cur_site)
+
+      approval_state = I18n.t('gws/schedule.views').find { |k, v| v == value }.try(:first)
+      item.approval_state = approval_state
+    end
     drawer.simple_column :approval_member_ids do |row, item, head, value|
       uid_or_emails = to_array(value)
 
