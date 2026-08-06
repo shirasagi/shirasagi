@@ -51,7 +51,7 @@ describe "guide_agents_nodes_guide", type: :feature, dbscope: :example, js: true
       procedure = create(
         :guide_procedure, cur_site: site, cur_node: node, name: "procedure1", id_name: "0.procedure1", order: 10)
 
-      xss_link = %Q(#" onclick="console.log('#{xss_text}')" data-dummy=")
+      xss_link = %(#" onclick="console.log('#{xss_text}')" data-dummy=")
       procedure.set(link_url: xss_link)
 
       procedure

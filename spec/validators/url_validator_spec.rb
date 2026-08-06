@@ -5,6 +5,7 @@ describe UrlValidator, type: :validator do
     let!(:clazz) do
       Struct.new(:url) do
         include ActiveModel::Validations
+
         def self.model_name
           ActiveModel::Name.new(self, nil, "temp")
         end
@@ -45,6 +46,7 @@ describe UrlValidator, type: :validator do
     let!(:clazz) do
       Struct.new(:url) do
         include ActiveModel::Validations
+
         def self.model_name
           ActiveModel::Name.new(self, nil, "temp")
         end
@@ -75,6 +77,7 @@ describe UrlValidator, type: :validator do
     let!(:clazz) do
       Struct.new(:url) do
         include ActiveModel::Validations
+
         def self.model_name
           ActiveModel::Name.new(self, nil, "temp")
         end
@@ -119,7 +122,7 @@ describe UrlValidator, type: :validator do
     end
 
     context 'with xss' do
-      subject! { clazz.new(%Q(#" onclick="console.log('xss')" data-dummy=")) }
+      subject! { clazz.new(%(#" onclick="console.log('xss')" data-dummy=")) }
 
       it do
         expect(subject).to be_invalid

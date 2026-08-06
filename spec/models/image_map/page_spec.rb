@@ -17,7 +17,7 @@ describe ImageMap::Page, type: :model, dbscope: :example do
     end
 
     context "xss #2" do
-      let(:xss_link) { %Q(#" onclick="console.log('xss')" data-dummy=") }
+      let(:xss_link) { %(#" onclick="console.log('xss')" data-dummy=") }
       subject { build(:image_map_page, cur_site: site, cur_node: node, link_url: xss_link) }
 
       it do

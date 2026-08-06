@@ -17,7 +17,7 @@ describe Guide::Procedure, type: :model, dbscope: :example do
     end
 
     context "xss #2" do
-      let(:xss_link) { %Q(#" onclick="console.log('xss')" data-dummy=") }
+      let(:xss_link) { %(#" onclick="console.log('xss')" data-dummy=") }
       subject { build(:guide_procedure, cur_site: site, cur_node: node, link_url: xss_link) }
 
       it do
@@ -37,7 +37,7 @@ describe Guide::Procedure, type: :model, dbscope: :example do
         expect(subject.id).to eq item1.id
         expect(subject.name).to eq item1.name
         expect(subject.link_url).to eq item1.link_url
-        expect(subject.link).to eq %Q(<a href="#{item1.link_url}">#{item1.name}</a>)
+        expect(subject.link).to eq %(<a href="#{item1.link_url}">#{item1.name}</a>)
         expect(subject.html).to eq item1.html
         expect(subject.procedure_location).to eq item1.procedure_location
         expect(subject.belongings).to eq item1.belongings
