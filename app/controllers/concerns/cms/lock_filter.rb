@@ -20,7 +20,7 @@ module Cms::LockFilter
       return
     end
 
-    if @item.acquire_lock(force: params[:force].present?)
+    if @item.acquire_lock(user: @cur_user, force: params[:force].present?)
       render
     else
       respond_to do |format|
@@ -66,7 +66,7 @@ module Cms::LockFilter
       return
     end
 
-    if @item.release_lock(force: params[:force].present?)
+    if @item.release_lock(user: @cur_user, force: params[:force].present?)
       respond_to do |format|
         format.html { redirect_to(action: :edit) }
         format.json { head :no_content }

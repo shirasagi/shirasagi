@@ -82,7 +82,7 @@ class Gws::Schedule::Todo::Apis::CommentsController < ApplicationController
     @cur_todo.errors.clear
 
     if @item.is_a?(Cms::Addon::EditLock)
-      unless @item.acquire_lock
+      unless @item.acquire_lock(user: @cur_user)
         redirect_to action: :lock
         return
       end

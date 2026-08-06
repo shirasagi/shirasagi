@@ -89,7 +89,7 @@ module Cms::PageFilter
 
     if !result && @item.is_a?(Cms::Addon::EditLock)
       # So, edit lock must be held
-      unless @item.acquire_lock
+      unless @item.acquire_lock(user: @cur_user)
         location = { action: :lock }
       end
     end
@@ -112,7 +112,7 @@ module Cms::PageFilter
     # If page is failed to update, page is going to show in edit mode with update errors
     if !result && @item.is_a?(Cms::Addon::EditLock)
       # So, edit lock must be held
-      unless @item.acquire_lock
+      unless @item.acquire_lock(user: @cur_user)
         location = { action: :lock }
       end
     end

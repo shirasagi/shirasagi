@@ -15,7 +15,7 @@ module Gws::Addon::EditLock
     after_save :release_lock
   end
 
-  def acquire_lock(user: @cur_user, force: false)
+  def acquire_lock(user:, force: false)
     return if user.blank?
 
     lock_until = LOCK_INTERVAL.from_now.utc
