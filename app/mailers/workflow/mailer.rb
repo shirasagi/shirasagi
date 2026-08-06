@@ -10,7 +10,7 @@ class Workflow::Mailer < ApplicationMailer
     @url       = make_full_url(args[:url])
     @comment   = args[:comment]
 
-    from_email = format_email(@from_user) || site_sender(@site) || Cms::DEFAULT_SENDER_ADDRESS
+    from_email = from_email(site: @site, user: @from_user)
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
@@ -35,7 +35,7 @@ class Workflow::Mailer < ApplicationMailer
     @subject   = "[#{I18n.t('workflow.mail.subject.approve')}]#{@page.name} - #{@site.name}"
     @url       = make_full_url(args[:url])
 
-    from_email = format_email(@from_user) || site_sender(@site) || Cms::DEFAULT_SENDER_ADDRESS
+    from_email = from_email(site: @site, user: @from_user)
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
@@ -61,7 +61,7 @@ class Workflow::Mailer < ApplicationMailer
     @url       = make_full_url(args[:url])
     @comment   = args[:comment]
 
-    from_email = format_email(@from_user) || site_sender(@site) || Cms::DEFAULT_SENDER_ADDRESS
+    from_email = from_email(site: @site, user: @from_user)
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
@@ -81,11 +81,11 @@ class Workflow::Mailer < ApplicationMailer
   def remind_mail(site:, page:, user:)
     @from_user = page.workflow_user
     @to_user   = user
-    from_email = format_email(@from_user) || site_sender(site) || Cms::DEFAULT_SENDER_ADDRESS
+    @site = site
+    from_email = from_email(site: @site, user: @from_user)
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
-    @site = site
     @page = page
     mail from: from_email, to: to_email, message_id: Cms.generate_message_id(site)
   end
@@ -105,6 +105,15 @@ class Workflow::Mailer < ApplicationMailer
   def site_sender(site)
     return if site.blank?
     site.sender_address
+  end
+
+  def from_email(site:, user:)
+    if SS.config.workflow.enable_user_email_from
+      email = format_email(user)
+      return email if email.present?
+    end
+
+    site_sender(site) || Cms::DEFAULT_SENDER_ADDRESS
   end
 
   def make_full_url(url)

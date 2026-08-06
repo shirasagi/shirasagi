@@ -36,7 +36,7 @@ monthNavi.render(<%== month_dropdown_items.to_json %>, { hideClose: true });
     <% end %>
     <div class="dropdown-menu dropdown-menu--white"></div>
   </div>
-  <% if @download_url.present? %>
+  <% if @download_url.present? && SS::DownloadPolicy.download_allowed? %>
     <%= link_to t("ss.links.download"), @download_url, class: "btn", style: "float: right;" %>
   <% end %>
 </div>

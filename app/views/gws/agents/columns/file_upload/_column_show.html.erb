@@ -16,7 +16,7 @@
         <% end %>
       </span>
       <span class="filename" style="display: table-cell; vertical-align: middle; padding: 4px">
-        <%= link_to(file.humanized_name, file.url) %>
+        <%= link_to(file.humanized_name, file.url, class: SS::DownloadPolicy.html_class) %>
         <%= sanitizer_status(file) %>
       </span>
       <span class="postfix" style="display: table-cell; text-align: center; vertical-align: middle; padding: 4px">

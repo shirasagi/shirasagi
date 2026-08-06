@@ -33,16 +33,15 @@ module Opendata::Addon::ZipDataset
             file = Tempfile.open(name)
             file.puts(resource.source_url)
             file.rewind
-            files << [name_util.format_duplicates(name), file]
+            files << [name_util.format_duplicates(::Fs.zip_safe_path(name)), file]
           else
-            files << [name_util.format_duplicates(resource.filename), resource.file]
+            files << [name_util.format_duplicates(::Fs.zip_safe_path(resource.filename)), resource.file]
           end
         end
 
         ::FileUtils.mkdir_p(::File.dirname(zip_path))
         Zip::File.open(zip_path, Zip::File::CREATE) do |zip|
           files.each do |name, file|
-            name = ::Fs.zip_safe_path(name)
             zip.add(name, file.path)
           end
         end

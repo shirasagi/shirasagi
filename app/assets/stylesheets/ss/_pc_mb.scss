@@ -3429,6 +3429,14 @@ form .CodeMirror {
 }
 
 // -------------------------------------------------------------------------------------------------
+// Download policy
+
+.download-disallowed, .upload-disallowed {
+  color: init.$gray2;
+  pointer-events: none;
+}
+
+// -------------------------------------------------------------------------------------------------
 // Sanitizer
 
 .sanitizer-status {

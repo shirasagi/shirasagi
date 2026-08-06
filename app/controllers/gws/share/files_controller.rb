@@ -130,7 +130,7 @@ class Gws::Share::FilesController < ApplicationController
   def render_update(result, opts = {})
     unless result
       # if result is false, browser goes to edit form which requires to be locked.
-      unless @item.acquire_lock
+      unless @item.acquire_lock(user: @cur_user)
         redirect_to action: :lock
         return
       end
@@ -227,7 +227,7 @@ class Gws::Share::FilesController < ApplicationController
   def edit
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    unless @item.acquire_lock
+    unless @item.acquire_lock(user: @cur_user)
       redirect_to action: :lock
       return
     end
@@ -261,7 +261,7 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   def lock
-    if @item.acquire_lock(force: params[:force].present?)
+    if @item.acquire_lock(user: @cur_user, force: params[:force].present?)
       render
     else
       respond_to do |format|
@@ -300,7 +300,7 @@ class Gws::Share::FilesController < ApplicationController
       return
     end
 
-    if @item.release_lock(force: params[:force].present?)
+    if @item.release_lock(user: @cur_user, force: params[:force].present?)
       respond_to do |format|
         format.html { redirect_to url_for(action: :edit), notice: t("ss.notice.unlocked") }
         format.json { head :no_content }

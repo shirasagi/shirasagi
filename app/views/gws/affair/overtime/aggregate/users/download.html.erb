@@ -9,7 +9,9 @@
   </div>
 
   <footer class="send ss-sticky ss-sticky-bottom">
-    <%= f.submit t('ss.buttons.download'), class: 'btn-primary save' %>
+    <% if SS::DownloadPolicy.download_allowed? %>
+      <%= f.submit t('ss.buttons.download'), class: 'btn-primary save' %>
+    <% end %>
     <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset, onclick: "history.back(); return false;" %>
   </footer>
 <% end %>

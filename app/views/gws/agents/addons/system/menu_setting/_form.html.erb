@@ -62,3 +62,8 @@
 <% render_menu_setting.call(:tabular) %>
 <% render_menu_setting.call(:elasticsearch) %>
 <% render_menu_setting.call(:conf, select_state: false) %>
+
+<dl class="see addon-gws-system-menu-setting">
+  <dt><%= @model.t :menu_display_ip_addresses %><%= @model.tt :menu_display_ip_addresses %></dt>
+  <dd><%= f.ss_lines_field :menu_display_ip_addresses %></dd>
+</dl>

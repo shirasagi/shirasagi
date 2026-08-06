@@ -19,7 +19,9 @@ yearNavi.render(<%== year_items %>, { hideClose: true });
         <%= @fiscal_year %><%= t("gws/affair.year_id") %>
       <% end %>
       <div class="dropdown-menu dropdown-menu--white"></div>
-      <%= link_to t("ss.links.download"), { action: :download_yearly }, class: "btn", style: "float: right;" %>
+      <% if SS::DownloadPolicy.download_allowed? %>
+        <%= link_to t("ss.links.download"), { action: :download_yearly }, class: "btn", style: "float: right;" %>
+      <% end %>
     </div>
   </div>
 </div>

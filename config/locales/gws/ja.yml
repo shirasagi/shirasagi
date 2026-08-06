@@ -91,6 +91,10 @@ ja:
         user_occupation: 職種
         email: メールアドレス
         tel: 電話番号
+      menu_state:
+        show: 表示
+        show_if_ip_address_matched: IPアドレスが一致する場合に表示
+        hide: 非表示
 
     links:
       back_to_portal: ポータルへ戻る
@@ -415,6 +419,7 @@ ja:
         menu_tabular_state: 汎用DBの表示
         menu_conf_label: サイト設定の表示
         menu_conf_state: サイト設定の表示
+        menu_display_ip_addresses: メニュー表示IPアドレス
       gws/addon/system/notice_setting:
         notice_schedule_state: スケジュール
         notice_todo_state: ToDo
@@ -588,6 +593,11 @@ ja:
         - システムからメールを送信する際、メールに記載される URL がここで設定したドメインになります。
       trash_threshold:
         - ゴミ箱の保持期間を設定できます。
+    gws/addon/system/menu_setting:
+      menu_display_ip_addresses:
+        - 特定のメニューを表示したいアクセス元のIPアドレスを設定します。
+        - 複数の IP アドレスを設定する場合は、改行で区切って設定します。
+        - "\"192.168.10.0/24\" や \"192.168.10.0/255.255.255.0\" のようなネットワークアドレスも設定することができます。"
     gws/addon/group_permission:
       custom_group_ids:
         - 編集を許可するカスタムグループを選択します。

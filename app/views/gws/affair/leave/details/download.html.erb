@@ -31,7 +31,9 @@
   </div>
 
   <footer class="send ss-sticky ss-sticky-bottom">
-    <%= f.submit t('ss.buttons.download'), class: 'btn-primary save' %>
+    <% if SS::DownloadPolicy.download_allowed? %>
+      <%= f.submit t('ss.buttons.download'), class: 'btn-primary save' %>
+    <% end %>
   </footer>
 <% end %>
 

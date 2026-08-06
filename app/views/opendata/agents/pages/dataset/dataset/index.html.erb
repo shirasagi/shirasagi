@@ -137,6 +137,10 @@ SS.renderClipboardCopy();
           <dt class="info-list__title"><%= rs.t :downloaded_count %></dt>
           <dd class="info-list__content"><%= rs.downloaded_count.to_fs(:delimited) %><%= I18n.t("opendata.labels.time") %></dd>
         <% end %>
+        <% if rs.metadata_file_id.present? %>
+          <dt class="info-list__title"><%= rs.t :metadata_file_id %></dt>
+          <dd class="info-list__content"><%= rs.metadata_file_id %></dd>
+        <% end %>
         <% if rs.metadata_file_released.present? %>
           <dt class="info-list__title"><%= rs.t :metadata_file_released %></dt>
           <dd class="info-list__content"><%= tryb { I18n.l(rs.metadata_file_released.to_date, format: :long) } %></dd>

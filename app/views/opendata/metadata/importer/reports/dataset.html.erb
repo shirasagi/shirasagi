@@ -9,6 +9,24 @@
         </th>
       </tr>
       <tr>
+        <th><%= @dataset.t :resources %></th>
+        <td>
+          <% @item.resources.map do |report_resource| %>
+            <% resource = @dataset.resources.where(uuid: report_resource.uuid).first %>
+            <% if resource.present? %>
+              <%= link_to resource.name, opendata_dataset_resource_path(dataset_id: @dataset.id, id: resource.id), target: "_blank", rel: "noopener" %>
+            <% else %>
+              <%= report_resource.name %>
+            <% end %>
+            <br />
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <th><%= @dataset.t :updated %></th>
+        <td><%= I18n.l(@dataset.updated.to_date) %></td>
+      </tr>
+      <tr>
         <th><%= @dataset.t :metadata_text_index %></th>
         <td><%= @dataset.metadata_text_index  %></td>
       </tr>
@@ -59,6 +77,13 @@
         <th style="<%= style %>"><%= t("opendata.dataset") %></th>
         <td style="<%= style %>"><%=br @item.error_messages %></td>
       </tr>
+      <% @item.resources.each_with_index do |resource, idx| %>
+        <% style = (resource.state == "failed") ? 'background-color: #ffdada;' : "" %>
+        <tr>
+          <th style="<%= style %>"><%= "#{t("opendata.labels.resource")}#{idx + 1}" %></th>
+          <td style="<%= style %>"><%=br resource.error_messages %></td>
+        </tr>
+      <% end %>
     </tbody>
   </table>
 <% end %>

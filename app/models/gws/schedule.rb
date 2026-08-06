@@ -129,6 +129,7 @@ module Gws::Schedule
   end
 
   def menu_item_gws_schedule_csv(cur_site, cur_user)
+    return unless SS::UploadPolicy.upload_allowed?
     return unless Gws::Schedule::Plan.allowed?(:use, cur_user, site: cur_site)
     return unless Gws::Schedule::Plan.allowed?(:edit, cur_user, site: cur_site)
     return unless cur_site.schedule_any_tab_visible?

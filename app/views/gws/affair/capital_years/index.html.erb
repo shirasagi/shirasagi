@@ -44,16 +44,16 @@
         <td>
           <%= link_to t("modules.gws/affair/capital"), gws_affair_capitals_path(year: item) %>
           |
-          <%= link_to t("gws/affair.user_setting"), import_member_gws_affair_capitals_path(year: item) %>
+          <%= link_to t("gws/affair.user_setting"), import_member_gws_affair_capitals_path(year: item), class: SS::UploadPolicy.html_class %>
           |
-          <%= link_to t("gws/affair.group_setting"), import_group_gws_affair_capitals_path(year: item) %>
+          <%= link_to t("gws/affair.group_setting"), import_group_gws_affair_capitals_path(year: item), class: SS::UploadPolicy.html_class %>
         </td>
         <td>
           <%= link_to t("gws/affair.leave_setting"), gws_affair_leave_settings_path(year: item) %>
           |
-          <%= link_to t("gws/affair.user_setting"), import_member_gws_affair_leave_settings_path(year: item) %>
+          <%= link_to t("gws/affair.user_setting"), import_member_gws_affair_leave_settings_path(year: item), class: SS::UploadPolicy.html_class %>
           |
-          <%= link_to t("gws/affair.download_day_count"), download_yearly_gws_affair_leave_settings_path(year: item) %>
+          <%= link_to t("gws/affair.download_day_count"), download_yearly_gws_affair_leave_settings_path(year: item), class: SS::DownloadPolicy.html_class %>
         </td>
       </tr>
     <% end %>

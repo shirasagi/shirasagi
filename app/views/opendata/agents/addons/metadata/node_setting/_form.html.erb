@@ -1,0 +1,11 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+<dl class="see">
+  <dt><%= @model.t :metadata_japanese_local_goverment_code %></dt>
+  <dd><%= f.text_field :metadata_japanese_local_goverment_code %></dd>
+
+  <dt><%= @model.t :metadata_local_goverment_name %></dt>
+  <dd><%= f.text_field :metadata_local_goverment_name %></dd>
+</dl>

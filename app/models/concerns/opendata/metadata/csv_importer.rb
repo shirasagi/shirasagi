@@ -17,9 +17,15 @@ module Opendata::Metadata::CsvImporter
     opts[:http_basic_authentication] = [basicauth_username, basicauth_password] if basicauth_enabled?
 
     imported_dataset_ids = []
+    created_dataset_ids = []
+    created_metadata_dataset_ids = []
     updated_dataset_ids = []
+    updated_metadata_dataset_ids = []
+    deleted_dataset_ids = []
+    deleted_metadata_dataset_ids = []
     skipped_dataset_ids = []
     error_dataset_names = []
+    error_metadata_dataset_ids = []
     imported_resource_ids = []
     notice_body = []
 
@@ -30,12 +36,14 @@ module Opendata::Metadata::CsvImporter
           put_log('[Download] ' + tempfile.size.to_fs(:delimited) + ' bytes')
           put_log('[Import] start')
           SS::Csv.foreach_row(tempfile.path, headers: true) do |csv_row, idx|
+            @report_dataset = nil
+            @report_resource = nil
+            dataset = nil
+            resource = nil
             begin
               name = (csv_row['データセット_タイトル'].presence || csv_row['データ名称']).to_s.gsub(/\R|\s|\u00A0|　/, '')
 
               put_log("- #{idx + 1} #{name}")
-
-              @report_dataset = @report.new_dataset
 
               attributes = JSON.parse(csv_row.to_h.to_json)
 
@@ -45,9 +53,12 @@ module Opendata::Metadata::CsvImporter
                 first
               dataset ||= ::Opendata::Dataset.new
 
+              @report_dataset = @report.datasets.where(uuid: dataset.uuid).first.presence || @report.new_dataset
+
               dataset.cur_site = site
               dataset.cur_node = node
               def dataset.set_updated; end
+              def dataset.generate_file; end
 
               dataset.layout = node.page_layout || node.layout
               dataset.name = name
@@ -88,19 +99,29 @@ module Opendata::Metadata::CsvImporter
               dataset.state = "public"
 
               if dataset.updated_changed?
-                put_log("- dataset : #{dataset.new_record? ? "create" : "update"} #{dataset.name}")
-                # notice_body << "#{idx + 2}行目 #{dataset.name} : #{dataset.new_record? ? "作成" : "更新"}"
-                dataset.save!
-                updated_dataset_ids << dataset.id if !updated_dataset_ids.include?(dataset.id)
-              elsif !updated_dataset_ids.include?(dataset.id)
+                if dataset.new_record?
+                  put_log("- dataset : create #{dataset.name}")
+                  dataset.save!
+                  if !created_dataset_ids.include?(dataset.id)
+                    created_dataset_ids << dataset.id
+                    created_metadata_dataset_ids << dataset.metadata_dataset_id
+                  end
+                else
+                  put_log("- dataset : update #{dataset.name}")
+                  dataset.save!
+                  if !updated_dataset_ids.include?(dataset.id)
+                    updated_dataset_ids << dataset.id
+                    updated_metadata_dataset_ids << dataset.metadata_dataset_id
+                  end
+                end
+              elsif !created_dataset_ids.include?(dataset.id) && !updated_dataset_ids.include?(dataset.id)
                 put_log("- dataset : skip #{dataset.name}")
-                # notice_body << "#{idx + 2}行目 #{dataset.name} : --"
                 skipped_dataset_ids << dataset.id if !skipped_dataset_ids.include?(dataset.id)
               end
 
               @report_dataset.set_reports(dataset, attributes, source_url, idx)
 
-              imported_dataset_ids << dataset.id
+              imported_dataset_ids << dataset.id if !imported_dataset_ids.include?(dataset.id)
 
               license_id = csv_row['ファイル_ライセンス'].to_s.presence || csv_row['ライセンス'].to_s
               license = get_license_from_metadata_uid(license_id)
@@ -108,9 +129,8 @@ module Opendata::Metadata::CsvImporter
 
               url = csv_row['ファイル_ダウンロードURL']
               if url.present?
+                resource_name = csv_row['ファイル_タイトル']
                 begin
-                  @report_resource = @report_dataset.new_resource
-
                   resource = dataset.resources.select { |r| r.source_url == url }.first
 
                   if resource.nil?
@@ -118,25 +138,26 @@ module Opendata::Metadata::CsvImporter
                     dataset.resources << resource
                   end
 
+                  @report_resource = @report_dataset.resources.where(uuid: resource.uuid).first.presence ||
+                                     @report_dataset.new_resource
+
                   filename = csv_row['ファイル_タイトル'].to_s + ::File.extname(url.to_s)
-                  format = csv_row['ファイル形式']
+                  format = csv_row['ファイル_形式'].presence || csv_row['ファイル形式']
                   format = ::File.extname(url.to_s).delete(".").sub(/\?.*$/, "").downcase if format.blank?
                   format = "html" if format.blank?
+                  resource_name ||= filename
 
                   resource.source_url = url
-                  resource.name = csv_row['ファイル_タイトル'].presence || filename
+                  resource.name = resource_name
                   resource.text = csv_row['ファイル_説明']
                   resource.filename = filename
                   resource.format = format
                   resource.license = license
-                  # resource.original_url = url
-                  # resource.original_updated = Time.zone.parse(csv_row['ファイル_最終更新日']) rescue dataset.updated
-                  # resource.crawl_update = 'auto'
 
                   def resource.set_updated; end
+                  def resource.generate_file; end
 
                   resource.updated = Time.zone.parse(csv_row['ファイル_最終更新日']) rescue dataset.updated
-                  # resource.updated = resource.original_updated
                   resource.created = Time.zone.parse(csv_row['ファイル_公開日']) rescue dataset.created
 
                   resource.metadata_importer = self
@@ -146,6 +167,7 @@ module Opendata::Metadata::CsvImporter
                   resource.metadata_imported_url = source_url
                   resource.metadata_imported_attributes = attributes
 
+                  resource.metadata_file_id = csv_row['ファイル_ID']
                   resource.metadata_file_access_url = csv_row['ファイル_アクセスURL']
                   resource.metadata_file_download_url = csv_row['ファイル_ダウンロードURL']
                   resource.metadata_file_released = resource.created
@@ -157,11 +179,9 @@ module Opendata::Metadata::CsvImporter
 
                   if resource.updated_changed?
                     put_log("-- resource : #{resource.new_record? ? "create" : "update"} #{resource.name}")
-                    # notice_body << "#{idx + 2}行目 #{resource.name} : #{resource.new_record? ? "作成" : "更新"}"
                     resource.save!
                   else
                     put_log("-- resource : skip #{resource.name}")
-                    # notice_body << "#{idx + 2}行目 #{resource.name} : --"
                   end
 
                   imported_resource_ids << resource.id
@@ -170,12 +190,13 @@ module Opendata::Metadata::CsvImporter
                 rescue => e
                   message = "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
                   put_log(message)
-                  notice_body << "#{idx + 2}行目 #{resource.name} : #{e.message}"
+                  notice_body << "#{dataset.metadata_dataset_id}[#{resource_name}]：#{e.message}"
                   error_dataset_names << dataset.name
+                  error_metadata_dataset_ids << dataset.metadata_dataset_id
 
-                  @report_resource.add_error(message)
+                  @report_resource&.add_error(message)
                 ensure
-                  @report_resource.save!
+                  @report_resource&.save!
                 end
               end
 
@@ -189,66 +210,66 @@ module Opendata::Metadata::CsvImporter
               notice_body << "#{idx + 2}行目 #{dataset.name} : #{e.message}"
               error_dataset_names << dataset.name
 
-              @report_dataset.add_error(message) if @report_dataset.present?
+              @report_dataset&.add_error(message)
             ensure
-              @report_dataset.save! if @report_dataset.present?
+              @report_dataset&.save!
             end
           end
           put_log('[Import] finished')
+          if imported_dataset_ids.present? && error_dataset_names.blank?
+            dataset_ids = ::Opendata::Dataset.site(site).node(node).where(
+              "metadata_importer_id" => id
+            ).pluck(:id)
+            dataset_ids.each do |id|
+              dataset = ::Opendata::Dataset.find(id) rescue nil
+              next unless dataset
+
+              if imported_dataset_ids.include?(id)
+                dataset.resources.each do |resource|
+                  next if imported_resource_ids.include?(resource.id)
+                  put_log("-- resource : destroy #{resource.name}")
+                  resource.destroy
+                end
+              else
+                put_log("- dataset : destroy #{dataset.name}")
+                deleted_dataset_ids << dataset.id
+                deleted_metadata_dataset_ids << dataset.metadata_dataset_id
+                dataset.destroy
+              end
+            end
+          end
         end
       end
     rescue => e
       put_log("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      body = []
+      body << "CSVファイルのインポートに失敗しました。"
+      body << "ファイルやURLに問題がないかご確認ください。"
+      # body << "---エラー内容-------"
+      # body << "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
+      @report.notice_body = body.join("\n")
     end
 
-    body = []
-    url = ::File.join(
-      site.mypage_full_url,
-      Rails.application.routes.url_helpers.opendata_metadata_importer_path(site: site.id, cid: node.id, id: id)
-    )
-    if error_dataset_names.present?
-      @report.notice_subject = "#{site.name} #{name}【エラー通知】"
-      body << "取り込み時にエラーが発生しました。"
-      body << "下記のエラーを確認し、修正してください。"
-      body << "オープンデータカタログのダウンロードURL及びアクセスURLの項目について、"
-      body << "記入されているURLが間違いないか、ご担当者様でご確認をお願いいたします。"
-      body << notice_body.join("\n")
-    else
-      # destroy unimported datasets
-      dataset_ids = ::Opendata::Dataset.site(site).node(node).where(
-        "metadata_importer_id" => id
-      ).pluck(:id)
-      # dataset_ids -= imported_dataset_ids
-      dataset_ids.each do |id|
-        dataset = ::Opendata::Dataset.find(id) rescue nil
-        next unless dataset
-
-        if imported_dataset_ids.include?(id)
-          dataset.resources.each do |resource|
-            next if imported_resource_ids.include?(resource.id)
-            put_log("-- resource : destroy #{resource.name}")
-            resource.destroy
-          end
-        else
-          put_log("- dataset : destroy #{dataset.name}")
-          dataset.destroy
-        end
-      end
-
-      @report.notice_subject = "#{site.name} #{name}【更新通知】"
-      body << "#{I18n.l(@report.created, format: :long)}に、CSVの取り込みを実施しました。"
-      if updated_dataset_ids.present?
-        body << "#{updated_dataset_ids.count}件のデータセットを更新しました。"
-      end
-      if skipped_dataset_ids.present?
-        body << "#{skipped_dataset_ids.count}件のデータセットは更新しませんでした。"
-      end
-      body << "オープンデータカタログのダウンロードURL及びアクセスURLの項目について、"
-      body << "記入されているURLが間違いないか、ご担当者様でご確認をお願いいたします。"
-      # body << notice_body.join("\n")
+    if @report.notice_subject.blank?
+      @report.notice_subject = "【#{name}：#{I18n.l(Time.zone.now.to_date, format: :long)}】データセット更新状況"
     end
-    body << url
-    @report.notice_body = body.join("\n")
+    if @report.notice_body.blank?
+      body = []
+      body << "全データセット件数　#{imported_dataset_ids.count}件"
+      body << "１．更新なし　：#{skipped_dataset_ids.count}件"
+      body << "２．更新あり　：#{updated_dataset_ids.count}件 #{updated_metadata_dataset_ids.uniq.compact}"
+      body << "３．新規追加　：#{created_dataset_ids.count}件 #{created_metadata_dataset_ids.uniq.compact}"
+      body << "４．削除　　　：#{deleted_dataset_ids.count}件 #{deleted_metadata_dataset_ids.uniq.compact}"
+      body << "５．更新エラー：#{error_dataset_names.compact.uniq.count}件 #{error_metadata_dataset_ids.uniq.compact}"
+      if error_dataset_names.present?
+        body << ""
+        body << "下記データセットについて更新エラーが発生しました。"
+        body << "エラー内容に基づきCSVファイルを修正してください。"
+        body << "---エラー内容-------"
+        body << notice_body.join("\n\n")
+      end
+      @report.notice_body = body.join("\n")
+    end
 
     @report.save!
   end

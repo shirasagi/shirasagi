@@ -10,12 +10,16 @@
       <%= f.hidden_field "item[in_file]", value: "" %>
       <%= f.file_field :in_file %>
     </dd>
-    <dd><%= link_to t('ss.links.download_template'), action: :download_template %></dd>
+    <% if SS::DownloadPolicy.download_allowed? %>
+      <dd><%= link_to t('ss.links.download_template'), action: :download_template %></dd>
+    <% end %>
   </dl>
 </section>
 
 <footer class="send">
-  <%= f.submit t("ss.buttons.import"), class: :save, data: { confirm: t("ss.confirm.import"), disable_with: t("ss.buttons.importing") } %>
+  <% if SS::UploadPolicy.upload_allowed? %>
+    <%= f.submit t("ss.buttons.import"), class: :save, data: { confirm: t("ss.confirm.import"), disable_with: t("ss.buttons.importing") } %>
+  <% end %>
   <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
 </footer>
 <% end %>

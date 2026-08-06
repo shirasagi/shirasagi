@@ -46,6 +46,7 @@
     <tr>
       <th>No</th>
       <th><%= Opendata::Dataset.t(:name) %></th>
+      <th><%= @model.t(:resource_count) %></th>
       <th><%= Opendata::Dataset.t(:category_ids) %></th>
       <th><%= Opendata::Dataset.t(:estat_category_ids) %></th>
       <th><%= Opendata::Dataset.t(:area_ids) %></th>
@@ -59,6 +60,7 @@
           <%= link_to dataset.name, { action: :dataset, dataset_id: dataset.id } %>
         </td>
 
+        <td class="resource-count"><%= dataset.resources.count %></td>
         <td class="category"><%=br dataset.categories.pluck(:name) %></td>
         <td class="estat-category"><%=br dataset.estat_categories.pluck(:name) %></td>
         <td class="area"><%=br dataset.areas.pluck(:name) %></td>

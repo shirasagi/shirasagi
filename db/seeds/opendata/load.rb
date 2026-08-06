@@ -522,14 +522,14 @@ license_file5 = save_ss_files "fixtures/cc-by-nc-sa.png", filename: "cc-by-nc-sa
 license_file6 = save_ss_files "fixtures/cc-by-nc-nd.png", filename: "cc-by-nc-nd.png", model: "opendata/license"
 license_file7 = save_ss_files "fixtures/cc-zero.png", filename: "cc-zero.png", model: "opendata/license"
 
-license_cc_by = save_license name: "表示（CC BY）", file_id: license_file1.id, order: 1,
+license_cc_by = save_license name: "CC BY", file_id: license_file1.id, order: 1,
   default_state: 'default', uid: "cc-by", metadata_uid: 'CC BY 4.0'
-save_license name: "表示-継承（CC BY-SA）", file_id: license_file2.id, order: 2, uid: "cc-by-sa"
-save_license name: "表示-改変禁止（CC BY-ND）", file_id: license_file3.id, order: 3, uid: "cc-by-nd"
-save_license name: "表示-非営利（CC BY-NC）", file_id: license_file4.id, order: 4, uid: "cc-by-nc"
-save_license name: "表示-非営利-継承（CC BY-NC-SA）", file_id: license_file5.id, order: 5, uid: "cc-by-nc-sa"
-save_license name: "表示-非営利-改変禁止（CC BY-NC-ND）", file_id: license_file6.id, order: 6, uid: "cc-by-nc-nd"
-save_license name: "いかなる権利も保有しない（CC 0）", file_id: license_file7.id, order: 7, uid: "cc-zero"
+save_license name: "CC BY-SA", file_id: license_file2.id, order: 2, uid: "cc-by-sa"
+save_license name: "CC BY-ND", file_id: license_file3.id, order: 3, uid: "cc-by-nd"
+save_license name: "CC BY-NC", file_id: license_file4.id, order: 4, uid: "cc-by-nc"
+save_license name: "CC BY-NC-SA", file_id: license_file5.id, order: 5, uid: "cc-by-nc-sa"
+save_license name: "CC BY-NC-ND", file_id: license_file6.id, order: 6, uid: "cc-by-nc-nd"
+save_license name: "CC 0", file_id: license_file7.id, order: 7, uid: "cc-zero"
 
 ## -------------------------------------
 puts "# opendata dataset_groups"
@@ -777,7 +777,7 @@ def save_metadata_resource(idx, dataset, report, data)
     name: data[:metadata_imported_attributes]['ファイル_タイトル'].presence || filename,
     text: data[:metadata_imported_attributes]['ファイル_説明'],
     filename: filename,
-    format: data[:metadata_imported_attributes]['ファイル形式'],
+    format: data[:metadata_imported_attributes]['ファイル_形式'],
     license: license,
     updated: Time.zone.parse(data[:metadata_imported_attributes]['ファイル_最終更新日']),
     created: Time.zone.parse(data[:metadata_imported_attributes]['ファイル_公開日']),
@@ -786,6 +786,7 @@ def save_metadata_resource(idx, dataset, report, data)
     metadata_imported: Time.zone.now,
     metadata_imported_url: @metadata_importer.source_url,
     metadata_imported_attributes: data[:metadata_imported_attributes],
+    metadata_file_id: data[:metadata_imported_attributes]['ファイル_ID'],
     metadata_file_access_url: data[:metadata_imported_attributes]['ファイル_アクセスURL'],
     metadata_file_download_url: data[:metadata_imported_attributes]['ファイル_ダウンロードURL'],
     metadata_file_released: Time.zone.parse(data[:metadata_imported_attributes]['ファイル_公開日']),
@@ -831,11 +832,12 @@ save_metadata_dataset 0, filename: "dataset/metadata_dataset1.html", route: "ope
     'データセット_連絡先FormURL': "http://www.test.jp/doc.html",
     'データセット_連絡先備考（その他、SNSなど）': "http://www.test.jp/doc.html",
     'データセット_備考': "特になし",
+    'ファイル_ID': "1111111111",
     'ファイル_タイトル': "manager-system.csv",
     'ファイル_アクセスURL': "https://opendata.demo.ss-proj.org/",
     'ファイル_ダウンロードURL': "https://opendata.demo.ss-proj.org/",
     'ファイル_説明': "シラサギ市の指定管理者制度導入施設一覧",
-    'ファイル形式': "csv",
+    'ファイル_形式': "csv",
     'ファイル_ライセンス': "CC BY 4.0",
     'ファイル_ステータス': "配信中",
     'ファイル_サイズ': "8053",
@@ -879,11 +881,12 @@ save_metadata_dataset 1, filename: "dataset/metadata_dataset1.html", route: "ope
     'データセット_連絡先FormURL': "http://www.test.jp/doc.html",
     'データセット_連絡先備考（その他、SNSなど）': "http://www.test.jp/doc.html",
     'データセット_備考': "特になし",
+    'ファイル_ID': "2222222222",
     'ファイル_タイトル': "manager-system2.csv",
     'ファイル_アクセスURL': "https://opendata.demo.ss-proj.org/dataset/",
     'ファイル_ダウンロードURL': "https://opendata.demo.ss-proj.org/dataset/",
     'ファイル_説明': "シラサギ市の指定管理者制度導入施設一覧2",
-    'ファイル形式': "csv",
+    'ファイル_形式': "csv",
     'ファイル_ライセンス': "CC BY 4.0",
     'ファイル_ステータス': "配信中",
     'ファイル_サイズ': "8053",
@@ -927,11 +930,12 @@ save_metadata_dataset 2, filename: "dataset/metadata_dataset2.html", route: "ope
     'データセット_連絡先FormURL': "http://www.test.jp/doc.html",
     'データセット_連絡先備考（その他、SNSなど）': "http://www.test.jp/doc.html",
     'データセット_備考': "特になし",
+    'ファイル_ID': "3333333333",
     'ファイル_タイトル': "tourist-facilities.csv",
     'ファイル_アクセスURL': "https://opendata.demo.ss-proj.org/",
     'ファイル_ダウンロードURL': "https://opendata.demo.ss-proj.org/",
     'ファイル_説明': "シラサギ市観光施設一覧",
-    'ファイル形式': "csv",
+    'ファイル_形式': "csv",
     'ファイル_ライセンス': "CC BY 4.0",
     'ファイル_ステータス': "配信中",
     'ファイル_サイズ': "8053",
@@ -975,11 +979,12 @@ save_metadata_dataset 3, filename: "dataset/metadata_dataset3.html", route: "ope
     'データセット_連絡先FormURL': "http://www.test.jp/doc.html",
     'データセット_連絡先備考（その他、SNSなど）': "http://www.test.jp/doc.html",
     'データセット_備考': "特になし",
+    'ファイル_ID': "4444444444",
     'ファイル_タイトル': "population.csv",
     'ファイル_アクセスURL': "https://opendata.demo.ss-proj.org/",
     'ファイル_ダウンロードURL': "https://opendata.demo.ss-proj.org/",
     'ファイル_説明': "シラサギ市地域・年齢別人口",
-    'ファイル形式': "csv",
+    'ファイル_形式': "csv",
     'ファイル_ライセンス': "CC BY 4.0",
     'ファイル_ステータス': "配信中",
     'ファイル_サイズ': "8053",

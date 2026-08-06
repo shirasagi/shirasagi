@@ -5,7 +5,7 @@ class Opendata::Harvest::Importer
     include Cms::SitePermission
     include ActiveSupport::NumberHelper
 
-    set_permission_name "opendata_datasets"
+    set_permission_name "other_opendata_harvests", :edit
 
     field :size, type: Integer, default: 0
     belongs_to :importer, class_name: 'Opendata::Harvest::Importer'

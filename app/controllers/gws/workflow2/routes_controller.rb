@@ -72,7 +72,7 @@ class Gws::Workflow2::RoutesController < ApplicationController
       end
     end
 
-    if @item.is_a?(Cms::Addon::EditLock) && !@item.acquire_lock
+    if @item.is_a?(Cms::Addon::EditLock) && !@item.acquire_lock(user: @cur_user)
       redirect_to action: :lock
       return
     end

@@ -242,7 +242,7 @@ class Gws::Tabular::FilesController < ApplicationController
     raise "404" unless cur_view.authoring_allowed?("edit")
     raise "403" unless policy_class.edit?(@cur_site, @cur_user, @model, @item)
 
-    if @item.is_a?(Cms::Addon::EditLock) && !@item.acquire_lock
+    if @item.is_a?(Cms::Addon::EditLock) && !@item.acquire_lock(user: @cur_user)
       redirect_to action: :lock
       return
     end

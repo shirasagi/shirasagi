@@ -15,7 +15,9 @@
   </section>
 
   <footer class="send">
-    <%= f.submit t("ss.download"), class: :save %>
+    <% if SS::DownloadPolicy.download_allowed? %>
+      <%= f.submit t("ss.download"), class: :save %>
+    <% end %>
     <%= f.button t("ss.buttons.cancel"), onclick: "location.href='#{gws_affair_capital_years_path}'; return false;", class: "btn-default" %>
   </footer>
 <% end %>

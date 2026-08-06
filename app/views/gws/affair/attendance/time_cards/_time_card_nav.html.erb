@@ -9,7 +9,9 @@
   </nav>
   <% if @item.present? %>
   <nav class="nav-operation">
-    <%= link_to(t('ss.buttons.download'), { action: :download }, class: :btn) %>
+    <% if SS::DownloadPolicy.download_allowed? %>
+      <%= link_to(t('ss.buttons.download'), { action: :download }, class: :btn) %>
+    <% end %>
     <%= link_to(t('ss.buttons.print'), { action: :print }, class: :btn) %>
   </nav>
   <% end %>

@@ -9,7 +9,7 @@ describe Opendata::Harvest::ImportJob, type: :feature, dbscope: :example do
   let!(:node_search) { create :opendata_node_search_dataset, filename: "dataset/search" }
   let!(:node) { create(:opendata_node_dataset, name: "datasets") }
 
-  let!(:license) { create(:opendata_license, cur_site: site, uid: "cc-by", name: "表示（CC BY）") }
+  let!(:license) { create(:opendata_license, cur_site: site, uid: "cc-by", name: "CC BY") }
 
   context "with empty datasets" do
     let!(:importer) do

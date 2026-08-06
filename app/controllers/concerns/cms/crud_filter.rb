@@ -156,7 +156,7 @@ module Cms::CrudFilter
   def edit
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     if @item.is_a?(Cms::Addon::EditLock)
-      unless @item.acquire_lock
+      unless @item.acquire_lock(user: @cur_user)
         redirect_to action: :lock
         return
       end

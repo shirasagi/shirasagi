@@ -43,7 +43,10 @@ production: &production
   #   ln_s: create symbolic link
   publish_file_with: cp
 
-  # Upload Policy (restricted, sanitizer)
+  # Download Policy (disallowed)
+  download_policy:
+
+  # Upload Policy (disallowed, restricted, sanitizer)
   upload_policy:
 
   # Sanitizer directories

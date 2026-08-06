@@ -77,7 +77,7 @@
 <% end %>
 
 <div class="operations">
-  <% if @download_url %>
+  <% if @download_url && SS::DownloadPolicy.download_allowed? %>
     <%= ss_button_to t("ss.buttons.csv"), @download_url, class: "btn btn-csv ss-dc-guard", method: 'post' %>
   <% end %>
   <input type="button" value="<%= t('ss.buttons.print') %>" class="btn btn-print" />

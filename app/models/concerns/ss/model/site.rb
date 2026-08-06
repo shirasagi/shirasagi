@@ -20,6 +20,7 @@ module SS::Model::Site
     field :https, type: String, default: "disabled"
     field :mypage_scheme, type: String, default: 'http'
     field :mypage_domain, type: String
+    field :download_policy, type: String
     field :upload_policy, type: String
     embeds_ids :groups, class_name: "SS::Group"
 
@@ -139,9 +140,8 @@ module SS::Model::Site
       ]
     end
 
-    def upload_policy_options
-      SS::UploadPolicy.upload_policy_options
-    end
+    delegate :download_policy_options, to: :'SS::DownloadPolicy'
+    delegate :upload_policy_options, to: :'SS::UploadPolicy'
 
     def same_domain_sites
       @_same_domain_sites ||= Cms::Site.all.select { |site| self.full_root_url == site.full_root_url }

@@ -16,6 +16,7 @@ module Opendata::Addon::Metadata::Resource
     field :metadata_host, type: String, default: nil
     field :metadata_text_index, type: String, default: ""
 
+    field :metadata_file_id, type: String
     field :metadata_file_access_url, type: String
     field :metadata_file_download_url, type: String
     field :metadata_file_released, type: DateTime
@@ -25,9 +26,9 @@ module Opendata::Addon::Metadata::Resource
     field :metadata_file_follow_standards, type: String
     field :metadata_file_copyright, type: String
 
-    permit_params :metadata_file_access_url, :metadata_file_download_url, :metadata_file_released,
-      :metadata_file_updated, :metadata_file_terms_of_service, :metadata_file_related_document,
-      :metadata_file_follow_standards, :metadata_file_copyright
+    permit_params :metadata_file_id, :metadata_file_access_url, :metadata_file_download_url,
+      :metadata_file_released, :metadata_file_updated, :metadata_file_terms_of_service,
+      :metadata_file_related_document, :metadata_file_follow_standards, :metadata_file_copyright
 
     before_validation :set_uuid
     before_validation :set_metadata_text_index, if: -> { metadata_imported.present? }
@@ -62,6 +63,7 @@ module Opendata::Addon::Metadata::Resource
     self.metadata_host = nil
     self.metadata_text_index = ""
 
+    self.metadata_file_id = nil
     self.metadata_file_access_url = nil
     self.metadata_file_download_url = nil
     self.metadata_file_released = nil

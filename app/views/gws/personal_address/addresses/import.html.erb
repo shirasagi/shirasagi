@@ -15,6 +15,8 @@
 </section>
 
 <footer class="send">
-  <%= f.submit t("ss.buttons.import"), class: :save, data: { disable_with: t("ss.buttons.importing") } %>
+  <% if SS::UploadPolicy.upload_allowed? %>
+    <%= f.submit t("ss.buttons.import"), class: :save, data: { disable_with: t("ss.buttons.importing") } %>
+  <% end %>
 </footer>
 <% end %>

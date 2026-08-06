@@ -28,7 +28,7 @@
       </span>
       <% @item.files.each do |file| %>
         <span id="file-<%= file.id %>" class="<%= @cur_site.monitor_files_break == 'horizontal' ? 'd-inline-block mr-1' : 'd-block' %>">
-          <%= link_to(file.url, class: "icon-#{file.extname}", target: '_blank', rel: "noopener") do %>
+          <%= link_to(file.url, class: "icon-#{file.extname} #{SS::DownloadPolicy.html_class}", target: '_blank', rel: "noopener") do %>
             <img src="/assets/img/gws/ic-file.png" alt="" />
             <%= file.humanized_name %>
           <% end %>
@@ -36,7 +36,7 @@
         </span>
       <% end %>
       <span id="file-all" class="d-block">
-        <%= link_to(url_for(action: :all_topic_files), target: '_blank', rel: "noopener", method: :post) do %>
+        <%= link_to(url_for(action: :all_topic_files), target: '_blank', rel: "noopener", method: :post, class: SS::DownloadPolicy.html_class) do %>
           <i class="material-icons">file_download</i>
           <%= t('gws/monitor.topic.file_download') %>
         <% end rescue nil %>

@@ -591,10 +591,17 @@ ja:
       gws_use:
         disabled: 使用しない
         enabled: 使用する
+      download_policy:
+        default_none: 既定 (制限なし)
+        default_disallowed: 既定 (ダウンロード禁止)
+        disallowed: ダウンロード禁止
+        none: 制限なし
       upload_policy:
         default_none: 既定 (制限なし)
+        default_disallowed: 既定 (アップロード禁止)
         default_sanitizer: 既定 (無害化)
         default_restricted: 既定 (アップロード拒否)
+        disallowed: アップロード禁止
         sanitizer: 無害化
         restricted: アップロード拒否
       sanitizer_state:
@@ -806,6 +813,7 @@ ja:
         mypage_domain: マイページドメイン
         group_ids: グループ
         domains_with_subdir: サブディレクトリを含めたドメイン
+        download_policy: ダウンロード制限
         upload_policy: アップロード制限
       ss/model/user:
         name: 氏名
@@ -871,6 +879,7 @@ ja:
         expiration_date: 有効期限（終了）
         domains: ドメイン
         gws_use: グループウェアの使用
+        download_policy: ダウンロード制限
         upload_policy: アップロード制限
         path_id: 書き出しパスID
       ss/user_group_history:
@@ -1186,6 +1195,8 @@ ja:
         state: 状態
   tooltip:
     ss/model/site:
+      download_policy:
+        - ファイルダウンロード時の動作を設定します。
       upload_policy:
         - ファイルアップロード時の動作を設定します。
     ss/model/user:
@@ -1257,6 +1268,8 @@ ja:
       gws_use:
         - グループウェアを使用するかどうかを指定します。
         - 既定では、グループウェアを使用します。
+      download_policy:
+        - ファイルダウンロード時の動作を設定します。
       upload_policy:
         - ファイルアップロード時の動作を設定します。
       path_id:

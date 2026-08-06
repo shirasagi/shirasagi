@@ -4,7 +4,7 @@
   end
 %>
 <%= jquery do %>
-  Gws_Discussion_Thread.render(<%= @cur_user.id %>);
+  Gws_Discussion_Thread.render(<%= @cur_user.id %>, <%== { 'linkClass' => SS::DownloadPolicy.html_class }.to_json %>);
   <% if @cur_site.discussion_unseen_interval.present? %>
   Gws_Discussion_Unseen.renderUnseen(
     "<%= gws_discussion_apis_unseen_path(id: @topic.id) %>",

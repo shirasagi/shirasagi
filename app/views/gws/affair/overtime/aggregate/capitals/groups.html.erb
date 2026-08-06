@@ -2,7 +2,9 @@
   <div class="attendance-box overtime-aggregate">
     <div class="attendance-box-main">
       <div class="title"><%= @title %></div>
-      <%= link_to t("ss.links.download"), { action: :download_groups }, class: "btn", style: "float: right;" %>
+      <% if SS::DownloadPolicy.download_allowed? %>
+        <%= link_to t("ss.links.download"), { action: :download_groups }, class: "btn", style: "float: right;" %>
+      <% end %>
     </div>
   </div>
 
