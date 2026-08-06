@@ -11,13 +11,16 @@
   <% if @items.present? %>
     <map name="<%= @usemap %>">
       <% @items.each do |item| %>
-        <area 
-          shape="<%= item.shape %>" 
-          coords="<%= item.coords.join(",") %>" 
-          href="<%= item.link_url.present? ? item.link_url : "\##{item.area_anchor}" %>" 
-          data-state="<%= item.area_state %>" 
-          data-name="<%= item.label :area_state %>" 
-          alt="<%= item.name %>">
+        <%=
+          if item.link_url.present? && UrlValidator.valid?(item.link_url, absolute_path: true)
+            href = item.link_url
+          else # item.area_anchor is always presented
+            href = "\##{item.area_anchor}"
+          end
+
+          tag.area shape: item.shape, coords: item.coords.join(","), href: href,
+                   alt: item.name, data: { state: item.area_state, name: item.label(:area_state) }
+        %>
       <% end %>
     </map>
     <div class="area-contents">
