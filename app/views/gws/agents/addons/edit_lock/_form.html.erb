@@ -6,7 +6,7 @@
       addon[:display_body] = "hide"
     %>
     <%= jquery do %>
-      var editLock = new SS_EditLock(".mod-gws-edit_lock", "<%= url_for action: :lock %>", "<%= url_for action: :unlock %>");
+      var editLock = new SS_EditLock(".mod-gws-edit_lock", "<%= url_for action: :lock, format: :json %>", "<%= url_for action: :unlock, format: :json %>");
     <% end %>
 
     <dl class="see mod-gws-edit_lock">

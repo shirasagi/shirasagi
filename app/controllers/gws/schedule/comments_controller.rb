@@ -55,7 +55,7 @@ class Gws::Schedule::CommentsController < ApplicationController
   def edit
     raise '403' if @item.user_id != @cur_user.id && !@cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site)
     if @item.is_a?(Cms::Addon::EditLock)
-      unless @item.acquire_lock
+      unless @item.acquire_lock(user: @cur_user)
         redirect_to action: :lock
         return
       end

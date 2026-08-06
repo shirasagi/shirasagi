@@ -1208,28 +1208,16 @@ SS_Preview = (function () {
 
   EditLock.prototype.release = function() {
     if (!SS_Preview.lockPath) {
-      return $.Deferred().resolve().promise();
+      return;
     }
 
-    var self = this;
     var url = SS_Preview.lockPath;
     var token = $('meta[name="csrf-token"]').attr('content');
 
-    return $.ajax({
-      url: url,
-      type: "POST",
-      dataType: "json",
-      cache: false,
-      data: { _method: "delete", authenticity_token: token }
-    }).fail(function(xhr, status, error) {
-      if (self.container.notice) {
-        if (xhr.responseJSON) {
-          self.container.notice.show(xhr.responseJSON.join("\n"));
-        } else {
-          self.container.notice.show(error);
-        }
-      }
-    });
+    var data = new FormData();
+    data.append("authenticity_token", token);
+    data.append("_method", "delete");
+    navigator.sendBeacon(url, data)
   };
 
   EditLock.prototype.startRefreshLoop = function(failed) {
@@ -1351,10 +1339,11 @@ SS_Preview = (function () {
 
     if (dontCareLock) {
       afterReleased();
-      return $.Deferred().resolve().promise();
+      return;
     }
 
-    return this.editLock.release().always(afterReleased);
+    this.editLock.release();
+    afterReleased();
   };
 
   //

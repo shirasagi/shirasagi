@@ -51,7 +51,7 @@ class Gws::StaffRecord::PublicDutiesController < ApplicationController
 
   def edit_charge
     if @item.is_a?(Cms::Addon::EditLock)
-      return redirect_to(action: :lock) unless @item.acquire_lock
+      return redirect_to(action: :lock) unless @item.acquire_lock(user: @cur_user)
     end
   end
 

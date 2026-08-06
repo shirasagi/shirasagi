@@ -175,7 +175,7 @@ class Gws::Workflow2::FilesController < ApplicationController
       redirect_to url_for(action: :show), notice: I18n.t("gws/workflow2.notice.unable_to_edit_because_form_is_deleted")
       return
     end
-    if @item.is_a?(Cms::Addon::EditLock) && !@item.acquire_lock
+    if @item.is_a?(Cms::Addon::EditLock) && !@item.acquire_lock(user: @cur_user)
       redirect_to action: :lock
       return
     end
