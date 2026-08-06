@@ -74,7 +74,7 @@ class Gws::Schedule::FacilityPlansController < ApplicationController
     response.status = 200
     send_enum(
       Gws::Schedule::PlanCsv::Exporter.enum_csv(@items, site: @cur_site, user: @cur_user, encoding: encoding, truncate: true),
-      type: 'text/csv; charset=Shift_JIS', filename: filename
+      type: "text/csv; charset=#{encoding}", filename: filename
     )
   end
 

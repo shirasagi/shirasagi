@@ -20,8 +20,10 @@
             )
           </dd>
         <% end %>
-        <% unless Gws::Schedule::Plan.allowed?(:import_approval, @cur_user, site: @cur_site) %>
-          <p class="description"><%= t("gws/schedule.import.disallow_import_approval") %></p>
+        <% if Gws::Schedule::Plan.allowed?(:import_approval, @cur_user, site: @cur_site) %>
+          <dd class="wide">
+            <p class="description"><%= t("gws/schedule.import.disallow_import_approval") %></p>
+          </dd>
         <% end %>
       </dl>
 
