@@ -41,7 +41,17 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
   end
 
   def effective_link_url
-    link_url.presence || link_item.try(:url)
+    if link_url.present? && UrlValidator.valid?(link_url, absolute_path: true)
+      return link_url
+    end
+
+    # backward compatibility
+    url = link_item.try(:url)
+    if url.present? && UrlValidator.valid?(url, absolute_path: true)
+      return url
+    end
+
+    nil
   end
 
   def effective_link_label

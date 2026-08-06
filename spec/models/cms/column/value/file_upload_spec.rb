@@ -122,4 +122,30 @@ describe Cms::Column::Value::FileUpload, type: :model, dbscope: :example do
       end
     end
   end
+
+  describe "#link_url" do
+    let!(:site) { cms_site }
+    let!(:node) { create :article_node_page, cur_site: site }
+    let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
+    let!(:file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png") }
+    let!(:column1) { create(:cms_column_file_upload, cur_form: form, order: 1, file_type: 'banner', html_tag: "a+img") }
+    let(:xss_link) { "javascript:console.log('xss')" }
+
+    context "validation" do
+      subject do
+        build(
+          :article_page, cur_site: site, cur_node: node, form: form,
+          column_values: [
+            column1.value_type.new(column: column1, file: file, link_url: xss_link)
+          ]
+        )
+      end
+
+      it do
+        expect(subject).to be_invalid
+        expect(subject.errors[:base]).to have(1).items
+        expect(subject.errors[:base][0]).to include(I18n.t("errors.messages.url"))
+      end
+    end
+  end
 end

@@ -235,7 +235,7 @@ ja:
           &lt;dl class="procedure item-{{ item.id }}">
             &lt;dt>
               {% if item.link_url %}
-                &lt;a href="{{ item.link_url }}">{{ item.name }}&lt;/a>
+                &lt;a href="{{ item.link_url | escape_once }}">{{ item.name }}&lt;/a>
               {% else %}
                 {{ item.name }}
               {% endif %}

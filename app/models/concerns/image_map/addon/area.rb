@@ -15,7 +15,7 @@ module ImageMap::Addon
       permit_params :link_url, :area_state
 
       validate :validate_in_area
-      validate :validate_link_url
+      validates :link_url, url: { absolute_path: true, allow_blank: true }
       validates :link_url, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
     end
 
@@ -45,13 +45,6 @@ module ImageMap::Addon
     end
 
     private
-
-    def validate_link_url
-      return if link_url.blank?
-      ::Addressable::URI.parse(link_url)
-    rescue
-      errors.add :link_url, :invalid
-    end
 
     def validate_in_area
       return if in_area.blank?

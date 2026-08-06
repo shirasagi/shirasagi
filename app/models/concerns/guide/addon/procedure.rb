@@ -19,9 +19,11 @@ module Guide::Addon
       permit_params :remarks
       permit_params :order
 
+      validates :link_url, url: { absolute_path: true, allow_blank: true }
+
       template_variable_handler(:id, :template_variable_handler_name)
       template_variable_handler(:name, :template_variable_handler_name)
-      template_variable_handler(:link_url, :template_variable_handler_name)
+      template_variable_handler(:link_url, :template_variable_handler_link_url)
       template_variable_handler(:link, :template_variable_handler_link)
       template_variable_handler(:html, :template_variable_handler_html)
       template_variable_handler(:procedure_location, :template_variable_handler_name)
@@ -32,9 +34,13 @@ module Guide::Addon
       liquidize do
         export :id
         export :name
-        export :link_url
+        export :link_url do
+          if link_url.present? && UrlValidator.valid?(link_url, absolute_path: true)
+            link_url # CGI.escapeHTML が欲しい場合は escape_once を組み合わせる
+          end
+        end
         export :link do
-          link_url.present? ? "<a href=\"#{link_url}\">#{self.name}</a>".html_safe : self.name
+          template_variable_handler_link("link", self)
         end
         export :html
         export :procedure_location
@@ -54,7 +60,17 @@ module Guide::Addon
     end
 
     def template_variable_handler_link(name, issuer)
-      link_url.present? ? "<a href=\"#{link_url}\">#{self.name}</a>".html_safe : self.name
+      if link_url.present? && UrlValidator.valid?(link_url, absolute_path: true)
+        ApplicationController.helpers.link_to(self.name, link_url)
+      else
+        self.name
+      end
+    end
+
+    def template_variable_handler_link_url(name, issuer)
+      if link_url.present? && UrlValidator.valid?(link_url, absolute_path: true)
+        CGI.escapeHTML(link_url)
+      end
     end
 
     def referenced_questions
