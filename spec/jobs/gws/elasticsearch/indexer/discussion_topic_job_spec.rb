@@ -46,7 +46,7 @@ describe Gws::Elasticsearch::Indexer::DiscussionTopicJob, dbscope: :example, es:
         site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
           expect(es_docs["hits"]["hits"].length).to eq 2
           es_docs["hits"]["hits"][0].tap do |es_doc|
-            expect(es_doc["_id"]).to eq "gws_discussion_posts-topic-#{topic.id}"
+            expect(es_doc["_id"]).to eq "gws_discussion_posts-post-#{topic.id}"
             source = es_doc["_source"]
             url = "/.g#{site.id}/discussion/-/forums/#{forum.id}/thread/topic#{topic.id}/comments#comment-#{topic.id}"
             expect(source['url']).to eq url
@@ -92,7 +92,7 @@ describe Gws::Elasticsearch::Indexer::DiscussionTopicJob, dbscope: :example, es:
           # confirm that file was removed from topic
           expect(es_docs["hits"]["hits"].length).to eq 1
           es_docs["hits"]["hits"][0].tap do |es_doc|
-            expect(es_doc["_id"]).to eq "gws_discussion_posts-topic-#{topic.id}"
+            expect(es_doc["_id"]).to eq "gws_discussion_posts-post-#{topic.id}"
             source = es_doc["_source"]
             url = "/.g#{site.id}/discussion/-/forums/#{forum.id}/thread/topic#{topic.id}/comments#comment-#{topic.id}"
             expect(source['url']).to eq url
