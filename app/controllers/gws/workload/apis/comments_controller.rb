@@ -10,23 +10,22 @@ class Gws::Workload::Apis::CommentsController < ApplicationController
   private
 
   def set_cur_work
-    @cur_work = Gws::Workload::Work.find(params[:work_id])
-    @cur_work.cur_user = @cur_user
+    @cur_work ||= begin
+      work = Gws::Workload::Work.site(@cur_site).find(params[:work_id])
+      work.cur_user = @cur_user
+      work
+    end
   end
 
   def fix_params
     { cur_site: @cur_site, cur_user: @cur_user, cur_work: @cur_work }
   end
 
-  def set_item
-    @item ||= begin
-      item = @cur_work.comments.find(params[:id])
-      item.attributes = fix_params
-      item
+  def set_items
+    @items ||= begin
+      set_cur_work
+      @cur_work.comments
     end
-  rescue Mongoid::Errors::DocumentNotFound => e
-    return render_destroy(true) if params[:action] == 'destroy'
-    raise e
   end
 
   public

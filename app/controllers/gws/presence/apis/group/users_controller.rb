@@ -6,7 +6,7 @@ class Gws::Presence::Apis::Group::UsersController < ApplicationController
   private
 
   def set_groups
-    @group = Gws::Group.find(params[:group]) rescue nil
+    @group = Gws::Group.site(@cur_site).find(params[:group]) rescue nil
     raise "404" unless @group
 
     @groups = [ @cur_site.root ] + @cur_site.root.descendants.active.to_a

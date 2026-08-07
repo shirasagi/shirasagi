@@ -27,7 +27,8 @@ class Cms::Apis::NodesController < ApplicationController
     @single = params[:single].present?
     @multi = !@single
 
-    @items = @model.site(@cur_site).
+    set_items
+    @items = @items.
       search(params[:s]).
       order_by(_id: -1).
       page(params[:page]).per(50)

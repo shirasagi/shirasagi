@@ -12,11 +12,15 @@ class Jmaxml::Apis::TsunamiRegionsController < ApplicationController
     @multi = !@single
   end
 
+  def set_items
+    @items ||= @model.site(@cur_site).and_enabled
+  end
+
   public
 
   def index
-    @items = @model.site(@cur_site).
-      and_enabled.
+    set_items
+    @items = @items.
       search(params[:s]).
       order_by(order: 1, _id: 1).
       page(params[:page]).per(50)

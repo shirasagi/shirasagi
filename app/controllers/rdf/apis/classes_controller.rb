@@ -26,6 +26,8 @@ class Rdf::Apis::ClassesController < ApplicationController
   def index
     @target = params[:target]
     @vocab_options = vocab_options
-    @items = @model.site(@cur_site).search(params[:s]).page(params[:page]).per(50)
+
+    set_items
+    @items = @items.search(params[:s]).page(params[:page]).per(50)
   end
 end
