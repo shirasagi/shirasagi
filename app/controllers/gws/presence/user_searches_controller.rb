@@ -29,6 +29,12 @@ class Gws::Presence::UserSearchesController < ApplicationController
     @s[:limit] ||= 100
   end
 
+  def set_items
+    @items ||= @model.site(@cur_site).
+      active.
+      readable_users(@cur_user, site: @cur_site)
+  end
+
   def items
     @items = @model.site(@cur_site).active.readable_users(@cur_user, site: @cur_site).order_by_title(@cur_site).
       page(params[:page]).per(@s[:limit])
@@ -82,9 +88,13 @@ class Gws::Presence::UserSearchesController < ApplicationController
         user_presence.memo = params.dig(:item, item.id.to_s, :memo)
         user_presence.manager_name = params.dig(:item, item.id.to_s, :manager_name)
         user_presence.department = params.dig(:item, item.id.to_s, :department)
-        user_presence.save if user_presence.changed?
+        if user_presence.changed? && !user_presence.save
+          result = false
+        end
         item.tel_ext = params.dig(:item, item.id.to_s, :tel_ext)
-        item.save if item.changed?
+        if item.changed? && !item.save
+          result = false
+        end
         @items << item
       rescue
         result = false

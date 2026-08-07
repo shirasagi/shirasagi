@@ -2,18 +2,17 @@
 Gws_Presence_User.render();
 new ScrollHint('.js-scrollable', {
   i18n: {
-    scrollable: 'スクロールできます'
+    scrollable: '<%= t('gws/presence.scrollable') %>'
   }
 });
 <% end %>
 <%
-  time = Time.zone.now
   send_message = Gws::Memo::Message.allowed?(:edit, @cur_user, site: @cur_site)
 %>
 <% @send_message_proc = proc do |user| %>
   <% path = new_gws_memo_message_path(to: user.id) %>
   <% if path %>
-    <%= link_to path, { "aria-label": t("ss.controls.send_message") } do %>
+    <%= link_to path, { "aria-label": t("ss.links.send_message") } do %>
       <span class="material-icons-outlined">
         mail
       </span>
@@ -21,7 +20,6 @@ new ScrollHint('.js-scrollable', {
   <% end %>
 <% end %>
 
-<time datetime="<%= time %>>" style="display: none;"><%=l time, format: :long %></time>
 <div class="presence-users presence-user-search">
   <div class="data-table-wrap wrap-table js-scrollable">
     <table class="index data-table">
@@ -39,7 +37,7 @@ new ScrollHint('.js-scrollable', {
         <% if send_message %>
           <th class="presence-send-message">
             <span class="material-icons-outlined">
-                comment
+              comment
             </span>
           </th>
         <% end %>

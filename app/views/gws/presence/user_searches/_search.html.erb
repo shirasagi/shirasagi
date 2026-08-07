@@ -33,11 +33,11 @@ $('#s_title_id').trigger('change');
   <%= f.select :custom_group_id, options_from_collection_for_select(@custom_groups, :id, :name, @s[:custom_group_id]), include_blank: Gws::CustomGroup.model_name.human %>
   <%= f.select :title_id, options_from_collection_for_select(@titles, :id, :name, @s[:title_id]), include_blank: t('gws/presence.search.title_id') %>
   <div class="search-inner">
-    <%= f.text_field :keyword, placeholder: t('gws/presence.search.keyword'), style: "width: 500px;" %>
+    <%= f.text_field :keyword, placeholder: t('gws/presence.search.keyword'), aria: { label: t('gws/presence.search.keyword') }, style: "width: 500px;" %>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
 
     <span class="limit">
-      <%= @model.t :limit %>
+      <%= f.label(:limit, @model.t(:limit)) %>
       <%= f.select :limit, %w(20 50 100), selected: @s[:limit] %>
     </span>
   </div>

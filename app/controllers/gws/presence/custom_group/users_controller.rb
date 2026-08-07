@@ -22,7 +22,7 @@ class Gws::Presence::CustomGroup::UsersController < ApplicationController
   end
 
   def items
-    @items = @custom_group.members.active.search(params[:s]).order_by_title(@cur_site).
+    @items = @custom_group.members.active.readable_users(@cur_user, site: @cur_site).search(params[:s]).order_by_title(@cur_site).
       page(params[:page]).per(25)
   end
 

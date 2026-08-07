@@ -12,7 +12,7 @@
 <%= jquery do %>
 new ScrollHint('.js-scrollable', {
   i18n: {
-    scrollable: 'スクロールできます'
+    scrollable: '<%= t('gws/presence.scrollable') %>'
   }
 });
 <% end %>
@@ -24,7 +24,7 @@ new ScrollHint('.js-scrollable', {
 <%= hidden_field_tag :page, params[:page] %>
 
 <div class="main-box presence-users presence-user-search">
-  <p class="lead-scroll">※表が画面内に収まらない場合は横にスクロールして確認できます。</p>
+  <p class="lead-scroll"><%= t('gws/presence.lead_scroll') %></p>
   <div class="data-table-wrap wrap-table js-scrollable">
     <table class="index data-table">
       <thead>

@@ -18,13 +18,16 @@ describe 'gws_presence_user_searches', type: :feature, dbscope: :example, js: tr
         expect(page).to have_css(".presence-state", text: presence_states["available"])
 
         find(".presence-memo").click
-        fill_in "presence_memo", with: "new_memo"
+        wait_for_all_turbo_frames
+        within "form" do
+          fill_in "item[memo]", with: "new_memo"
+        end
         find(".presence-memo").click
-        expect(page).to have_css("[data-name='presence_memo']", text: "new_memo")
 
         click_link(gws_user.gws_main_group(site).trailing_name)
+        wait_for_all_turbo_frames
 
-        expect(page).to have_css("[data-name='presence_memo']", text: "new_memo")
+        expect(page).to have_css("a", text: "new_memo")
 
         wait_cbox_open { click_link(gws_user.name) }
       end
@@ -60,7 +63,7 @@ describe 'gws_presence_user_searches', type: :feature, dbscope: :example, js: tr
         click_button(I18n.t('ss.buttons.close'))
       end
 
-      expect(page).to have_css("[data-name='presence_memo']", text: "modified_memo")
+      expect(page).to have_css("a", text: "modified_memo")
       expect(page).to have_css("td", text: "modified_manager_name")
       expect(page).to have_css("td", text: "modified_tel_ext")
       expect(page).to have_css("td", text: "modified_department")

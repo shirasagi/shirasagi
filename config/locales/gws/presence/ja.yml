@@ -1,6 +1,8 @@
 ja:
   gws/presence:
     group: グループ
+    lead_scroll: ※表が画面内に収まらない場合は横にスクロールして確認できます。
+    scrollable: スクロールできます
     sync_state: ステータス自動更新
     buttons:
       register_reminder: リマインダーを登録

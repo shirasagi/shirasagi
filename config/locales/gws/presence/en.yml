@@ -1,6 +1,8 @@
 en:
   gws/presence:
     group: Group
+    lead_scroll: If the table does not fit on the screen, you can scroll horizontally to view it.
+    scrollable: Scrollable
     sync_state: Automatic status updates
     buttons:
       register_reminder: Register reminders

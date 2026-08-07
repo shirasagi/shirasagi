@@ -12,7 +12,7 @@ $(".user-detail").colorbox({
 });
 new ScrollHint('.js-scrollable', {
   i18n: {
-    scrollable: 'スクロールできます'
+    scrollable: '<%= t('gws/presence.scrollable') %>'
   }
 });
 <% end %>
@@ -22,7 +22,7 @@ new ScrollHint('.js-scrollable', {
 </div>
 
 <div class="main-box presence-users presence-user-search">
-  <p class="lead-scroll">※表が画面内に収まらない場合は横にスクロールして確認できます。</p>
+  <p class="lead-scroll"><%= t('gws/presence.lead_scroll') %></p>
   <div class="data-table-wrap wrap-table js-scrollable">
     <table class="index data-table">
       <thead>
@@ -84,7 +84,7 @@ new ScrollHint('.js-scrollable', {
             </td>
             <% if send_message %>
               <td class="no-overflow">
-                <%= link_to new_gws_memo_message_path(to: item.id) do %>
+                <%= link_to new_gws_memo_message_path(to: item.id), { "aria-label": t("ss.links.send_message") } do %>
                   <span class="material-icons-outlined">
                     mail
                   </span>
@@ -125,7 +125,7 @@ new ScrollHint('.js-scrollable', {
             </td>
             <% if send_message %>
               <td class="no-overflow">
-                <%= link_to new_gws_memo_message_path(to: item.id) do %>
+                <%= link_to new_gws_memo_message_path(to: item.id), { "aria-label": t("ss.links.send_message") } do %>
                   <span class="material-icons-outlined">
                     mail
                   </span>
