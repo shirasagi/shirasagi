@@ -32,7 +32,7 @@ module History::Addon
       return if @skip_history_backup
 
       max_age = History::Backup.max_age
-      current = current_backup
+      current = current_backup.presence || backups.first
       before = before_backup
 
       # add backup
@@ -67,15 +67,17 @@ module History::Addon
       current.state = 'before' if current
       before.state = nil if before
 
-      backup.save
-      if current
-        # don't touch "updated"
-        current.without_record_timestamps { current.save }
-      end
+      return false if backup.invalid? || current&.invalid? || before&.invalid?
+
       if before
         # don't touch "updated"
         before.without_record_timestamps { before.save }
       end
+      if current
+        # don't touch "updated"
+        current.without_record_timestamps { current.save }
+      end
+      backup.save
 
       # remove old backups
       backups.skip(max_age).destroy
