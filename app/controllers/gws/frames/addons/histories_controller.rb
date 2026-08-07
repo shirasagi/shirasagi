@@ -26,7 +26,12 @@ class Gws::Frames::Addons::HistoriesController < ApplicationController
   def set_item
     return @item if @item
 
-    model_class = params[:model_class].constantize rescue nil
+    class_name = params[:model_class].to_s.classify rescue nil
+    if class_name.to_s.start_with?('Gws::')
+      model_class = class_name.constantize rescue nil
+    else
+      model_class = nil
+    end
     raise '404' unless model_class
     raise '404' unless model_class.include?(Gws::Addon::History)
 
