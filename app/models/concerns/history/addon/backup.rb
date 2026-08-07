@@ -67,6 +67,8 @@ module History::Addon
       current.state = 'before' if current
       before.state = nil if before
 
+      return false if backup.invalid? || current&.invalid? || before&.invalid?
+
       if before
         # don't touch "updated"
         before.without_record_timestamps { before.save }

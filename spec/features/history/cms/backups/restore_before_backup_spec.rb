@@ -99,7 +99,7 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
       expect(current_path).to eq restore_path
       expect(page).to have_css('dd', text: I18n.l(page_item.updated))
       expect(page).to have_css('dd', text: SS.version)
-      expect(page).to have_css('dd', text: I18n.l(backup_item.updated))
+      expect(page).to have_css('dd', text: I18n.l(backup_item.data['updated'].in_time_zone))
       expect(page).to have_css('dd', text: backup_item.version)
 
       click_button I18n.t('history.buttons.restore')
