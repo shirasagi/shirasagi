@@ -137,6 +137,9 @@ Rails.application.routes.draw do
         resource :group, only: %i[show update]
         resource :contrast, only: %i[show update]
       end
+      namespace :addons do
+        resources :histories, only: [:index], path: 'histories/:model_class/:model_id'
+      end
     end
   end
 
