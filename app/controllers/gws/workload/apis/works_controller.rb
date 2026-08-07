@@ -6,8 +6,12 @@ class Gws::Workload::Apis::WorksController < ApplicationController
   helper_method :category_options, :load_options, :client_options, :cycle_options
 
   def form_options
-    @item = @model.find(params[:id]) rescue nil
-    @item ||= @model.new
+    @item = @model.site(@cur_site).find(params[:id]) rescue nil
+    @item ||= begin
+      item = @model.new
+      item.cur_site = @cur_site
+      item
+    end
 
     @year = params[:year].to_i if params[:year].match?(/\A\d+\z/)
     @group = Gws::Group.find(params[:group]) rescue nil

@@ -16,7 +16,7 @@ class Gws::Memo::Apis::SharedMultiCheckboxesController < ApplicationController
 
   def set_group
     if params[:s].present? && params[:s][:group].present?
-      @address_group = Gws::SharedAddress::Group.find(params[:s][:group]) rescue nil
+      @address_group = Gws::SharedAddress::Group.site(@cur_site).find(params[:s][:group]) rescue nil
     end
 
     @groups = Gws::SharedAddress::Group.site(@cur_site).readable(@cur_user, site: @cur_site)

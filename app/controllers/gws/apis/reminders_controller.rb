@@ -27,7 +27,7 @@ class Gws::Apis::RemindersController < ApplicationController
 
   def destroy
     @now = Time.zone.now
-    reminder = Gws::Reminder.find(params[:id])
+    reminder = Gws::Reminder.site(@cur_site).find(params[:id])
     reminder.deleted = @now
     reminder.read_at = @now
     reminder.notifications.each do |notification|
@@ -40,7 +40,7 @@ class Gws::Apis::RemindersController < ApplicationController
 
   def restore
     @now = Time.zone.now
-    reminder = Gws::Reminder.find(params[:id])
+    reminder = Gws::Reminder.site(@cur_site).find(params[:id])
     reminder.deleted = nil
     reminder.read_at = @now
     reminder.notifications.each do |notification|
