@@ -15,7 +15,7 @@
     <%= gws_menu_icon(:reminder, gws_reminder_main_path) %>
   <% end %>
   <% if @cur_site.menu_presence_visible? && Gws.module_usable?(:presence, @cur_site, @cur_user) %>
-    <%= gws_menu_icon(:presence, gws_presence_group_users_path(group: @cur_user.gws_main_group(@cur_site))) %>
+    <%= gws_menu_icon(:presence, gws_presence_user_searches_path) %>
   <% end %>
   <% if @cur_site.menu_memo_visible? && Gws.module_usable?(:memo, @cur_site, @cur_user) %>
     <%= gws_menu_icon(:memo, gws_memo_messages_path) %>

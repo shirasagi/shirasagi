@@ -1,26 +1,28 @@
+<%
+  group = @group || @custom_group
+  send_message = Gws::Memo::Message.allowed?(:edit, @cur_user, site: @cur_site)
+%>
+
 <%= jquery do %>
 Gws_Presence_User.render();
+$(".user-detail").colorbox({
+  maxWidth: "80%",
+  maxHeight: "80%",
+  fixed: true
+});
 new ScrollHint('.js-scrollable', {
   i18n: {
     scrollable: '<%= t('gws/presence.scrollable') %>'
   }
 });
 <% end %>
-<%
-  send_message = Gws::Memo::Message.allowed?(:edit, @cur_user, site: @cur_site)
-%>
-<% @send_message_proc = proc do |user| %>
-  <% path = new_gws_memo_message_path(to: user.id) %>
-  <% if path %>
-    <%= link_to path, { "aria-label": t("ss.links.send_message") } do %>
-      <span class="material-icons-outlined">
-        mail
-      </span>
-    <% end %>
-  <% end %>
-<% end %>
 
-<div class="presence-users presence-user-search">
+<div class="list-search gws-presence-list-search">
+  <%= render partial: 'search' %>
+</div>
+
+<div class="main-box presence-users presence-user-search">
+  <p class="lead-scroll"><%= t('gws/presence.lead_scroll') %></p>
   <div class="data-table-wrap wrap-table js-scrollable">
     <table class="index data-table">
       <thead>
@@ -57,10 +59,10 @@ new ScrollHint('.js-scrollable', {
               <%== user_presence_state_selector(item) %>
             </td>
             <td class="no-overflow">
-              <%= render_edit_presence_plan(item) %>
+              <%= render_edit_presence_memo(item) %>
             </td>
             <td class="no-overflow">
-              <%= link_to item.gws_main_group(@cur_site).trailing_name, gws_presence_user_searches_path(s: { group_id: item.gws_main_group(@cur_site).id }), class: "group-name" %>
+              <%= link_to item.gws_main_group(@cur_site).trailing_name, { action: :index, s: { group_id: item.gws_main_group(@cur_site).id } }, class: "group-name" %>
             </td>
             <td class="no-overflow">
               <%= user_presence.manager_name %>
@@ -69,7 +71,7 @@ new ScrollHint('.js-scrollable', {
               <%= tryb { item.title(@cur_site).name } %>
             </td>
             <td class="no-overflow">
-              <%= item.name %>
+              <%= link_to item.name, gws_apis_user_detail_path(id: item), class: 'user-detail link' %>
             </td>
             <td class="no-overflow">
               <%= item.send :kana %>
@@ -82,7 +84,11 @@ new ScrollHint('.js-scrollable', {
             </td>
             <% if send_message %>
               <td class="no-overflow">
-                <% @send_message_proc.call(item) %>
+                <%= link_to new_gws_memo_message_path(to: item.id), { "aria-label": t("ss.links.send_message") } do %>
+                  <span class="material-icons-outlined">
+                    mail
+                  </span>
+                <% end %>
               </td>
             <% end %>
           </tr>
@@ -97,7 +103,7 @@ new ScrollHint('.js-scrollable', {
               <%= user_presence.memo %>
             </td>
             <td class="no-overflow">
-              <%= link_to item.gws_main_group(@cur_site).trailing_name, gws_presence_user_searches_path(s: { group_id: item.gws_main_group(@cur_site).id }), class: "group-name" %>
+              <%= link_to item.gws_main_group(@cur_site).trailing_name, { action: :index, s: { group_id: item.gws_main_group(@cur_site).id } }, class: "group-name" %>
             </td>
             <td class="no-overflow">
               <%= user_presence.manager_name %>
@@ -106,7 +112,7 @@ new ScrollHint('.js-scrollable', {
               <%= tryb { item.title(@cur_site).name } %>
             </td>
             <td class="no-overflow">
-              <%= item.name %>
+              <%= link_to item.name, gws_apis_user_detail_path(id: item), class: 'user-detail link' %>
             </td>
             <td class="no-overflow">
               <%= item.send :kana %>
@@ -119,7 +125,11 @@ new ScrollHint('.js-scrollable', {
             </td>
             <% if send_message %>
               <td class="no-overflow">
-                <% @send_message_proc.call(item) %>
+                <%= link_to new_gws_memo_message_path(to: item.id), { "aria-label": t("ss.links.send_message") } do %>
+                  <span class="material-icons-outlined">
+                    mail
+                  </span>
+                <% end %>
               </td>
             <% end %>
           </tr>
@@ -129,4 +139,5 @@ new ScrollHint('.js-scrollable', {
     </table>
   </div>
 </div>
-<div class="list-more"><%= link_to t("gws/presence.links.all_groups"), gws_presence_user_searches_path %></div>
+
+<%= paginate @items if @items.try(:current_page) %>
