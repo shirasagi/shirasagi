@@ -692,6 +692,14 @@
 }
 // Print View
 .print-preview {
+  .calendar-mb-scroller {
+    overflow: visible;
+    &[data-view="timelineDay"] {
+      .calendar-wrap {
+        min-width: 0;
+      }
+    }
+  }
   .fc-unthemed {
     th,
     td {
@@ -869,6 +877,39 @@
 .calendar {
   ~ .calendar .fc-row-name td {
     border-top-width: 0;
+  }
+}
+
+// multiple calendar (mb scroller)
+.calendar-mb-scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+  @include init.mb {
+    .fc-toolbar {
+      position: sticky;
+      left: 0;
+      width: 443px;
+    }
+    .calendar-multiple-header .header-wrap {
+      position: sticky;
+      left: 5px;
+      width: 420px;
+    }
+    .calendar-attr {
+      margin-top: 3px;
+      float: none;
+      span {
+        margin-left: 0px;
+      }
+    }
+  }
+  &[data-view="timelineDay"] {
+    .calendar-wrap {
+      min-width: 1200px;
+      @include init.mb {
+        min-width: 1600px;
+      }
+    }
   }
 }
 

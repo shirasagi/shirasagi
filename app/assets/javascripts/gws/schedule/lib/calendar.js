@@ -155,6 +155,9 @@ SS.ready(function() {
             return target.prepend($('<span />', { class: "fc-loading" }).text(i18next.t("gws/schedule.errors.resource_error")));
           }
         },
+        viewRender: function(view, _element) {
+          $(selector).closest(".calendar-mb-scroller").attr("data-view", view.type);
+        },
         eventRender: function(event, element) {
           var name = element.find('.fc-title').text();
           var span = $('<span class="fc-event-name"></span>').text(name);

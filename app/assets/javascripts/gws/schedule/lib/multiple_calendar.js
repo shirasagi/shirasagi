@@ -52,7 +52,7 @@ SS.ready(function() {
       Gws_Schedule_Multiple_Calendar.onceRendered = true;
     };
 
-    Gws_Schedule_Multiple_Calendar.defaultParams = function (_selector, _opts) {
+    Gws_Schedule_Multiple_Calendar.defaultParams = function (selector, _opts) {
       return {
         firstDay: 0,
         defaultView: 'basicWeek',
@@ -73,7 +73,10 @@ SS.ready(function() {
             minTime: '08:00',
             maxTime: '22:00'
           }
-        }
+        },
+        viewRender: function(view, _element) {
+          $(selector).closest(".calendar-mb-scroller").attr("data-view", view.type);
+        },
       };
     };
 
