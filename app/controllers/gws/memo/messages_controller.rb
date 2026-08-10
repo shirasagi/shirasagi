@@ -463,6 +463,8 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def download_attachment
+    raise "404" if SS::DownloadPolicy.download_disallowed?
+
     set_item
 
     files = @item.files

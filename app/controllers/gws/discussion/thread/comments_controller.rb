@@ -97,6 +97,8 @@ class Gws::Discussion::Thread::CommentsController < ApplicationController
   end
 
   def download_attachment
+    raise "404" if SS::DownloadPolicy.download_disallowed?
+
     if params[:topic_id] == params[:id]
       set_items
       @item = @topic
@@ -106,7 +108,7 @@ class Gws::Discussion::Thread::CommentsController < ApplicationController
 
     files = @item.files
     if files.blank?
-      redirect_to({ action: :show }, { notice: t("gws/workflow.notice.no_files") })
+      redirect_to({ action: :index }, { notice: t("gws/workflow.notice.no_files") })
       return
     end
 

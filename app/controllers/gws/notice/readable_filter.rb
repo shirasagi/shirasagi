@@ -8,8 +8,8 @@ module Gws::Notice::ReadableFilter
     before_action :set_categories
     before_action :set_category
     before_action :set_groups
-    before_action :set_group
     before_action :set_search_params
+    before_action :set_group
     before_action :set_items
   end
 
@@ -43,7 +43,7 @@ module Gws::Notice::ReadableFilter
   end
 
   def set_group
-    return if params[:group_id].blank? || params[:group_id] == '-'
+    return if @s[:group_id].blank? || @s[:group_id] == '-'
     @group ||= @groups.where(id: @s[:group_id]).first
   end
 
@@ -126,6 +126,8 @@ module Gws::Notice::ReadableFilter
   end
 
   def download_attachment
+    raise "404" if SS::DownloadPolicy.download_disallowed?
+
     set_item
 
     files = @item.files

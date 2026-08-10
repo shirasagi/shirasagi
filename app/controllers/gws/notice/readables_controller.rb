@@ -49,7 +49,7 @@ class Gws::Notice::ReadablesController < ApplicationController
     end
 
     view_context.tag.div(class: css_classes) do
-      view_context.link_to(prev_path, title: label, aria_label: label) do
+      view_context.link_to(prev_path, title: label, aria: { label: label }) do
         view_context.tag.span("arrow_circle_left", class: "material-icons-outlined")
       end
     end
@@ -64,7 +64,7 @@ class Gws::Notice::ReadablesController < ApplicationController
     end
 
     view_context.tag.div(class: css_classes) do
-      view_context.link_to(next_path, title: label, aria_label: label) do
+      view_context.link_to(next_path, title: label, aria: { label: label }) do
         view_context.tag.span("arrow_circle_right", class: "material-icons-outlined")
       end
     end
@@ -74,7 +74,7 @@ class Gws::Notice::ReadablesController < ApplicationController
 
   def index
     @categories = @categories.tree_sort
-    @items = @items.search(@s).page(params[:page]).per(50)
+    @items = @items.search(@s).reorder(released: -1, id: -1).page(params[:page]).per(50)
 
     id_list = []
     @items.each do |item|
