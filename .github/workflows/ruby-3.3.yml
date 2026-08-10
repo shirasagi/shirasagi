@@ -25,7 +25,7 @@ jobs:
         id: [ 0,1,2,3,4,5,6,7,8,9,10,11 ]
     steps:
       - name: Free Disk Space
-        uses: jlumbroso/free-disk-space@main
+        uses: jlumbroso/free-disk-space@v1.3.1
         with:
           # 削除するものに true を、削除しないものに false をセットする
           #
@@ -57,10 +57,12 @@ jobs:
           mongodb-version: 7.0
       - name: Prepare Ldap
         run: docker pull osixia/openldap
-      - name: Start Shirasagi Mail
+      - name: Prepare Shirasagi Mail
         run: |
           docker pull ghcr.io/shirasagi/mail:latest
           docker tag ghcr.io/shirasagi/mail:latest shirasagi/mail:latest
+      - name: Launch Shirasagi Mail
+        run: |
           docker run --name test_mail -d -p 10143:143 -p 10587:587 shirasagi/mail
       - name: Prepare Michecker
         run: |
@@ -68,8 +70,8 @@ jobs:
           docker tag ghcr.io/shirasagi/michecker:latest shirasagi/michecker:latest
       - name: Prepare Elasticsearch
         run: |
-          docker pull ghcr.io/shirasagi/elasticsearch:7
-          docker tag ghcr.io/shirasagi/elasticsearch:7 shirasagi/elasticsearch:latest
+          docker pull ghcr.io/shirasagi/elasticsearch:8
+          docker tag ghcr.io/shirasagi/elasticsearch:8 shirasagi/elasticsearch:latest
       - name: Launch Elasticsearch
         id: elasticsearch
         run: |
@@ -111,11 +113,9 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: 22
-          cache: npm
-      - name: Install yarn
-        run: npm install -g yarn
+          cache: 'yarn'
       - name: Install node modules
-        run: yarn install
+        run: yarn install --frozen-lockfile
       - name: Install MeCab Ruby
         run: |
           tar xzf vendor/mecab/mecab-ruby-0.996.tar.gz
