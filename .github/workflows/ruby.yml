@@ -95,9 +95,10 @@ jobs:
           echo $container_id
           echo "CONTAINER_ID=$container_id" >> $GITHUB_OUTPUT
       - name: Install pre requisites
-        run: |
-          sudo apt update
-          sudo apt -y install imagemagick libmagick++-dev sox libsox-dev lame libmp3lame-dev mecab libmecab-dev mecab-ipadic-utf8 open-jtalk open-jtalk-mecab-naist-jdic graphicsmagick
+        uses: awalsh128/cache-apt-pkgs-action@v1
+        with:
+          packages: imagemagick libmagick++-dev sox libsox-dev lame libmp3lame-dev mecab libmecab-dev mecab-ipadic-utf8 open-jtalk open-jtalk-mecab-naist-jdic graphicsmagick
+          version: 1.0
       - name: Google Chrome Version
         run: |
           which google-chrome
