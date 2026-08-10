@@ -1,5 +1,5 @@
 name: reviewdog
-on: [pull_request]
+on: [abracadabra]
 env:
   DISABLE_SPRING: 1
 jobs:
