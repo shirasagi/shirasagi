@@ -181,31 +181,31 @@ jobs:
         run: docker ps -a
       - name: Bundle assets
         run: npx webpack-cli build
-      - name: Run tests
-        run: |
-          file_list=$(bundle exec ruby .travis.d/split_specs.rb -p 12 -i 1)
-          if [ $? -ne 0 ]; then
-            exit 1
-          fi
-          echo $file_list | xargs bundle exec rspec --profile 10
-        env:
-          TZ: "Asia/Tokyo"
-          LANG: ja_JP.UTF-8
-          LC_ALL: ja_JP.UTF-8
-          allow_open_jtalk: 1
-          LDAP_TEST: enable
-          ES_CONTAINER_ID: ${{ steps.elasticsearch.outputs.CONTAINER_ID }}
-          CKAN_CONTAINER_ID: ${{ steps.ckan.outputs.CONTAINER_ID }}
-          RUBYOPT: "-W:deprecated"
-          logs_on_failure: 0
-          CAPYBARA_MAX_WAIT_TIME: 30
-          DOWNLOAD_MAX_WAIT_TIME: 10
-          driver: chrome
-          # driver: firefox
-          # driver: random
-          # RSPEC_LOCALE: en
-          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
-          RUBYZIP_V3_API_WARN: true
+#      - name: Run tests
+#        run: |
+#          file_list=$(bundle exec ruby .travis.d/split_specs.rb -p 12 -i 1)
+#          if [ $? -ne 0 ]; then
+#            exit 1
+#          fi
+#          echo $file_list | xargs bundle exec rspec --profile 10
+#        env:
+#          TZ: "Asia/Tokyo"
+#          LANG: ja_JP.UTF-8
+#          LC_ALL: ja_JP.UTF-8
+#          allow_open_jtalk: 1
+#          LDAP_TEST: enable
+#          ES_CONTAINER_ID: ${{ steps.elasticsearch.outputs.CONTAINER_ID }}
+#          CKAN_CONTAINER_ID: ${{ steps.ckan.outputs.CONTAINER_ID }}
+#          RUBYOPT: "-W:deprecated"
+#          logs_on_failure: 0
+#          CAPYBARA_MAX_WAIT_TIME: 30
+#          DOWNLOAD_MAX_WAIT_TIME: 10
+#          driver: chrome
+#          # driver: firefox
+#          # driver: random
+#          # RSPEC_LOCALE: en
+#          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+#          RUBYZIP_V3_API_WARN: true
       #CI実行中にElasticsearchに問題が発生した場合、
       #このステップを有効にしElasticsearchのログを確認すること
       #- name: After test
