@@ -23,8 +23,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        parallelism: [ 1 ]
-        id: [ 0 ]
+        parallelism: [ 12 ]
+        id: [ 0,1,2,3,4,5,6,7,8,9,10,11 ]
     steps:
       - name: Free Disk Space
         uses: jlumbroso/free-disk-space@v1.3.1
@@ -70,28 +70,10 @@ jobs:
         run: |
           docker pull ghcr.io/shirasagi/michecker:latest
           docker tag ghcr.io/shirasagi/michecker:latest shirasagi/michecker:latest
-      - name: Elasticsearch Docker Image Digest
-        id: elasticsearch-docker-image-hash
-        run: |
-          digest=$(docker manifest inspect ghcr.io/shirasagi/elasticsearch:8 | jq -r .config.digest | sed -e 's/^.*://')
-          echo $digest
-          echo "DIGEST=$digest" >> $GITHUB_OUTPUT
-      - name: Cache Elasticsearch Docker image
-        uses: actions/cache@v6
-        id: cache-elasticsearch-images
-        with:
-          path: ~/docker-elasticsearch-image
-          key: ${{ runner.os }}-elasticsearch-docker-image-${{ steps.elasticsearch-docker-image-hash.outputs.DIGEST }}
       - name: Prepare Elasticsearch
-        if: steps.cache-elasticsearch-images.outputs.cache-hit != 'true'
         run: |
           docker pull ghcr.io/shirasagi/elasticsearch:8
           docker tag ghcr.io/shirasagi/elasticsearch:8 shirasagi/elasticsearch:latest
-          docker save shirasagi/elasticsearch:latest -o ~/docker-elasticsearch-image
-      - name: Load Elasticsearch
-        if: steps.cache-elasticsearch-images.outputs.cache-hit == 'true'
-        run: |
-          docker load -i ~/docker-elasticsearch-image
       - name: Launch Elasticsearch
         id: elasticsearch
         run: |
@@ -101,28 +83,10 @@ jobs:
           fi
           echo $container_id
           echo "CONTAINER_ID=$container_id" >> $GITHUB_OUTPUT
-      - name: Ckan Docker Image Digest
-        id: ckan-docker-image-hash
-        run: |
-          digest=$(docker manifest inspect ghcr.io/shirasagi/ckan:latest | jq -r .config.digest | sed -e 's/^.*://')
-          echo $digest
-          echo "DIGEST=$digest" >> $GITHUB_OUTPUT
-      - name: Cache Ckan Docker image
-        uses: actions/cache@v6
-        id: cache-ckan-images
-        with:
-          path: ~/docker-ckan-image
-          key: ${{ runner.os }}-ckan-docker-image-${{ steps.ckan-docker-image-hash.outputs.DIGEST }}
       - name: Prepare Ckan
-        if: steps.cache-ckan-images.outputs.cache-hit != 'true'
         run: |
           docker pull ghcr.io/shirasagi/ckan:latest
           docker tag ghcr.io/shirasagi/ckan:latest shirasagi/ckan:latest
-          docker save shirasagi/ckan:latest -o ~/docker-ckan-image
-      - name: Load Ckan
-        if: steps.cache-ckan-images.outputs.cache-hit == 'true'
-        run: |
-          docker load -i ~/docker-ckan-image
       - name: Launch Ckan
         id: ckan
         run: |
@@ -186,31 +150,31 @@ jobs:
         run: docker ps -a
       - name: Bundle assets
         run: npx webpack-cli build
-#      - name: Run tests
-#        run: |
-#          file_list=$(bundle exec ruby .travis.d/split_specs.rb -p 12 -i 1)
-#          if [ $? -ne 0 ]; then
-#            exit 1
-#          fi
-#          echo $file_list | xargs bundle exec rspec --profile 10
-#        env:
-#          TZ: "Asia/Tokyo"
-#          LANG: ja_JP.UTF-8
-#          LC_ALL: ja_JP.UTF-8
-#          allow_open_jtalk: 1
-#          LDAP_TEST: enable
-#          ES_CONTAINER_ID: ${{ steps.elasticsearch.outputs.CONTAINER_ID }}
-#          CKAN_CONTAINER_ID: ${{ steps.ckan.outputs.CONTAINER_ID }}
-#          RUBYOPT: "-W:deprecated"
-#          logs_on_failure: 0
-#          CAPYBARA_MAX_WAIT_TIME: 30
-#          DOWNLOAD_MAX_WAIT_TIME: 10
-#          driver: chrome
-#          # driver: firefox
-#          # driver: random
-#          # RSPEC_LOCALE: en
-#          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
-#          RUBYZIP_V3_API_WARN: true
+      - name: Run tests
+        run: |
+          file_list=$(bundle exec ruby .travis.d/split_specs.rb -p ${{ matrix.parallelism }} -i ${{ matrix.id }})
+          if [ $? -ne 0 ]; then
+            exit 1
+          fi
+          echo $file_list | xargs bundle exec rspec --profile 10
+        env:
+          TZ: "Asia/Tokyo"
+          LANG: ja_JP.UTF-8
+          LC_ALL: ja_JP.UTF-8
+          allow_open_jtalk: 1
+          LDAP_TEST: enable
+          ES_CONTAINER_ID: ${{ steps.elasticsearch.outputs.CONTAINER_ID }}
+          CKAN_CONTAINER_ID: ${{ steps.ckan.outputs.CONTAINER_ID }}
+          RUBYOPT: "-W:deprecated"
+          logs_on_failure: 0
+          CAPYBARA_MAX_WAIT_TIME: 30
+          DOWNLOAD_MAX_WAIT_TIME: 10
+          driver: chrome
+          # driver: firefox
+          # driver: random
+          # RSPEC_LOCALE: en
+          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+          RUBYZIP_V3_API_WARN: true
       #CI実行中にElasticsearchに問題が発生した場合、
       #このステップを有効にしElasticsearchのログを確認すること
       #- name: After test
