@@ -26,6 +26,22 @@ jobs:
         parallelism: [ 12 ]
         id: [ 0,1,2,3,4,5,6,7,8,9,10,11 ]
     steps:
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          # 削除するものに true を、削除しないものに false をセットする
+          #
+          # 注意：
+          # 当然、空き容量はあればあるほど良いが、true の数を多くすればするほどテストの実行時間が長くなる
+          # すべてを true にすると、1並列当たり3分ぐらいかかる。6並列だと18分、10並列だと30分もかかる
+          # テストが完了する最低限の空きがあれば十分なので、true にするのもほどほどに
+          tool-cache: false
+          android: false # trueにすると11GiBの削減
+          dotnet: false # trueにすると5.1GiBの削減
+          haskell: true # trueにすると3.6GiBの削減
+          large-packages: false
+          docker-images: false
+          swap-storage: false
       - uses: actions/checkout@v7
       - name: Generate ja_JP.UTF-8
         run: |
