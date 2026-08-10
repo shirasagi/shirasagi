@@ -43,13 +43,13 @@ jobs:
           docker-images: false
           swap-storage: false
       - uses: actions/checkout@v7
+      - run: mkdir -p ~/docker-image-cache
       - name: Cache Docker images
         uses: actions/cache@v6
+        id: cache-images
         with:
           path: ~/docker-image-cache
-          key: ${{ runner.os }}-docker-image-${{ hashFiles('**/your-dependency-file-if-any') }}
-          restore-keys: |
-            ${{ runner.os }}-docker-image-
+          key: ${{ runner.os }}-docker-image
       - name: Generate ja_JP.UTF-8
         run: |
           sudo locale-gen ja_JP
