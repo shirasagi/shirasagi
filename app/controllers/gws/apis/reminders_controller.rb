@@ -6,8 +6,9 @@ class Gws::Apis::RemindersController < ApplicationController
 
   def create
     models = Mongoid.models.select { |m| m.ancestors.include?(Gws::Referenceable) }
-    model = models.find{ |m| m.to_s == params[:item_model].classify }
-    item = model.find(params[:item_id])
+    item_model = params[:item_model].classify
+    model = models.find { |m| m.to_s == item_model }
+    item = model.site(@cur_site).find(params[:item_id])
     cond = {
       site_id: @cur_site.id,
       user_id: @cur_user.id,
@@ -27,7 +28,7 @@ class Gws::Apis::RemindersController < ApplicationController
 
   def destroy
     @now = Time.zone.now
-    reminder = Gws::Reminder.site(@cur_site).find(params[:id])
+    reminder = Gws::Reminder.site(@cur_site).user(@cur_user).find(params[:id])
     reminder.deleted = @now
     reminder.read_at = @now
     reminder.notifications.each do |notification|
@@ -40,7 +41,7 @@ class Gws::Apis::RemindersController < ApplicationController
 
   def restore
     @now = Time.zone.now
-    reminder = Gws::Reminder.site(@cur_site).find(params[:id])
+    reminder = Gws::Reminder.site(@cur_site).user(@cur_user).find(params[:id])
     reminder.deleted = nil
     reminder.read_at = @now
     reminder.notifications.each do |notification|

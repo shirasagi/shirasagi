@@ -11,7 +11,7 @@ class Gws::Board::Apis::CategoriesController < ApplicationController
     @categories = Gws::Board::Category.site(@cur_site).readable(@cur_user, site: @cur_site).tree_sort
 
     category_id = params.dig(:s, :category).presence
-    @category = @model.site(@cur_site).where(id: category_id).first if category_id.present?
+    @category = @model.site(@cur_site).find(category_id) if category_id.present?
   end
 
   def parent_name

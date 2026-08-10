@@ -4,7 +4,7 @@ class Gws::Affair::Leave::Apis::SpecialLeavesController < ApplicationController
   model Gws::Affair::SpecialLeave
 
   def index
-    @user = Gws::User.site(@cur_site).active.find_by(id: params[:uid])
+    @user = Gws::User.site(@cur_site).active.find(params[:uid])
 
     @items = @model.site(@cur_site).
       where(staff_category: @user.staff_category).
