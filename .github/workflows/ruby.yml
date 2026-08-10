@@ -43,6 +43,13 @@ jobs:
           docker-images: false
           swap-storage: false
       - uses: actions/checkout@v7
+      - name: Cache Docker images
+        uses: actions/cache@v6
+        with:
+          path: ~/docker-image-cache
+          key: ${{ runner.os }}-docker-image-${{ hashFiles('**/your-dependency-file-if-any') }}
+          restore-keys: |
+            ${{ runner.os }}-docker-image-
       - name: Generate ja_JP.UTF-8
         run: |
           sudo locale-gen ja_JP
@@ -59,19 +66,39 @@ jobs:
           mongodb-version: 8.0
       - name: Prepare Ldap
         run: docker pull osixia/openldap
-      - name: Start Shirasagi Mail
+      - name: Prepare Shirasagi Mail
+        if: steps.cache-images.outputs.cache-hit != 'true'
         run: |
           docker pull ghcr.io/shirasagi/mail:latest
           docker tag ghcr.io/shirasagi/mail:latest shirasagi/mail:latest
+          docker save -o ~/docker-image-cache/mail.tar shirasagi/mail:latest
+      - name: Load Shirasagi Mail
+        if: steps.cache-images.outputs.cache-hit == 'true'
+        run: |
+          docker load -i ~/docker-image-cache/mail.tar
+      - name: Launch Shirasagi Mail
+        run: |
           docker run --name test_mail -d -p 10143:143 -p 10587:587 shirasagi/mail
       - name: Prepare Michecker
+        if: steps.cache-images.outputs.cache-hit != 'true'
         run: |
           docker pull ghcr.io/shirasagi/michecker:latest
           docker tag ghcr.io/shirasagi/michecker:latest shirasagi/michecker:latest
+          docker save -o ~/docker-image-cache/michecker.tar shirasagi/michecker:latest
+      - name: Load Michecker
+        if: steps.cache-images.outputs.cache-hit == 'true'
+        run: |
+          docker load -i ~/docker-image-cache/michecker.tar
       - name: Prepare Elasticsearch
+        if: steps.cache-images.outputs.cache-hit != 'true'
         run: |
           docker pull ghcr.io/shirasagi/elasticsearch:8
           docker tag ghcr.io/shirasagi/elasticsearch:8 shirasagi/elasticsearch:latest
+          docker save -o ~/docker-image-cache/elasticsearch.tar shirasagi/elasticsearch:latest
+      - name: Load Elasticsearch
+        if: steps.cache-images.outputs.cache-hit == 'true'
+        run: |
+          docker load -i ~/docker-image-cache/elasticsearch.tar
       - name: Launch Elasticsearch
         id: elasticsearch
         run: |
@@ -82,9 +109,15 @@ jobs:
           echo $container_id
           echo "CONTAINER_ID=$container_id" >> $GITHUB_OUTPUT
       - name: Prepare Ckan
+        if: steps.cache-images.outputs.cache-hit != 'true'
         run: |
           docker pull ghcr.io/shirasagi/ckan:latest
           docker tag ghcr.io/shirasagi/ckan:latest shirasagi/ckan:latest
+          docker save -o ~/docker-image-cache/ckan.tar shirasagi/ckan:latest
+      - name: Load Ckan
+        if: steps.cache-images.outputs.cache-hit == 'true'
+        run: |
+          docker load -i ~/docker-image-cache/ckan.tar
       - name: Launch Ckan
         id: ckan
         run: |
