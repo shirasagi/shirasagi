@@ -43,9 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
     <div>
       <%
         sort_params = params.permit(:target, s: {})
-        options = %w(score released).map do |value|
-          name = t("cms.search_sort_options.#{value}")
-          [name, value, 'data-href': "#{@cur_node.url}?" + url_for(sort_params.merge(sort: value).to_query)]
+        options = @cur_node.sort_type_options.map do |k, v|
+          [k, v, 'data-href': "#{@cur_node.url}?" + url_for(sort_params.merge(sort: v).to_query)]
         end
       %>
       <%= t('cms.search_sort') %>
