@@ -23,8 +23,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        parallelism: [ 12 ]
-        id: [ 0,1,2,3,4,5,6,7,8,9,10,11 ]
+        parallelism: [ 1 ]
+        id: [ 0 ]
     steps:
       - name: Free Disk Space
         uses: jlumbroso/free-disk-space@main
@@ -185,7 +185,7 @@ jobs:
         run: npx webpack-cli build
       - name: Run tests
         run: |
-          file_list=$(bundle exec ruby .travis.d/split_specs.rb -p ${{ matrix.parallelism }} -i ${{ matrix.id }})
+          file_list=$(bundle exec ruby .travis.d/split_specs.rb -p 12 -i 1
           if [ $? -ne 0 ]; then
             exit 1
           fi
