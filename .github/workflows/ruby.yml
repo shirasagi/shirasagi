@@ -27,7 +27,7 @@ jobs:
         id: [ 0 ]
     steps:
       - name: Free Disk Space
-        uses: jlumbroso/free-disk-space@main
+        uses: jlumbroso/free-disk-space@v1
         with:
           # 削除するものに true を、削除しないものに false をセットする
           #
