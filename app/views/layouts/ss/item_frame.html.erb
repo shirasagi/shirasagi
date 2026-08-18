@@ -1,10 +1,13 @@
-<% body = capture { yield } %>
-<turbo-frame id="<%= @frame_id || "item-frame" %>">
+<%
+  frame_id = @frame_id.presence || try(:turbo_frame).presence || "item-frame"
+  body = capture { yield }
+%>
+<turbo-frame id="<%= frame_id %>">
   <%= body %>
 
   <%= javascript_tag do %>
     document.documentElement.addEventListener("turbo:frame-load", function() {
-      SS.render("#<%= @frame_id || "item-frame" %>");
+      SS.render("#<%= frame_id %>");
       SS_SearchUI.render();
     }, { once: true });
 

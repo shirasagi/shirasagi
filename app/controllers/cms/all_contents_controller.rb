@@ -32,20 +32,30 @@ class Cms::AllContentsController < ApplicationController
   public
 
   def download_all
-    csv_params = params.key?(:item) ? params.require(:item).permit(:encoding, :truncate) : SS::EMPTY_HASH
-
-    respond_to do |format|
-      format.html
-      format.csv do
-        exporter = Cms::AllContent.new(site: @cur_site, truncate: csv_params.fetch(:truncate, "yes") != "no")
-        enumerable = exporter.enum_csv(encoding: csv_params.fetch(:encoding, "UTF-8"))
-
-        filename = "all_contents_#{Time.zone.now.to_i}.csv"
-
-        response.status = 200
-        send_enum enumerable, type: enumerable.content_type, filename: filename
-      end
+    @item = Cms::AllContentParam.new(cur_site: @cur_site, cur_user: @cur_user)
+    if request.get? || request.head?
+      render
+      return
     end
+
+    @item.attributes = params.require(:item).permit(:encoding, :truncate)
+    if @item.invalid?
+      render
+      return
+    end
+
+    task = Cms::FileGenTask.new(cur_site: @cur_site, cur_user: @cur_user)
+    task.name = "all_contents_download_#{@cur_user.id}_#{Time.zone.now.to_i}"
+    task.file_basename = "all_contents"
+    task.file_format = "csv"
+    task.params = @item.attributes.as_json
+    task.save!
+
+    job_class = Cms::AllContentsExportJob.bind(site_id: @cur_site, user_id: @cur_user, task_id: task)
+    job_class.perform_later
+
+    @task = task
+    render
   end
 
   def import

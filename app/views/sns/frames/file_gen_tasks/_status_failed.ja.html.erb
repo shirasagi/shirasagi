@@ -1,0 +1,10 @@
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2>CSVダウンロードの失敗</h2></div>
+    <div class="addon-body">
+      <p>CSVの作成中に失敗しました。</p>
+      <p>エラーの原因などの詳細はジョブのログを確認してください。</p>
+      <p class="mt-2"><%= link_to "ジョブの実行履歴", job_sns_logs_path, data: { turbo: false } %></p>
+    </div>
+  </div>
+</div>

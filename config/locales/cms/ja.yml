@@ -3810,6 +3810,7 @@ ja:
       cms/import_files_job: CMS/ページ・フォルダー取り込み
       cms/role/import_job: CMS/権限インポート
       cms/form_db/import_url_job: CMS/定型DBインポート
+      cms/all_contents_export_job: CMS/全コンテンツ一括ダウンロード
       cms/all_contents_import_job: CMS/全コンテンツ一括設定
       cms/michecker_job: CMS/miChecker
       cms/sns_post/twitter_job: CMS/X(旧Twitter)ページ投稿

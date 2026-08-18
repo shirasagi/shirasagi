@@ -1,0 +1,14 @@
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2>CSVの作成中</h2></div>
+    <div class="addon-body">
+      <p>ただいまバックグラウンドでCSVを作成中です。</p>
+      <p><%= @item.current_count %>行</p>
+
+      <p class="mt-2">ダウンロードの準備が完了すると自動的にダイアログが閉じられダウンロードが始まります。</p>
+      <p>CSVダウンロードの準備が完了するとベル通知が届きます。このダイアログを閉じてしまった場合はベル通知が届くまで待ち、届いたベル通知からCSVダウンロードへお進みください。</p>
+
+      <%= render "status_refresh" %>
+    </div>
+  </div>
+</div>

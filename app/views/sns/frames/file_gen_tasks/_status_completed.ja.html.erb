@@ -1,0 +1,12 @@
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2>ダウンロードの準備完了</h2></div>
+    <div class="addon-body">
+      <p>ダウンロードの準備が完了しました。</p>
+      <p>自動的にダウンロードが始まらない場合は以下のダウンロードボタンをクリックしてダウンロードし、ダウンロード後にダイアログを閉じてください。</p>
+      <p class="mt-2">
+        <%= link_to "ダウンロード", sns_apis_file_gen_task_download_path(id: @item), class: "btn", data: { turbo: false, "ss--file-gen-task-target" => "instantlyClickAndClose" } %>
+      </p>
+    </div>
+  </div>
+</div>
