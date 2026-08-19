@@ -26,11 +26,13 @@ class Gws::Frames::Addons::HistoriesController < ApplicationController
   def set_item
     return @item if @item
 
-    class_name = params[:model_class].to_s.classify rescue nil
-    if class_name.to_s.start_with?('Gws::')
-      model_class = class_name.constantize rescue nil
+    class_name = params[:model_class].to_s
+    raise '404' unless class_name.to_s.start_with?('Gws::')
+
+    if Rails.env.development?
+      model_class = params[:model_class].to_s.classify.constantize rescue nil
     else
-      model_class = nil
+      model_class = Mongoid.models.find { |c| c.name == class_name }
     end
     raise '404' unless model_class
     raise '404' unless model_class.include?(Gws::Addon::History)
