@@ -1,0 +1,101 @@
+<header class="courses-detail__header">
+  <h2 class="courses-detail__title">{{ page.name }}</h2>
+  <p class="courses-detail__place">{{ values["絞り込み条件_活動場所"] }}</p>
+</header>
+<div class="courses-detail__img">{{ values["メイン画像"] }}</div>
+{% if values["紹介文"].value %}
+<div class="courses-detail__intro">
+  <p class="courses-detail__intro-text">{{ values["紹介文"] }}</p>
+</div>
+{% endif %}
+
+<div class="courses-detail__conditions">
+  <dl class="courses-detail__conditions-list">
+    <div class="courses-detail__conditions-item">
+      <dt class="courses-detail__conditions-item-label">ジャンル</dt>
+      <dd class="courses-detail__conditions-item-value">
+        {{ values["絞り込み条件_ジャンル"] }}
+      </dd>
+    </div><!-- /conditions-item -->
+    <div class="courses-detail__conditions-item">
+      <dt class="courses-detail__conditions-item-label">対象</dt>
+      <dd class="courses-detail__conditions-item-value">
+        {{ values["絞り込み条件_対象"] }}
+      </dd>
+    </div><!-- /conditions-item -->
+    <div class="courses-detail__conditions-item">
+      <dt class="courses-detail__conditions-item-label">活動場所</dt>
+      <dd class="courses-detail__conditions-item-value">
+        {{ values["絞り込み条件_活動場所"] }}
+      </dd>
+    </div><!-- /conditions-item -->
+    <div class="courses-detail__conditions-item">
+      <dt class="courses-detail__conditions-item-label">曜日</dt>
+      <dd class="courses-detail__conditions-item-value">
+        {{ values["絞り込み条件_曜日"] }}
+      </dd>
+    </div><!-- /conditions-item -->
+    <div class="courses-detail__conditions-item">
+      <dt class="courses-detail__conditions-item-label">時間帯</dt>
+      <dd class="courses-detail__conditions-item-value">
+        {{ values["絞り込み条件_時間帯"] }}
+      </dd>
+    </div><!-- /conditions-item -->
+    <div class="courses-detail__conditions-item">
+      <dt class="courses-detail__conditions-item-label">参加費</dt>
+      <dd class="courses-detail__conditions-item-value">
+        {{ values["絞り込み条件_参加費"] }}
+      </dd>
+    </div><!-- /conditions-item -->
+  </dl><!-- /conditions-list -->
+</div><!-- /conditions -->
+
+<div class="courses-detail__table-wrap">
+  <table class="courses-detail__table">
+    <tr class="courses-detail__table-item">
+      <th class="courses-detail__table-item-label">開催日時</th>
+      <td class="courses-detail__table-item-value">{{ values["講座情報_開催日時"] }}</td>
+    </tr>
+    <tr class="courses-detail__table-item">
+      <th class="courses-detail__table-item-label">参加費</th>
+      <td class="courses-detail__table-item-value">{{ values["講座情報_参加費"] }}</td>
+    </tr>
+    {% if values["講座情報_団体名"].value %}
+    <tr class="courses-detail__table-item">
+      <th class="courses-detail__table-item-label">団体名</th>
+      <td class="courses-detail__table-item-value">{{ values["講座情報_団体名"] }}</td>
+    </tr>
+    {% endif %}
+    {% if values["講座情報_講師名"].value %}
+    <tr class="courses-detail__table-item">
+      <th class="courses-detail__table-item-label">講師名</th>
+      <td class="courses-detail__table-item-value">{{ values["講座情報_講師名"] }}</td>
+    </tr>
+    {% endif %}
+    {% if values["講座情報_持ち物"].value %}
+    <tr class="courses-detail__table-item">
+      <th class="courses-detail__table-item-label">持ち物</th>
+      <td class="courses-detail__table-item-value">{{ values["講座情報_持ち物"] }}</td>
+    </tr>
+    {% endif %}
+    {% if values["講座情報_申込方法"].value %}
+    <tr class="courses-detail__table-item">
+      <th class="courses-detail__table-item-label">申込方法</th>
+      <td class="courses-detail__table-item-value">{{ values["講座情報_申込方法"] }}</td>
+    </tr>
+    {% endif %}
+    <tr class="courses-detail__table-item">
+      <th class="courses-detail__table-item-label">問い合わせ先</th>
+      <td class="courses-detail__table-item-value">{{ values["講座情報_問い合わせ先"] }}</td>
+    </tr>
+  </table><!--/table -->
+</div><!--/table-wrap -->
+
+{% if values["注意事項"].value %}
+<div class="courses-detail__attention">
+  <h3 class="courses-detail__attention-title">注意事項</h3>
+  <div class="courses-detail__attention-body">
+      {{ values["注意事項"] }}
+  </div>
+</div><!--/attention -->
+{% endif %}

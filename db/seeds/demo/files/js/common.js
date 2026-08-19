@@ -74,7 +74,7 @@ $(function () {
 });
 
 // load : 画像などが表示された後に実行
-$(window).load(function () {
+$(window).on('load', function () {
   // Firefox対応
 
   // 新着タブの記事がない場合、RSSリンクを非表示にする
@@ -143,7 +143,7 @@ var currentDispFunc = function () {
   $("#navi li").each(function () {
     var menu = $(this).find("a");
     if (path == menu.attr("href")) {
-      $("this").addClass("current");
+      $(this).addClass("current");
     }
   });
   var url = window.location.pathname;
@@ -338,7 +338,9 @@ var tabsCategoryFunc = function () {
   $('.cms-tabs .tab:nth-child(n+2)').each(function () {
     var catName = $('h2', this).text();
     var catId = $(this).attr('id');
-    $('time', this).after('<span class="cat ' + catId + '">' + catName + '</span>');
+
+    // カテゴリータグはLiquid側で出力するため、JSでの追加は停止
+    //$('time', this).after('<span class="cat ' + catId + '">' + catName + '</span>');
 
     var tabCont = $(this).html();
 
@@ -347,15 +349,12 @@ var tabsCategoryFunc = function () {
       var link = $('a', this).attr('href');
       if (tabCont.indexOf(link) !== -1) {
         //$(this).prev('span.cat').remove();
-        $(this).prev('time').after('<span class="cat ' + catId + '">' + catName + '</span>');
+        // カテゴリータグはLiquid側で出力するため、JSでの追加は停止
+        //$(this).prev('time').after('<span class="cat ' + catId + '">' + catName + '</span>');
       }
     });
   });
 
-  $('.cms-tabs article').each(function () {
-    var label = $('h2', this).text();
-    $('a.more', this).text('お知らせ一覧を見る');
-  });
   $('.cms-tabs article').each(function () {
     var label = $('h2', this).text();
     $('a.more', this).text($('a.more', this).parents('article').find('h2').text() + '一覧を見る');
@@ -597,7 +596,7 @@ var mypageCheckboxAddTags = function () {
 ---------------------------------------------------------- */
 
 var lineBreakChatbot = function () {
-  $('#chat .chat--close p').html('<p>なんでも<br>聞いてね！</p>');
+  $('#chat .chat--close p').html('なんでも<br>聞いてね！');
 }
 
 /* ----------------------------------------------------------
@@ -757,3 +756,19 @@ var fileSizeFunc = function () {
 var searchButtonFunc = function () {
   $('#search-button').html('<img src="/img/ic-search.svg" alt="検索">');
 }
+
+/* ----------------------------------------------------------
+ addArticleSearchLink
+---------------------------------------------------------- */
+document.addEventListener('DOMContentLoaded', function () {
+  setTimeout(function () {
+    document.querySelectorAll('#news .view nav').forEach(function (nav) {
+      if (nav.querySelector('.article-search-link')) return;
+
+      nav.insertAdjacentHTML(
+        'beforeend',
+        '<a class="article-search-link" href="/docs/search/">記事検索</a>'
+      );
+    });
+  }, 100);
+});

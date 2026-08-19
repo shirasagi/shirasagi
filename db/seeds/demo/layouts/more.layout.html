@@ -77,7 +77,12 @@
 
             <!-- サイド -->
             <div id="side">
-				{{ part "docs/folder-list" }}
+              <!-- 記事検索へのリンク -->
+              <div class="article-search-nav">
+                <a href="/docs/search/">記事検索</a>
+              </div>
+              <!-- フォルダーリスト -->
+				      {{ part "docs/folder-list" }}
               <!-- くらしのガイド -->
               {{ part "guide/catelist" }}
               <!-- オンラインサービス -->

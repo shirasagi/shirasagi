@@ -32,6 +32,8 @@ def save_column(type, data)
     model = Cms::Column::Select
   when :file_upload
     model = Cms::Column::FileUpload
+  when :multiple_files_upload
+    model = Cms::Column::MultipleFilesUpload
   when :head_line
     model = Cms::Column::Headline
   when :list
@@ -170,21 +172,31 @@ end
   name: 'ブロック入力', order: 40, state: 'public', filename: '4.html', sub_type: 'entry', group_ids: [@g_seisaku.id]
 )
 
+column_multiple_images_2_columns_layout_html = File.read("columns/multiple_images_2_columns.layout.html") rescue nil
+column_multiple_images_slider_layout_html = File.read("columns/multiple_images_slider.layout.html") rescue nil
 @form_columns4 = [
   save_column(:text, form: @form4, name: '一行入力', order: 10, required: 'optional', input_type: 'text'),
   save_column(:text_area, form: @form4, name: '複数行入力', order: 20, required: 'optional'),
   save_column(:head_line, form: @form4, name: '見出し', order: 30, required: 'optional'),
   save_column(:url, form: @form4, name: 'リンク', order: 40, required: 'optional'),
   save_column(:file_upload, form: @form4, name: 'イメージ', order: 50, required: 'optional', file_type: 'image'),
-  save_column(:file_upload, form: @form4, name: '添付ファイル', order: 60, required: 'optional', file_type: 'attachment'),
-  save_column(:list, form: @form4, name: '番号付きリスト', order: 70, required: 'optional', list_type: 'ol'),
-  save_column(:list, form: @form4, name: '番号なしリスト', order: 80, required: 'optional', list_type: 'ul'),
-  save_column(:table, form: @form4, name: '表', order: 90, required: 'optional'),
-  save_column(:youtube, form: @form4, name: 'YouTube埋め込み', order: 100, required: 'optional'),
-  save_column(:file_upload, form: @form4, name: '動画埋め込み', order: 110, required: 'optional', file_type: 'video'),
-  save_column(:free, form: @form4, name: '自由入力', order: 120, required: 'optional'),
-  save_column(:text, form: @form4, name: 'ライン', order: 130, required: 'optional', input_type: 'text',
-    layout: '<hr>', place_holder: 'ラインを挿入します。記入しないでください。'),
+  save_column(:multiple_files_upload, form: @form4, name: 'イメージ(複数-2カラム)', order: 60,
+    required: 'optional', file_type: 'image', header_input_setting: 'hide',
+    layout: column_multiple_images_2_columns_layout_html),
+  save_column(:multiple_files_upload, form: @form4, name: 'イメージ(複数-スライダー)', order: 70,
+    required: 'optional', file_type: 'image',
+    layout: column_multiple_images_slider_layout_html),
+  save_column(:file_upload, form: @form4, name: '添付ファイル', order: 80, required: 'optional', file_type: 'attachment'),
+  save_column(:multiple_files_upload, form: @form4, name: '添付ファイル(複数)', order: 90,
+    required: 'optional', file_type: 'attachment'),
+  save_column(:list, form: @form4, name: '番号付きリスト', order: 100, required: 'optional', list_type: 'ol'),
+  save_column(:list, form: @form4, name: '番号なしリスト', order: 110, required: 'optional', list_type: 'ul'),
+  save_column(:table, form: @form4, name: '表', order: 120, required: 'optional'),
+  save_column(:youtube, form: @form4, name: 'YouTube埋め込み', order: 130, required: 'optional'),
+  save_column(:file_upload, form: @form4, name: '動画埋め込み', order: 140, required: 'optional', file_type: 'video'),
+  save_column(:free, form: @form4, name: '自由入力', order: 150, required: 'optional'),
+  save_column(:text, form: @form4, name: 'ライン', order: 160, required: 'optional', input_type: 'text',
+    layout: '<hr>', place_holder: 'ラインを挿入します。記入しないでください。')
 ]
 
 @form5 = save_form(
@@ -255,6 +267,49 @@ save_init_column(order: 80, form: @form5, column: @form_columns5[3])
   save_column(:text, form: @form8, name: '想定収容人数', order: 80, required: 'required', input_type: 'text')
 ]
 
+@form9 = save_form(
+  name: '市民講座・サークル', order: 0, state: 'public', filename: '9.html', sub_type: 'static', group_ids: [@g_seisaku.id]
+)
+
+@form_columns9 = [
+  save_column(:file_upload, form: @form9, name: 'メイン画像', order: 10, required: 'optional', file_type: 'image'),
+  save_column(:text_area, form: @form9, name: '紹介文', order: 20, required: 'optional'),
+  save_column(
+    :checkbox, form: @form9, name: '絞り込み条件_ジャンル', order: 30, required: 'required',
+    select_options: %w(健康・運動 文化・芸術 音楽 料理 語学 パソコン・IT 園芸・自然 歴史・郷土 その他)
+  ),
+  save_column(
+    :checkbox, form: @form9, name: '絞り込み条件_対象', order: 40, required: 'required',
+    select_options: %w(子ども 親子 一般 シニア)
+  ),
+  save_column(
+    :checkbox, form: @form9, name: '絞り込み条件_活動場所', order: 60, required: 'required',
+    select_options: %w(市民センター 交流センター 文化センター 生涯学習センター 地域コミュニティセンター オンライン)
+  ),
+  save_column(
+    :checkbox, form: @form9, name: '絞り込み条件_曜日', order: 70, required: 'required',
+    select_options: %w(月曜日 火曜日 水曜日 木曜日 金曜日 土曜日 日曜日 不定期)
+  ),
+  save_column(
+    :checkbox, form: @form9, name: '絞り込み条件_時間帯', order: 80, required: 'required',
+    tooltips: "午前(10:00〜12:00)
+午後(13:00〜17:00)
+夜間(17:00以降)", select_options: %w(午前 午後 夜間)
+  ),
+  save_column(
+    :radio, form: @form9, name: '絞り込み条件_参加費', order: 90, required: 'required',
+    select_options: %w(無料 有料)
+  ),
+  save_column(:text, form: @form9, name: '講座情報_開催日時', order: 100, required: 'required', input_type: 'text'),
+  save_column(:text, form: @form9, name: '講座情報_参加費', order: 110, required: 'required', input_type: 'text'),
+  save_column(:text, form: @form9, name: '講座情報_団体名', order: 120, required: 'optional', input_type: 'text'),
+  save_column(:text, form: @form9, name: '講座情報_講師名', order: 130, required: 'optional', input_type: 'text'),
+  save_column(:text, form: @form9, name: '講座情報_持ち物', order: 140, required: 'optional', input_type: 'text'),
+  save_column(:text_area, form: @form9, name: '講座情報_申込方法', order: 150, required: 'optional'),
+  save_column(:text_area, form: @form9, name: '講座情報_問い合わせ先', order: 160, required: 'required'),
+  save_column(:text_area, form: @form9, name: '注意事項', order: 170, required: 'optional')
+]
+
 puts "form dbs"
 
 def save_form_db(data)
@@ -265,18 +320,19 @@ def save_form_db(data)
   item.save!
   item
 end
+
 @form_db1 = save_form_db name: "避難所情報（土砂災害）", form: @form8,
   import_url: ::File.join(@site.full_url, "dataset/shirasagi_City_designation_Shelter.csv"),
   import_primary_key: "ID", import_page_name: "名称",
-  import_column_options: [{name: "災害種別_崖崩れ、土石流及び地滑り", kind: "any_of", values: ["1"]}],
+  import_column_options: [{name: "災害種別_崖崩れ、土石流及び地滑り", kind: "any_of", values: %w[1]}],
   import_map: 1, generate_on_import: 1, import_skip_same_file: 1
 @form_db2 = save_form_db name: "避難所情報（地震）", form: @form8,
   import_url: ::File.join(@site.full_url, "dataset/shirasagi_City_designation_Shelter.csv"),
   import_primary_key: "ID", import_page_name: "名称",
-  import_column_options: [{name: "災害種別_地震", kind: "any_of", values: ["1"]}],
+  import_column_options: [{name: "災害種別_地震", kind: "any_of", values: %w[1]}],
   import_map: 1, generate_on_import: 1, import_skip_same_file: 1
 @form_db3 = save_form_db name: "避難所情報（津波）", form: @form8,
   import_url: ::File.join(@site.full_url, "dataset/shirasagi_City_designation_Shelter.csv"),
   import_primary_key: "ID", import_page_name: "名称",
-  import_column_options: [{name: "災害種別_津波", kind: "any_of", values: ["1"]}],
+  import_column_options: [{name: "災害種別_津波", kind: "any_of", values: %w[1]}],
   import_map: 1, generate_on_import: 1, import_skip_same_file: 1

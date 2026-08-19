@@ -44,7 +44,8 @@ save_part route: "article/page", filename: "oshirase/shisei/recent.part.html", n
 save_part route: "cms/crumb", filename: "breadcrumb.part.html", name: "パンくず", mobile_view: "hide"
 save_part route: "category/node", filename: "category-list.part.html", name: "カテゴリーリスト", sort: "order"
 save_part route: "cms/tabs", filename: "recent-tabs.part.html", name: "新着タブ",
-  conditions: %w(shinchaku oshirase oshirase/event shisei/jinji), limit: 6
+  conditions: %w(shinchaku shinchaku/oshirase shinchaku/event shinchaku/jinji), limit: 6,
+  loop_format: 'liquid', group_ids: [@g_ss.id, @g_seisaku.id]
 save_part route: "cms/free", filename: "urgency-layout/announce.part.html", name: "緊急アナウンス"
 save_part route: "cms/free", filename: "urgency-layout/calamity.part.html", name: "災害関係ホームページ"
 save_part route: "cms/free", filename: "urgency-layout/connect.part.html", name: "関連サイト"
@@ -92,7 +93,7 @@ save_part route: "cms/node", filename: "guide/catelist.part.html", name: "カテ
 save_part route: "recommend/similarity", filename: "highly-relevant.part.html", name: "このページと関連性の高いページ",
   limit: 5
 save_part route: "cms/site_search_keyword", filename: "keyword.part.html", name: "注目ワード",
-  site_search_keywords: %w(マイナンバー 防災情報)
+  site_search_keywords: %w(マイナンバー 防災情報,/docs/page42.html)
 save_part route: "cms/site_search_history", filename: "search/search.part.html", name: "サイト内検索",
   placeholder: "サイト内検索"
 save_part route: "cms/page", filename: "kohoshi/kongetsukoho/recent.part.html", name: "トップ　最新　広報SHIRASAGI",
@@ -105,7 +106,8 @@ save_part route: "cms/page", filename: "population/show-top.part.html", name: "�
 save_part route: "cms/print", filename: "print.part.html", name: "印刷パーツ",
   print_display_name: "ページを印刷する"
 save_part route: "cms/tabs", filename: "recent-tabsside.part.html", name: "新着タブ：サイドメニュー用",
-  conditions: %w(oshirase oshirase/event shisei/jinji), limit: 5, new_days: 0
+  conditions: %w(shinchaku/oshirase shinchaku/event shinchaku/jinji), limit: 5, new_days: 0,
+  group_ids: [@g_ss.id, @g_seisaku.id]
 save_part route: "cms/node2", filename: "sub-catelist.part.html", name: "サブカテゴリー一覧", sort: 'order',
   loop_format: 'liquid', node_routes: %w(category/page category/node), list_origin: 'content'
 save_part route: "cms/node", filename: "sub-catelist-old.part.html", name: "サブカテゴリー一覧（旧）", sort: 'order',
@@ -122,3 +124,4 @@ save_part route: "cms/free", filename: "favicon.part.html", name: "ファビコ�
 save_part route: "cms/node2", filename: "docs/folder-list.part.html", name: "フォルダーリスト",
   sort: 'order', limit: 20, loop_format: 'shirasagi', list_origin: 'deployment'
 save_part route: "cms/free", filename: "search/search-info.part.html", name: "サイト内検索説明"
+save_part route: "cms/free", filename: "courses/search.part.html", name: "市民講座・サークル絞り込み"

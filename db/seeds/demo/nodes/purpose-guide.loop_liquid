@@ -1,0 +1,36 @@
+{% for item in procedures %}
+<div class="guide__lists">
+  <h2>{{ item.name }}</h2>
+  <div class="procedure__wrap">
+    <dl class="procedure item-{{ item.id }}">
+      {% if item.link_url %}
+        <dt>リンク URL</dt>
+        <dd><a href="{{ item.link_url }}">{{ item.link_url }}</a></dd>
+      {% endif %}
+      {% if item.html.size > 0 %}
+        <dt>概要</dt>
+        <dd>{{ item.html }}</dd>
+      {% endif %}
+      {% if item.procedure_location.size > 0 %}
+        <dt>実施場所</dt>
+        <dd>{{ item.procedure_location }}</dd>
+      {% endif %}
+      {% if item.belongings.size > 0 %}
+        <dt>必要なもの</dt>
+        <dd>{{ item.belongings }}</dd>
+      {% endif %}
+      {% if item.procedure_applicant.size > 0 %}
+        <dt>対象者</dt>
+        <dd>{{ item.procedure_applicant }}</dd>
+      {% endif %}
+      {% if item.remarks.size > 0 %}
+        <dt>備考</dt>
+        <dd>{{ item.remarks }}</dd>
+      {% endif %}
+    </dl>
+    <div class="close-btn"><span>×</span>閉じる</div>
+  </div>
+</div>
+{% endfor %}
+
+<a class="print-btn" href="javascript:void(0)" onclick="window.print();return false;">結果ページを印刷</a>

@@ -1,0 +1,20 @@
+{% for page in pages %}
+  <article class="news-item{% if page.new? %} new{% endif %}{% if page.current? %} current{% endif %}">
+    <header>
+      <time datetime="{{ page.date | ss_date: "default" }}">{{ page.date | ss_date: "long" }}</time>
+      <div class="news-item__content">
+        <div class="news-cats">
+          {% for category in page.categories %}
+            {% if category.filename == "shinchaku" or
+                  category.filename == "shinchaku/oshirase" or
+                  category.filename == "shinchaku/event" or
+                  category.filename == "shinchaku/jinji" %}
+              <span class="cat {{ category.css_class }}">{{ category.name }}</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <h3><a href="{{ page.url }}">{{ page.index_name | default: page.name }}</a></h3>
+      </div>
+    </header>
+  </article>
+{% endfor %}
