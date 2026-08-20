@@ -217,6 +217,9 @@ export default class Dialog {
   #onClose(resolve) {
     if (!this._result && !this._returnValue) {
       this._result = this._dialogFrame._dialog.returnValue;
+      if (SS.env !== "production") {
+        console.log({result: this._result});
+      }
       if (this._result) {
         const formElement = this._dialogFrame._dialog.querySelector("form");
         if (formElement) {
@@ -235,16 +238,21 @@ export default class Dialog {
 
   #onSelect($itemEl) {
     const $dataEl = $itemEl.closest("[data-id]")
-    var data = $dataEl.data();
-    if (!data.name) {
-      data.name = $dataEl.find(".select-item").html() || $itemEl.text() || $dataEl.text();
+    var data
+    if ($dataEl[0]) {
+      data = $dataEl.data()
+      if (!data.name) {
+        data.name = $dataEl.find(".select-item").html() || $itemEl.text() || $dataEl.text()
+      }
     }
 
     if (!this._returnValue) {
       this._returnValue = []
     }
     this._result = "send"
-    this._returnValue.push(data)
+    if (data) {
+      this._returnValue.push(data)
+    }
     this.ok = true
   }
 }

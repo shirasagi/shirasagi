@@ -138,6 +138,8 @@ export function replaceWith(element, htmlTextOrNode) {
 
   element.replaceWith(dummyElement);
   _executeNewScript(parentElement || document.body);
+
+  return dummyElement;
 }
 
 function _cloneNode(htmlTextOrNode) {
@@ -174,6 +176,8 @@ export function appendChildren(element, htmlTextOrNode) {
 
   element.appendChild(dummyElement);
   _executeNewScript(element);
+
+  return dummyElement;
 }
 
 export function prependChildren(element, htmlTextOrNode) {
@@ -182,6 +186,8 @@ export function prependChildren(element, htmlTextOrNode) {
 
   element.prepend(dummyElement);
   _executeNewScript(element);
+
+  return dummyElement;
 }
 
 export function appendAfter(element, htmlTextOrNode) {
@@ -195,6 +201,8 @@ export function appendAfter(element, htmlTextOrNode) {
 
   element.parentElement.insertBefore(dummyElement, element.nextElementSibling)
   _executeNewScript(element);
+
+  return dummyElement;
 }
 
 export function showErrorInListItem(listItemElement, fetchResponse, errorMessages) {
@@ -262,4 +270,14 @@ export function collectFormData(formElement) {
   }
 
   return new FormData(formElement);
+}
+
+function _ujsConfirmHandler(ev) {
+  ev.result = false
+}
+
+export function disableUjsConfirm(currentTarget) {
+  $(currentTarget)
+    .off("confirm", _ujsConfirmHandler)
+    .one("confirm", _ujsConfirmHandler)
 }
