@@ -107,8 +107,8 @@ export default class extends Controller {
       }
     }
 
-    Dialog.showModal(apiUrl.toString(), { data: data }).then((result) => {
-      this._renderResult(result.returnValue);
+    Dialog.showModal(apiUrl.toString(), { data: data }).then((dialogResult) => {
+      this._renderResult(dialogResult.items);
     })
   }
 

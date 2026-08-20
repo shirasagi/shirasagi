@@ -242,14 +242,14 @@ export default class extends Controller {
     Dialog.showModal(path).then((result) => this.#applySelectedCategories(formElement, result));
   }
 
-  #applySelectedCategories(formElement, dialog) {
-    if (!dialog.returnValue) {
+  #applySelectedCategories(formElement, dialogResult) {
+    if (!dialogResult.items) {
       // dialog is just closed
       return;
     }
 
     const categories = [];
-    dialog.returnValue.forEach((value) => {
+    dialogResult.items.forEach((value) => {
       if (value[0] === 's[category_ids][]') {
         const cate = urlSafeBase64ToObject(value[1]);
         categories.push(cate);
