@@ -3,6 +3,7 @@ class Article::PagesController < ApplicationController
   include Cms::PageFilter
   include Workflow::PageFilter
   include Cms::OpendataRef::PageFilter
+  include SS::TurboFrameFilter
 
   model Article::Page
 
@@ -28,43 +29,29 @@ class Article::PagesController < ApplicationController
   public
 
   def download_all
+    @item = Article::Page::ExporterParam.new(fix_params)
     if request.get? || request.head?
+      render template: "file_gen", layout: "ss/item_frame"
       return
     end
 
-    csv_params = params.require(:item).permit(:encoding, :form_id, :truncate)
-    csv_params.merge!(fix_params)
-
-    form = nil
-    if csv_params[:form_id].present?
-      if @cur_node.respond_to?(:st_forms)
-        form = @cur_node.st_forms.where(id: csv_params.delete(:form_id)).first
-        csv_params[:form] = form
-      end
+    @item.attributes = params.require(:item).permit(:encoding, :form_id, :truncate)
+    if @item.invalid?
+      render template: "file_gen", layout: "ss/item_frame"
+      return
     end
 
-    criteria = @model.all
-    criteria = criteria.site(@cur_site)
-    criteria = criteria.node(@cur_node)
-    criteria = criteria.allow(:read, @cur_user, site: @cur_site, node: @cur_node)
-    # 効率を優先し id の降順に並べる
-    criteria = criteria.reorder(id: -1)
+    task = Cms::FileGenTask.new(cur_site: @cur_site, cur_user: @cur_user)
+    task.name = "article_pages_download_#{@cur_user.id}_#{Time.zone.now.to_i}"
+    task.file_basename = "article_pages"
+    task.file_format = "csv"
+    task.params = @item.attributes.as_json
+    task.save!
 
-    if form.present?
-      criteria = criteria.where(form_id: form)
-    else
-      criteria = criteria.exists(form_id: false)
-    end
+    job_class = Article::Page::ExportJob.bind(site_id: @cur_site, user_id: @cur_user, node_id: @cur_node, task_id: task)
+    job_class.perform_later
 
-    exporter = Cms::PageExporter.new(
-      mode: "article", site: @cur_site, truncate: csv_params.fetch(:truncate, 'yes') != 'no', criteria: criteria)
-    enumerable = exporter.enum_csv(csv_params)
-
-    filename = @model.to_s.tableize.tr("/", "_")
-    filename = "#{filename}_#{Time.zone.now.to_i}.csv"
-
-    response.status = 200
-    send_enum enumerable, type: enumerable.content_type, filename: filename
+    redirect_to sns_frames_file_gen_task_status_path(id: task)
   end
 
   def import
