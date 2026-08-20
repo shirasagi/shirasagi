@@ -1681,20 +1681,23 @@ _:future,
       margin: 0;
       padding: 10px;
     }
-    a {
+    a, .nav-menu-item {
       display: inline-block;
       // Material Icons Outlined: expand_circle_down を回転して右向き矢印として表示（コントラスト機能対応）
       @include mi-icon($left: 0);
-      padding-left: 22px;
+      padding: 0 0 0 22px;
+      border: none;
       color: init.$black;
+      line-height: inherit;
       &:hover {
         color: init.$orange;
+        text-decoration: underline;
       }
       @include init.mb {
         margin-bottom: 16px;
       }
     }
-    a:not(.no-margin) {
+    a:not(.no-margin), .nav-menu-item:not(.no-margin) {
       margin-right: 16px;
     }
     // ドロップダウン内の項目には矢印グリフを表示しない
