@@ -273,3 +273,36 @@ export function disableUjsConfirm(currentTarget) {
     .off("confirm", _ujsConfirmHandler)
     .one("confirm", _ujsConfirmHandler)
 }
+
+export function formDataToRailsStyleJson(formData) {
+  const result = {}
+
+  for (const [key, value] of formData) {
+    const parts = key.split(/[\[\]]+/).filter(Boolean)
+    const isArrayElement = key.endsWith('[]')
+
+    let current = result
+
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i]
+      const isLast = (i === parts.length - 1)
+
+      if (isLast) {
+        if (isArrayElement) {
+          current[part] = current[part] || []
+          current[part].push(value)
+        } else {
+          current[part] = value
+        }
+      } else {
+        if (!current[part]) {
+          const nextPart = parts[i + 1]
+          current[part] = /^\d+$/.text(nextPart) ? [] : {}
+        }
+        current = current[part]
+      }
+    }
+  }
+
+  return result
+}

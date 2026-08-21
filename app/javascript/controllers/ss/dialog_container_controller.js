@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { dispatchEvent, formDataToRailsStyleJson } from "../../ss/tool";
 
 export default class extends Controller {
   static targets = [ "container", "dialog", "content", "result" ]
@@ -21,8 +22,11 @@ export default class extends Controller {
   }
 
   #onClose() {
-    const detail = this._result ? this._result : { "returnValue": this.dialogTarget.returnValue }
-    this.dispatch("ss:modal-result", { detail })
+    const detail = this._selectedResult ? this._selectedResult : this.#buildResult()
+    if (this.hasResultTarget) {
+      this.resultTarget.textContent = JSON.stringify(detail)
+    }
+    dispatchEvent(this.dialogTarget, "ss:modal-result", detail)
     SS_SearchUI.dialogType = 'colorbox'
   }
 
@@ -36,22 +40,36 @@ export default class extends Controller {
       }
     }
 
-    if (!this._result) {
-      this._result = {}
+    if (!this._selectedResult) {
+      this._selectedResult = {}
     }
-    if (!this._result.returnValue) {
-      this._result.returnValue = "send"
+    if (!this._selectedResult.returnValue) {
+      this._selectedResult.returnValue = "send"
     }
     if (data) {
-      if (!this._result.items) {
-        this._result.items = []
+      if (!this._selectedResult.items) {
+        this._selectedResult.items = []
       }
-      this._result.items.push(data)
+      this._selectedResult.items.push(data)
     }
-    this._result.ok = true
 
     if (this.hasResultTarget) {
-      this.resultTarget.textContent = JSON.stringify(this._result)
+      this.resultTarget.textContent = JSON.stringify(this._selectedResult)
     }
+  }
+
+  #buildResult() {
+    const result = { "returnValue": this.dialogTarget.returnValue }
+
+    if (this.hasDialogTarget) {
+      const formElement = this.dialogTarget.querySelector("form")
+      if (formElement) {
+        const formData = new FormData(formElement)
+        const item = formDataToRailsStyleJson(formData)
+        result.items = [ item ]
+      }
+    }
+
+    return result
   }
 }

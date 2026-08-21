@@ -42,6 +42,7 @@ class DialogFrame {
 
   constructor(observer) {
     this._observer = observer
+    this._modalResultEventHandler = undefined
   }
 
   #connect() {
@@ -64,23 +65,23 @@ class DialogFrame {
   }
 
   #bind() {
-    this._dialog.addEventListener("close", this.#closeEventHandler)
+    this._dialog.addEventListener("ss:modal-result", this.#modalResultEventHandler)
   }
 
   disconnect() {
-    this._dialog.removeEventListener("close", this.#closeEventHandler)
+    this._dialog.removeEventListener("ss:modal-result", this.#modalResultEventHandler)
     if (!this._attached) {
       this._dialogContainer.remove()
     }
   }
 
-  get #closeEventHandler() {
-    if ('_closeEventHandler' in this) {
-      return this._closeEventHandler
+  get #modalResultEventHandler() {
+    if (this._modalResultEventHandler) {
+      return this._modalResultEventHandler
     }
 
-    this._closeEventHandler = (ev) => this._observer.onClose(ev)
-    return this._closeEventHandler
+    this._modalResultEventHandler = (ev) => this._observer.modalResult(ev)
+    return this._modalResultEventHandler
   }
 
   showModal() {
@@ -100,24 +101,6 @@ class DialogFrame {
 
   renderContent(content) {
     replaceChildren(this._dialogContent, content);
-  }
-
-  dialogResult() {
-    const result = this.#parseDialogResult()
-    if (!result.returnValue) {
-      result.returnValue = this._dialog.returnValue
-    }
-    return result
-  }
-
-  #parseDialogResult() {
-    const dialogResult = this._dialog.querySelector(`[data-ss--dialog-container-target="result"]`)
-    let json = dialogResult?.textContent?.trim()
-    if (json) {
-      return JSON.parse(json)
-    } else {
-      return {}
-    }
   }
 }
 
@@ -172,9 +155,9 @@ export default class Dialog {
     return new Promise((resolve) => this._dialogClosed = resolve)
   }
 
-  onClose(_ev) {
+  modalResult(ev) {
     this._open = false
-    this._dialogClosed(this._dialogFrame.dialogResult())
+    this._dialogClosed(ev.detail)
     dispatchEvent(this._dialogFrame._dialog, "ss:dialog:closed")
     requestAnimationFrame(() => this._dialogFrame.disconnect())
   }
