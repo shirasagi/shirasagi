@@ -137,9 +137,6 @@ export default class extends Controller {
   }
 
   _renderResult(selectedItems) {
-    if (SS.env !== "production") {
-      console.log({selectedItems});
-    }
     if (!selectedItems || selectedItems.length === 0) {
       return;
     }

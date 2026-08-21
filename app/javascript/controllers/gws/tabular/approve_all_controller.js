@@ -30,7 +30,7 @@ export default class extends Controller {
     }
 
     Dialog.showModal(this.dialogTarget.cloneNode(true)).then((dialogResult) => {
-      if (dialogResult.returnedValue === "approve" || dialogResult.returnedValue === "remand") {
+      if (dialogResult.returnValue === "approve" || dialogResult.returnValue === "remand") {
         let comment = undefined;
         if (dialogResult.items) {
           dialogResult.items.forEach((value) => {

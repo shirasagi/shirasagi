@@ -36,7 +36,7 @@ export default class extends Controller {
     }
 
     Dialog.showModal(this.dialogTarget.cloneNode(true)).then((dialogResult) => {
-      if (dialogResult.returnedValue === "download") {
+      if (dialogResult.returnValue === "download") {
         const form = this.#buildForm(href, checkedItemIds, dialogResult.items);
         document.body.appendChild(form);
         form.requestSubmit();

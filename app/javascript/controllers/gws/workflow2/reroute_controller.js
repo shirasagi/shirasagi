@@ -44,6 +44,9 @@ export default class extends Controller {
       return
     }
     const data = dialogResult.items[0]
+    if (!data) {
+      return
+    }
     const form = this.#buildForm(data.id)
     this.#appendForm(form)
     form.addEventListener("turbo:submit-end", () => form.remove(), { once: true });

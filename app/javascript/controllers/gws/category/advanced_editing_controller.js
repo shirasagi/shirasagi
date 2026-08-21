@@ -243,7 +243,7 @@ export default class extends Controller {
   }
 
   #applySelectedCategories(formElement, dialogResult) {
-    if (!dialogResult.items) {
+    if (!dialogResult.items || !dialogResult.items[0]) {
       // dialog is just closed
       return;
     }

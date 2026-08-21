@@ -138,8 +138,6 @@ export function replaceWith(element, htmlTextOrNode) {
 
   element.replaceWith(dummyElement);
   _executeNewScript(parentElement || document.body);
-
-  return dummyElement;
 }
 
 function _cloneNode(htmlTextOrNode) {
@@ -176,8 +174,6 @@ export function appendChildren(element, htmlTextOrNode) {
 
   element.appendChild(dummyElement);
   _executeNewScript(element);
-
-  return dummyElement;
 }
 
 export function prependChildren(element, htmlTextOrNode) {
@@ -186,8 +182,6 @@ export function prependChildren(element, htmlTextOrNode) {
 
   element.prepend(dummyElement);
   _executeNewScript(element);
-
-  return dummyElement;
 }
 
 export function appendAfter(element, htmlTextOrNode) {
@@ -201,8 +195,6 @@ export function appendAfter(element, htmlTextOrNode) {
 
   element.parentElement.insertBefore(dummyElement, element.nextElementSibling)
   _executeNewScript(element);
-
-  return dummyElement;
 }
 
 export function showErrorInListItem(listItemElement, fetchResponse, errorMessages) {
