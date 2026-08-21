@@ -192,8 +192,8 @@ export default class extends SelectBoxController {
       return;
     }
 
-    document.addEventListener("ss:dialog:opened", (ev) => {
-      const tempFilesElement = ev.target.querySelector(".cms-temp-file");
+    document.addEventListener("ss:tempFile:connected", (ev) => {
+      const tempFilesElement = ev.target;
       dispatchEvent(tempFilesElement, "ss:tempFile:upload", { files: files });
       this.fileUploadDropAreaTarget.classList.remove('file-dragenter');
     }, { once: true })
