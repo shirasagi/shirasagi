@@ -78,7 +78,11 @@ module SS::StimulusHelper
 
   # ボタンクリックでダイアログを開きたい場合
   def ss_dialog_button(name = nil, options = nil, html_options = nil, &block)
-    html_options, options, name = options, name, nil if block_given?
+    if block_given?
+      html_options = options
+      options = name
+      name = nil
+    end
     options ||= {}
 
     html_options = convert_options_to_data_attributes(options, html_options)
@@ -92,7 +96,10 @@ module SS::StimulusHelper
 
   # 画面切り替え完了と同時にダイアログを開きたい場合
   def ss_dialog_open(options = nil, html_options = nil, &block)
-    html_options, options = options, nil if block_given?
+    if block_given?
+      html_options = options
+      options = {}
+    end
     options ||= {}
 
     html_options = convert_options_to_data_attributes(options, html_options)
