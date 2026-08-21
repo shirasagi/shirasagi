@@ -2,7 +2,10 @@ this.Gws_Discussion_Thread = (function () {
   function Gws_Discussion_Thread() {
   }
 
-  Gws_Discussion_Thread.render = function (user) {
+  Gws_Discussion_Thread.render = function (user, opts) {
+    if (opts == null) {
+      opts = {};
+    }
     //temp file
     var appendSelectedFile = function (selected, fileId, humanizedName) {
       var span = $('<span></span>');
@@ -15,6 +18,7 @@ this.Gws_Discussion_Thread = (function () {
       span.attr("id", "file-" + fileId);
       a.text(humanizedName);
       a.attr("href", "/.u" + user + "/apis/temp_files/" + fileId + "/view");
+      a.attr("class", opts["linkClass"]);
       input.attr("value", fileId);
       icon.on("click", function (_e) {
         $(this).parent("span").remove();

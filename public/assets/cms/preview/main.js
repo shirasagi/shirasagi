@@ -70,7 +70,9 @@ this.Cms_Form = (function () {
     if (typeof tinymce !== 'undefined') {
       return tinymce.get(id).setContent(html);
     } else if (typeof CKEDITOR !== 'undefined') {
-      return CKEDITOR.instances[id].setData(html);
+      var editor = CKEDITOR.instances[id];
+      editor.setData(html, { callback: function() { editor.updateElement(); } });
+      return;
     }
   };
 
@@ -96,43 +98,44 @@ this.Cms_Form = (function () {
       }
     });
 
-    var h = [], ids = [], code, id, errorIdx, ref, i, j;
+    var h = [], ids = [], code, id, ref, i, j;
     $("#addon-cms-agents-addons-form-page .column-value-cms-column-headline").each(function () {
       ids.push($(this).attr("id"));
       h.push($(this).find('[name="item[column_values][][in_wrap][head]"]').val());
     });
 
     // orderOfH
-    errorIdx = [];
+    var errorEntries = [];
+    var levelOf = function (name) {
+      var m = /h([1-6])/i.exec(name);
+      return m ? parseInt(m[1], 10) : 0;
+    };
     if (h.length) {
       for (i = j = 0, ref = h.length - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+        var currentLevel = levelOf(h[i]);
+        if (currentLevel === 0) continue;
         if (i === 0) {
-          if (!/h[12]/i.test(h[i])) {
-            errorIdx.push(i);
+          if (currentLevel > 2) {
+            errorEntries.push({ idx: i, key: "invalidFirstHeadingLevel" });
           }
-        } else {
-          if (/h3/i.test(h[i])) {
-            if (!/h[234]/i.test(h[i - 1])) {
-              errorIdx.push(i);
-            }
-          } else if (/h4/i.test(h[i])) {
-            if (!/h[34]/i.test(h[i - 1])) {
-              errorIdx.push(i);
-            }
+        } else if (currentLevel > 2) {
+          var prevLevel = levelOf(h[i - 1]);
+          if (prevLevel < currentLevel - 1) {
+            errorEntries.push({ idx: i, key: "invalidHeadingLevelSkip" });
           }
         }
       }
     }
 
-    for (i = 0; i < errorIdx.length; i++) {
-      var idx = errorIdx[i];
+    for (i = 0; i < errorEntries.length; i++) {
+      var entry = errorEntries[i];
       Syntax_Checker.errors.push(
         {
-          id: ids[idx],
+          id: ids[entry.idx],
           idx: 0,
-          code: h[idx],
-          msg: Syntax_Checker.message["invalidOrderOfH"],
-          detail: Syntax_Checker.detail["invalidOrderOfH"]
+          code: h[entry.idx],
+          msg: Syntax_Checker.message[entry.key],
+          detail: Syntax_Checker.detail[entry.key]
         }
       );
     }
@@ -203,32 +206,32 @@ this.Form_Alert = (function () {
 
   Form_Alert.render = function () {
     $("input:submit").on("click.form_alert", function (e) {
-      var submit = this;
-      var $submit = $(submit);
-      var form = $submit.closest("form");
+      var submitter = this;
+      var $submitter = $(submitter);
+      var $form = $submitter.closest("form");
 
       var resolved = function(html) {
-        var promise = Form_Alert.asyncValidate(form, submit, { html: html });
+        var promise = Form_Alert.asyncValidate($form, submitter, { html: html });
         promise.done(function() {
           if (!SS.isEmptyObject(Form_Alert.alerts)) {
-            Form_Alert.showAlert(form, submit);
-            $submit.trigger("ss:formAlertFinish");
+            Form_Alert.showAlert($form, submitter);
+            $submitter.trigger("ss:formAlertFinish");
             return;
           }
 
-          $submit.off(".form_alert");
-          $submit.trigger("ss:formAlertFinish");
+          $submitter.off(".form_alert");
+          $submitter.trigger("ss:formAlertFinish");
           // To protected from bubbling events within a event wraps trigger "click" with setTimeout
-          setTimeout(function() { $submit.trigger("click"); }, 0);
+          setTimeout(function() { $submitter.trigger("click"); }, 0);
         });
       };
 
       var rejected = function(xhr, status, error) {
         alert(error);
-        $submit.trigger("ss:formAlertFinish");
+        $submitter.trigger("ss:formAlertFinish");
       };
 
-      $submit.trigger("ss:formAlertStart");
+      $submitter.trigger("ss:formAlertStart");
       Cms_Form.getHtml(resolved, rejected);
 
       e.preventDefault();
@@ -236,11 +239,11 @@ this.Form_Alert = (function () {
     });
   };
 
-  Form_Alert.asyncValidate = function (form, submit, opts) {
+  Form_Alert.asyncValidate = function ($form, submitter, opts) {
     Form_Alert.alerts = {};
     var promises = [];
     $.each(Form_Alert.asyncValidations, function () {
-      var promise = this(form, submit, opts);
+      var promise = this($form, submitter, opts);
       promises.push(promise);
     });
 
@@ -261,7 +264,7 @@ this.Form_Alert = (function () {
     });
   };
 
-  Form_Alert.showAlert = function (form, submit) {
+  Form_Alert.showAlert = function ($form, submitter) {
     var $div = $('<div/>', { id: "alertExplanation", class: "errorExplanation" });
     $div.append("<h2>警告</h2>");
 
@@ -288,8 +291,8 @@ this.Form_Alert = (function () {
       allowEdit = false;
     } else if (!SS.isEmptyObject(Form_Alert.alerts["アクセシビリティチェック"])) {
       $.each(Form_Alert.alerts["アクセシビリティチェック"], function(id, alert) {
-        if (alert["msg"] == "アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。") {
-          if ($(submit).attr("name") == "draft_save") {
+        if (alert["msg"] === "アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。") {
+          if (submitter.name === "draft_save" || submitter.name === "branch_save") {
             allowEdit = true;
           } else {
             allowEdit = false;
@@ -307,9 +310,9 @@ this.Form_Alert = (function () {
       fixed: true
     });
     $("#cboxLoadedContent").find(".save").on("click", function () {
-      Form_Alert.runBeforeSave(form, submit);
-      $(submit).off(".form_alert");
-      return $(submit).trigger("click");
+      Form_Alert.runBeforeSave($form, submitter);
+      $(submitter).off(".form_alert");
+      return $(submitter).trigger("click");
     });
     $("#cboxLoadedContent").find(".cancel").on("click", function (e) {
       $.colorbox.close();
@@ -321,8 +324,8 @@ this.Form_Alert = (function () {
     return Form_Alert.beforeSaves.push(callback);
   };
 
-  Form_Alert.asyncValidateSyntaxCheck = function (form, submit, opts) {
-    var promise = Syntax_Checker.asyncCheck();
+  Form_Alert.asyncValidateSyntaxCheck = function ($form, submitter, opts) {
+    var promise = Syntax_Checker.asyncCheck2($form, submitter);
     promise.done(function() {
       $.each(Syntax_Checker.errors, function(id, error) {
         Form_Alert.add("アクセシビリティチェック", error["ele"], error["msg"]);
@@ -332,41 +335,43 @@ this.Form_Alert = (function () {
   };
 
   Form_Alert.wrapDeferred = function (validate) {
-    return function (form, submit) {
+    return function ($form, submitter, opts) {
       var d = $.Deferred();
       try {
-        validate(form, submit);
+        validate($form, submitter, opts);
         d.resolve();
       } catch (ex) {
         d.reject(ex);
       }
-      return d.promise(form, submit);
+      return d.promise($form, submitter, opts);
     };
   };
 
-  Form_Alert.clonedName = function (form, submit) {
-    var name = $(form).find("#addon-basic #item_name");
-    if ($(submit).hasClass("publish_save") && /^\[複製\]/.test($(name).val())) {
-      var addonName = $(name).closest(".addon-view").find("header").text();
-      return Form_Alert.add(addonName, name, "タイトルに[複製]が含まれています。");
+  Form_Alert.clonedName = function ($form, submitter, _opts) {
+    var $name = $form.find("#addon-basic #item_name");
+    if ($(submitter).hasClass("publish_save") && /^\[複製\]/.test($name.val())) {
+      var addonName = $name.closest(".addon-view").find("header").text();
+      return Form_Alert.add(addonName, $name, "タイトルに[複製]が含まれています。");
     }
   };
 
-  Form_Alert.closeConfirmation = function (form, submit) {
+  Form_Alert.closeConfirmation = function ($form, submitter, _opts) {
     var addonName, msg;
-    if ($(submit).attr("data-close-confirmation")) {
+    if ($(submitter).attr("data-close-confirmation")) {
       addonName = "非公開状態で保存しようとしています";
       msg = null;
-      if ($(submit).attr("data-contain-links-path")) {
-        msg = '<a href="' + $(submit).attr("data-contain-links-path") + '" target="_blank" rel="noopener">' + "このページへのリンクを確認する。" + '</a>';
+      if ($(submitter).attr("data-contain-links-path")) {
+        msg = $("<a/>", { href: $(submitter).attr("data-contain-links-path"), target: "_blank", ref: "noopener" })
+          .text("このページへのリンクを確認する。")
+          .prop("outerHTML");
       }
       return Form_Alert.add(addonName, null, msg);
     }
   };
 
-  Form_Alert.snsPostConfirmation = function (form, submit) {
+  Form_Alert.snsPostConfirmation = function ($form, submitter) {
     var addonName, messages, f;
-    f = $(submit).data("sns-post-confirmation");
+    f = $(submitter).data("sns-post-confirmation");
 
     messages = [];
     if (f) {
@@ -758,7 +763,8 @@ this.Syntax_Checker = (function () {
                 $(self.form.addonSelector).find("button.syntax-check").trigger("click");
               },
               error: function (xhr, status, error) {
-                console.log(error);
+                console.warn(error);
+                alert("自動修正に失敗しました。");
               },
               complete: function (xhr, status) {
                 ev.target.disabled = false;
@@ -970,6 +976,33 @@ this.Syntax_Checker = (function () {
     return defer.promise();
   };
 
+  Syntax_Checker.asyncCheck2 = function ($form, submitter) {
+    Syntax_Checker.reset();
+
+    var defer = $.Deferred();
+    // .cms-body-checker は 2 つある。cms/addon/body と cms/addon/form/page と。
+    // （どちらを選択しても問題ないけど念のため）表示されている方の .cms-body-checker を選択する。
+    var cmsChecker = $form.find(":not(.hide) .cms-body-checker")[0];
+    if (!cmsChecker) {
+      defer.resolve();
+      return defer.promise();
+    }
+
+    var callback = function(ev) {
+      $.each(ev.detail.errors, function() {
+        Syntax_Checker.errors.push(this);
+      });
+      defer.resolve();
+    };
+
+    $form[0].addEventListener("ss:formAlert:done", callback, { once: true });
+
+    var ev = new CustomEvent("ss:formAlert:run", { submitter: submitter });
+    cmsChecker.dispatchEvent(ev);
+
+    return defer.promise();
+  };
+
   Syntax_Checker.reset = function () {
     Syntax_Checker.errors = [];
     Syntax_Checker.errorCount = 0;
@@ -1046,14 +1079,14 @@ this.Syntax_Checker = (function () {
       contentType: "application/json",
       success: function(data, textStatus, xhr) {
         Syntax_Checker.showServerResult(checks, contents, data, textStatus, xhr);
-        defer.resolve({ status: Syntax_Checker.errors.length == 0 ? "ok" : "failed" });
+        defer.resolve({ status: Syntax_Checker.errors.length === 0 ? "ok" : "failed" });
       },
       error: function (xhr, status, error) {
         Syntax_Checker.resultBox.showServerError();
         defer.reject(null, null, error);
       },
       complete: function (xhr, status) {
-        defer.resolve({ status: Syntax_Checker.errors.length == 0 ? "ok" : "failed" });
+        defer.resolve({ status: Syntax_Checker.errors.length === 0 ? "ok" : "failed" });
       }
     });
   };
@@ -1074,7 +1107,7 @@ this.Syntax_Checker = (function () {
       Syntax_Checker.afterCheck();
     }
 
-    var warnMessages = ["アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。","動画や音声を含む場合、説明があるか確認してください。"];
+    var warnMessages = ["アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。","動画や音声を本文に埋め込む場合は説明を記述してください。"];
     var allowEdit = true;
     $.each(Syntax_Checker.errors, function(id, error) {
       if (warnMessages.includes(error['msg'])) {
@@ -1096,12 +1129,14 @@ this.Syntax_Checker = (function () {
   // javascript syntax check
 
   Syntax_Checker.message = {
-    invalidOrderOfH: "見出し(H)の順番が不正です。",
-    checkLinkText: "リンクのテキストを確認してください。",
+    invalidFirstHeadingLevel: "先頭の見出しは h1 または h2 にしてください。",
+    invalidHeadingLevelSkip: "見出しレベルが 1 段を超えて深くなっています。",
+    checkLinkText: "Translation missing: ja.errors.messages.check_link_text",
   };
   Syntax_Checker.detail = {
-    invalidOrderOfH: ["適切な順に配置してください。"],
-    checkLinkText: ["リンク内のテキストは遷移先を表すものを設定してください。"],
+    invalidFirstHeadingLevel: ["ページ先頭の見出しは h1 または h2 から開始してください。","該当の見出しを h1 または h2 に変更してください。"],
+    invalidHeadingLevelSkip: ["直前の見出しの次に来る見出しは、同じレベルまたは 1 段深いレベル（例：h2 の次は h3）にしてください。","h2 の直後に h4 を置くなど、レベルを 2 段以上スキップしないでください。"],
+    checkLinkText: "Translation missing: ja.errors.messages.syntax_check_detail.check_link_text",
   };
 
   return Syntax_Checker;
@@ -1415,7 +1450,7 @@ this.Mobile_Size_Checker = (function () {
     return defer.promise();
   };
 
-  Mobile_Size_Checker.asyncValidateHtml = function (form, submit, opts) {
+  Mobile_Size_Checker.asyncValidateHtml = function ($form, submitter, opts) {
     var promise = Mobile_Size_Checker.asyncCheckHtmlSize(opts.html);
     promise.done(function() {
       if (Mobile_Size_Checker.errors.length === 0) {
@@ -1725,7 +1760,7 @@ this.Backlink_Checker = (function () {
 
   Backlink_Checker.itemId = null;
 
-  Backlink_Checker.asyncCheck = function(form, submit, _opts) {
+  Backlink_Checker.asyncCheck = function($form, submitter, _opts) {
     var defer = $.Deferred();
     if (!Backlink_Checker.enabled || !Backlink_Checker.url || !Backlink_Checker.itemId) {
       defer.resolve();
@@ -1735,7 +1770,7 @@ this.Backlink_Checker = (function () {
     $.ajax({
       url: Backlink_Checker.url,
       method: "post",
-      data: { item: { id: Backlink_Checker.itemId, submit: submit.name } },
+      data: { item: { id: Backlink_Checker.itemId, submit: submitter.name } },
       cache: false,
       success: function(data) {
         if (data["errors"] && data["errors"].length > 0) {
@@ -1991,6 +2026,10 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
         $this.closest("fieldset").prop("disabled", false);
       }
     });
+  });
+
+  this.$el.on("ss:correct:done", function() {
+    self.resetOrder();
   });
 
   if (options && options.type === "entry") {
@@ -3127,9 +3166,6 @@ this.SS_SearchUI = (function () {
     var tr = $(item).closest("tr");
 
     tr.remove();
-    if (table.find("tbody tr").size() === 0) {
-      table.hide();
-    }
     table.trigger("change");
   };
 
@@ -3220,6 +3256,15 @@ this.SS_SearchUI = (function () {
     e.preventDefault();
   };
 
+  SS_SearchUI.deselectAll = function (ev) {
+    ev.preventDefault();
+
+    var $table = $(this).closest(".ajax-selected");
+    $table.find("tbody tr .deselect").each(function() {
+      SS_SearchUI.defaultDeselector($(this));
+    });
+  };
+
   SS_SearchUI.toggleSelectButton = function ($el) {
     if (!$el) {
       $el = $("#ajax-box");
@@ -3252,9 +3297,7 @@ this.SS_SearchUI = (function () {
       var $this = $(this);
       SS.justOnce(this, "searchUI", function() {
         $this.on("click", "a.deselect", SS_SearchUI.deselect);
-        if ($this.find("a.deselect").size() === 0) {
-          $this.hide();
-        }
+        $this.on("click", "[name='delete_all']", SS_SearchUI.deselectAll);
       });
     });
   };
@@ -3322,6 +3365,9 @@ this.SS_SearchUI = (function () {
           },
           error: function (_data, _status) {
             $el.find(".pagination").html("== Error ==");
+          },
+          complete: function (_xhr, _status) {
+            $("#cboxContent").trigger("ss:ajaxPagination");
           }
         });
 
@@ -3944,7 +3990,7 @@ String.prototype.padStart||(String.prototype.padStart=function(t,n){return t>>=0
 String.prototype.repeat||(String.prototype.repeat=function(t){if(null==this)throw new TypeError("can't convert "+this+" to object");var r=""+this;if((t=+t)!=t&&(t=0),t<0)throw new RangeError("repeat count must be non-negative");if(t==1/0)throw new RangeError("repeat count must be less than infinity");if(t=Math.floor(t),0==r.length||0==t)return"";if(r.length*t>=1<<28)throw new RangeError("repeat count must not overflow maximum string size");for(var e="";1==(1&t)&&(e+=r),0!=(t>>>=1);)r+=r;return e});
 String.prototype.startsWith||(String.prototype.startsWith=function(t,r){return r=r||0,this.substr(r,t.length)===t});
 String.prototype.trim||(String.prototype.trim=function(){return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,"")});
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.ejs=f()}})(function(){var define,module,exports;return function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r}()({1:[function(require,module,exports){"use strict";var fs=require("fs");var path=require("path");var utils=require("./utils");var scopeOptionWarned=false;var _VERSION_STRING=require("../package.json").version;var _DEFAULT_OPEN_DELIMITER="<";var _DEFAULT_CLOSE_DELIMITER=">";var _DEFAULT_DELIMITER="%";var _DEFAULT_LOCALS_NAME="locals";var _NAME="ejs";var _REGEX_STRING="(<%%|%%>|<%=|<%-|<%_|<%#|<%|%>|-%>|_%>)";var _OPTS_PASSABLE_WITH_DATA=["delimiter","scope","context","debug","compileDebug","client","_with","rmWhitespace","strict","filename","async"];var _OPTS_PASSABLE_WITH_DATA_EXPRESS=_OPTS_PASSABLE_WITH_DATA.concat("cache");var _BOM=/^\uFEFF/;var _JS_IDENTIFIER=/^[a-zA-Z_$][0-9a-zA-Z_$]*$/;exports.cache=utils.cache;exports.fileLoader=fs.readFileSync;exports.localsName=_DEFAULT_LOCALS_NAME;exports.promiseImpl=new Function("return this;")().Promise;exports.resolveInclude=function(name,filename,isDir){var dirname=path.dirname;var extname=path.extname;var resolve=path.resolve;var includePath=resolve(isDir?filename:dirname(filename),name);var ext=extname(name);if(!ext){includePath+=".ejs"}return includePath};function resolvePaths(name,paths){var filePath;if(paths.some(function(v){filePath=exports.resolveInclude(name,v,true);return fs.existsSync(filePath)})){return filePath}}function getIncludePath(path,options){var includePath;var filePath;var views=options.views;var match=/^[A-Za-z]+:\\|^\//.exec(path);if(match&&match.length){path=path.replace(/^\/*/,"");if(Array.isArray(options.root)){includePath=resolvePaths(path,options.root)}else{includePath=exports.resolveInclude(path,options.root||"/",true)}}else{if(options.filename){filePath=exports.resolveInclude(path,options.filename);if(fs.existsSync(filePath)){includePath=filePath}}if(!includePath&&Array.isArray(views)){includePath=resolvePaths(path,views)}if(!includePath&&typeof options.includer!=="function"){throw new Error('Could not find the include file "'+options.escapeFunction(path)+'"')}}return includePath}function handleCache(options,template){var func;var filename=options.filename;var hasTemplate=arguments.length>1;if(options.cache){if(!filename){throw new Error("cache option requires a filename")}func=exports.cache.get(filename);if(func){return func}if(!hasTemplate){template=fileLoader(filename).toString().replace(_BOM,"")}}else if(!hasTemplate){if(!filename){throw new Error("Internal EJS error: no file name or template "+"provided")}template=fileLoader(filename).toString().replace(_BOM,"")}func=exports.compile(template,options);if(options.cache){exports.cache.set(filename,func)}return func}function tryHandleCache(options,data,cb){var result;if(!cb){if(typeof exports.promiseImpl=="function"){return new exports.promiseImpl(function(resolve,reject){try{result=handleCache(options)(data);resolve(result)}catch(err){reject(err)}})}else{throw new Error("Please provide a callback function")}}else{try{result=handleCache(options)(data)}catch(err){return cb(err)}cb(null,result)}}function fileLoader(filePath){return exports.fileLoader(filePath)}function includeFile(path,options){var opts=utils.shallowCopy(utils.createNullProtoObjWherePossible(),options);opts.filename=getIncludePath(path,opts);if(typeof options.includer==="function"){var includerResult=options.includer(path,opts.filename);if(includerResult){if(includerResult.filename){opts.filename=includerResult.filename}if(includerResult.template){return handleCache(opts,includerResult.template)}}}return handleCache(opts)}function rethrow(err,str,flnm,lineno,esc){var lines=str.split("\n");var start=Math.max(lineno-3,0);var end=Math.min(lines.length,lineno+3);var filename=esc(flnm);var context=lines.slice(start,end).map(function(line,i){var curr=i+start+1;return(curr==lineno?" >> ":"    ")+curr+"| "+line}).join("\n");err.path=filename;err.message=(filename||"ejs")+":"+lineno+"\n"+context+"\n\n"+err.message;throw err}function stripSemi(str){return str.replace(/;(\s*$)/,"$1")}exports.compile=function compile(template,opts){var templ;if(opts&&opts.scope){if(!scopeOptionWarned){console.warn("`scope` option is deprecated and will be removed in EJS 3");scopeOptionWarned=true}if(!opts.context){opts.context=opts.scope}delete opts.scope}templ=new Template(template,opts);return templ.compile()};exports.render=function(template,d,o){var data=d||utils.createNullProtoObjWherePossible();var opts=o||utils.createNullProtoObjWherePossible();if(arguments.length==2){utils.shallowCopyFromList(opts,data,_OPTS_PASSABLE_WITH_DATA)}return handleCache(opts,template)(data)};exports.renderFile=function(){var args=Array.prototype.slice.call(arguments);var filename=args.shift();var cb;var opts={filename:filename};var data;var viewOpts;if(typeof arguments[arguments.length-1]=="function"){cb=args.pop()}if(args.length){data=args.shift();if(args.length){utils.shallowCopy(opts,args.pop())}else{if(data.settings){if(data.settings.views){opts.views=data.settings.views}if(data.settings["view cache"]){opts.cache=true}viewOpts=data.settings["view options"];if(viewOpts){utils.shallowCopy(opts,viewOpts)}}utils.shallowCopyFromList(opts,data,_OPTS_PASSABLE_WITH_DATA_EXPRESS)}opts.filename=filename}else{data=utils.createNullProtoObjWherePossible()}return tryHandleCache(opts,data,cb)};exports.Template=Template;exports.clearCache=function(){exports.cache.reset()};function Template(text,optsParam){var opts=utils.hasOwnOnlyObject(optsParam);var options=utils.createNullProtoObjWherePossible();this.templateText=text;this.mode=null;this.truncate=false;this.currentLine=1;this.source="";options.client=opts.client||false;options.escapeFunction=opts.escape||opts.escapeFunction||utils.escapeXML;options.compileDebug=opts.compileDebug!==false;options.debug=!!opts.debug;options.filename=opts.filename;options.openDelimiter=opts.openDelimiter||exports.openDelimiter||_DEFAULT_OPEN_DELIMITER;options.closeDelimiter=opts.closeDelimiter||exports.closeDelimiter||_DEFAULT_CLOSE_DELIMITER;options.delimiter=opts.delimiter||exports.delimiter||_DEFAULT_DELIMITER;options.strict=opts.strict||false;options.context=opts.context;options.cache=opts.cache||false;options.rmWhitespace=opts.rmWhitespace;options.root=opts.root;options.includer=opts.includer;options.outputFunctionName=opts.outputFunctionName;options.localsName=opts.localsName||exports.localsName||_DEFAULT_LOCALS_NAME;options.views=opts.views;options.async=opts.async;options.destructuredLocals=opts.destructuredLocals;options.legacyInclude=typeof opts.legacyInclude!="undefined"?!!opts.legacyInclude:true;if(options.strict){options._with=false}else{options._with=typeof opts._with!="undefined"?opts._with:true}this.opts=options;this.regex=this.createRegex()}Template.modes={EVAL:"eval",ESCAPED:"escaped",RAW:"raw",COMMENT:"comment",LITERAL:"literal"};Template.prototype={createRegex:function(){var str=_REGEX_STRING;var delim=utils.escapeRegExpChars(this.opts.delimiter);var open=utils.escapeRegExpChars(this.opts.openDelimiter);var close=utils.escapeRegExpChars(this.opts.closeDelimiter);str=str.replace(/%/g,delim).replace(/</g,open).replace(/>/g,close);return new RegExp(str)},compile:function(){var src;var fn;var opts=this.opts;var prepended="";var appended="";var escapeFn=opts.escapeFunction;var ctor;var sanitizedFilename=opts.filename?JSON.stringify(opts.filename):"undefined";if(!this.source){this.generateSource();prepended+='  var __output = "";\n'+"  function __append(s) { if (s !== undefined && s !== null) __output += s }\n";if(opts.outputFunctionName){if(!_JS_IDENTIFIER.test(opts.outputFunctionName)){throw new Error("outputFunctionName is not a valid JS identifier.")}prepended+="  var "+opts.outputFunctionName+" = __append;"+"\n"}if(opts.localsName&&!_JS_IDENTIFIER.test(opts.localsName)){throw new Error("localsName is not a valid JS identifier.")}if(opts.destructuredLocals&&opts.destructuredLocals.length){var destructuring="  var __locals = ("+opts.localsName+" || {}),\n";for(var i=0;i<opts.destructuredLocals.length;i++){var name=opts.destructuredLocals[i];if(!_JS_IDENTIFIER.test(name)){throw new Error("destructuredLocals["+i+"] is not a valid JS identifier.")}if(i>0){destructuring+=",\n  "}destructuring+=name+" = __locals."+name}prepended+=destructuring+";\n"}if(opts._with!==false){prepended+="  with ("+opts.localsName+" || {}) {"+"\n";appended+="  }"+"\n"}appended+="  return __output;"+"\n";this.source=prepended+this.source+appended}if(opts.compileDebug){src="var __line = 1"+"\n"+"  , __lines = "+JSON.stringify(this.templateText)+"\n"+"  , __filename = "+sanitizedFilename+";"+"\n"+"try {"+"\n"+this.source+"} catch (e) {"+"\n"+"  rethrow(e, __lines, __filename, __line, escapeFn);"+"\n"+"}"+"\n"}else{src=this.source}if(opts.client){src="escapeFn = escapeFn || "+escapeFn.toString()+";"+"\n"+src;if(opts.compileDebug){src="rethrow = rethrow || "+rethrow.toString()+";"+"\n"+src}}if(opts.strict){src='"use strict";\n'+src}if(opts.debug){console.log(src)}if(opts.compileDebug&&opts.filename){src=src+"\n"+"//# sourceURL="+sanitizedFilename+"\n"}try{if(opts.async){try{ctor=new Function("return (async function(){}).constructor;")()}catch(e){if(e instanceof SyntaxError){throw new Error("This environment does not support async/await")}else{throw e}}}else{ctor=Function}fn=new ctor(opts.localsName+", escapeFn, include, rethrow",src)}catch(e){if(e instanceof SyntaxError){if(opts.filename){e.message+=" in "+opts.filename}e.message+=" while compiling ejs\n\n";e.message+="If the above error is not helpful, you may want to try EJS-Lint:\n";e.message+="https://github.com/RyanZim/EJS-Lint";if(!opts.async){e.message+="\n";e.message+="Or, if you meant to create an async function, pass `async: true` as an option."}}throw e}var returnedFn=opts.client?fn:function anonymous(data){var include=function(path,includeData){var d=utils.shallowCopy(utils.createNullProtoObjWherePossible(),data);if(includeData){d=utils.shallowCopy(d,includeData)}return includeFile(path,opts)(d)};return fn.apply(opts.context,[data||utils.createNullProtoObjWherePossible(),escapeFn,include,rethrow])};if(opts.filename&&typeof Object.defineProperty==="function"){var filename=opts.filename;var basename=path.basename(filename,path.extname(filename));try{Object.defineProperty(returnedFn,"name",{value:basename,writable:false,enumerable:false,configurable:true})}catch(e){}}return returnedFn},generateSource:function(){var opts=this.opts;if(opts.rmWhitespace){this.templateText=this.templateText.replace(/[\r\n]+/g,"\n").replace(/^\s+|\s+$/gm,"")}this.templateText=this.templateText.replace(/[ \t]*<%_/gm,"<%_").replace(/_%>[ \t]*/gm,"_%>");var self=this;var matches=this.parseTemplateText();var d=this.opts.delimiter;var o=this.opts.openDelimiter;var c=this.opts.closeDelimiter;if(matches&&matches.length){matches.forEach(function(line,index){var closing;if(line.indexOf(o+d)===0&&line.indexOf(o+d+d)!==0){closing=matches[index+2];if(!(closing==d+c||closing=="-"+d+c||closing=="_"+d+c)){throw new Error('Could not find matching close tag for "'+line+'".')}}self.scanLine(line)})}},parseTemplateText:function(){var str=this.templateText;var pat=this.regex;var result=pat.exec(str);var arr=[];var firstPos;while(result){firstPos=result.index;if(firstPos!==0){arr.push(str.substring(0,firstPos));str=str.slice(firstPos)}arr.push(result[0]);str=str.slice(result[0].length);result=pat.exec(str)}if(str){arr.push(str)}return arr},_addOutput:function(line){if(this.truncate){line=line.replace(/^(?:\r\n|\r|\n)/,"");this.truncate=false}if(!line){return line}line=line.replace(/\\/g,"\\\\");line=line.replace(/\n/g,"\\n");line=line.replace(/\r/g,"\\r");line=line.replace(/"/g,'\\"');this.source+='    ; __append("'+line+'")'+"\n"},scanLine:function(line){var self=this;var d=this.opts.delimiter;var o=this.opts.openDelimiter;var c=this.opts.closeDelimiter;var newLineCount=0;newLineCount=line.split("\n").length-1;switch(line){case o+d:case o+d+"_":this.mode=Template.modes.EVAL;break;case o+d+"=":this.mode=Template.modes.ESCAPED;break;case o+d+"-":this.mode=Template.modes.RAW;break;case o+d+"#":this.mode=Template.modes.COMMENT;break;case o+d+d:this.mode=Template.modes.LITERAL;this.source+='    ; __append("'+line.replace(o+d+d,o+d)+'")'+"\n";break;case d+d+c:this.mode=Template.modes.LITERAL;this.source+='    ; __append("'+line.replace(d+d+c,d+c)+'")'+"\n";break;case d+c:case"-"+d+c:case"_"+d+c:if(this.mode==Template.modes.LITERAL){this._addOutput(line)}this.mode=null;this.truncate=line.indexOf("-")===0||line.indexOf("_")===0;break;default:if(this.mode){switch(this.mode){case Template.modes.EVAL:case Template.modes.ESCAPED:case Template.modes.RAW:if(line.lastIndexOf("//")>line.lastIndexOf("\n")){line+="\n"}}switch(this.mode){case Template.modes.EVAL:this.source+="    ; "+line+"\n";break;case Template.modes.ESCAPED:this.source+="    ; __append(escapeFn("+stripSemi(line)+"))"+"\n";break;case Template.modes.RAW:this.source+="    ; __append("+stripSemi(line)+")"+"\n";break;case Template.modes.COMMENT:break;case Template.modes.LITERAL:this._addOutput(line);break}}else{this._addOutput(line)}}if(self.opts.compileDebug&&newLineCount){this.currentLine+=newLineCount;this.source+="    ; __line = "+this.currentLine+"\n"}}};exports.escapeXML=utils.escapeXML;exports.__express=exports.renderFile;exports.VERSION=_VERSION_STRING;exports.name=_NAME;if(typeof window!="undefined"){window.ejs=exports}},{"../package.json":6,"./utils":2,fs:3,path:4}],2:[function(require,module,exports){"use strict";var regExpChars=/[|\\{}()[\]^$+*?.]/g;var hasOwnProperty=Object.prototype.hasOwnProperty;var hasOwn=function(obj,key){return hasOwnProperty.apply(obj,[key])};exports.escapeRegExpChars=function(string){if(!string){return""}return String(string).replace(regExpChars,"\\$&")};var _ENCODE_HTML_RULES={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&#34;","'":"&#39;"};var _MATCH_HTML=/[&<>'"]/g;function encode_char(c){return _ENCODE_HTML_RULES[c]||c}var escapeFuncStr="var _ENCODE_HTML_RULES = {\n"+'      "&": "&amp;"\n'+'    , "<": "&lt;"\n'+'    , ">": "&gt;"\n'+'    , \'"\': "&#34;"\n'+'    , "\'": "&#39;"\n'+"    }\n"+"  , _MATCH_HTML = /[&<>'\"]/g;\n"+"function encode_char(c) {\n"+"  return _ENCODE_HTML_RULES[c] || c;\n"+"};\n";exports.escapeXML=function(markup){return markup==undefined?"":String(markup).replace(_MATCH_HTML,encode_char)};function escapeXMLToString(){return Function.prototype.toString.call(this)+";\n"+escapeFuncStr}try{if(typeof Object.defineProperty==="function"){Object.defineProperty(exports.escapeXML,"toString",{value:escapeXMLToString})}else{exports.escapeXML.toString=escapeXMLToString}}catch(err){console.warn("Unable to set escapeXML.toString (is the Function prototype frozen?)")}exports.shallowCopy=function(to,from){from=from||{};if(to!==null&&to!==undefined){for(var p in from){if(!hasOwn(from,p)){continue}if(p==="__proto__"||p==="constructor"){continue}to[p]=from[p]}}return to};exports.shallowCopyFromList=function(to,from,list){list=list||[];from=from||{};if(to!==null&&to!==undefined){for(var i=0;i<list.length;i++){var p=list[i];if(typeof from[p]!="undefined"){if(!hasOwn(from,p)){continue}if(p==="__proto__"||p==="constructor"){continue}to[p]=from[p]}}}return to};exports.cache={_data:{},set:function(key,val){this._data[key]=val},get:function(key){return this._data[key]},remove:function(key){delete this._data[key]},reset:function(){this._data={}}};exports.hyphenToCamel=function(str){return str.replace(/-[a-z]/g,function(match){return match[1].toUpperCase()})};exports.createNullProtoObjWherePossible=function(){if(typeof Object.create=="function"){return function(){return Object.create(null)}}if(!({__proto__:null}instanceof Object)){return function(){return{__proto__:null}}}return function(){return{}}}();exports.hasOwnOnlyObject=function(obj){var o=exports.createNullProtoObjWherePossible();for(var p in obj){if(hasOwn(obj,p)){o[p]=obj[p]}}return o}},{}],3:[function(require,module,exports){},{}],4:[function(require,module,exports){(function(process){function normalizeArray(parts,allowAboveRoot){var up=0;for(var i=parts.length-1;i>=0;i--){var last=parts[i];if(last==="."){parts.splice(i,1)}else if(last===".."){parts.splice(i,1);up++}else if(up){parts.splice(i,1);up--}}if(allowAboveRoot){for(;up--;up){parts.unshift("..")}}return parts}exports.resolve=function(){var resolvedPath="",resolvedAbsolute=false;for(var i=arguments.length-1;i>=-1&&!resolvedAbsolute;i--){var path=i>=0?arguments[i]:process.cwd();if(typeof path!=="string"){throw new TypeError("Arguments to path.resolve must be strings")}else if(!path){continue}resolvedPath=path+"/"+resolvedPath;resolvedAbsolute=path.charAt(0)==="/"}resolvedPath=normalizeArray(filter(resolvedPath.split("/"),function(p){return!!p}),!resolvedAbsolute).join("/");return(resolvedAbsolute?"/":"")+resolvedPath||"."};exports.normalize=function(path){var isAbsolute=exports.isAbsolute(path),trailingSlash=substr(path,-1)==="/";path=normalizeArray(filter(path.split("/"),function(p){return!!p}),!isAbsolute).join("/");if(!path&&!isAbsolute){path="."}if(path&&trailingSlash){path+="/"}return(isAbsolute?"/":"")+path};exports.isAbsolute=function(path){return path.charAt(0)==="/"};exports.join=function(){var paths=Array.prototype.slice.call(arguments,0);return exports.normalize(filter(paths,function(p,index){if(typeof p!=="string"){throw new TypeError("Arguments to path.join must be strings")}return p}).join("/"))};exports.relative=function(from,to){from=exports.resolve(from).substr(1);to=exports.resolve(to).substr(1);function trim(arr){var start=0;for(;start<arr.length;start++){if(arr[start]!=="")break}var end=arr.length-1;for(;end>=0;end--){if(arr[end]!=="")break}if(start>end)return[];return arr.slice(start,end-start+1)}var fromParts=trim(from.split("/"));var toParts=trim(to.split("/"));var length=Math.min(fromParts.length,toParts.length);var samePartsLength=length;for(var i=0;i<length;i++){if(fromParts[i]!==toParts[i]){samePartsLength=i;break}}var outputParts=[];for(var i=samePartsLength;i<fromParts.length;i++){outputParts.push("..")}outputParts=outputParts.concat(toParts.slice(samePartsLength));return outputParts.join("/")};exports.sep="/";exports.delimiter=":";exports.dirname=function(path){if(typeof path!=="string")path=path+"";if(path.length===0)return".";var code=path.charCodeAt(0);var hasRoot=code===47;var end=-1;var matchedSlash=true;for(var i=path.length-1;i>=1;--i){code=path.charCodeAt(i);if(code===47){if(!matchedSlash){end=i;break}}else{matchedSlash=false}}if(end===-1)return hasRoot?"/":".";if(hasRoot&&end===1){return"/"}return path.slice(0,end)};function basename(path){if(typeof path!=="string")path=path+"";var start=0;var end=-1;var matchedSlash=true;var i;for(i=path.length-1;i>=0;--i){if(path.charCodeAt(i)===47){if(!matchedSlash){start=i+1;break}}else if(end===-1){matchedSlash=false;end=i+1}}if(end===-1)return"";return path.slice(start,end)}exports.basename=function(path,ext){var f=basename(path);if(ext&&f.substr(-1*ext.length)===ext){f=f.substr(0,f.length-ext.length)}return f};exports.extname=function(path){if(typeof path!=="string")path=path+"";var startDot=-1;var startPart=0;var end=-1;var matchedSlash=true;var preDotState=0;for(var i=path.length-1;i>=0;--i){var code=path.charCodeAt(i);if(code===47){if(!matchedSlash){startPart=i+1;break}continue}if(end===-1){matchedSlash=false;end=i+1}if(code===46){if(startDot===-1)startDot=i;else if(preDotState!==1)preDotState=1}else if(startDot!==-1){preDotState=-1}}if(startDot===-1||end===-1||preDotState===0||preDotState===1&&startDot===end-1&&startDot===startPart+1){return""}return path.slice(startDot,end)};function filter(xs,f){if(xs.filter)return xs.filter(f);var res=[];for(var i=0;i<xs.length;i++){if(f(xs[i],i,xs))res.push(xs[i])}return res}var substr="ab".substr(-1)==="b"?function(str,start,len){return str.substr(start,len)}:function(str,start,len){if(start<0)start=str.length+start;return str.substr(start,len)}}).call(this,require("_process"))},{_process:5}],5:[function(require,module,exports){var process=module.exports={};var cachedSetTimeout;var cachedClearTimeout;function defaultSetTimout(){throw new Error("setTimeout has not been defined")}function defaultClearTimeout(){throw new Error("clearTimeout has not been defined")}(function(){try{if(typeof setTimeout==="function"){cachedSetTimeout=setTimeout}else{cachedSetTimeout=defaultSetTimout}}catch(e){cachedSetTimeout=defaultSetTimout}try{if(typeof clearTimeout==="function"){cachedClearTimeout=clearTimeout}else{cachedClearTimeout=defaultClearTimeout}}catch(e){cachedClearTimeout=defaultClearTimeout}})();function runTimeout(fun){if(cachedSetTimeout===setTimeout){return setTimeout(fun,0)}if((cachedSetTimeout===defaultSetTimout||!cachedSetTimeout)&&setTimeout){cachedSetTimeout=setTimeout;return setTimeout(fun,0)}try{return cachedSetTimeout(fun,0)}catch(e){try{return cachedSetTimeout.call(null,fun,0)}catch(e){return cachedSetTimeout.call(this,fun,0)}}}function runClearTimeout(marker){if(cachedClearTimeout===clearTimeout){return clearTimeout(marker)}if((cachedClearTimeout===defaultClearTimeout||!cachedClearTimeout)&&clearTimeout){cachedClearTimeout=clearTimeout;return clearTimeout(marker)}try{return cachedClearTimeout(marker)}catch(e){try{return cachedClearTimeout.call(null,marker)}catch(e){return cachedClearTimeout.call(this,marker)}}}var queue=[];var draining=false;var currentQueue;var queueIndex=-1;function cleanUpNextTick(){if(!draining||!currentQueue){return}draining=false;if(currentQueue.length){queue=currentQueue.concat(queue)}else{queueIndex=-1}if(queue.length){drainQueue()}}function drainQueue(){if(draining){return}var timeout=runTimeout(cleanUpNextTick);draining=true;var len=queue.length;while(len){currentQueue=queue;queue=[];while(++queueIndex<len){if(currentQueue){currentQueue[queueIndex].run()}}queueIndex=-1;len=queue.length}currentQueue=null;draining=false;runClearTimeout(timeout)}process.nextTick=function(fun){var args=new Array(arguments.length-1);if(arguments.length>1){for(var i=1;i<arguments.length;i++){args[i-1]=arguments[i]}}queue.push(new Item(fun,args));if(queue.length===1&&!draining){runTimeout(drainQueue)}};function Item(fun,array){this.fun=fun;this.array=array}Item.prototype.run=function(){this.fun.apply(null,this.array)};process.title="browser";process.browser=true;process.env={};process.argv=[];process.version="";process.versions={};function noop(){}process.on=noop;process.addListener=noop;process.once=noop;process.off=noop;process.removeListener=noop;process.removeAllListeners=noop;process.emit=noop;process.prependListener=noop;process.prependOnceListener=noop;process.listeners=function(name){return[]};process.binding=function(name){throw new Error("process.binding is not supported")};process.cwd=function(){return"/"};process.chdir=function(dir){throw new Error("process.chdir is not supported")};process.umask=function(){return 0}},{}],6:[function(require,module,exports){module.exports={name:"ejs",description:"Embedded JavaScript templates",keywords:["template","engine","ejs"],version:"3.1.9",author:"Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",license:"Apache-2.0",bin:{ejs:"./bin/cli.js"},main:"./lib/ejs.js",jsdelivr:"ejs.min.js",unpkg:"ejs.min.js",repository:{type:"git",url:"git://github.com/mde/ejs.git"},bugs:"https://github.com/mde/ejs/issues",homepage:"https://github.com/mde/ejs",dependencies:{jake:"^10.8.5"},devDependencies:{browserify:"^16.5.1",eslint:"^6.8.0","git-directory-deploy":"^1.5.1",jsdoc:"^4.0.2","lru-cache":"^4.0.1",mocha:"^10.2.0","uglify-js":"^3.3.16"},engines:{node:">=0.10.0"},scripts:{test:"npx jake test"}}},{}]},{},[1])(1)});
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.ejs=f()}})(function(){var define,module,exports;return function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r}()({1:[function(require,module,exports){"use strict";var __importDefault=this&&this.__importDefault||function(mod){return mod&&mod.__esModule?mod:{default:mod}};Object.defineProperty(exports,"__esModule",{value:true});var fs_1=__importDefault(require("fs"));var path_1=__importDefault(require("path"));var utils_js_1=__importDefault(require("./utils.js"));var DECLARATION_KEYWORD="var";var ejs={};var _DEFAULT_OPEN_DELIMITER="<";var _DEFAULT_CLOSE_DELIMITER=">";var _DEFAULT_DELIMITER="%";var _DEFAULT_LOCALS_NAME="locals";var _REGEX_STRING="(<%%|%%>|<%=|<%-|<%_|<%#|<%|%>|-%>|_%>)";var _OPTS_PASSABLE_WITH_DATA=["delimiter","scope","context","debug","compileDebug","_with","rmWhitespace","strict","filename","async"];var _OPTS_PASSABLE_WITH_DATA_EXPRESS=_OPTS_PASSABLE_WITH_DATA.concat("cache");var _BOM=/^\uFEFF/;var _JS_IDENTIFIER=/^[a-zA-Z_$][0-9a-zA-Z_$]*$/;ejs.cache=utils_js_1.default.cache;ejs.fileLoader=fs_1.default.readFileSync;ejs.localsName=_DEFAULT_LOCALS_NAME;ejs.promiseImpl=new Function("return this;")().Promise;ejs.resolveInclude=function(name,filename,isDir){var dirname=path_1.default.dirname;var extname=path_1.default.extname;var resolve=path_1.default.resolve;var includePath=resolve(isDir?filename:dirname(filename),name);var ext=extname(name);if(!ext){includePath+=".ejs"}return includePath};function resolvePaths(name,paths){var filePath;if(paths.some(function(v){filePath=ejs.resolveInclude(name,v,true);return fs_1.default.existsSync(filePath)})){return filePath}}function getIncludePath(path,options){var includePath;var filePath;var views=options.views;var match=/^[A-Za-z]+:\\|^\//.exec(path);if(match&&match.length){path=path.replace(/^\/*/,"");if(Array.isArray(options.root)){includePath=resolvePaths(path,options.root)}else{includePath=ejs.resolveInclude(path,options.root||"/",true)}}else{if(options.filename){filePath=ejs.resolveInclude(path,options.filename);if(fs_1.default.existsSync(filePath)){includePath=filePath}}if(!includePath&&Array.isArray(views)){includePath=resolvePaths(path,views)}if(!includePath&&typeof options.includer!=="function"){throw new Error('Could not find the include file "'+options.escapeFunction(path)+'"')}}return includePath}function handleCache(options,template){var func;var filename=options.filename;var hasTemplate=arguments.length>1;if(options.cache){if(!filename){throw new Error("cache option requires a filename")}func=ejs.cache.get(filename);if(func){return func}if(!hasTemplate){template=fileLoader(filename).toString().replace(_BOM,"")}}else if(!hasTemplate){if(!filename){throw new Error("Internal EJS error: no file name or template "+"provided")}template=fileLoader(filename).toString().replace(_BOM,"")}func=ejs.compile(template,options);if(options.cache){ejs.cache.set(filename,func)}return func}function tryHandleCache(options,data,cb){var result;if(!cb){if(typeof ejs.promiseImpl=="function"){return new ejs.promiseImpl(function(resolve,reject){try{result=handleCache(options)(data);resolve(result)}catch(err){reject(err)}})}else{throw new Error("Please provide a callback function")}}else{try{result=handleCache(options)(data)}catch(err){return cb(err)}cb(null,result)}}function fileLoader(filePath){return ejs.fileLoader(filePath)}function includeFile(path,options){var opts=utils_js_1.default.shallowCopy(utils_js_1.default.createNullProtoObjWherePossible(),options);opts.filename=getIncludePath(path,opts);if(typeof options.includer==="function"){var includerResult=options.includer(path,opts.filename);if(includerResult){if(includerResult.filename){opts.filename=includerResult.filename}if(includerResult.template){return handleCache(opts,includerResult.template)}}}return handleCache(opts)}function rethrow(err,str,flnm,lineno,esc){var lines=str.split("\n");var start=Math.max(lineno-3,0);var end=Math.min(lines.length,lineno+3);var filename=esc(flnm);var context=lines.slice(start,end).map(function(line,i){var curr=i+start+1;return(curr==lineno?" >> ":"    ")+curr+"| "+line}).join("\n");err.path=filename;err.message=(filename||"ejs")+":"+lineno+"\n"+context+"\n\n"+err.message;throw err}function stripSemi(str){return str.replace(/;(\s*$)/,"$1")}ejs.compile=function compile(template,opts){var templ;if(opts&&opts.scope){console.warn("`scope` option is deprecated and will be removed in future EJS");if(!opts.context){opts.context=opts.scope}delete opts.scope}templ=new Template(template,opts);return templ.compile()};ejs.render=function(template,d,o){var data=d||utils_js_1.default.createNullProtoObjWherePossible();var opts=o||utils_js_1.default.createNullProtoObjWherePossible();if(arguments.length==2){utils_js_1.default.shallowCopyFromList(opts,data,_OPTS_PASSABLE_WITH_DATA)}return handleCache(opts,template)(data)};ejs.renderFile=function(){var args=Array.prototype.slice.call(arguments);var filename=args.shift();var cb;var opts={filename:filename};var data;var viewOpts;if(typeof arguments[arguments.length-1]=="function"){cb=args.pop()}if(args.length){data=args.shift();if(args.length){utils_js_1.default.shallowCopy(opts,args.pop())}else{if(utils_js_1.default.hasOwn(data,"settings")&&data.settings){if(data.settings.views){opts.views=data.settings.views}if(data.settings["view cache"]){opts.cache=true}viewOpts=data.settings["view options"];if(viewOpts){utils_js_1.default.shallowCopy(opts,viewOpts)}}utils_js_1.default.shallowCopyFromList(opts,data,_OPTS_PASSABLE_WITH_DATA_EXPRESS)}opts.filename=filename}else{data=utils_js_1.default.createNullProtoObjWherePossible()}return tryHandleCache(opts,data,cb)};ejs.Template=Template;ejs.clearCache=function(){ejs.cache.reset()};function Template(text,optsParam){var opts=utils_js_1.default.hasOwnOnlyObject(optsParam);var options=utils_js_1.default.createNullProtoObjWherePossible();this.templateText=text;this.mode=null;this.truncate=false;this.currentLine=1;this.source="";options.escapeFunction=opts.escape||opts.escapeFunction||utils_js_1.default.escapeXML;options.compileDebug=opts.compileDebug!==false;options.debug=!!opts.debug;options.filename=opts.filename;options.openDelimiter=opts.openDelimiter||ejs.openDelimiter||_DEFAULT_OPEN_DELIMITER;options.closeDelimiter=opts.closeDelimiter||ejs.closeDelimiter||_DEFAULT_CLOSE_DELIMITER;options.delimiter=opts.delimiter||ejs.delimiter||_DEFAULT_DELIMITER;options.strict=opts.strict||false;options.context=opts.context;options.cache=opts.cache||false;options.rmWhitespace=opts.rmWhitespace;options.root=opts.root;options.includer=opts.includer;options.outputFunctionName=opts.outputFunctionName;options.localsName=opts.localsName||ejs.localsName||_DEFAULT_LOCALS_NAME;options.views=opts.views;options.async=opts.async;options.destructuredLocals=opts.destructuredLocals;options.legacyInclude=typeof opts.legacyInclude!="undefined"?!!opts.legacyInclude:true;options.unsafePrototypeLocals=!!opts.unsafePrototypeLocals;if(options.strict){options._with=false}else{options._with=typeof opts._with!="undefined"?opts._with:true}this.opts=options;this.regex=this.createRegex()}Template.modes={EVAL:"eval",ESCAPED:"escaped",RAW:"raw",COMMENT:"comment",LITERAL:"literal"};Template.prototype={createRegex:function(){var str=_REGEX_STRING;var delim=utils_js_1.default.escapeRegExpChars(this.opts.delimiter);var open=utils_js_1.default.escapeRegExpChars(this.opts.openDelimiter);var close=utils_js_1.default.escapeRegExpChars(this.opts.closeDelimiter);str=str.replace(/%/g,delim).replace(/</g,open).replace(/>/g,close);return new RegExp(str)},compile:function(){var src;var fn;var opts=this.opts;var prepended="";var appended="";var escapeFn=opts.escapeFunction;var ctor;var sanitizedFilename=opts.filename?JSON.stringify(opts.filename):"undefined";if(!this.source){this.generateSource();prepended+="  ".concat(DECLARATION_KEYWORD,' __output = "";\n')+"  function __append(s) { if (s !== undefined && s !== null) __output += s }\n";if(opts.outputFunctionName){if(!_JS_IDENTIFIER.test(opts.outputFunctionName)){throw new Error("outputFunctionName is not a valid JS identifier.")}prepended+="  ".concat(DECLARATION_KEYWORD," ")+opts.outputFunctionName+" = __append;"+"\n"}if(opts.localsName&&!_JS_IDENTIFIER.test(opts.localsName)){throw new Error("localsName is not a valid JS identifier.")}if(opts.destructuredLocals&&opts.destructuredLocals.length){var destructuring="  ".concat(DECLARATION_KEYWORD," __locals = (")+opts.localsName+" || {}),\n";for(var i=0;i<opts.destructuredLocals.length;i++){var name_1=opts.destructuredLocals[i];if(!_JS_IDENTIFIER.test(name_1)){throw new Error("destructuredLocals["+i+"] is not a valid JS identifier.")}if(i>0){destructuring+=",\n  "}destructuring+=name_1+" = __locals."+name_1}prepended+=destructuring+";\n"}if(opts._with!==false){prepended+="  with ("+opts.localsName+" || {}) {"+"\n";appended+="  }"+"\n"}appended+="  return __output;"+"\n";this.source=prepended+this.source+appended}if(opts.compileDebug){src="".concat(DECLARATION_KEYWORD," __line = 1")+"\n"+"  , __lines = "+JSON.stringify(this.templateText)+"\n"+"  , __filename = "+sanitizedFilename+";"+"\n"+"try {"+"\n"+this.source+"} catch (e) {"+"\n"+"  rethrow(e, __lines, __filename, __line, escapeFn);"+"\n"+"}"+"\n"}else{src=this.source}if(opts.strict){src='"use strict";\n'+src}if(opts.debug){console.log(src)}if(opts.compileDebug&&opts.filename){src=src+"\n"+"//# sourceURL="+sanitizedFilename+"\n"}try{if(opts.async){try{ctor=new Function("return (async function(){}).constructor;")()}catch(e){if(e instanceof SyntaxError){throw new Error("This environment does not support async/await")}else{throw e}}}else{ctor=Function}fn=new ctor(opts.localsName+", escapeFn, include, rethrow",src)}catch(e){if(e instanceof SyntaxError){if(opts.filename){e.message+=" in "+opts.filename}e.message+=" while compiling ejs\n\n";e.message+="If the above error is not helpful, you may want to try EJS-Lint:\n";e.message+="https://github.com/RyanZim/EJS-Lint";if(!opts.async){e.message+="\n";e.message+="Or, if you meant to create an async function, pass `async: true` as an option."}}throw e}var returnedFn=function anonymous(data){var include=function(path,includeData){var d=utils_js_1.default.shallowCopy(utils_js_1.default.createNullProtoObjWherePossible(),data);if(includeData){d=utils_js_1.default.shallowCopy(d,includeData)}return includeFile(path,opts)(d)};var locals;if(opts.unsafePrototypeLocals){locals=data||utils_js_1.default.createNullProtoObjWherePossible()}else{locals=utils_js_1.default.shallowCopy(utils_js_1.default.createNullProtoObjWherePossible(),data)}return fn.apply(opts.context,[locals,escapeFn,include,rethrow])};if(opts.filename&&typeof Object.defineProperty==="function"){var filename=opts.filename;var basename=path_1.default.basename(filename,path_1.default.extname(filename));try{Object.defineProperty(returnedFn,"name",{value:basename,writable:false,enumerable:false,configurable:true})}catch(e){}}return returnedFn},generateSource:function(){var opts=this.opts;if(opts.rmWhitespace){this.templateText=this.templateText.replace(/[\r\n]+/g,"\n").replace(/^\s+|\s+$/gm,"")}var self=this;var d=this.opts.delimiter;var o=this.opts.openDelimiter;var c=this.opts.closeDelimiter;var openWhitespaceSlurpTag=utils_js_1.default.escapeRegExpChars(o+d+"_");var closeWhitespaceSlurpTag=utils_js_1.default.escapeRegExpChars("_"+d+c);var openWhitespaceSlurpReplacement=o+d+"_";var closeWhitespaceSlurpReplacement="_"+d+c;this.templateText=this.templateText.replace(new RegExp("[ \\t]*"+openWhitespaceSlurpTag,"gm"),openWhitespaceSlurpReplacement).replace(new RegExp(closeWhitespaceSlurpTag+"[ \\t]*","gm"),closeWhitespaceSlurpReplacement);var matches=this.parseTemplateText();if(matches&&matches.length){matches.forEach(function(line,index){var closing;if(line.indexOf(o+d)===0&&line.indexOf(o+d+d)!==0){closing=matches[index+2];if(!(closing==d+c||closing=="-"+d+c||closing=="_"+d+c)){throw new Error('Could not find matching close tag for "'+line+'".')}}self.scanLine(line)})}},parseTemplateText:function(){var str=this.templateText;var pat=this.regex;var result=pat.exec(str);var arr=[];var firstPos;while(result){firstPos=result.index;if(firstPos!==0){arr.push(str.substring(0,firstPos));str=str.slice(firstPos)}arr.push(result[0]);str=str.slice(result[0].length);result=pat.exec(str)}if(str){arr.push(str)}return arr},_addOutput:function(line){if(this.truncate){line=line.replace(/^(?:\r\n|\r|\n)/,"");this.truncate=false}if(!line){return line}line=line.replace(/\\/g,"\\\\");line=line.replace(/\n/g,"\\n");line=line.replace(/\r/g,"\\r");line=line.replace(/"/g,'\\"');this.source+='    ; __append("'+line+'")'+"\n"},scanLine:function(line){var self=this;var d=this.opts.delimiter;var o=this.opts.openDelimiter;var c=this.opts.closeDelimiter;var newLineCount=0;newLineCount=line.split("\n").length-1;switch(line){case o+d:case o+d+"_":this.mode=Template.modes.EVAL;break;case o+d+"=":this.mode=Template.modes.ESCAPED;break;case o+d+"-":this.mode=Template.modes.RAW;break;case o+d+"#":this.mode=Template.modes.COMMENT;break;case o+d+d:this.mode=Template.modes.LITERAL;this.source+='    ; __append("'+line.replace(o+d+d,o+d)+'")'+"\n";break;case d+d+c:this.mode=Template.modes.LITERAL;this.source+='    ; __append("'+line.replace(d+d+c,d+c)+'")'+"\n";break;case d+c:case"-"+d+c:case"_"+d+c:if(this.mode==Template.modes.LITERAL){this._addOutput(line)}this.mode=null;this.truncate=line.indexOf("-")===0||line.indexOf("_")===0;break;default:if(this.mode){switch(this.mode){case Template.modes.EVAL:case Template.modes.ESCAPED:case Template.modes.RAW:if(line.lastIndexOf("//")>line.lastIndexOf("\n")){line+="\n"}}switch(this.mode){case Template.modes.EVAL:this.source+="    ; "+line+"\n";break;case Template.modes.ESCAPED:this.source+="    ; __append(escapeFn("+stripSemi(line)+"))"+"\n";break;case Template.modes.RAW:this.source+="    ; __append("+stripSemi(line)+")"+"\n";break;case Template.modes.COMMENT:break;case Template.modes.LITERAL:this._addOutput(line);break}}else{this._addOutput(line)}}if(self.opts.compileDebug&&newLineCount){this.currentLine+=newLineCount;this.source+="    ; __line = "+this.currentLine+"\n"}}};ejs.escapeXML=utils_js_1.default.escapeXML;ejs.__express=ejs.renderFile;if(typeof window!="undefined"){window.ejs=ejs}module.exports=ejs},{"./utils.js":2,fs:3,path:4}],2:[function(require,module,exports){"use strict";Object.defineProperty(exports,"__esModule",{value:true});var utils={};var regExpChars=/[|\\{}()[\]^$+*?.]/g;var hasOwnProperty=Object.prototype.hasOwnProperty;var hasOwn=function(obj,key){return hasOwnProperty.apply(obj,[key])};utils.hasOwn=hasOwn;utils.escapeRegExpChars=function(string){if(!string){return""}return String(string).replace(regExpChars,"\\$&")};var _ENCODE_HTML_RULES={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&#34;","'":"&#39;"};var _MATCH_HTML=/[&<>'"]/g;function encode_char(c){return _ENCODE_HTML_RULES[c]||c}var escapeFuncStr="var _ENCODE_HTML_RULES = {\n"+'      "&": "&amp;"\n'+'    , "<": "&lt;"\n'+'    , ">": "&gt;"\n'+'    , \'"\': "&#34;"\n'+'    , "\'": "&#39;"\n'+"    }\n"+"  , _MATCH_HTML = /[&<>'\"]/g;\n"+"function encode_char(c) {\n"+"  return _ENCODE_HTML_RULES[c] || c;\n"+"};\n";utils.escapeXML=function(markup){return markup==undefined?"":String(markup).replace(_MATCH_HTML,encode_char)};function escapeXMLToString(){return Function.prototype.toString.call(this)+";\n"+escapeFuncStr}try{if(typeof Object.defineProperty==="function"){Object.defineProperty(utils.escapeXML,"toString",{value:escapeXMLToString})}else{utils.escapeXML.toString=escapeXMLToString}}catch(err){console.warn("Unable to set escapeXML.toString (is the Function prototype frozen?)")}utils.shallowCopy=function(to,from){from=from||{};if(to!==null&&to!==undefined){for(var p in from){if(!hasOwn(from,p)){continue}if(p==="__proto__"||p==="constructor"){continue}to[p]=from[p]}}return to};utils.shallowCopyFromList=function(to,from,list){list=list||[];from=from||{};if(to!==null&&to!==undefined){for(var i=0;i<list.length;i++){var p=list[i];if(typeof from[p]!="undefined"){if(!hasOwn(from,p)){continue}if(p==="__proto__"||p==="constructor"){continue}to[p]=from[p]}}}return to};utils.cache={_data:{},set:function(key,val){this._data[key]=val},get:function(key){return this._data[key]},remove:function(key){delete this._data[key]},reset:function(){this._data={}}};utils.hyphenToCamel=function(str){return str.replace(/-[a-z]/g,function(match){return match[1].toUpperCase()})};utils.createNullProtoObjWherePossible=function(){if(typeof Object.create=="function"){return function(){return Object.create(null)}}if(!({__proto__:null}instanceof Object)){return function(){return{__proto__:null}}}return function(){return{}}}();utils.hasOwnOnlyObject=function(obj){var o=utils.createNullProtoObjWherePossible();for(var p in obj){if(hasOwn(obj,p)){o[p]=obj[p]}}return o};module.exports=utils},{}],3:[function(require,module,exports){},{}],4:[function(require,module,exports){(function(process){(function(){"use strict";function assertPath(path){if(typeof path!=="string"){throw new TypeError("Path must be a string. Received "+JSON.stringify(path))}}function normalizeStringPosix(path,allowAboveRoot){var res="";var lastSegmentLength=0;var lastSlash=-1;var dots=0;var code;for(var i=0;i<=path.length;++i){if(i<path.length)code=path.charCodeAt(i);else if(code===47)break;else code=47;if(code===47){if(lastSlash===i-1||dots===1){}else if(lastSlash!==i-1&&dots===2){if(res.length<2||lastSegmentLength!==2||res.charCodeAt(res.length-1)!==46||res.charCodeAt(res.length-2)!==46){if(res.length>2){var lastSlashIndex=res.lastIndexOf("/");if(lastSlashIndex!==res.length-1){if(lastSlashIndex===-1){res="";lastSegmentLength=0}else{res=res.slice(0,lastSlashIndex);lastSegmentLength=res.length-1-res.lastIndexOf("/")}lastSlash=i;dots=0;continue}}else if(res.length===2||res.length===1){res="";lastSegmentLength=0;lastSlash=i;dots=0;continue}}if(allowAboveRoot){if(res.length>0)res+="/..";else res="..";lastSegmentLength=2}}else{if(res.length>0)res+="/"+path.slice(lastSlash+1,i);else res=path.slice(lastSlash+1,i);lastSegmentLength=i-lastSlash-1}lastSlash=i;dots=0}else if(code===46&&dots!==-1){++dots}else{dots=-1}}return res}function _format(sep,pathObject){var dir=pathObject.dir||pathObject.root;var base=pathObject.base||(pathObject.name||"")+(pathObject.ext||"");if(!dir){return base}if(dir===pathObject.root){return dir+base}return dir+sep+base}var posix={resolve:function resolve(){var resolvedPath="";var resolvedAbsolute=false;var cwd;for(var i=arguments.length-1;i>=-1&&!resolvedAbsolute;i--){var path;if(i>=0)path=arguments[i];else{if(cwd===undefined)cwd=process.cwd();path=cwd}assertPath(path);if(path.length===0){continue}resolvedPath=path+"/"+resolvedPath;resolvedAbsolute=path.charCodeAt(0)===47}resolvedPath=normalizeStringPosix(resolvedPath,!resolvedAbsolute);if(resolvedAbsolute){if(resolvedPath.length>0)return"/"+resolvedPath;else return"/"}else if(resolvedPath.length>0){return resolvedPath}else{return"."}},normalize:function normalize(path){assertPath(path);if(path.length===0)return".";var isAbsolute=path.charCodeAt(0)===47;var trailingSeparator=path.charCodeAt(path.length-1)===47;path=normalizeStringPosix(path,!isAbsolute);if(path.length===0&&!isAbsolute)path=".";if(path.length>0&&trailingSeparator)path+="/";if(isAbsolute)return"/"+path;return path},isAbsolute:function isAbsolute(path){assertPath(path);return path.length>0&&path.charCodeAt(0)===47},join:function join(){if(arguments.length===0)return".";var joined;for(var i=0;i<arguments.length;++i){var arg=arguments[i];assertPath(arg);if(arg.length>0){if(joined===undefined)joined=arg;else joined+="/"+arg}}if(joined===undefined)return".";return posix.normalize(joined)},relative:function relative(from,to){assertPath(from);assertPath(to);if(from===to)return"";from=posix.resolve(from);to=posix.resolve(to);if(from===to)return"";var fromStart=1;for(;fromStart<from.length;++fromStart){if(from.charCodeAt(fromStart)!==47)break}var fromEnd=from.length;var fromLen=fromEnd-fromStart;var toStart=1;for(;toStart<to.length;++toStart){if(to.charCodeAt(toStart)!==47)break}var toEnd=to.length;var toLen=toEnd-toStart;var length=fromLen<toLen?fromLen:toLen;var lastCommonSep=-1;var i=0;for(;i<=length;++i){if(i===length){if(toLen>length){if(to.charCodeAt(toStart+i)===47){return to.slice(toStart+i+1)}else if(i===0){return to.slice(toStart+i)}}else if(fromLen>length){if(from.charCodeAt(fromStart+i)===47){lastCommonSep=i}else if(i===0){lastCommonSep=0}}break}var fromCode=from.charCodeAt(fromStart+i);var toCode=to.charCodeAt(toStart+i);if(fromCode!==toCode)break;else if(fromCode===47)lastCommonSep=i}var out="";for(i=fromStart+lastCommonSep+1;i<=fromEnd;++i){if(i===fromEnd||from.charCodeAt(i)===47){if(out.length===0)out+="..";else out+="/.."}}if(out.length>0)return out+to.slice(toStart+lastCommonSep);else{toStart+=lastCommonSep;if(to.charCodeAt(toStart)===47)++toStart;return to.slice(toStart)}},_makeLong:function _makeLong(path){return path},dirname:function dirname(path){assertPath(path);if(path.length===0)return".";var code=path.charCodeAt(0);var hasRoot=code===47;var end=-1;var matchedSlash=true;for(var i=path.length-1;i>=1;--i){code=path.charCodeAt(i);if(code===47){if(!matchedSlash){end=i;break}}else{matchedSlash=false}}if(end===-1)return hasRoot?"/":".";if(hasRoot&&end===1)return"//";return path.slice(0,end)},basename:function basename(path,ext){if(ext!==undefined&&typeof ext!=="string")throw new TypeError('"ext" argument must be a string');assertPath(path);var start=0;var end=-1;var matchedSlash=true;var i;if(ext!==undefined&&ext.length>0&&ext.length<=path.length){if(ext.length===path.length&&ext===path)return"";var extIdx=ext.length-1;var firstNonSlashEnd=-1;for(i=path.length-1;i>=0;--i){var code=path.charCodeAt(i);if(code===47){if(!matchedSlash){start=i+1;break}}else{if(firstNonSlashEnd===-1){matchedSlash=false;firstNonSlashEnd=i+1}if(extIdx>=0){if(code===ext.charCodeAt(extIdx)){if(--extIdx===-1){end=i}}else{extIdx=-1;end=firstNonSlashEnd}}}}if(start===end)end=firstNonSlashEnd;else if(end===-1)end=path.length;return path.slice(start,end)}else{for(i=path.length-1;i>=0;--i){if(path.charCodeAt(i)===47){if(!matchedSlash){start=i+1;break}}else if(end===-1){matchedSlash=false;end=i+1}}if(end===-1)return"";return path.slice(start,end)}},extname:function extname(path){assertPath(path);var startDot=-1;var startPart=0;var end=-1;var matchedSlash=true;var preDotState=0;for(var i=path.length-1;i>=0;--i){var code=path.charCodeAt(i);if(code===47){if(!matchedSlash){startPart=i+1;break}continue}if(end===-1){matchedSlash=false;end=i+1}if(code===46){if(startDot===-1)startDot=i;else if(preDotState!==1)preDotState=1}else if(startDot!==-1){preDotState=-1}}if(startDot===-1||end===-1||preDotState===0||preDotState===1&&startDot===end-1&&startDot===startPart+1){return""}return path.slice(startDot,end)},format:function format(pathObject){if(pathObject===null||typeof pathObject!=="object"){throw new TypeError('The "pathObject" argument must be of type Object. Received type '+typeof pathObject)}return _format("/",pathObject)},parse:function parse(path){assertPath(path);var ret={root:"",dir:"",base:"",ext:"",name:""};if(path.length===0)return ret;var code=path.charCodeAt(0);var isAbsolute=code===47;var start;if(isAbsolute){ret.root="/";start=1}else{start=0}var startDot=-1;var startPart=0;var end=-1;var matchedSlash=true;var i=path.length-1;var preDotState=0;for(;i>=start;--i){code=path.charCodeAt(i);if(code===47){if(!matchedSlash){startPart=i+1;break}continue}if(end===-1){matchedSlash=false;end=i+1}if(code===46){if(startDot===-1)startDot=i;else if(preDotState!==1)preDotState=1}else if(startDot!==-1){preDotState=-1}}if(startDot===-1||end===-1||preDotState===0||preDotState===1&&startDot===end-1&&startDot===startPart+1){if(end!==-1){if(startPart===0&&isAbsolute)ret.base=ret.name=path.slice(1,end);else ret.base=ret.name=path.slice(startPart,end)}}else{if(startPart===0&&isAbsolute){ret.name=path.slice(1,startDot);ret.base=path.slice(1,end)}else{ret.name=path.slice(startPart,startDot);ret.base=path.slice(startPart,end)}ret.ext=path.slice(startDot,end)}if(startPart>0)ret.dir=path.slice(0,startPart-1);else if(isAbsolute)ret.dir="/";return ret},sep:"/",delimiter:":",win32:null,posix:null};posix.posix=posix;module.exports=posix}).call(this)}).call(this,require("_process"))},{_process:5}],5:[function(require,module,exports){var process=module.exports={};var cachedSetTimeout;var cachedClearTimeout;function defaultSetTimout(){throw new Error("setTimeout has not been defined")}function defaultClearTimeout(){throw new Error("clearTimeout has not been defined")}(function(){try{if(typeof setTimeout==="function"){cachedSetTimeout=setTimeout}else{cachedSetTimeout=defaultSetTimout}}catch(e){cachedSetTimeout=defaultSetTimout}try{if(typeof clearTimeout==="function"){cachedClearTimeout=clearTimeout}else{cachedClearTimeout=defaultClearTimeout}}catch(e){cachedClearTimeout=defaultClearTimeout}})();function runTimeout(fun){if(cachedSetTimeout===setTimeout){return setTimeout(fun,0)}if((cachedSetTimeout===defaultSetTimout||!cachedSetTimeout)&&setTimeout){cachedSetTimeout=setTimeout;return setTimeout(fun,0)}try{return cachedSetTimeout(fun,0)}catch(e){try{return cachedSetTimeout.call(null,fun,0)}catch(e){return cachedSetTimeout.call(this,fun,0)}}}function runClearTimeout(marker){if(cachedClearTimeout===clearTimeout){return clearTimeout(marker)}if((cachedClearTimeout===defaultClearTimeout||!cachedClearTimeout)&&clearTimeout){cachedClearTimeout=clearTimeout;return clearTimeout(marker)}try{return cachedClearTimeout(marker)}catch(e){try{return cachedClearTimeout.call(null,marker)}catch(e){return cachedClearTimeout.call(this,marker)}}}var queue=[];var draining=false;var currentQueue;var queueIndex=-1;function cleanUpNextTick(){if(!draining||!currentQueue){return}draining=false;if(currentQueue.length){queue=currentQueue.concat(queue)}else{queueIndex=-1}if(queue.length){drainQueue()}}function drainQueue(){if(draining){return}var timeout=runTimeout(cleanUpNextTick);draining=true;var len=queue.length;while(len){currentQueue=queue;queue=[];while(++queueIndex<len){if(currentQueue){currentQueue[queueIndex].run()}}queueIndex=-1;len=queue.length}currentQueue=null;draining=false;runClearTimeout(timeout)}process.nextTick=function(fun){var args=new Array(arguments.length-1);if(arguments.length>1){for(var i=1;i<arguments.length;i++){args[i-1]=arguments[i]}}queue.push(new Item(fun,args));if(queue.length===1&&!draining){runTimeout(drainQueue)}};function Item(fun,array){this.fun=fun;this.array=array}Item.prototype.run=function(){this.fun.apply(null,this.array)};process.title="browser";process.browser=true;process.env={};process.argv=[];process.version="";process.versions={};function noop(){}process.on=noop;process.addListener=noop;process.once=noop;process.off=noop;process.removeListener=noop;process.removeAllListeners=noop;process.emit=noop;process.prependListener=noop;process.prependOnceListener=noop;process.listeners=function(name){return[]};process.binding=function(name){throw new Error("process.binding is not supported")};process.cwd=function(){return"/"};process.chdir=function(dir){throw new Error("process.chdir is not supported")};process.umask=function(){return 0}},{}]},{},[1])(1)});
 
 
 
@@ -4031,6 +4077,7 @@ SS_Preview = (function () {
     }
 
     SS_Preview.instance = new SS_Preview("#ss-preview");
+    document.body.setAttribute("aria-busy", true);
 
     SS_Preview.loadJQuery(function() {
       $.when(
@@ -4038,6 +4085,7 @@ SS_Preview = (function () {
         SS_Preview.lazyLoad(SS_Preview.libs.colorbox),
         SS_Preview.lazyLoad(SS_Preview.libs.dialog)
       ).done(function () {
+        SS_Preview.preventExternalPrevew();
         SS_Preview.instance.initialize(opts);
       });
     });
@@ -4113,6 +4161,44 @@ SS_Preview = (function () {
     return d.promise();
   };
 
+  SS_Preview.preventExternalPrevew = function () {
+    let preventPreview = function (ev) {
+      alert('別サイトに遷移しようとしています。プレビュー時は別サイトへは遷移できません。');
+      return false;
+    };
+    let preventSubmit = function (ev) {
+      alert('プレビューでフォームデータの送信(POST)はできません。');
+      return false;
+    };
+    $(document).on("click", "a[data-external-preview]", preventPreview);
+    $(document).on("submit", "form[data-external-preview]", preventPreview);
+    $(document).on("submit", "form[data-external-submit]", preventSubmit);
+
+    /*
+    let preventPreview = function (ev) {
+      ev.stopPropagation();
+      ev.preventDefault();
+      alert('別サイトに遷移しようとしています。プレビュー時は別サイトへは遷移できません。');
+      return;
+    };
+    let preventSubmit = function (ev) {
+      ev.stopPropagation();
+      ev.preventDefault();
+      alert('プレビューでフォームデータの送信(POST)はできません。');
+      return;
+    };
+    document.querySelectorAll("a[data-external-preview]").forEach(function(element) {
+      element.addEventListener("click", preventPreview, true);
+    });
+    document.querySelectorAll("form[data-external-preview]").forEach(function(element) {
+      element.addEventListener("submit", preventPreview, true);
+    });
+    document.querySelectorAll("form[data-external-submit]").forEach(function(element) {
+      element.addEventListener("submit", preventSubmit, true);
+    });
+    */
+  };
+
   SS_Preview.notice = function (message) {
     if (!SS_Preview.instance) {
       return;
@@ -4153,6 +4239,8 @@ SS_Preview = (function () {
   SS_Preview.prototype.initialize = function(opts) {
     this.$el = $(this.el);
     this.$datePicker = this.$el.find(".ss-preview-date");
+
+    SS_DateTimePicker.renderOnce();
     new SS_DateTimePicker(this.$datePicker, "datetime");
 
     var self = this;
@@ -4326,6 +4414,9 @@ SS_Preview = (function () {
         $el.css('position', 'relative');
       }
     });
+
+    document.body.setAttribute("aria-busy", false);
+    document.body.dispatchEvent(new CustomEvent("ss:previewInitialized"));
   };
 
   SS_Preview.prototype.initializeLayout = function() {
@@ -5153,28 +5244,16 @@ SS_Preview = (function () {
 
   EditLock.prototype.release = function() {
     if (!SS_Preview.lockPath) {
-      return $.Deferred().resolve().promise();
+      return;
     }
 
-    var self = this;
     var url = SS_Preview.lockPath;
     var token = $('meta[name="csrf-token"]').attr('content');
 
-    return $.ajax({
-      url: url,
-      type: "POST",
-      dataType: "json",
-      cache: false,
-      data: { _method: "delete", authenticity_token: token }
-    }).fail(function(xhr, status, error) {
-      if (self.container.notice) {
-        if (xhr.responseJSON) {
-          self.container.notice.show(xhr.responseJSON.join("\n"));
-        } else {
-          self.container.notice.show(error);
-        }
-      }
-    });
+    var data = new FormData();
+    data.append("authenticity_token", token);
+    data.append("_method", "delete");
+    navigator.sendBeacon(url, data)
   };
 
   EditLock.prototype.startRefreshLoop = function(failed) {
@@ -5296,10 +5375,11 @@ SS_Preview = (function () {
 
     if (dontCareLock) {
       afterReleased();
-      return $.Deferred().resolve().promise();
+      return;
     }
 
-    return this.editLock.release().always(afterReleased);
+    this.editLock.release();
+    afterReleased();
   };
 
   //

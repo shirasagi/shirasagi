@@ -208,15 +208,6 @@ this.Gws_Member = (function () {
     })
   };
 
-  Gws_Member.confirmReadableSetting = function () {
-    return $('.save').on('click', function () {
-//$(submit).trigger("click")
-      if ($('.gws-addon-readable-setting tbody tr').length === 0) {
-        return confirm(i18next.t("gws.confirm.readable_setting.empty"));
-      }
-    });
-  };
-
   Gws_Member.copyGroups = function (el) {
     this.groups = el.closest('dl').find('tbody tr').clone(true);
     this.showLog(el, this.groups.length + i18next.t('gws.member_log.copy_groups'));
@@ -1791,7 +1782,10 @@ this.Gws_Discussion_Thread = (function () {
   function Gws_Discussion_Thread() {
   }
 
-  Gws_Discussion_Thread.render = function (user) {
+  Gws_Discussion_Thread.render = function (user, opts) {
+    if (opts == null) {
+      opts = {};
+    }
     //temp file
     var appendSelectedFile = function (selected, fileId, humanizedName) {
       var span = $('<span></span>');
@@ -1804,6 +1798,7 @@ this.Gws_Discussion_Thread = (function () {
       span.attr("id", "file-" + fileId);
       a.text(humanizedName);
       a.attr("href", "/.u" + user + "/apis/temp_files/" + fileId + "/view");
+      a.attr("class", opts["linkClass"]);
       input.attr("value", fileId);
       icon.on("click", function (_e) {
         $(this).parent("span").remove();
@@ -2542,6 +2537,31 @@ Gws_Share_FolderToolbar.prototype.refreshFolder = function () {
 
   this.options.treeNavi.refresh();
 };
+this.Gws_Share_File = (function () {
+  function Gws_Share_File() {}
+
+  // チェックされたファイルの ids[] を載せた一括操作用フォームを生成する。
+  // チェックが無い場合は false を返す。
+  Gws_Share_File.buildForm = function (action, confirm) {
+    var checked = $(".list-item input:checkbox:checked").map(function () {
+      return $(this).val();
+    });
+    if (checked.length === 0) {
+      return false;
+    }
+
+    var token = $('meta[name="csrf-token"]').attr("content");
+    var form = $("<form/>", { action: action, method: "post", data: { confirm: confirm } });
+    form.append($("<input/>", { name: "authenticity_token", value: token, type: "hidden" }));
+
+    for (var i = 0, len = checked.length; i < len; i++) {
+      form.append($("<input/>", { name: "ids[]", value: checked[i], type: "hidden" }));
+    }
+    return form;
+  };
+
+  return Gws_Share_File;
+})();
 Gws_Affair_Menu = function (current, sessionKey) {
   this.current = current;
   this.sessionKey = sessionKey;
@@ -2895,64 +2915,6 @@ Gws_Affair_ShiftRecords.prototype.onClickCell = function($cell) {
   this.$toolbar.show();
   this.$toolbar.offset(offset);
 };
-Gws_Workflow2_Approver = function () {
-};
-
-Gws_Workflow2_Approver.prototype.renderAgentForm = function(params) {
-  this.superiorsUrl = params.url;
-  this.errorHtml = $("<span/>", { class: "error" }).text(i18next.t("gws/workflow2.errors.messages.superior_is_not_found"));
-
-  var _this = this;
-  $('.agent-type-agent .ajax-selected').on('change', function() {
-    _this.changeApprovers();
-  });
-
-  $('input[name="item[workflow_agent_type]"]').on('change', function() {
-    var type = $(this).val();
-    if (type === 'myself') {
-      $('.myself-approvers').removeClass('hide');
-      $('.agent-approvers').addClass('hide');
-    } else {
-      $('.myself-approvers').addClass('hide');
-      $('.agent-approvers').removeClass('hide');
-    }
-    _this.renderSubmitButton();
-  });
-};
-
-Gws_Workflow2_Approver.prototype.changeApprovers = function() {
-  var _this = this;
-  var userId = $('.change_agent_type table.index input').val();
-
-  if (!userId) {
-    var $message = $("<span />", { class: "info" }).text(i18next.t("gws/workflow2.errors.messages.plz_select_delegatee"));
-    $('.gws-workflow-file-approver-item .agent-approvers').html($message);
-    _this.renderSubmitButton();
-    return;
-  }
-
-  $.ajax({
-    url: this.superiorsUrl.replace('$id', userId),
-    dataType: "json",
-    beforeSend: function() {
-      $('.gws-workflow-file-approver-item .agent-approvers').text('Loading..');
-    },
-    success: function(user) {
-      $('.gws-workflow-file-approver-item .agent-approvers').text(user.long_name);
-    },
-    error: function() {
-      $('.gws-workflow-file-approver-item .agent-approvers').html(_this.errorHtml);
-    },
-    complete: function() {
-      _this.renderSubmitButton();
-    }
-  });
-};
-
-Gws_Workflow2_Approver.prototype.renderSubmitButton = function() {
-  var disabled = $('.gws-workflow-file-approver-item').find('.user:not(.hide)').find('.error,.info').length > 0;
-  $('form#workflow-request').find('.btn-primary').attr({ 'disabled': (disabled ? 'disabled': null) });
-};
 
 
 
@@ -2989,8 +2951,16 @@ Gws_Workflow2_Approver.prototype.renderSubmitButton = function() {
 
 
 SS.ready(function () {
-  // external link
-  $('a[href^=http]').not('[href*="' + location.hostname + '"]').attr({ target: '_blank', rel: "noopener" });
+  var renderExternalLinks = function($box) {
+    // external link
+    $box.find('a[href^=http]').not('[href*="' + location.hostname + '"]').attr({ target: '_blank', rel: "noopener" });
+  }
+  renderExternalLinks($(document));
+  $(document).on("cbox_complete", function() {
+    renderExternalLinks($("#cboxLoadedContent"))
+  }).on("ss:dialog:opened", function(ev) {
+    renderExternalLinks($(ev.target))
+  });
 
   // tabs
   var path = location.pathname + "/";
