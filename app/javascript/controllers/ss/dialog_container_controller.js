@@ -1,8 +1,8 @@
 import { Controller } from "@hotwired/stimulus";
-import { dispatchEvent, formDataToRailsStyleJson } from "../../ss/tool";
+import { dispatchEvent } from "../../ss/tool";
 
 export default class extends Controller {
-  static targets = [ "container", "dialog", "content", "result" ]
+  static targets = [ "container", "dialog", "content" ]
 
   connect() {
     // console.log(`[${this.identifier}] connected`, this.hasDialogTarget);
@@ -22,51 +22,43 @@ export default class extends Controller {
   }
 
   #onClose() {
-    const detail = this._selectedResult ? this._selectedResult : this.#buildResult()
-    if (this.hasResultTarget) {
-      this.resultTarget.textContent = JSON.stringify(detail)
-    }
-    dispatchEvent(this.dialogTarget, "ss:modal-result", detail)
+    const detail = this.#buildResult()
+    dispatchEvent(this.dialogTarget, "ss:modal-result", detail, { cancelable: false })
     SS_SearchUI.dialogType = 'colorbox'
   }
 
   #onSelect($itemEl) {
     const $dataEl = $itemEl.closest("[data-id]")
-    var data
-    if ($dataEl[0]) {
-      data = $dataEl.data()
-      if (!data.name) {
-        data.name = $dataEl.find(".select-item").html() || $itemEl.text() || $dataEl.text()
-      }
+    if (!$dataEl[0]) {
+      return
     }
 
-    if (!this._selectedResult) {
-      this._selectedResult = {}
+    const data = $dataEl.data()
+    if (!data) {
+      return
     }
-    if (!this._selectedResult.returnValue) {
-      this._selectedResult.returnValue = "send"
-    }
-    if (data) {
-      if (!this._selectedResult.items) {
-        this._selectedResult.items = []
-      }
-      this._selectedResult.items.push(data)
+    if (!data.name) {
+      data.name = $dataEl.find(".select-item").html() || $itemEl.text() || $dataEl.text()
     }
 
-    if (this.hasResultTarget) {
-      this.resultTarget.textContent = JSON.stringify(this._selectedResult)
+    if (!this._items) {
+      this._items = []
     }
+    this._items.push(data)
   }
 
   #buildResult() {
     const result = { "returnValue": this.dialogTarget.returnValue }
 
+    if (this._items) {
+      result.items = this._items
+      result.returnValue = result.returnValue || "send"
+    }
+
     if (this.hasDialogTarget) {
       const formElement = this.dialogTarget.querySelector("form")
       if (formElement) {
-        const formData = new FormData(formElement)
-        const item = formDataToRailsStyleJson(formData)
-        result.items = [ item ]
+        result.formData = new FormData(formElement)
       }
     }
 

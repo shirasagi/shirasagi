@@ -13,15 +13,11 @@ function clearCheck(element) {
 
 export default class extends Controller {
   connect() {
-    this.element.addEventListener("click", (ev) => {
-      ev.preventDefault();
-      this.clearAllCheckboxes();
-      return false;
-    })
+    // console.log(`[${this.identifier}] connected`);
   }
 
-  clearAllCheckboxes() {
-    Array.from(this.element.form.elements).forEach((element) => {
+  clear() {
+    Array.from(this.element.querySelectorAll("input")).forEach((element) => {
       if (isCheckbox(element)) {
         clearCheck(element);
       }

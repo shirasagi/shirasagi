@@ -15,8 +15,6 @@ const DIALOG_TEMPLATE = `
     <div class="ss-dialog-content" data-ss--dialog-container-target="content">
       ${LOADING}
     </div>
-    <script type="application/json" data-ss--dialog-container-target="result">
-    </script>
   </dialog>
 </div>`
 
@@ -112,8 +110,8 @@ export default class Dialog {
     this._dialogClosed = undefined
   }
 
-  static showModal(src, options) {
-    const dialog = new Dialog(src, options)
+  static showModal(src, { source = undefined, data = undefined } = {}) {
+    const dialog = new Dialog(src, { source, data })
     return dialog.showModal()
   }
 
@@ -159,6 +157,11 @@ export default class Dialog {
     this._open = false
     this._dialogClosed(ev.detail)
     dispatchEvent(this._dialogFrame._dialog, "ss:dialog:closed")
-    requestAnimationFrame(() => this._dialogFrame.disconnect())
+    requestAnimationFrame(() => {
+      this._dialogFrame.disconnect()
+      if (this.options?.source) {
+        dispatchEvent(this.options.source, "modalresult", ev.detail, { cancelable: false })
+      }
+    })
   }
 }

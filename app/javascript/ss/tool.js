@@ -29,8 +29,8 @@ export function csrfToken(el) {
   return csrfTokenEl.getAttribute('content')
 }
 
-export function dispatchEvent(element, eventName, detail) {
-  const event = new CustomEvent(eventName, { bubbles: true, cancelable: true, composed: true, detail: detail })
+export function dispatchEvent(element, eventName, detail, { bubbles = true, cancelable = true, composed = true } = {}) {
+  const event = new CustomEvent(eventName, { detail, bubbles, cancelable, composed })
   element.dispatchEvent(event)
   return event
 }
@@ -272,37 +272,4 @@ export function disableUjsConfirm(currentTarget) {
   $(currentTarget)
     .off("confirm", _ujsConfirmHandler)
     .one("confirm", _ujsConfirmHandler)
-}
-
-export function formDataToRailsStyleJson(formData) {
-  const result = {}
-
-  for (const [key, value] of formData) {
-    const parts = key.split(/[\[\]]+/).filter(Boolean)
-    const isArrayElement = key.endsWith('[]')
-
-    let current = result
-
-    for (let i = 0; i < parts.length; i++) {
-      const part = parts[i]
-      const isLast = (i === parts.length - 1)
-
-      if (isLast) {
-        if (isArrayElement) {
-          current[part] = current[part] || []
-          current[part].push(value)
-        } else {
-          current[part] = value
-        }
-      } else {
-        if (!current[part]) {
-          const nextPart = parts[i + 1]
-          current[part] = /^\d+$/.text(nextPart) ? [] : {}
-        }
-        current = current[part]
-      }
-    }
-  }
-
-  return result
 }

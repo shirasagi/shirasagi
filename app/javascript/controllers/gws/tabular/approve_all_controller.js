@@ -32,8 +32,8 @@ export default class extends Controller {
     Dialog.showModal(this.dialogTarget.cloneNode(true)).then((dialogResult) => {
       if (dialogResult.returnValue === "approve" || dialogResult.returnValue === "remand") {
         let comment = undefined;
-        if (dialogResult.items && dialogResult.items[0]) {
-          comment = dialogResult.items[0].comment;
+        if (dialogResult.formData) {
+          comment = dialogResult.formData.get("comment");
         }
         this.#approveAll(href, checkedItems, dialogResult.returnValue, comment);
       }

@@ -38,19 +38,24 @@ export default class extends Controller {
   seq = 0;
 
   connect() {
+    //console.log(`[${this.identifier}]`, "connect");
     this.element.addEventListener("click", (ev) => {
       if ("name" in ev.target) {
         if (ev.target.name === "btn-add-individual-criteria") {
           this.#addIndividualCriteria();
+          return;
         }
         if (ev.target.name === "btn-delete-individual-criteria") {
           this.#deleteIndividualCriteria(ev.target);
+          return;
         }
         if (ev.target.name === "btn-open-category-dialog") {
           this.#openCategoryDialog(ev.target);
+          return;
         }
         if (ev.target.name === "btn-delete-category") {
           this.#deleteCategory(ev.target);
+          return;
         }
       }
       if ("classList" in ev.target && ev.target.classList.contains("btn-open-category-dialog")) {
@@ -60,17 +65,20 @@ export default class extends Controller {
       }
       if (ev.target.closest('[name="btn-delete-category"]')) {
         this.#deleteCategory(ev.target);
+        return;
       }
     })
     this.element.addEventListener("change", (ev) => {
       if ("name" in ev.target) {
         if (ev.target.name === "overall_op") {
           this.#updateReturnPath();
+          return;
         }
       }
       if ("classList" in ev.target && ev.target.classList.contains("individual-criteria-operator")) {
         this.#updateIndividualOp(ev.target);
         this.#updateReturnPath();
+        return;
       }
     })
     this.#restartSmoothDnD();
@@ -237,24 +245,31 @@ export default class extends Controller {
     const formElement = anchorElement.closest(".individual-criteria");
     const { op, categories } = this.#buildFilter(formElement);
     const filterString = categories.length ? objecToUrlSafeBase64({ op, categories }, { padding: false }) : "-";
-    const path = anchorElement.href.replace("$(category_id)", filterString).replace("%24%28category_id%29", filterString);
+    const pathTemplate = anchorElement.href || anchorElement.dataset.href
+    const path = pathTemplate.replace("$(category_id)", filterString).replace("%24%28category_id%29", filterString);
 
-    Dialog.showModal(path).then((result) => this.#applySelectedCategories(formElement, result));
+    Dialog.showModal(path).then((dialogResult) => this.#applySelectedCategories(formElement, dialogResult));
   }
 
   #applySelectedCategories(formElement, dialogResult) {
-    if (!dialogResult.items || !dialogResult.items[0]) {
+    if (dialogResult.returnValue !== "send") {
       // dialog is just closed
       return;
     }
+    if (!dialogResult.formData) {
+      // something strange issues have been happened
+      return;
+    }
 
+    const category_ids = dialogResult.formData.getAll("s[category_ids][]")
+    if (!category_ids || category_ids.length === 0) {
+      // dialog is just closed
+      return;
+    }
     const categories = [];
-    dialogResult.items.forEach((value) => {
-      if (value[0] === 's[category_ids][]') {
-        const cate = urlSafeBase64ToObject(value[1]);
-        categories.push(cate);
-      }
-    });
+    category_ids.forEach((encoded) => {
+      categories.push(urlSafeBase64ToObject(encoded));
+    })
 
     // delete all
     formElement.querySelectorAll(".category-item-wrap").forEach((element) => element.remove());
