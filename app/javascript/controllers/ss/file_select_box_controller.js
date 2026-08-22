@@ -2,6 +2,7 @@ import SelectBoxController from "./select_box_controller";
 import {dispatchEvent, prependChildren, replaceChildren} from "../../ss/tool";
 import i18next from 'i18next'
 import DropArea from "../../ss/drop_area";
+import FileUploadDialog from "../../ss/file_upload_dialog";
 
 // アップロード順
 // ※アップロード順とは、ID順のこと
@@ -192,14 +193,10 @@ export default class extends SelectBoxController {
       return;
     }
 
-    document.addEventListener("ss:tempFile:connected", (ev) => {
-      const tempFilesElement = ev.target;
-      dispatchEvent(tempFilesElement, "ss:tempFile:upload", { files: files });
-      this.fileUploadDropAreaTarget.classList.remove('file-dragenter');
-    }, { once: true })
-
-    this.apiValue = this.uploadApiValue;
-    super.openDialog();
+    FileUploadDialog.showModal(this.uploadApiValue, { files }).then((dialogResult) => {
+      this._renderResult(dialogResult.items);
+    });
+    this.fileUploadDropAreaTarget.classList.remove('file-dragenter');
   }
 
   #insertContent(content) {

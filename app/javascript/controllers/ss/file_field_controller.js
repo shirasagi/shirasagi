@@ -1,6 +1,7 @@
 import SelectBoxController from "./select_box_controller";
 import DropArea from "../../ss/drop_area";
 import {dispatchEvent} from "../../ss/tool";
+import FileUploadDialog from "../../ss/file_upload_dialog";
 
 export default class extends SelectBoxController {
   static targets = [
@@ -124,12 +125,9 @@ export default class extends SelectBoxController {
       return;
     }
 
-    document.addEventListener("ss:tempFile:connected", (ev) => {
-      const tempFilesElement = ev.target;
-      dispatchEvent(tempFilesElement, "ss:tempFile:upload", { files: files });
-      this.fileUploadDropAreaTarget.classList.remove('file-dragenter');
-    }, { once: true })
-
-    super.openDialog();
+    FileUploadDialog.showModal(this.apiValue, { files }).then((dialogResult) => {
+      this._renderResult(dialogResult.items);
+    });
+    this.fileUploadDropAreaTarget.classList.remove('file-dragenter');
   }
 }
