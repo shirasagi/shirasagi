@@ -4,6 +4,7 @@ class Cms::Node::CopyNodesJob < Cms::ApplicationJob
   include Job::Cms::CopyNodes::CmsForms
   include Job::Cms::CopyNodes::CmsColumns
   include Job::Cms::CopyNodes::CmsLayouts
+  include SS::Copy::CmsLoopSettings
   include Job::Cms::CopyNodes::CmsNodes
   include Job::Cms::CopyNodes::CmsParts
   include Job::Cms::CopyNodes::CmsPages
