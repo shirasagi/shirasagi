@@ -18,6 +18,12 @@ module Cms::ColumnFilter2
 
   private
 
+  def set_items
+    raise SS::ForbiddenError unless cur_form.allowed?(:read, @cur_user, site: @cur_site)
+
+    @items ||= items
+  end
+
   def set_assets
     stylesheet "/assets/css/codemirror/codemirror.css"
     javascript "/assets/js/codemirror/codemirror.js"

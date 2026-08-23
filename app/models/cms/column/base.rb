@@ -12,6 +12,16 @@ class Cms::Column::Base
         name: self.model_name.human
       }
     end
+
+    # カラム自体は権限を持たず、親フォームの権限に従う。
+    def allowed?(action, user, opts = {})
+      Cms::Form.allowed?(action, user, opts)
+    end
+  end
+
+  # カラム自体は権限を持たず、親フォームの権限に従う。
+  def allowed?(action, user, opts = {})
+    form ? form.allowed?(action, user, opts) : false
   end
 
   def alignment_options

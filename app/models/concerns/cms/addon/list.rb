@@ -2,6 +2,7 @@ module Cms::Addon::List
   module Model
     extend ActiveSupport::Concern
     extend SS::Translation
+    include Cms::Addon::LoopSettingValidation
 
     WELL_KONWN_CONDITION_HASH_OPTIONS = %i[site default_location request_dir category bind].freeze
 
@@ -49,6 +50,11 @@ module Cms::Addon::List
       validates :no_items_display_state, inclusion: { in: %w(show hide), allow_blank: true }
       validates :loop_format, inclusion: { in: %w(shirasagi liquid), allow_blank: true }
       validates :loop_liquid, liquid_format: true, if: ->{ loop_format_liquid? }
+      validate lambda {
+        validate_loop_setting_reference(
+          loop_format_liquid? ? 'liquid' : 'shirasagi',
+          changed: loop_setting_id_changed? || loop_format_changed?)
+      }
     end
 
     def sort_options

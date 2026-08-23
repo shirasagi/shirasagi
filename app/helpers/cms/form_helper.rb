@@ -31,13 +31,16 @@ module Cms::FormHelper
     items
   end
 
-  def ancestral_loop_settings
-    items = []
-    settings = Cms::LoopSetting.site(@cur_site).shirasagi
-    settings.each do |item|
-      items << [item.name, item.id]
-    end
-    items
+  def ancestral_loop_settings(loop_setting = nil)
+    settings = Cms::LoopSetting.site(@cur_site).shirasagi.template_type
+    loop_setting = nil unless loop_setting&.html_format_shirasagi?
+    loop_template_options(settings, loop_setting)
+  end
+
+  def liquid_loop_template_options(loop_setting = nil)
+    settings = Cms::LoopSetting.site(@cur_site).liquid.template_type
+    loop_setting = nil unless loop_setting&.html_format_liquid?
+    loop_template_options(settings, loop_setting)
   end
 
   def ancestral_forms
@@ -51,5 +54,15 @@ module Cms::FormHelper
     st_forms = st_forms.and_public
     st_forms = st_forms.allow(:read, @cur_user, site: @cur_site)
     st_forms.order_by(update: 1)
+  end
+
+  private
+
+  def loop_template_options(settings, loop_setting)
+    options = settings.map { |setting| [setting.name, setting.id] }
+    if loop_setting && options.none? { |_name, id| id == loop_setting.id }
+      options << [loop_setting.name, loop_setting.id]
+    end
+    options
   end
 end

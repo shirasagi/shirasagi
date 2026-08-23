@@ -275,9 +275,16 @@ describe Cms::LoopSetting, dbscope: :example do
       expect(loop_setting).to be_valid
     end
 
-    it "accepts snippet" do
-      loop_setting = build(:cms_loop_setting, site: site, loop_html_setting_type: "snippet")
+    it "accepts snippet for liquid format" do
+      loop_setting = build(:cms_loop_setting, site: site, html_format: "liquid", loop_html_setting_type: "snippet")
       expect(loop_setting).to be_valid
+      expect(loop_setting.loop_html_setting_type).to eq "snippet"
+    end
+
+    it "normalizes snippet to template for non-liquid format" do
+      loop_setting = build(:cms_loop_setting, site: site, html_format: "shirasagi", loop_html_setting_type: "snippet")
+      expect(loop_setting).to be_valid
+      expect(loop_setting.loop_html_setting_type).to eq "template"
     end
 
     it "accepts blank (backward compatibility)" do
@@ -289,6 +296,24 @@ describe Cms::LoopSetting, dbscope: :example do
       loop_setting = build(:cms_loop_setting, site: site, loop_html_setting_type: "invalid")
       expect(loop_setting).not_to be_valid
       expect(loop_setting.errors[:loop_html_setting_type]).to include(I18n.t('errors.messages.inclusion'))
+    end
+
+    it "normalizes an inconsistent shirasagi snippet record on the next save" do
+      loop_setting = create(:cms_loop_setting, :shirasagi, :template_type, site: site)
+
+      # コールバックを迂回し、既存DBに存在し得る矛盾データを再現する
+      loop_setting.set(loop_html_setting_type: "snippet")
+      loop_setting.reload
+
+      expect(loop_setting.loop_html_setting_type).to eq "snippet"
+      expect(described_class.site(site).snippet_type).to include(loop_setting)
+
+      loop_setting.save!
+      loop_setting.reload
+
+      expect(loop_setting.loop_html_setting_type).to eq "template"
+      expect(described_class.site(site).snippet_type).not_to include(loop_setting)
+      expect(described_class.site(site).template_type).to include(loop_setting)
     end
   end
 

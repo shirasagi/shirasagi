@@ -21,6 +21,7 @@ class Cms::LoopSetting
   validates :loop_html_setting_type, inclusion: { in: %w(template snippet), allow_blank: true }
   validates :state, inclusion: { in: %w(public closed), allow_blank: true }
   validates :html, liquid_format: true, if: ->{ html_format_liquid? }
+  before_validation :normalize_loop_html_setting_type
 
   default_scope -> { order_by(order: 1, name: 1) }
   scope :public_state, -> { where(:state.in => [nil, 'public']) }
@@ -84,5 +85,11 @@ class Cms::LoopSetting
     %w(template snippet).map do |v|
       [I18n.t("cms.options.loop_html_setting_type.#{v}"), v]
     end
+  end
+
+  private
+
+  def normalize_loop_html_setting_type
+    self.loop_html_setting_type = 'template' if loop_html_setting_type == 'snippet' && !html_format_liquid?
   end
 end

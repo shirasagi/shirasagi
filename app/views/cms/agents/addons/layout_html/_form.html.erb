@@ -2,12 +2,13 @@
   addon ||= local_assigns.fetch(:addon, {})
   snippet_select_id = "#{addon[:id]}_loop_snippet_selector"
   loop_setting_select_id = "#{addon[:id]}_loop_setting_id"
+  show_loop_setting_ui = @item.is_a?(Cms::Form)
 
   # Liquid のスニペット/テンプレート選択は Cms::Form でのみ意味がある (Cms::Form#render_html が loop_setting.html を参照)。
   # Cms::Layout は html を直接レンダリングするため、これらの UI は表示しない。
-  if @item.is_a?(Cms::Form)
+  if show_loop_setting_ui
     liquid_settings = Cms::LoopSetting.site(@cur_site).liquid
-    template_options = liquid_settings.template_type.map { [_1.name, _1.id] }
+    template_options = liquid_loop_template_options(@item.loop_setting)
     snippet_options = liquid_settings.snippet_type.map { [_1.name, _1.id, { "data-snippet" => _1.html.to_s }] }
   else
     template_options = []
@@ -19,7 +20,7 @@
 
 <dl class="see">
   <dt><%= @model.t :html %><%= @model.tt :html %></dt>
-  <% if template_options.present? %>
+  <% if show_loop_setting_ui %>
     <dd>
       <%=
         template_options = render SS::OptionsForSelectComponent.new(options: template_options, selected: @item.loop_setting_id)

@@ -13,8 +13,7 @@
     var $loopSettingSelectShirasagi = $('#item_loop_setting_id');
     var $loopSettingSelectLiquid = $('#item_loop_setting_id_liquid');
 
-    // liquid のループ設定が無いと select 自体が描画されない。
-    // 存在する時だけロックする（無い場合は直接入力で編集可のままにする）。
+    // 設定が0件でも select は常に描画され、未選択（空）なら直接入力として編集可能になる。 i18n-ok
     if ($loopSettingSelectLiquid.length) {
       Cms_Editor_CodeMirror.lock('#item_loop_setting_id_liquid', '#item_loop_liquid');
     }
@@ -97,7 +96,11 @@
 
     <% if @model.use_loop_html %>
       <dt><%= t("cms.loop_html") %><%= @model.tt :loop_html %></dt>
-      <dd><%= f.select :loop_setting_id, ancestral_loop_settings, { include_blank: t('cms.input_directly') }, disabled: (@item.loop_format == 'liquid') %></dd>
+      <dd>
+        <%= f.select :loop_setting_id, ancestral_loop_settings(@item.loop_setting),
+                     { include_blank: t('cms.input_directly') },
+                     disabled: (@item.loop_format == 'liquid') %>
+      </dd>
       <dd><%= f.text_area :loop_html, class: :html, style: "height: 100px;" %></dd>
     <% end %>
 
@@ -122,14 +125,14 @@
   <%
     liquid_settings = Cms::LoopSetting.site(@cur_site).liquid
     liquid_snippet_options = liquid_settings.snippet_type.map { [_1.name, _1.id, { "data-snippet" => _1.html.to_s }] }
-    liquid_template_options = liquid_settings.template_type.map { [_1.name, _1.id] }
+    liquid_template_options = liquid_loop_template_options(@item.loop_setting)
   %>
   <dl class="see loop-format-liquid">
     <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
-    <% if liquid_template_options.present? %>
     <dd>
       <%=
-        liquid_template_options = render SS::OptionsForSelectComponent.new(options: liquid_template_options, selected: @item.loop_setting_id)
+        liquid_template_options = render SS::OptionsForSelectComponent.new(
+          options: liquid_template_options, selected: @item.loop_setting_id)
         select_tag(
           'item[loop_setting_id]',
           liquid_template_options,
@@ -141,7 +144,6 @@
       %>
       <%= tt("cms.labels.loop_html") %>
     </dd>
-    <% end %>
     <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
     <% if liquid_snippet_options.present? %>
       <dd>

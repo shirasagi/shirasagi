@@ -74,6 +74,56 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
       closed_names = settings.map { |name, _id| name }
       expect(closed_names).not_to include(closed_setting.name)
     end
+
+    it "supplements a closed shirasagi setting" do
+      settings = helper.ancestral_loop_settings(closed_setting)
+
+      expect(settings).to include([closed_setting.name, closed_setting.id])
+    end
+
+    it "does not supplement a liquid setting" do
+      settings = helper.ancestral_loop_settings(liquid_setting)
+
+      expect(settings).not_to include([liquid_setting.name, liquid_setting.id])
+    end
+  end
+
+  describe "#liquid_loop_template_options" do
+    let!(:user) { cms_user }
+    let!(:site) { cms_site }
+    let!(:liquid_setting) { create(:cms_loop_setting, :liquid, :template_type, site: site) }
+    let!(:shirasagi_setting) { create(:cms_loop_setting, :shirasagi, :template_type, site: site) }
+    let!(:closed_setting) { create(:cms_loop_setting, :liquid, :template_type, site: site, state: "closed") }
+    let!(:snippet_setting) { create(:cms_loop_setting, :liquid, :snippet_type, site: site) }
+
+    before do
+      @cur_site = site
+      @cur_user = user
+    end
+
+    it "does not supplement a shirasagi setting" do
+      settings = helper.liquid_loop_template_options(shirasagi_setting)
+
+      expect(settings).not_to include([shirasagi_setting.name, shirasagi_setting.id])
+    end
+
+    it "supplements a closed liquid setting" do
+      settings = helper.liquid_loop_template_options(closed_setting)
+
+      expect(settings).to include([closed_setting.name, closed_setting.id])
+    end
+
+    it "supplements a liquid snippet setting" do
+      settings = helper.liquid_loop_template_options(snippet_setting)
+
+      expect(settings).to include([snippet_setting.name, snippet_setting.id])
+    end
+
+    it "includes a public liquid template setting" do
+      settings = helper.liquid_loop_template_options
+
+      expect(settings).to include([liquid_setting.name, liquid_setting.id])
+    end
   end
 
   describe "snippet insertion helper functionality" do
