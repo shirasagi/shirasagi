@@ -3,7 +3,11 @@
   loop_setting_select_id = "#{addon[:id]}_loop_setting_id"
   snippet_select_id = "#{addon[:id]}_loop_snippet_selector"
 
-  liquid_settings = Cms::LoopSetting.site(@cur_site).liquid
+  # ループHTML設定はサイト管理者専用。権限が無い場合は選択欄を disabled にして変更させない。
+  # disabled な select は送信されないため、既に紐付いている設定はそのまま保持される。
+  loop_setting_editable = Cms::LoopSetting.allowed?(:edit, @cur_user, site: @cur_site)
+
+  liquid_settings = Cms::LoopSetting.site(@cur_site).liquid.allow(:edit, @cur_user, site: @cur_site)
   template_options = liquid_loop_template_options(@item.loop_setting)
   snippet_options = liquid_settings.snippet_type.map { [_1.name, _1.id, { "data-snippet" => _1.html.to_s }] }
 %>
@@ -15,7 +19,7 @@
     <%=
       template_options = render SS::OptionsForSelectComponent.new(options: template_options, selected: @item.loop_setting_id)
       f.select :loop_setting_id, template_options, { include_blank: t('cms.input_directly') },
-               id: loop_setting_select_id, class: 'loop-setting-selector'
+               id: loop_setting_select_id, class: 'loop-setting-selector', disabled: !loop_setting_editable
     %>
     <%= tt("cms.labels.loop_html") %>
   </dd>

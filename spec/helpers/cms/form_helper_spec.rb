@@ -86,6 +86,31 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
 
       expect(settings).not_to include([liquid_setting.name, liquid_setting.id])
     end
+
+    # ループHTML設定はサイト管理者専用。権限の無いユーザーには選択肢を出さない。
+    context "with a user who has no permission on loop settings" do
+      let!(:restricted_role) { create(:cms_role, name: unique_id) }
+      let!(:restricted_user) do
+        create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", in_password: ss_pass,
+          group_ids: [cms_group.id], cms_role_ids: [restricted_role.id])
+      end
+
+      before do
+        @cur_user = restricted_user
+      end
+
+      it "returns no options" do
+        expect(helper.ancestral_loop_settings).to eq []
+      end
+
+      # 現在適用中の設定だけは補完する。補完しないと select が空になり、
+      # 保存時に既存の紐付けが意図せず解除されてしまう。
+      it "supplements only the currently selected setting" do
+        settings = helper.ancestral_loop_settings(shirasagi_setting)
+
+        expect(settings).to eq [[shirasagi_setting.name, shirasagi_setting.id]]
+      end
+    end
   end
 
   describe "#liquid_loop_template_options" do
@@ -123,6 +148,31 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
       settings = helper.liquid_loop_template_options
 
       expect(settings).to include([liquid_setting.name, liquid_setting.id])
+    end
+
+    # ループHTML設定はサイト管理者専用。権限の無いユーザーには選択肢を出さない。
+    context "with a user who has no permission on loop settings" do
+      let!(:restricted_role) { create(:cms_role, name: unique_id) }
+      let!(:restricted_user) do
+        create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", in_password: ss_pass,
+          group_ids: [cms_group.id], cms_role_ids: [restricted_role.id])
+      end
+
+      before do
+        @cur_user = restricted_user
+      end
+
+      it "returns no options" do
+        expect(helper.liquid_loop_template_options).to eq []
+      end
+
+      # 現在適用中の設定だけは補完する。補完しないと select が空になり、
+      # 保存時に既存の紐付けが意図せず解除されてしまう。
+      it "supplements only the currently selected setting" do
+        settings = helper.liquid_loop_template_options(liquid_setting)
+
+        expect(settings).to eq [[liquid_setting.name, liquid_setting.id]]
+      end
     end
   end
 

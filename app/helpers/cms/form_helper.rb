@@ -33,12 +33,14 @@ module Cms::FormHelper
 
   def ancestral_loop_settings(loop_setting = nil)
     settings = Cms::LoopSetting.site(@cur_site).shirasagi.template_type
+    settings = settings.allow(:edit, @cur_user, site: @cur_site)
     loop_setting = nil unless loop_setting&.html_format_shirasagi?
     loop_template_options(settings, loop_setting)
   end
 
   def liquid_loop_template_options(loop_setting = nil)
     settings = Cms::LoopSetting.site(@cur_site).liquid.template_type
+    settings = settings.allow(:edit, @cur_user, site: @cur_site)
     loop_setting = nil unless loop_setting&.html_format_liquid?
     loop_template_options(settings, loop_setting)
   end

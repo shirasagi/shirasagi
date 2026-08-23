@@ -6,8 +6,13 @@
 
   # Liquid のスニペット/テンプレート選択は Cms::Form でのみ意味がある (Cms::Form#render_html が loop_setting.html を参照)。
   # Cms::Layout は html を直接レンダリングするため、これらの UI は表示しない。
+
+  # ループHTML設定はサイト管理者専用。権限が無い場合は選択欄を disabled にして変更させない。
+  # disabled な select は送信されないため、既に紐付いている設定はそのまま保持される。
+  loop_setting_editable = Cms::LoopSetting.allowed?(:edit, @cur_user, site: @cur_site)
+
   if show_loop_setting_ui
-    liquid_settings = Cms::LoopSetting.site(@cur_site).liquid
+    liquid_settings = Cms::LoopSetting.site(@cur_site).liquid.allow(:edit, @cur_user, site: @cur_site)
     template_options = liquid_loop_template_options(@item.loop_setting)
     snippet_options = liquid_settings.snippet_type.map { [_1.name, _1.id, { "data-snippet" => _1.html.to_s }] }
   else
@@ -28,7 +33,8 @@
                  template_options,
                  { include_blank: t('cms.input_directly') },
                  id: loop_setting_select_id,
-                 class: 'loop-setting-selector'
+                 class: 'loop-setting-selector',
+                 disabled: !loop_setting_editable
       %>
       <%= tt("cms.labels.loop_html") %>
     </dd>
