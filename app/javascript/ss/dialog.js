@@ -82,6 +82,14 @@ class DialogFrame {
     return this._modalResultEventHandler
   }
 
+  get open() {
+    if (!this._dialog) {
+      return false
+    }
+
+    return this._dialog.open
+  }
+
   showModal() {
     SS_SearchUI.dialogType = 'ss'
     if (!this._attached) {
@@ -93,10 +101,6 @@ class DialogFrame {
     })
   }
 
-  // closeModal() {
-  //   this._dialog.requestClose()
-  // }
-
   renderContent(content) {
     replaceChildren(this._dialogContent, content);
   }
@@ -106,7 +110,7 @@ export default class Dialog {
   constructor(src, options) {
     this.src = src
     this.options = options
-    this._open = false
+    this._dialogFrame = undefined
     this._dialogClosed = undefined
   }
 
@@ -116,12 +120,15 @@ export default class Dialog {
   }
 
   get open() {
-    return this._open;
+    if (!this._dialogFrame) {
+      return false
+    }
+    return this._dialogFrame.open
   }
 
   async showModal() {
-    this._open = false
     this._dialogFrame = undefined
+    const ret = new Promise((resolve) => this._dialogClosed = resolve)
 
     // let promise1;
     if (this.options && this.options.attach) {
@@ -148,17 +155,28 @@ export default class Dialog {
         this._dialogFrame.renderContent(html)
       }
     }
-    this._open = true
-    dispatchEvent(this._dialogFrame._dialog, "ss:dialog:opened")
-    return new Promise((resolve) => this._dialogClosed = resolve)
+
+    // ダイアログを開く際、上から降ってくるようなアニメーションをする。
+    // このアニメーションの終了まで待機してから "ss:dialog:opened" イベントは発火させるが、
+    // アニメーションの待機中にダイアログが閉じてしまう可能性が 1mm ぐらい存在する。
+    // そこで、開いている場合にのみ "ss:dialog:opened" イベントを発火させるようにする
+    if (this.open) {
+      dispatchEvent(this._dialogFrame._dialog, "ss:dialog:opened")
+    }
+    return ret
   }
 
   modalResult(ev) {
-    this._open = false
-    this._dialogClosed(ev.detail)
-    dispatchEvent(this._dialogFrame._dialog, "ss:dialog:closed")
+    if (this._dialogClosed) {
+      this._dialogClosed(ev.detail)
+    }
+    if (this._dialogFrame?._dialog) {
+      dispatchEvent(this._dialogFrame._dialog, "ss:dialog:closed")
+    }
     requestAnimationFrame(() => {
-      this._dialogFrame.disconnect()
+      if (this._dialogFrame) {
+        this._dialogFrame.disconnect()
+      }
       if (this.options?.source) {
         dispatchEvent(this.options.source, "modalresult", ev.detail, { cancelable: false })
       }
