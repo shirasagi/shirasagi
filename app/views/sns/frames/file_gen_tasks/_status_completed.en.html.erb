@@ -2,8 +2,8 @@
   <div class="addon-view" id="addon-basic">
     <div class="addon-head"><h2><%= t("sns.file_gen_task.completed") %></h2></div>
     <div class="addon-body">
-      <p>ダウンロードの準備が完了しました。</p>
-      <p>自動的にダウンロードが始まらない場合は以下のダウンロードボタンをクリックしてダウンロードし、ダウンロード後にダイアログを閉じてください。</p>
+      <p>The download is ready.</p>
+      <p>If the download does not start automatically, please click the download button below to download the file, and then close the dialog box once the download is complete.</p>
       <p class="mt-2">
         <%= link_to t("ss.buttons.download"), sns_apis_file_gen_task_download_path(id: @item), class: "btn", data: { turbo: false, "ss--file-gen-task-target" => "instantlyClickAndClose" } %>
       </p>

@@ -1,0 +1,6 @@
+<div class="input-group mt-2">
+  <%= link_to t("ss.buttons.update"), url_for(action: :status), class: "btn", data: { "ss--file-gen-task-target" => "refresh" } %>
+  <label style="display: contents;"><%= checkbox_tag "auto_refresh", "yes", true, data: { "ss--file-gen-task-target" => "autoRefresh" } %>
+    <%= t("ss.auto_reload") %>（<%= t("datetime.distance_in_words.x_seconds", count: SS::FileGenTask::TIMER_MS / 1000) %>）
+  </label>
+</div>

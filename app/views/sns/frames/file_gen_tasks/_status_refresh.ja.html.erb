@@ -1,6 +1,0 @@
-<div class="input-group mt-2">
-  <%= link_to "更新", url_for(action: :status), class: "btn", data: { "ss--file-gen-task-target" => "refresh" } %>
-  <label style="display: contents;"><%= checkbox_tag "auto_refresh", "yes", true, data: { "ss--file-gen-task-target" => "autoRefresh" } %>
-    自動更新（<%= SS::FileGenTask::TIMER_MS / 1000 %>秒）
-  </label>
-</div>

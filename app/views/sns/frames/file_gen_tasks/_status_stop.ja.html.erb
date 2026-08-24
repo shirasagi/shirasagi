@@ -1,9 +1,13 @@
 <div class="addon-views">
   <div class="addon-view" id="addon-basic">
-    <div class="addon-head"><h2>待機中</h2></div>
+    <div class="addon-head"><h2><%= t("sns.file_gen_task.stop") %></h2></div>
     <div class="addon-body">
       <p>実行開始までしばらくお待ちください。</p>
-      <p>CSVダウンロードの準備が完了するとベル通知が届きます。このダイアログを閉じてしまった場合はベル通知が届くまで待ち、届いたベル通知からCSVダウンロードへお進みください。</p>
+      <p class="mt-2">ダウンロードの準備が完了すると自動的にダイアログが閉じられダウンロードが始まります。</p>
+      <p>
+        また、ダウンロードの準備が完了するとダウンロード用URLを記載したベル通知が届きます。
+        このダイアログを閉じてしまった場合はベル通知が届くまで待ち、届いたベル通知からダウンロードへお進みください。
+      </p>
 
       <%= render "status_refresh" %>
     </div>
