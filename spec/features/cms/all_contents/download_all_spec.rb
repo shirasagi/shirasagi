@@ -31,7 +31,7 @@ describe "cms_all_contents", type: :feature, dbscope: :example, js: true do
 
       wait_for_download
 
-      expect(Job::Log.count).to eq 1
+      expect(Job::Log.all.count).to eq 1
       Job::Log.all.each do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
@@ -39,8 +39,28 @@ describe "cms_all_contents", type: :feature, dbscope: :example, js: true do
 
       expect(Cms::FileGenTask.all.site(site).count).to eq 1
       task = Cms::FileGenTask.all.site(site).first
+      expect(task.job_id).to be_present
       expect(task.file_basename).to eq "all_contents"
       expect(File.size(task.generated_file_path)).to be > 0
+
+      expect(SS::Notification.all.count).to eq 1
+      notification = SS::Notification.all.first
+      expect(notification.group_id).to be_blank
+      expect(notification.member_ids).to eq [ user.id ]
+      expect(notification.user_id).to eq user.id
+      expect(notification.subject).to eq "[#{site.name}] CSVダウンロード準備完了のお知らせ"
+      expect(notification.text).to be_present
+      path = Rails.application.routes.url_helpers.sns_apis_file_gen_task_download_path(id: task)
+      expect(notification.text).to include(path)
+      expect(notification.html).to be_blank
+      expect(notification.format).to eq "text"
+      expect(notification.user_settings).to be_blank
+      expect(notification.state).to eq "public"
+      expect(notification.send_date.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+      expect(notification.url).to be_blank
+      expect(notification.reply_module).to be_blank
+      expect(notification.reply_model).to be_blank
+      expect(notification.reply_item_id).to be_blank
 
       SS::Csv.open(downloads.first) do |csv|
         table = csv.read
