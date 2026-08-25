@@ -2,7 +2,7 @@ import DialogController from "../../ss/dialog_controller";
 
 export default class extends DialogController {
   apply(dialog) {
-    if (!dialog.formData) {
+    if (dialog.returnValue !== "send" || !dialog.formData) {
       // dialog is just closed
       return;
     }
