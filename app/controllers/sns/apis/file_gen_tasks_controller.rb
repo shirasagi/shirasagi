@@ -19,5 +19,6 @@ class Sns::Apis::FileGenTasksController < ApplicationController
 
     type = SS::MimeType.find(@item.file_format)
     ss_send_file @item.generated_file_path, type: type, filename: @item.public_filename,
-                 disposition: :attachment, x_sendfile: true  end
+                 disposition: :attachment, x_sendfile: true
+  end
 end

@@ -23,7 +23,7 @@ module SS::CsvExportBase
     end
 
     send_notification!
-  rescue => _ex
+  rescue => _e
     send_error_notification!
     raise
   end
