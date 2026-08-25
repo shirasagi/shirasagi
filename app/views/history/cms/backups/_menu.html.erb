@@ -1,7 +1,7 @@
 <nav class="nav-menu">
   <%=
     source = CGI.unescape(params[:source])
-    if UrlValidator.valid?(source, absolute_path: true)
+    if UrlValidator.valid?(source, absolute_path: true) && Sys::TrustedUrlValidator.myself_url?(source)
       link_to t('ss.links.back'), source
     end
   %>
