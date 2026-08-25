@@ -42,10 +42,10 @@ class Article::PagesController < ApplicationController
     end
 
     task = Cms::FileGenTask.new(cur_site: @cur_site, cur_user: @cur_user)
-    task.name = "article_pages_download_#{@cur_user.id}_#{Time.zone.now.to_i}"
+    task.name = "article_pages_download_#{@cur_user.id}"
     task.file_basename = "article_pages"
     task.file_format = "csv"
-    task.params = @item.attributes.as_json
+    task.params = @item.attributes.as_json.compact
     task.save!
 
     job_class = Article::Page::ExportJob.bind(site_id: @cur_site, user_id: @cur_user, node_id: @cur_node, task_id: task)

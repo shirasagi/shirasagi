@@ -6,7 +6,11 @@
     when @model::STATE_READY, @model::STATE_RUNNING
       render "status_running"
     when @model::STATE_COMPLETED
-      render "status_completed"
+      if File.exist?(@item.generated_file_path) && File.size(@item.generated_file_path) > 0
+        render "status_completed"
+      else
+        render "status_completed_but_empty_file"
+      end
     else # @model::STATE_FAILED, @model::STATE_INTERRUPTED
       render "status_failed"
     end

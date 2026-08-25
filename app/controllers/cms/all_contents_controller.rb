@@ -45,10 +45,10 @@ class Cms::AllContentsController < ApplicationController
     end
 
     task = Cms::FileGenTask.new(cur_site: @cur_site, cur_user: @cur_user)
-    task.name = "all_contents_download_#{@cur_user.id}_#{Time.zone.now.to_i}"
+    task.name = "all_contents_download_#{@cur_user.id}"
     task.file_basename = "all_contents"
     task.file_format = "csv"
-    task.params = @item.attributes.as_json
+    task.params = @item.attributes.as_json.compact
     task.save!
 
     job_class = Cms::AllContentsExportJob.bind(site_id: @cur_site, user_id: @cur_user, task_id: task)

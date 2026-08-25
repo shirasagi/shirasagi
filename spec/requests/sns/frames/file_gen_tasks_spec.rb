@@ -244,13 +244,13 @@ describe "sns/frames/file_gen_tasks", type: :request, dbscope: :example do
 
       fragment = Nokogiri::HTML.fragment(response.body.force_encoding(Encoding::UTF_8))
       fragment.css(".addon-head").tap do |addon_head|
-        expect(addon_head.text.strip).to eq I18n.t("sns.file_gen_task.completed", locale: SS::LocaleSupport.current_lang)
+        expect(addon_head.text.strip).to eq I18n.t("sns.file_gen_task.failed", locale: SS::LocaleSupport.current_lang)
       end
       fragment.css(".addon-body").tap do |addon_body|
-        addon_body.css(".btn").tap do |download_button|
-          expect(download_button).to have(1).items
-          expect(download_button.text.strip).to eq I18n.t("ss.buttons.download", locale: SS::LocaleSupport.current_lang)
-          expect(download_button[0]["href"]).to eq sns_apis_file_gen_task_download_path(id: task)
+        addon_body.css("a").tap do |anchor|
+          expect(anchor).to have(1).items
+          expect(anchor.text.strip).to eq I18n.t("mongoid.models.job/log", locale: SS::LocaleSupport.current_lang)
+          expect(anchor[0]["href"]).to eq job_sns_logs_path
         end
       end
     end

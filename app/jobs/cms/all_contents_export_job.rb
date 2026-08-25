@@ -6,12 +6,13 @@ class Cms::AllContentsExportJob < Cms::ApplicationJob
   private
 
   def csv_encoding
-    csv_encoding = task.params.fetch("encoding", "UTF-8") if task.params.present?
+    csv_encoding = task.params["encoding"].presence if task.params.present?
     csv_encoding || "UTF-8"
   end
 
   def create_exporter
-    truncate = task.params.fetch("truncate", "yes") if task.params.present?
+    truncate = task.params["truncate"].presence if task.params.present?
+    truncate ||= "yes"
     truncate = truncate != "no" if truncate
 
     Cms::AllContent.new(site: site, truncate: truncate)
