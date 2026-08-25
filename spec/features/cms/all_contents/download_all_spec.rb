@@ -66,7 +66,7 @@ describe "cms_all_contents", type: :feature, dbscope: :example, js: true do
         table = csv.read
 
         expect(table.length).to eq 3
-        expect(table.headers).to include(*%w(page_id, node_id, route).map { I18n.t("all_content.#{_1}") })
+        expect(table.headers).to include(*%w(page_id node_id route).map { I18n.t("all_content.#{_1}") })
         table[0].tap do |row|
           expect(row[I18n.t("all_content.page_id")]).to be_present
           expect(row[I18n.t("all_content.node_id")]).to be_blank
