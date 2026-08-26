@@ -9,17 +9,64 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let!(:page2) { Timecop.freeze(now - 4.hours) { create :article_page, cur_site: site, cur_node: node } }
   let(:index_path) { article_pages_path site.id, node }
 
+  around do |example|
+    perform_enqueued_jobs do
+      example.run
+    end
+  end
+
   feature "#download" do
     scenario "click on download button to check in checkbox" do
       login_cms_user to: index_path
       all(".check")[1].click
       expect(page).to have_checked_field 'ids[]'
 
-      click_on I18n.t("ss.links.download")
-      within "form#item-form" do
-        click_on I18n.t("ss.links.download")
+      wait_for_event_fired "turbo:frame-load" do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.links.download")
+        end
       end
+
+      wait_for_event_fired "turbo:frame-load" do
+        within_dialog do
+          within "form#item-form" do
+            click_on I18n.t("ss.links.download")
+          end
+        end
+      end
+
       wait_for_download
+
+      expect(Job::Log.count).to eq 1
+      Job::Log.all.each do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      end
+
+      expect(Cms::FileGenTask.all.site(site).count).to eq 1
+      task = Cms::FileGenTask.all.site(site).first
+      expect(task.job_id).to be_present
+      expect(task.file_basename).to eq "article_pages"
+      expect(File.size(task.generated_file_path)).to be > 0
+
+      expect(SS::Notification.all.count).to eq 1
+      notification = SS::Notification.all.first
+      expect(notification.group_id).to be_blank
+      expect(notification.member_ids).to eq [ cms_user.id ]
+      expect(notification.user_id).to eq cms_user.id
+      expect(notification.subject).to eq "[#{site.name}] CSVダウンロード準備完了のお知らせ"
+      expect(notification.text).to be_present
+      path = Rails.application.routes.url_helpers.sns_apis_file_gen_task_download_path(id: task)
+      expect(notification.text).to include(path)
+      expect(notification.html).to be_blank
+      expect(notification.format).to eq "text"
+      expect(notification.user_settings).to be_blank
+      expect(notification.state).to eq "public"
+      expect(notification.send_date.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+      expect(notification.url).to be_blank
+      expect(notification.reply_module).to be_blank
+      expect(notification.reply_model).to be_blank
+      expect(notification.reply_item_id).to be_blank
 
       # チェックはダウンロードに影響しない
       SS::Csv.open(downloads.first) do |csv|
@@ -37,12 +84,52 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     scenario "with default options" do
       login_cms_user to: index_path
-      click_on I18n.t("ss.links.download")
-
-      within "form#item-form" do
-        click_on I18n.t("ss.links.download")
+      wait_for_event_fired "turbo:frame-load" do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.links.download")
+        end
       end
+
+      wait_for_event_fired "turbo:frame-load" do
+        within_dialog do
+          within "form#item-form" do
+            click_on I18n.t("ss.links.download")
+          end
+        end
+      end
+
       wait_for_download
+
+      expect(Job::Log.count).to eq 1
+      Job::Log.all.each do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      end
+
+      expect(Cms::FileGenTask.all.site(site).count).to eq 1
+      task = Cms::FileGenTask.all.site(site).first
+      expect(task.job_id).to be_present
+      expect(task.file_basename).to eq "article_pages"
+      expect(File.size(task.generated_file_path)).to be > 0
+
+      expect(SS::Notification.all.count).to eq 1
+      notification = SS::Notification.all.first
+      expect(notification.group_id).to be_blank
+      expect(notification.member_ids).to eq [ cms_user.id ]
+      expect(notification.user_id).to eq cms_user.id
+      expect(notification.subject).to eq "[#{site.name}] CSVダウンロード準備完了のお知らせ"
+      expect(notification.text).to be_present
+      path = Rails.application.routes.url_helpers.sns_apis_file_gen_task_download_path(id: task)
+      expect(notification.text).to include(path)
+      expect(notification.html).to be_blank
+      expect(notification.format).to eq "text"
+      expect(notification.user_settings).to be_blank
+      expect(notification.state).to eq "public"
+      expect(notification.send_date.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+      expect(notification.url).to be_blank
+      expect(notification.reply_module).to be_blank
+      expect(notification.reply_model).to be_blank
+      expect(notification.reply_item_id).to be_blank
 
       SS::Csv.open(downloads.first) do |csv|
         csv_table = csv.read
@@ -59,13 +146,53 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     scenario "with UTF-8 encoding" do
       login_cms_user to: index_path
-      click_on I18n.t("ss.links.download")
-
-      within "form#item-form" do
-        choose I18n.t("ss.options.csv_encoding.UTF-8")
-        click_on I18n.t("ss.links.download")
+      wait_for_event_fired "turbo:frame-load" do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.links.download")
+        end
       end
+
+      wait_for_event_fired "turbo:frame-load" do
+        within_dialog do
+          within "form#item-form" do
+            choose I18n.t("ss.options.csv_encoding.UTF-8")
+            click_on I18n.t("ss.links.download")
+          end
+        end
+      end
+
       wait_for_download
+
+      expect(Job::Log.count).to eq 1
+      Job::Log.all.each do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      end
+
+      expect(Cms::FileGenTask.all.site(site).count).to eq 1
+      task = Cms::FileGenTask.all.site(site).first
+      expect(task.job_id).to be_present
+      expect(task.file_basename).to eq "article_pages"
+      expect(File.size(task.generated_file_path)).to be > 0
+
+      expect(SS::Notification.all.count).to eq 1
+      notification = SS::Notification.all.first
+      expect(notification.group_id).to be_blank
+      expect(notification.member_ids).to eq [ cms_user.id ]
+      expect(notification.user_id).to eq cms_user.id
+      expect(notification.subject).to eq "[#{site.name}] CSVダウンロード準備完了のお知らせ"
+      expect(notification.text).to be_present
+      path = Rails.application.routes.url_helpers.sns_apis_file_gen_task_download_path(id: task)
+      expect(notification.text).to include(path)
+      expect(notification.html).to be_blank
+      expect(notification.format).to eq "text"
+      expect(notification.user_settings).to be_blank
+      expect(notification.state).to eq "public"
+      expect(notification.send_date.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+      expect(notification.url).to be_blank
+      expect(notification.reply_module).to be_blank
+      expect(notification.reply_model).to be_blank
+      expect(notification.reply_item_id).to be_blank
 
       expect(SS::Csv.detect_encoding(downloads.first)).to eq Encoding::UTF_8
       SS::Csv.open(downloads.first) do |csv|
@@ -83,13 +210,53 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     scenario "with Shift_JIS encoding" do
       login_cms_user to: index_path
-      click_on I18n.t("ss.links.download")
-
-      within "form#item-form" do
-        choose I18n.t("ss.options.csv_encoding.Shift_JIS")
-        click_on I18n.t("ss.links.download")
+      wait_for_event_fired "turbo:frame-load" do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.links.download")
+        end
       end
+
+      wait_for_event_fired "turbo:frame-load" do
+        within_dialog do
+          within "form#item-form" do
+            choose I18n.t("ss.options.csv_encoding.Shift_JIS")
+            click_on I18n.t("ss.links.download")
+          end
+        end
+      end
+
       wait_for_download
+
+      expect(Job::Log.count).to eq 1
+      Job::Log.all.each do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      end
+
+      expect(Cms::FileGenTask.all.site(site).count).to eq 1
+      task = Cms::FileGenTask.all.site(site).first
+      expect(task.job_id).to be_present
+      expect(task.file_basename).to eq "article_pages"
+      expect(File.size(task.generated_file_path)).to be > 0
+
+      expect(SS::Notification.all.count).to eq 1
+      notification = SS::Notification.all.first
+      expect(notification.group_id).to be_blank
+      expect(notification.member_ids).to eq [ cms_user.id ]
+      expect(notification.user_id).to eq cms_user.id
+      expect(notification.subject).to eq "[#{site.name}] CSVダウンロード準備完了のお知らせ"
+      expect(notification.text).to be_present
+      path = Rails.application.routes.url_helpers.sns_apis_file_gen_task_download_path(id: task)
+      expect(notification.text).to include(path)
+      expect(notification.html).to be_blank
+      expect(notification.format).to eq "text"
+      expect(notification.user_settings).to be_blank
+      expect(notification.state).to eq "public"
+      expect(notification.send_date.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+      expect(notification.url).to be_blank
+      expect(notification.reply_module).to be_blank
+      expect(notification.reply_model).to be_blank
+      expect(notification.reply_item_id).to be_blank
 
       expect(SS::Csv.detect_encoding(downloads.first)).to eq Encoding::CP932
       SS::Csv.open(downloads.first) do |csv|
@@ -123,13 +290,53 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it do
         login_cms_user to: index_path
-        click_on I18n.t("ss.links.download")
-
-        within "form#item-form" do
-          check I18n.t("ss.truncate_long_csv_value")
-          click_on I18n.t("ss.links.download")
+        wait_for_event_fired "turbo:frame-load" do
+          wait_for_cbox_opened do
+            click_on I18n.t("ss.links.download")
+          end
         end
+
+        wait_for_event_fired "turbo:frame-load" do
+          within_dialog do
+            within "form#item-form" do
+              check I18n.t("ss.truncate_long_csv_value")
+              click_on I18n.t("ss.links.download")
+            end
+          end
+        end
+
         wait_for_download
+
+        expect(Job::Log.count).to eq 1
+        Job::Log.all.each do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        expect(Cms::FileGenTask.all.site(site).count).to eq 1
+        task = Cms::FileGenTask.all.site(site).first
+        expect(task.job_id).to be_present
+        expect(task.file_basename).to eq "article_pages"
+        expect(File.size(task.generated_file_path)).to be > 0
+
+        expect(SS::Notification.all.count).to eq 1
+        notification = SS::Notification.all.first
+        expect(notification.group_id).to be_blank
+        expect(notification.member_ids).to eq [ cms_user.id ]
+        expect(notification.user_id).to eq cms_user.id
+        expect(notification.subject).to eq "[#{site.name}] CSVダウンロード準備完了のお知らせ"
+        expect(notification.text).to be_present
+        path = Rails.application.routes.url_helpers.sns_apis_file_gen_task_download_path(id: task)
+        expect(notification.text).to include(path)
+        expect(notification.html).to be_blank
+        expect(notification.format).to eq "text"
+        expect(notification.user_settings).to be_blank
+        expect(notification.state).to eq "public"
+        expect(notification.send_date.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+        expect(notification.url).to be_blank
+        expect(notification.reply_module).to be_blank
+        expect(notification.reply_model).to be_blank
+        expect(notification.reply_item_id).to be_blank
 
         SS::Csv.open(downloads.first) do |csv|
           csv_table = csv.read
@@ -174,13 +381,53 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it do
         login_cms_user to: index_path
-        click_on I18n.t("ss.links.download")
-
-        within "form#item-form" do
-          uncheck I18n.t("ss.truncate_long_csv_value")
-          click_on I18n.t("ss.links.download")
+        wait_for_event_fired "turbo:frame-load" do
+          wait_for_cbox_opened do
+            click_on I18n.t("ss.links.download")
+          end
         end
+
+        wait_for_event_fired "turbo:frame-load" do
+          within_dialog do
+            within "form#item-form" do
+              uncheck I18n.t("ss.truncate_long_csv_value")
+              click_on I18n.t("ss.links.download")
+            end
+          end
+        end
+
         wait_for_download
+
+        expect(Job::Log.count).to eq 1
+        Job::Log.all.each do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        expect(Cms::FileGenTask.all.site(site).count).to eq 1
+        task = Cms::FileGenTask.all.site(site).first
+        expect(task.job_id).to be_present
+        expect(task.file_basename).to eq "article_pages"
+        expect(File.size(task.generated_file_path)).to be > 0
+
+        expect(SS::Notification.all.count).to eq 1
+        notification = SS::Notification.all.first
+        expect(notification.group_id).to be_blank
+        expect(notification.member_ids).to eq [ cms_user.id ]
+        expect(notification.user_id).to eq cms_user.id
+        expect(notification.subject).to eq "[#{site.name}] CSVダウンロード準備完了のお知らせ"
+        expect(notification.text).to be_present
+        path = Rails.application.routes.url_helpers.sns_apis_file_gen_task_download_path(id: task)
+        expect(notification.text).to include(path)
+        expect(notification.html).to be_blank
+        expect(notification.format).to eq "text"
+        expect(notification.user_settings).to be_blank
+        expect(notification.state).to eq "public"
+        expect(notification.send_date.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+        expect(notification.url).to be_blank
+        expect(notification.reply_module).to be_blank
+        expect(notification.reply_model).to be_blank
+        expect(notification.reply_item_id).to be_blank
 
         SS::Csv.open(downloads.first) do |csv|
           csv_table = csv.read

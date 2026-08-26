@@ -23,3 +23,8 @@ en:
     message:
       notification:
         no_recents: No new messages.
+    file_gen_task:
+      completed: Ready to download
+      failed: Failed to create download data
+      running: Creating download data
+      stop: On Standby

@@ -85,7 +85,7 @@
           <% end %>
         </td>
         <td>
-          <% if approval.approval_state == "approve" %>
+          <% if approval.approval_state == "approve" && approval.user.present? %>
             <%= gws_public_user_long_name(approval.user.long_name) %>
           <% end %>
         </td>

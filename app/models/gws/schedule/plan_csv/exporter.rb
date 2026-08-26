@@ -3,7 +3,7 @@ class Gws::Schedule::PlanCsv::Exporter
 
   MAX_LENGTH = 1_024
 
-  attr_accessor :site, :user, :model, :template, :criteria, :truncate
+  attr_accessor :site, :user, :model, :template, :criteria, :truncate, :encoding
 
   class << self
     def enum_csv(criteria, opts = {})
@@ -38,7 +38,7 @@ class Gws::Schedule::PlanCsv::Exporter
       draw_group_permission(drawer)
     end
 
-    drawer.enum(self.criteria, cur_site: site, cur_user: user, model: model)
+    drawer.enum(self.criteria, cur_site: site, cur_user: user, model: model, encoding: encoding)
   end
 
   private
@@ -201,6 +201,11 @@ class Gws::Schedule::PlanCsv::Exporter
   end
 
   def draw_schedule_approval(drawer)
+    drawer.column :approval_state do
+      drawer.body do |item|
+        I18n.t("gws/schedule.views.#{item.approval_state}") if item.approval_state.present?
+      end
+    end
     drawer.column :approval_member_ids do
       drawer.body do |item|
         criteria = item.approval_members

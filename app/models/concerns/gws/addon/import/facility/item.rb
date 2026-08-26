@@ -16,7 +16,7 @@ module Gws::Addon::Import::Facility
       def to_csv
         I18n.with_locale(I18n.default_locale) do
           CSV.generate do |data|
-            data << csv_headers.map { |k| header_value_to_text(k) }
+            data << csv_headers.map { |k, options| header_value_to_text(k, **options.to_h) }
             criteria.each do |item|
               line = []
               line << item.id

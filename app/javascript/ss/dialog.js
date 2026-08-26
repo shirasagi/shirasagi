@@ -5,14 +5,14 @@ import {dispatchEvent, LOADING, replaceChildren} from "./tool";
 import i18next from 'i18next'
 
 const DIALOG_TEMPLATE = `
-<div class="ss-dialog-container">
-  <dialog class="ss-dialog">
+<div class="ss-dialog-container" data-controller="ss--dialog-container" data-ss--dialog-container-target="container">
+  <dialog class="ss-dialog" data-ss--dialog-container-target="dialog">
     <div class="ss-dialog-header">
-      <button type="button" name="close" class="ss-dialog-close" data-action="close-dialog" aria-label="close dialog">
+      <button type="button" name="close" class="ss-dialog-close" data-action="ss--dialog-container#closeDialog" aria-label="close dialog">
         <span class="material-icons-outlined" aria-hidden="true" role="img">cancel</span>
       </button>
     </div>
-    <div class="ss-dialog-content">
+    <div class="ss-dialog-content" data-ss--dialog-container-target="content">
       ${LOADING}
     </div>
   </dialog>
@@ -26,19 +26,21 @@ function findDialogContainer(element) {
 }
 
 class DialogFrame {
-  static connect() {
-    const instance = new DialogFrame()
+  static connect(observer) {
+    const instance = new DialogFrame(observer)
     instance.#connect()
     return instance
   }
 
-  static attach(element) {
-    const instance = new DialogFrame()
+  static attach(observer, element) {
+    const instance = new DialogFrame(observer)
     instance.#attach(element)
     return instance
   }
 
-  constructor() {
+  constructor(observer) {
+    this._observer = observer
+    this._modalResultEventHandler = undefined
   }
 
   #connect() {
@@ -61,35 +63,31 @@ class DialogFrame {
   }
 
   #bind() {
-    this._dialog.addEventListener("click", (ev) => {
-      if (ev.target.dataset.action && ev.target.dataset.action === "close-dialog") {
-        this.closeModal()
-        return
-      }
-
-      const actionElement = ev.target.closest("[data-action]")
-      if (actionElement && actionElement.dataset.action && actionElement.dataset.action === "close-dialog") {
-        this.closeModal()
-        return
-      }
-    })
-
-    this._dialog.addEventListener("cancel", () => this.#onCancel())
-    this._dialog.addEventListener("close", () => this.#onClose())
-    this._dialogContent.addEventListener("ss:modal-close", () => this.closeModal())
-    this._dialogContent.addEventListener("ss:modal-select", (ev) => this.#onSelect(ev.detail.item))
+    this._dialog.addEventListener("ss:modal-result", this.#modalResultEventHandler)
   }
 
   disconnect() {
-    this._dialogContainer.remove()
+    this._dialog.removeEventListener("ss:modal-result", this.#modalResultEventHandler)
+    if (!this._attached) {
+      this._dialogContainer.remove()
+    }
   }
 
-  get observer() {
-    return this._observer
+  get #modalResultEventHandler() {
+    if (this._modalResultEventHandler) {
+      return this._modalResultEventHandler
+    }
+
+    this._modalResultEventHandler = (ev) => this._observer.modalResult(ev)
+    return this._modalResultEventHandler
   }
 
-  set observer(value) {
-    this._observer = value
+  get open() {
+    if (!this._dialog) {
+      return false
+    }
+
+    return this._dialog.open
   }
 
   showModal() {
@@ -103,38 +101,8 @@ class DialogFrame {
     })
   }
 
-  closeModal() {
-    const event = dispatchEvent(this._dialog, "ss:dialog:closing")
-    if (event.defaultPrevented) {
-      return
-    }
-    this._dialog.close()
-  }
-
   renderContent(content) {
     replaceChildren(this._dialogContent, content);
-  }
-
-  #onCancel() {
-    if (this._observer && this._observer.onCancel) {
-      this._observer.onCancel()
-    }
-  }
-
-  #onClose() {
-    if (this._observer && this._observer.onClose) {
-      this._observer.onClose()
-    }
-    if (!this._attached) {
-      this._dialogContent.innerHTML = LOADING
-    }
-    SS_SearchUI.dialogType = 'colorbox'
-  }
-
-  #onSelect(item) {
-    if (this._observer && this._observer.onSelect) {
-      this._observer.onSelect(item)
-    }
   }
 }
 
@@ -142,54 +110,34 @@ export default class Dialog {
   constructor(src, options) {
     this.src = src
     this.options = options
-    this._open = false
-    this._result = undefined
-    this._returnValue = undefined
+    this._dialogFrame = undefined
+    this._dialogClosed = undefined
   }
 
-  static showModal(src, options) {
-    const dialog = new Dialog(src, options)
+  static showModal(src, { source = undefined, data = undefined } = {}) {
+    const dialog = new Dialog(src, { source, data })
     return dialog.showModal()
   }
 
   get open() {
-    return this._open;
-  }
-
-  get result() {
-    return this._result;
-  }
-
-  get returnValue() {
-    return this._returnValue;
+    if (!this._dialogFrame) {
+      return false
+    }
+    return this._dialogFrame.open
   }
 
   async showModal() {
-    this._open = false
-    this._result = undefined
-    this._returnValue = undefined
     this._dialogFrame = undefined
+    const ret = new Promise((resolve) => this._dialogClosed = resolve)
 
-    let promise1;
+    // let promise1;
     if (this.options && this.options.attach) {
-      this._dialogFrame = DialogFrame.attach(this.src)
-      promise1 = new Promise((resolve) => {
-        this._dialogFrame.observer = {
-          onClose: () => this.#onClose(resolve),
-          onSelect: ($itemEl) => this.#onSelect($itemEl)
-        }
-      })
+      this._dialogFrame = DialogFrame.attach(this, this.src)
 
       await this._dialogFrame.showModal()
     } else {
-      this._dialogFrame = DialogFrame.connect()
-      promise1 = new Promise((resolve) => {
-        this._dialogFrame.observer = {
-          onClose: () => this.#onClose(resolve),
-          onSelect: ($itemEl) => this.#onSelect($itemEl)
-        }
-      })
-      const promise2 = this._dialogFrame.showModal()
+      this._dialogFrame = DialogFrame.connect(this)
+      await this._dialogFrame.showModal()
 
       if (this.src instanceof HTMLTemplateElement) {
         this._dialogFrame.renderContent(this.src.content.cloneNode(true))
@@ -206,45 +154,32 @@ export default class Dialog {
         const html = await response.text()
         this._dialogFrame.renderContent(html)
       }
-      await promise2
     }
-    this._open = true
-    dispatchEvent(this._dialogFrame._dialog, "ss:dialog:opened")
 
-    return await promise1
+    // ダイアログを開く際、上から降ってくるようなアニメーションをする。
+    // このアニメーションの終了まで待機してから "ss:dialog:opened" イベントは発火させるが、
+    // アニメーションの待機中にダイアログが閉じてしまう可能性が 1mm ぐらい存在する。
+    // そこで、開いている場合にのみ "ss:dialog:opened" イベントを発火させるようにする
+    if (this.open) {
+      dispatchEvent(this._dialogFrame._dialog, "ss:dialog:opened")
+    }
+    return ret
   }
 
-  #onClose(resolve) {
-    if (!this._result && !this._returnValue) {
-      this._result = this._dialogFrame._dialog.returnValue;
-      if (this._result) {
-        const formElement = this._dialogFrame._dialog.querySelector("form");
-        if (formElement) {
-          const formData = new FormData(formElement)
-          this._returnValue = Array.from(formData.entries())
-        }
+  modalResult(ev) {
+    if (this._dialogClosed) {
+      this._dialogClosed(ev.detail)
+    }
+    if (this._dialogFrame?._dialog) {
+      dispatchEvent(this._dialogFrame._dialog, "ss:dialog:closed")
+    }
+    requestAnimationFrame(() => {
+      if (this._dialogFrame) {
+        this._dialogFrame.disconnect()
       }
-    }
-
-    this._open = false
-    this._dialogFrame.observer = undefined
-    resolve(this)
-    dispatchEvent(this._dialogFrame._dialog, "ss:dialog:closed")
-    setTimeout(() => this._dialogFrame.disconnect(), 11)
-  }
-
-  #onSelect($itemEl) {
-    const $dataEl = $itemEl.closest("[data-id]")
-    var data = $dataEl.data();
-    if (!data.name) {
-      data.name = $dataEl.find(".select-item").html() || $itemEl.text() || $dataEl.text();
-    }
-
-    if (!this._returnValue) {
-      this._returnValue = []
-    }
-    this._result = "send"
-    this._returnValue.push(data)
-    this.ok = true
+      if (this.options?.source) {
+        dispatchEvent(this.options.source, "modalresult", ev.detail, { cancelable: false })
+      }
+    })
   }
 }

@@ -46,6 +46,11 @@ module Job::Cms::CopyNodes::CmsContents
     [:group, :user, :file, :layout].include?(type)
   end
 
+  def resolve_loop_setting_reference(id)
+    # 同一サイト内の複製なので、サイト共通のループHTML(共有)はそのまま参照する
+    id
+  end
+
   def update_html_strings(src_content, dest_content)
     from = "/" + src_content.filename.match(/(.*\/).*.part.html/)[1]
     to = "/" + dest_content.filename.match(/(.*\/).*.part.html/)[1]

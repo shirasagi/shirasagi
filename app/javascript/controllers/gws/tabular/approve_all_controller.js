@@ -29,15 +29,13 @@ export default class extends Controller {
       return;
     }
 
-    Dialog.showModal(this.dialogTarget.cloneNode(true)).then((dialog) => {
-      if (dialog.result === "approve" || dialog.result === "remand") {
+    Dialog.showModal(this.dialogTarget.cloneNode(true)).then((dialogResult) => {
+      if (dialogResult.returnValue === "approve" || dialogResult.returnValue === "remand") {
         let comment = undefined;
-        dialog.returnValue.forEach((value) => {
-          if (value[0] === 'comment' && !comment) {
-            comment = value[1];
-          }
-        });
-        this.#approveAll(href, checkedItems, dialog.result, comment);
+        if (dialogResult.formData) {
+          comment = dialogResult.formData.get("comment");
+        }
+        this.#approveAll(href, checkedItems, dialogResult.returnValue, comment);
       }
     });
   }

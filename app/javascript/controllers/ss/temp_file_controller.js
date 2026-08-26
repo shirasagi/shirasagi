@@ -64,6 +64,7 @@ export default class extends Controller {
     this.element.addEventListener("ss:tempFile:upload", (ev) => {
       this.#appendFilesToWaitingList(ev.detail.files)
     });
+    dispatchEvent(this.element, "ss:tempFile:connected");
   }
 
   optionTargetConnected(element) {

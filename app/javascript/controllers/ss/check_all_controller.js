@@ -10,6 +10,10 @@ export default class extends Controller {
     this.#modifyCheckBoxAll(false);
   }
 
+  synchronizeAll(ev) {
+    this.#modifyCheckBoxAll(ev.target.checked);
+  }
+
   #modifyCheckBoxAll(state) {
     var checkboxes = this.element.querySelectorAll('input[type=checkbox]');
     checkboxes.forEach((checkBox) => {

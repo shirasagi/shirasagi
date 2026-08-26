@@ -1,0 +1,18 @@
+<div data-state="<%= @item.state %>" data-controller="ss--file-gen-task" data-ss--file-gen-task-timer-value="<%= SS::FileGenTask::TIMER_MS %>">
+  <%=
+    case @item.state
+    when @model::STATE_STOP
+      render "status_stop"
+    when @model::STATE_READY, @model::STATE_RUNNING
+      render "status_running"
+    when @model::STATE_COMPLETED
+      if File.exist?(@item.generated_file_path) && File.size(@item.generated_file_path) > 0
+        render "status_completed"
+      else
+        render "status_completed_but_empty_file"
+      end
+    else # @model::STATE_FAILED, @model::STATE_INTERRUPTED
+      render "status_failed"
+    end
+  %>
+</div>
