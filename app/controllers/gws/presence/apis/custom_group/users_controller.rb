@@ -6,7 +6,7 @@ class Gws::Presence::Apis::CustomGroup::UsersController < ApplicationController
   private
 
   def set_groups
-    @group = Gws::CustomGroup.find(params[:group]) rescue nil
+    @group = Gws::CustomGroup.site(@cur_site).find(params[:group]) rescue nil
 
     raise "404" unless @group
     raise "404" unless @group.readable?(@cur_user)

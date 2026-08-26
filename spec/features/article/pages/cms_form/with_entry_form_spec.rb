@@ -1203,6 +1203,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         node.save!
 
         login_user(user2, to: new_article_page_path(site: site, cid: node))
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within '#addon-basic' do
           expect(page).to have_css('select[name="in_form_id"]')
@@ -1213,6 +1215,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
       it do
         visit new_article_page_path(site: site, cid: node)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
@@ -1230,6 +1234,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         item = Article::Page.last
         login_user(user2, to: edit_article_page_path(site: site, cid: node, id: item))
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within '#addon-basic' do
           expect(page).to have_css('select[name="in_form_id"][disabled]')

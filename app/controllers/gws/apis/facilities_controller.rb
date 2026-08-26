@@ -43,7 +43,7 @@ class Gws::Apis::FacilitiesController < ApplicationController
     item_id = item_params[:id]
 
     if item_id.present?
-      @plan = Gws::Schedule::Plan.find(item_id)
+      @plan = Gws::Schedule::Plan.site(@cur_site).find(item_id)
       @plan.attributes = item_params
     else
       @plan = Gws::Schedule::Plan.new item_params

@@ -12,10 +12,14 @@ class Cms::Apis::SitesController < ApplicationController
     @multi = !@single
   end
 
+  def set_items
+    @items ||= @model.without_deleted.allow(:read, @cur_user, site: @cur_site)
+  end
+
   public
 
   def index
-    @items = @model.without_deleted.allow(:read, @cur_user, site: @cur_site)
+    set_items
     @items = @items.search(params[:s])
     @items = @items.order_by(_id: -1)
     @items = @items.page(params[:page]).per(50)

@@ -30,6 +30,10 @@ class Cms::Frames::ColumnsController < ApplicationController
     @item ? @item.class : Cms::Column::Base
   end
 
+  def set_items
+    @items ||= model.site(@cur_site)
+  end
+
   public
 
   def show
