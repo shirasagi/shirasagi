@@ -10,11 +10,6 @@ $(".user-detail").colorbox({
   maxHeight: "80%",
   fixed: true
 });
-new ScrollHint('.js-scrollable', {
-  i18n: {
-    scrollable: '<%= t('gws/presence.scrollable') %>'
-  }
-});
 <% end %>
 
 <div class="list-search gws-presence-list-search">
@@ -28,6 +23,7 @@ new ScrollHint('.js-scrollable', {
       <thead>
       <tr>
         <th><%= Gws::UserPresence.t :presence_status %></th>
+        <th><%= Gws::UserPresence.t :plan %></th>
         <th><%= Gws::UserPresence.t :memo %></th>
         <th><%= Gws::UserPresence.t :affiliation %></th>
         <th><%= Gws::UserPresence.t :manager_name %></th>
@@ -57,6 +53,9 @@ new ScrollHint('.js-scrollable', {
                 </span>
               </div>
               <%== user_presence_state_selector(item) %>
+            </td>
+            <td class="no-overflow">
+              <%= render_edit_presence_plan(item) %>
             </td>
             <td class="no-overflow">
               <%= render_edit_presence_memo(item) %>
@@ -98,6 +97,9 @@ new ScrollHint('.js-scrollable', {
               <span class="presence-state <%= user_presence.state_style %>">
                 <%= user_presence.label :state %>
               </span>
+            </td>
+            <td class="no-overflow">
+              <%= user_presence.plan %>
             </td>
             <td class="no-overflow">
               <%= user_presence.memo %>

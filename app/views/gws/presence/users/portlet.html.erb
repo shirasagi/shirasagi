@@ -1,12 +1,8 @@
 <%= jquery do %>
 Gws_Presence_User.render();
-new ScrollHint('.js-scrollable', {
-  i18n: {
-    scrollable: '<%= t('gws/presence.scrollable') %>'
-  }
-});
 <% end %>
 <%
+  time = Time.zone.now
   send_message = Gws::Memo::Message.allowed?(:edit, @cur_user, site: @cur_site)
 %>
 <% @send_message_proc = proc do |user| %>
@@ -20,12 +16,14 @@ new ScrollHint('.js-scrollable', {
   <% end %>
 <% end %>
 
+<%= ss_time_tag(time, style: "display: none;") %>
 <div class="presence-users presence-user-search">
   <div class="data-table-wrap wrap-table js-scrollable">
     <table class="index data-table">
       <thead>
       <tr>
         <th><%= Gws::UserPresence.t :presence_status %></th>
+        <th><%= Gws::UserPresence.t :plan %></th>
         <th><%= Gws::UserPresence.t :memo %></th>
         <th><%= Gws::UserPresence.t :affiliation %></th>
         <th><%= Gws::UserPresence.t :manager_name %></th>
@@ -60,6 +58,9 @@ new ScrollHint('.js-scrollable', {
               <%= render_edit_presence_plan(item) %>
             </td>
             <td class="no-overflow">
+              <%= render_edit_presence_memo(item) %>
+            </td>
+            <td class="no-overflow">
               <%= link_to item.gws_main_group(@cur_site).trailing_name, gws_presence_user_searches_path(s: { group_id: item.gws_main_group(@cur_site).id }), class: "group-name" %>
             </td>
             <td class="no-overflow">
@@ -92,6 +93,9 @@ new ScrollHint('.js-scrollable', {
               <span class="presence-state <%= user_presence.state_style %>">
                 <%= user_presence.label :state %>
               </span>
+            </td>
+            <td class="no-overflow">
+              <%= user_presence.plan %>
             </td>
             <td class="no-overflow">
               <%= user_presence.memo %>

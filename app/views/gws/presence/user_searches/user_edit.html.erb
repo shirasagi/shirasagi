@@ -9,14 +9,6 @@
   end
 %>
 
-<%= jquery do %>
-new ScrollHint('.js-scrollable', {
-  i18n: {
-    scrollable: '<%= t('gws/presence.scrollable') %>'
-  }
-});
-<% end %>
-
 <%= form_for :item, url: { action: :user_edit }, html: html_option do |f| %>
 <%= error_messages_for :item %>
 
@@ -30,6 +22,7 @@ new ScrollHint('.js-scrollable', {
       <thead>
       <tr>
         <th><%= Gws::UserPresence.t :presence_status %></th>
+        <th><%= Gws::UserPresence.t :plan %></th>
         <th><%= Gws::UserPresence.t :memo %></th>
         <th><%= Gws::UserPresence.t :affiliation %></th>
         <th><%= Gws::UserPresence.t :manager_name %></th>
@@ -48,6 +41,9 @@ new ScrollHint('.js-scrollable', {
             <span class="presence-state <%= user_presence.state_style %>">
               <%= user_presence.label :state %>
             </span>
+          </td>
+          <td class="no-overflow">
+            <%= text_field_tag "#{f.object_name}[#{item.id}][plan]", user_presence.plan, id: nil %>
           </td>
           <td class="no-overflow">
             <%= text_field_tag "#{f.object_name}[#{item.id}][memo]", user_presence.memo, id: nil %>

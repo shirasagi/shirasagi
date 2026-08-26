@@ -1,5 +1,3 @@
-//= require scroll-hint/js/scroll-hint.min.js
-
 this.Gws_Presence_User = (function () {
   function Gws_Presence_User() {}
 

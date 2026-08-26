@@ -200,25 +200,29 @@
           &:nth-child(1) {
             width: 80px;
           }
-          /* 備考 */
+          /* 状況 */
           &:nth-child(2) {
             width: 120px;
           }
+          /* 備考 */
+          &:nth-child(3) {
+            width: 120px;
+          }
           /* 役職（補職） */
-          &:nth-child(5) {
+          &:nth-child(6) {
             width: 60px;
           }
           /* 所属, 担当（係）名, 職員名, 職員名（カナ）, 内線番号, 所属部班（災害時） */
-          &:nth-child(3),
           &:nth-child(4),
-          &:nth-child(6),
+          &:nth-child(5),
           &:nth-child(7),
           &:nth-child(8),
-          &:nth-child(9) {
+          &:nth-child(9),
+          &:nth-child(10) {
             width: 150px;
           }
           /* メッセージ */
-          &:nth-child(10) {
+          &:nth-child(11) {
             width: 60px;
             text-align: center;
           }
@@ -229,10 +233,10 @@
       tr {
         td {
           &:nth-child(1),
-          &:nth-child(10) {
+          &:nth-child(11) {
             text-align: center;
           }
-          &:nth-child(10) {
+          &:nth-child(11) {
             a {
               color: #000;
               &:hover {

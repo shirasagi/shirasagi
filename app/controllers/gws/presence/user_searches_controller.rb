@@ -85,6 +85,7 @@ class Gws::Presence::UserSearchesController < ApplicationController
     entries.each do |item|
       begin
         user_presence = item.user_presence(@cur_site)
+        user_presence.plan = params.dig(:item, item.id.to_s, :plan)
         user_presence.memo = params.dig(:item, item.id.to_s, :memo)
         user_presence.manager_name = params.dig(:item, item.id.to_s, :manager_name)
         user_presence.department = params.dig(:item, item.id.to_s, :department)
