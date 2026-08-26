@@ -1570,6 +1570,8 @@ ja:
         st_article_node_ids: 記事フォルダー
         site_search_type: 検索種類の初期値
         st_group_ids: 組織の設定
+        sort_state: 並び順の選択
+        sort_type: 並び順の初期値
       cms/form:
         name: 名前
         order: 並び順
@@ -3533,6 +3535,10 @@ ja:
         - サイト内検索の対象となる記事フォルダーを設定します。
       site_search_type:
         - 検索種類の初期値を設定します。
+      sort_state:
+        - 検索結果に並び順の選択を表示します。
+      sort_type:
+        - 並び順の初期値を設定します。
 
     cms/line/facility_search/category:
       name:
@@ -3810,6 +3816,7 @@ ja:
       cms/import_files_job: CMS/ページ・フォルダー取り込み
       cms/role/import_job: CMS/権限インポート
       cms/form_db/import_url_job: CMS/定型DBインポート
+      cms/all_contents_export_job: CMS/全コンテンツ一括ダウンロード
       cms/all_contents_import_job: CMS/全コンテンツ一括設定
       cms/michecker_job: CMS/miChecker
       cms/sns_post/twitter_job: CMS/X(旧Twitter)ページ投稿

@@ -55,7 +55,7 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
   context 'one site with hidden settings' do
     before do
       site_search_node.update search_type_state: 'hide',
-        article_node_state: 'hide', category_state: 'hide', organization_state: 'hide'
+        article_node_state: 'hide', category_state: 'hide', organization_state: 'hide', sort_state: 'hide'
     end
 
     it do
@@ -70,6 +70,9 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
       within '.search-form' do
         fill_in 's[keyword]', with: 'page ()'
         click_button I18n.t('ss.buttons.search')
+      end
+      within '.search-stats' do
+        expect(page).not_to have_css("select[name='sort']")
       end
       within '.pages .item:nth-child(3)' do
         expect(page).to have_css('.title')

@@ -316,7 +316,7 @@ this.Googlemaps_Map = (function () {
 
   Googlemaps_Map.getMapsSearchHtml = function(lat, lng) {
     const url = `${Googlemaps_Map.mapsSearchUrl}${lat},${lng}`;
-    return `<p class="marker-link"><a href="${url}">Googleマップで確認する</a></p>`;
+    return `<p class="marker-link"><a href="${url}" target="_blank" rel="noopener">Googleマップで確認する</a></p>`;
   };
 
   return Googlemaps_Map;

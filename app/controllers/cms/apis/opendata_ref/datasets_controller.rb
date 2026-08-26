@@ -11,6 +11,10 @@ class Cms::Apis::OpendataRef::DatasetsController < ApplicationController
     @cur_node ||= Cms::Node.find(params[:cid])
   end
 
+  def set_items
+    @items ||= @model.in(site_id: @cur_node.opendata_site_ids)
+  end
+
   public
 
   def index
@@ -18,7 +22,9 @@ class Cms::Apis::OpendataRef::DatasetsController < ApplicationController
 
     @single = params[:single].present?
     @multi = !@single
-    @items = @model.in(site_id: @cur_node.opendata_site_ids).
+
+    set_items
+    @items = @items.
       search(params[:s]).
       page(params[:page]).per(50)
   end

@@ -9,6 +9,6 @@ class Gws::Board::Apis::BrowsingStatesController < ApplicationController
   private
 
   def set_item
-    @item = @model.site(@cur_site).topic.find(params[:id])
+    @item ||= @model.site(@cur_site).topic.find(params[:id])
   end
 end

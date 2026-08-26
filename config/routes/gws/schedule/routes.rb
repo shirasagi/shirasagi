@@ -10,12 +10,11 @@ Rails.application.routes.draw do
   end
 
   concern :export do
-    post :download, on: :collection
+    match :download, on: :collection, via: [:get, :post]
   end
 
   concern :import do
-    get :import, on: :collection
-    post :import, on: :collection
+    match :import, on: :collection, via: [:get, :post]
   end
 
   concern :deletion do

@@ -1,0 +1,38 @@
+<%= form_for :s, url: { action: :download }, html: { id: "item-form", method: :post, multipart: true, autocomplete: :off } do |f| %>
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t("ss.download") %></h2></div>
+      <div class="addon-body">
+        <dl class="see">
+          <dt><%= t('ss.encoding') %><%= tt(:encoding, scope: 'gws/attendance.tooltips') %></dt>
+          <dd>
+            <% %w(UTF-8 Shift_JIS).each do |encoding| %>
+              <label>
+                <%= radio_button_tag "#{f.object_name}[encoding]", encoding, encoding == 'UTF-8', { id: nil } %>
+                <%= t("ss.options.csv_encoding.#{encoding}") %>
+              </label>
+            <% end %>
+          </dd>
+
+          <dt><%= t('gws/schedule.period_specification') %></dt>
+          <dd>
+            <% %w(all period).each do |period| %>
+              <label>
+                <%= radio_button_tag "#{f.object_name}[period]", period, period == 'period', { id: nil } %>
+                <%= t("gws/schedule.options.period_specification.#{period}") %>
+              </label>
+            <% end %>
+            <%= f.ss_datetime_field :start_at %> ~ <%= f.ss_datetime_field :end_at %>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send ss-sticky ss-sticky-bottom">
+    <%= f.submit t('ss.buttons.download'), class: 'btn-primary save' %>
+    <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+  </footer>
+<% end %>
+
+<%= jquery do %> SS.confirmUnloading(); <% end %>

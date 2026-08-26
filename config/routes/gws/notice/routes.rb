@@ -20,12 +20,14 @@ Rails.application.routes.draw do
         post :set_browsed_all, on: :collection
         post :unset_browsed_all, on: :collection
         get :print, on: :member
+        post :download_attachment, on: :member
       end
       resources :back_numbers, only: [:index, :show] do
         post :toggle_browsed, on: :member
         post :set_browsed_all, on: :collection
         post :unset_browsed_all, on: :collection
         get :print, on: :member
+        post :download_attachment, on: :member
       end
       resources :calendars, only: [:index, :show] do
         get :events, on: :collection

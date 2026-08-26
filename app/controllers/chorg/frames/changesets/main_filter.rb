@@ -38,6 +38,10 @@ module Chorg::Frames::Changesets::MainFilter
     @first_source_group = source_groups.first
   end
 
+  def set_items
+    @items ||= @model.revision(cur_revision)
+  end
+
   public
 
   def create

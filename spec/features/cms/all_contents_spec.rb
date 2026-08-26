@@ -5,51 +5,6 @@ describe "cms_all_contents", type: :feature, dbscope: :example do
 
   before { login_cms_user }
 
-  describe "download_all" do
-    let(:layout) { create(:cms_layout, cur_site: site) }
-    let(:cate) { create(:category_node_node, cur_site: site) }
-    let!(:node) do
-      create(:article_node_page, cur_site: site, layout_id: layout.id, category_ids: [ cate.id ], group_ids: [ cms_group.id ])
-    end
-    let!(:item) do
-      create(
-        :article_page, cur_site: site, cur_node: node, layout_id: layout.id, category_ids: [ cate.id ],
-        group_ids: [ cms_group.id ]
-      )
-    end
-
-    it do
-      visit cms_all_contents_path(site: site)
-      click_on I18n.t("ss.buttons.download")
-
-      csv_source = page.html
-      csv_source.force_encoding("UTF-8")
-      csv_source = csv_source[1..-1]
-      SS::Csv.open(StringIO.new(csv_source)) do |csv|
-        table = csv.read
-
-        expect(table.length).to eq 3
-        expect(table.headers).to include(
-          I18n.t("all_content.page_id"), I18n.t("all_content.node_id"), I18n.t("all_content.route"))
-        table[0].tap do |row|
-          expect(row[I18n.t("all_content.page_id")]).to be_present
-          expect(row[I18n.t("all_content.node_id")]).to be_blank
-          expect(row[I18n.t("all_content.route")]).to be_present
-        end
-        table[1].tap do |row|
-          expect(row[I18n.t("all_content.page_id")]).to be_blank
-          expect(row[I18n.t("all_content.node_id")]).to be_present
-          expect(row[I18n.t("all_content.route")]).to be_present
-        end
-        table[2].tap do |row|
-          expect(row[I18n.t("all_content.page_id")]).to be_blank
-          expect(row[I18n.t("all_content.node_id")]).to be_present
-          expect(row[I18n.t("all_content.route")]).to be_present
-        end
-      end
-    end
-  end
-
   describe "import" do
     context "upload csv file" do
       let(:keep_timestamp) { [ nil, "keep" ].sample }

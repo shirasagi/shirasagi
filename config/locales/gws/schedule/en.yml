@@ -8,6 +8,7 @@ en:
     search_users: Search users
     search_times: Search available times
     today_wday: Today's week day
+    period_specification: Period specification
     views:
       approval_state: Approval state
       request: Request
@@ -108,6 +109,9 @@ en:
         current_user: Current user
         under_current_group: Users under the current group
         specific: Specific users (specified below)
+      period_specification:
+        all: All plans
+        period: Period specification plans
     facility_reservation:
       index: Check reservation status
       state: Reservation status
@@ -122,6 +126,7 @@ en:
       error: Error
       saved: Registration completed
       count: "%{count} plans were imported."
+      disallow_import_approval: Importing approval state is disabled due to lack of permissions.
     errors:
       empty_plan_days: There are no days when you can register plans.
       less_than_years: "Must be within %{count} year(s)."
@@ -248,6 +253,7 @@ en:
     delete_private_gws_schedule_plans: Delete plans (own)
     trash_other_gws_schedule_plans: Manage plan trash (all)
     trash_private_gws_schedule_plans: Manage plan trash (own)
+    import_approval_other_gws_schedule_plans: Import approval plans
     use_private_gws_schedule_plans: Use of plans
     read_other_gws_schedule_categories: View types (all)
     read_private_gws_schedule_categories: View types (own)

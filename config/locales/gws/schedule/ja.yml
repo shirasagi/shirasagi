@@ -8,6 +8,7 @@ ja:
     search_users: ユーザーを検索
     search_times: 空き時間を検索
     today_wday: 本日の曜日
+    period_specification: 期間指定
     views:
       approval_state: 申請承認
       request: 申請
@@ -108,6 +109,9 @@ ja:
         current_user: 現在のユーザー
         under_current_group: 現在のグループ下のユーザー
         specific: 特定のユーザー（以下で指定）
+      period_specification:
+        all: 全ての予定
+        period: 指定期間の予定
     facility_reservation:
       index: 予約状況の確認
       state: 予約状況
@@ -122,6 +126,7 @@ ja:
       error: エラー
       saved: 登録完了
       count: "%{count} 件の予定をインポートしました。"
+      disallow_import_approval: 権限がないため、承認状態のインポートは無効となります。
     errors:
       empty_plan_days: 予定を登録できる日が存在しません。
       less_than_years: は%{count}年間以内の範囲にしてください。
@@ -248,6 +253,7 @@ ja:
     delete_private_gws_schedule_plans: 予定の削除（所有）
     trash_other_gws_schedule_plans: 予定ゴミ箱の管理（全て）
     trash_private_gws_schedule_plans: 予定ゴミ箱の管理（所有）
+    import_approval_other_gws_schedule_plans: 予定の承認インポート
     use_private_gws_schedule_plans: 予定の利用
     read_other_gws_schedule_categories: 種別の閲覧（全て）
     read_private_gws_schedule_categories: 種別の閲覧（所有）
