@@ -18,6 +18,7 @@ module SS::BaseFilter
     before_action :set_ss_assets
     before_action :logged_in?
     before_action :check_api_user
+    after_action :reset_locale_and_timezone
     rescue_from StandardError, with: :rescue_action
     layout "ss/base"
   end
@@ -197,6 +198,8 @@ module SS::BaseFilter
     # api user only allowd .json
     raise "403"
   end
+
+  delegate :reset_locale_and_timezone, to: SS
 
   def logout_path
     @logout_path ||= session[:logout_path].presence || sns_logout_path
