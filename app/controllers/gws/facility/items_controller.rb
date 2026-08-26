@@ -52,7 +52,7 @@ class Gws::Facility::ItemsController < ApplicationController
       csv = SS::Csv::UTF8_BOM + csv
     end
 
-    send_data csv, filename: "gws_items_#{Time.zone.now.to_i}.csv"
+    send_data csv, filename: "gws_facility_items_#{Time.zone.now.to_i}.csv"
   end
 
   def import
