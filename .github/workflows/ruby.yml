@@ -175,7 +175,6 @@ jobs:
           # driver: firefox
           # driver: random
           # RSPEC_LOCALE: en
-          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
           RUBYZIP_V3_API_WARN: true
       #CI実行中にElasticsearchに問題が発生した場合、
       #このステップを有効にしElasticsearchのログを確認すること

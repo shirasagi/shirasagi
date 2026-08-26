@@ -171,7 +171,6 @@ jobs:
           driver: chrome
           # driver: firefox
           # driver: random
-          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
       #CI実行中にElasticsearchに問題が発生した場合、
       #このステップを有効にしElasticsearchのログを確認すること
       #- name: After test
