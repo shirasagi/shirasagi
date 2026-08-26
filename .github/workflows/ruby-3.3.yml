@@ -154,7 +154,7 @@ jobs:
           if [ $? -ne 0 ]; then
             exit 1
           fi
-          echo $file_list | xargs bundle exec rspec --profile 10
+          echo $file_list | xargs bundle exec rspec
         env:
           TZ: "Asia/Tokyo"
           LANG: ja_JP.UTF-8
