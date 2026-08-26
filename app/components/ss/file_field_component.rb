@@ -53,7 +53,7 @@ class SS::FileFieldComponent < ApplicationComponent
           view_context.cms_apis_temp_files_path(site: cur_site)
         end
       else
-        view_context.sns_apis_temp_files_path(user: cur_user)
+        view_context.sns_apis_temp_files_path
       end
     end
   end
