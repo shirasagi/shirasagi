@@ -62,22 +62,24 @@ class History::Backup
         query.update_many('$set' => data)
         item = ref_class.constantize.find(self.ref_id)
       end
-      current = item.current_backup
+      current = item.current_backup || item.backups.first
       before = item.before_backup
       self.state = 'current'
       current.state = 'before' if current
       before.state = nil if before
 
-      self.update
+      return false if self.invalid? || current&.invalid? || before&.invalid?
 
-      if current
-        # don't touch "updated"
-        current.without_record_timestamps { current.save }
-      end
       if before
         # don't touch "updated"
         before.without_record_timestamps { before.save }
       end
+      if current
+        # don't touch "updated"
+        current.without_record_timestamps { current.save }
+      end
+
+      self.update
 
       return true
     rescue => e

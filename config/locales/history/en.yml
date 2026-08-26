@@ -5,6 +5,8 @@ en:
     target: Operation target
     action: Action
     backup: Backup
+    current_data: Latest data
+    backup_data: Data at time of backup
     current_version: Latest version
     backup_version: Version at time of backup
     compare_to_state_html: Compare to %{version}
