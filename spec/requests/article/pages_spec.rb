@@ -195,42 +195,22 @@ describe "Article::PagesController", type: :request, dbscope: :example do
             'item[encoding]' => 'Shift_JIS'
           }
           post download_pages_path, params: params
-          expect(response.status).to eq 200
-          body = response.body
-          body = body.encode("UTF-8", "SJIS")
 
-          csv = ::CSV.parse(body, headers: true)
-          expect(csv.length).to eq 1
-          expect(csv.headers).to include(Cms::Page.t(:filename), Cms::Page.t(:name), Cms::Page.t(:layout_id))
-          csv[0].tap do |row|
-            expect(row[Cms::Page.t(:filename)]).to eq "test1_filename.html"
-            expect(row[Cms::Page.t(:name)]).to eq "test1_article"
-            expect(row[Cms::Page.t(:layout_id)]).to eq "記事レイアウト (#{layout.filename})"
-            expect(row[Cms::Page.t(:keywords)]).to eq "test1_keywords"
-            expect(row[Cms::Page.t(:description)]).to eq "test1_description"
-            expect(row[Cms::Page.t(:summary_html)]).to eq "test1_summary_html"
-            expect(row[Cms::Page.t(:html)]).to eq "test1_html"
-            expect(row[Cms::Page.t(:category_ids)]).to eq "#{cate_node.name} (#{cate_node.filename})"
-            expect(row[Cms::Page.t(:parent_crumb)]).to eq "test1_parent_crumb_urls"
-            expect(row[Cms::Page.t(:event_name)]).to eq "test1_event_name"
-            expect(row["#{Cms::Page.t(:event_recurrences)}_1_開始日"]).to eq "2016/07/06"
-            expect(row["#{Cms::Page.t(:event_recurrences)}_1_終了日"]).to eq "2016/07/06"
-            expect(row[Cms::Page.t(:contact_state)]).to eq I18n.t("ss.options.state.show")
-            expect(row[Cms::Page.t(:contact_group)]).to eq group.name
-            expect(row[Cms::Page.t(:contact_group_name)]).to eq "test1_contact_name"
-            expect(row[Cms::Page.t(:contact_charge)]).to eq "test1_contact_charge"
-            expect(row[Cms::Page.t(:contact_tel)]).to eq "test1_contact_tel"
-            expect(row[Cms::Page.t(:contact_fax)]).to eq "test1_contact_fax"
-            expect(row[Cms::Page.t(:contact_email)]).to eq "test1_contact_email"
-            expect(row[Cms::Page.t(:contact_postal_code)]).to eq "test1_contact_postal_code"
-            expect(row[Cms::Page.t(:contact_address)]).to eq "test1_contact_address"
-            expect(row[Cms::Page.t(:contact_link_url)]).to eq "test1_contact_link_url"
-            expect(row[Cms::Page.t(:contact_link_name)]).to eq "test1_contact_link_name"
-            expect(row[Cms::Page.t(:released)]).to eq released.strftime("%Y/%m/%d %H:%M")
-            expect(row[Cms::Page.t(:release_date)]).to eq release_date.strftime("%Y/%m/%d %H:%M")
-            expect(row[Cms::Page.t(:close_date)]).to eq close_date.strftime("%Y/%m/%d %H:%M")
-            expect(row[Cms::Page.t(:group_ids)]).to eq group.name
+          expect(Cms::FileGenTask.all.count).to eq 1
+          task = Cms::FileGenTask.all.first
+          expect(task.job_id).to be_blank
+          expect(task.file_basename).to eq "article_pages"
+          expect(task.params).to include("encoding" => "Shift_JIS")
+          expect(File.exist?(task.generated_file_path)).to be_falsey
+
+          expect(enqueued_jobs.length).to eq 1
+          enqueued_jobs.first.tap do |enqueued_job|
+            expect(enqueued_job[:job]).to eq Article::Page::ExportJob
+            expect(enqueued_job[:args]).to be_blank
           end
+
+          expect(response.status).to eq 302
+          expect(response.location).to end_with sns_frames_file_gen_task_status_path(id: task)
         end
       end
     end
