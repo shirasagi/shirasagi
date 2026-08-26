@@ -1,0 +1,131 @@
+<% user_presence = @item.user_presence(@cur_site) %>
+
+<%= jquery do %>
+SS_Clipboard.renderCopy();
+<% end %>
+
+<dl class="see">
+  <dt><%= user_presence.t :staff_name %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= user_presence.t :staff_kana %></dt>
+  <dd><%= @item.send :kana %></dd>
+
+  <dt><%= @model.t :uid %></dt>
+  <dd><%= @item.uid %></dd>
+
+  <% if @item.organization_uid.present? %>
+  <dt><%= @model.t :organization_uid %></dt>
+  <dd><%= @item.send :organization_uid %></dd>
+  <% end %>
+
+  <dt><%= @model.t :email %></dt>
+  <dd><span class="email js-clipboard-copy"><%= mail_to @item.email %></span></dd>
+
+  <dt><%= @model.t :tel %></dt>
+  <dd><%= @item.send :tel %></dd>
+
+  <dt><%= @model.t :tel_ext %></dt>
+  <dd><%= @item.send :tel_ext %></dd>
+
+  <dt><%= user_presence.t :title_id %></dt>
+  <dd><%= tryb { @item.title.name_with_code } %></dd>
+
+  <dt><%= @model.t :occupation_ids %></dt>
+  <dd><%= tryb { @item.occupation.name_with_code } %></dd>
+
+  <dt><%= @model.t :type %></dt>
+  <dd><%= @item.label :type %></dd>
+
+  <% if @item.account_start_date.present? %>
+  <dt><%= @model.t :account_start_date %></dt>
+  <dd><%= ss_time_tag @item.account_start_date %></dd>
+  <% end %>
+
+  <% if @item.account_expiration_date.present? %>
+  <dt><%= @model.t :account_expiration_date %></dt>
+  <dd><%= ss_time_tag @item.account_expiration_date %></dd>
+  <% end %>
+
+  <% if @item.initial_password_warning.present? %>
+  <dt><%= @model.t :initial_password_warning %></dt>
+  <dd><%= @item.label :initial_password_warning %></dd>
+  <% end %>
+
+  <% if @item.session_lifetime.present? %>
+  <dt><%= @model.t :session_lifetime %></dt>
+  <dd><%= @item.label(:session_lifetime) || I18n.t('datetime.distance_in_words.x_seconds', count: @item.session_lifetime) %></dd>
+  <% end %>
+
+  <% if @item.restriction.present? %>
+  <dt><%= @model.t :restriction %></dt>
+  <dd><%= @item.label :restriction %></dd>
+  <% end %>
+
+  <dt><%= @model.t :lock_state %></dt>
+  <dd><%= @item.label :lock_state %></dd>
+
+  <dt><%= @model.t :deletion_lock_state %></dt>
+  <dd><%= @item.label :deletion_lock_state %></dd>
+
+  <% if @item.organization.present? %>
+  <dt><%= @model.t :organization_id %></dt>
+  <dd><%= @item.organization.name %></dd>
+  <% end %>
+
+  <% main_group = @item.gws_main_group(@cur_site) %>
+
+  <dt><%= @model.t :group_ids %></dt>
+  <dd>
+    <% @item.groups.order_by(name: 1).select{ |c| Gws::Group.site(@cur_site).pluck(:id).include?(c.id) }.each do |c| %>
+      <% if main_group && main_group.id == c.id %>
+        <strong><b><%= c.trailing_name %></b></strong><br />
+      <% else %>
+        <%= c.trailing_name %><br />
+      <% end %>
+    <% end %>
+  </dd>
+
+  <dt><%= user_presence.t :affiliation %></dt>
+  <dd><%= tryb { main_group.name } %></dd>
+
+  <dt><%= @model.t :gws_default_group_ids %></dt>
+  <dd><%= tryb { @item.gws_default_group(@cur_site).name } %></dd>
+
+  <% if @item.switch_user.present? %>
+  <dt><%= @model.t :switch_user_id %></dt>
+  <dd><%= gws_public_user_long_name(@item.switch_user.long_name) %></dd>
+  <% end %>
+
+  <% if @item.remark.present? %>
+  <dt><%= @model.t :remark %></dt>
+  <dd><%=br @item.send :remark %></dd>
+  <% end %>
+
+  <dt><%= user_presence.t :presence_status %></dt>
+  <dd>
+    <span class="presence-state <%= user_presence.state_style %>">
+      <%= user_presence.label :state %>
+    </span>
+  </dd>
+
+  <% if user_presence.plan.present? %>
+    <dt><%= user_presence.t :plan %></dt>
+    <dd><%= user_presence.plan %></dd>
+  <% end %>
+
+  <% if user_presence.memo.present? %>
+    <dt><%= user_presence.t :memo %></dt>
+    <dd><%= user_presence.memo %></dd>
+  <% end %>
+
+  <% if user_presence.manager_name.present? %>
+    <dt><%= user_presence.t :manager_name %></dt>
+    <dd><%= user_presence.manager_name %></dd>
+  <% end %>
+
+  <% if user_presence.department.present? %>
+    <dt><%= user_presence.t :department %></dt>
+    <dd><%= user_presence.department %></dd>
+  <% end %>
+</dl>
