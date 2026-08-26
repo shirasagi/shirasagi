@@ -28,17 +28,22 @@ export default class extends Controller {
   static targets = [ "result", "template", "ajaxTable" ]
 
   connect() {
+    //console.log(`[${this.identifier}] connected`);
   }
 
-  openDialog() {
+  select({ detail: { items }}) {
+    this._renderResult(items);
+  }
+
+  openDialog(ev) {
     if (!this.apiValue) {
       return;
     }
 
     if (this.dialogTypeValue === "cbox") {
-      this.#openDialogByCBox();
+      this.#openDialogByCBox(ev?.detail?.searchParams);
     } else {
-      this.#openDialogBySS();
+      this.#openDialogBySS(ev?.detail?.searchParams);
     }
 
     dispatchEvent(this.element, "change");
@@ -51,10 +56,16 @@ export default class extends Controller {
     }
   }
 
-  #openDialogByCBox() {
+  #openDialogByCBox(searchParams) {
     const apiUrl = new URL(this.apiValue, location.origin);
     const initialSelectedIds = Array.from(this._selectedIds());
     const cboxData = initialSelectedIds.length > 0 ? { _method: "GET", selected: initialSelectedIds } : undefined;
+
+    if (searchParams && searchParams.size > 0) {
+      for(const [key, value] of searchParams) {
+        apiUrl.searchParams.append(key, value);
+      }
+    }
 
     const selected = [];
     $.colorbox({
@@ -74,7 +85,7 @@ export default class extends Controller {
     })
   }
 
-  #openDialogBySS() {
+  #openDialogBySS(searchParams) {
     const apiUrl = new URL(this.apiValue, location.origin);
     let data = undefined;
     const initialSelectedIds = this._selectedIds();
@@ -84,8 +95,20 @@ export default class extends Controller {
       initialSelectedIds.forEach((id) => { data.append("selected[]", id) });
     }
 
-    Dialog.showModal(apiUrl.toString(), { data: data }).then((result) => {
-      this._renderResult(result.returnValue);
+    if (searchParams && searchParams.size > 0) {
+      if (data) {
+        for(const [key, value] of searchParams) {
+          data.append(key, value);
+        }
+      } else {
+        for(const [key, value] of searchParams) {
+          apiUrl.searchParams.append(key, value);
+        }
+      }
+    }
+
+    Dialog.showModal(apiUrl.toString(), { data: data }).then((dialogResult) => {
+      this._renderResult(dialogResult.items);
     })
   }
 
@@ -118,6 +141,7 @@ export default class extends Controller {
       return;
     }
     if (!this.hasResultTarget) {
+      this.dispatch("select", { detail: { items: selectedItems } });
       return;
     }
 
@@ -158,8 +182,8 @@ export default class extends Controller {
   }
 
   _selectedIds() {
-    if (!this.resultTarget) {
-      return;
+    if (!this.hasResultTarget) {
+      return new Set();
     }
 
     const ids = Array.from(this.resultTarget.querySelectorAll("[data-id]")).map((element) => element.dataset.id);

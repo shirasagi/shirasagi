@@ -75,4 +75,39 @@ module SS::StimulusHelper
     options = Utils.merge_data_params(options, data)
     tag.send(type, **options, &block)
   end
+
+  # ボタンクリックでダイアログを開きたい場合
+  def ss_dialog_button(name = nil, options = nil, html_options = nil, &block)
+    if block_given?
+      html_options = options
+      options = name
+      name = nil
+    end
+    options ||= {}
+
+    html_options = convert_options_to_data_attributes(options, html_options)
+
+    url = url_target(name, options)
+
+    component = SS::DialogButtonComponent.new(
+      cur_site: @cur_site, cur_user: @cur_user, name: name, url: url, html_options: html_options)
+    render component, &block
+  end
+
+  # 画面切り替え完了と同時にダイアログを開きたい場合
+  def ss_dialog_open(options = nil, html_options = nil, &block)
+    if block_given?
+      html_options = options
+      options = {}
+    end
+    options ||= {}
+
+    html_options = convert_options_to_data_attributes(options, html_options)
+
+    url = url_target(nil, options)
+
+    component = SS::DialogButtonComponent.new(
+      cur_site: @cur_site, cur_user: @cur_user, show_button: false, open: true, url: url, html_options: html_options)
+    render component, &block
+  end
 end

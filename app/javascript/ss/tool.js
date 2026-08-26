@@ -29,8 +29,8 @@ export function csrfToken(el) {
   return csrfTokenEl.getAttribute('content')
 }
 
-export function dispatchEvent(element, eventName, detail) {
-  const event = new CustomEvent(eventName, { bubbles: true, cancelable: true, composed: true, detail: detail })
+export function dispatchEvent(element, eventName, detail, { bubbles = true, cancelable = true, composed = true } = {}) {
+  const event = new CustomEvent(eventName, { detail, bubbles, cancelable, composed })
   element.dispatchEvent(event)
   return event
 }
@@ -262,4 +262,14 @@ export function collectFormData(formElement) {
   }
 
   return new FormData(formElement);
+}
+
+function _ujsConfirmHandler(ev) {
+  ev.result = false
+}
+
+export function disableUjsConfirm(currentTarget) {
+  $(currentTarget)
+    .off("confirm", _ujsConfirmHandler)
+    .one("confirm", _ujsConfirmHandler)
 }

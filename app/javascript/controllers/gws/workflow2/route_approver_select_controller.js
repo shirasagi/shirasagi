@@ -58,7 +58,7 @@ export default class extends Controller {
     const type = option.dataset.type
     if (value === "select_other") {
       const dialogSource = this.element.dataset.approverPath
-      Dialog.showModal(dialogSource).then(result => this.#ok(result.returnValue))
+      Dialog.showModal(dialogSource).then(dialogResult => this.#ok(dialogResult.items))
     } else {
       this.#updateApprover(type, value)
       this.prevSelectedIndex = this.selectElement.selectedIndex
