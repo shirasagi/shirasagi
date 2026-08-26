@@ -50,6 +50,8 @@ class Gws::Notice::Post
         search_folders(params).
         search_category(params).
         search_categories(params).
+        search_group(params).
+        search_groups(params).
         search_browsed_state(params).
         search_term(params)
     end
@@ -89,6 +91,18 @@ class Gws::Notice::Post
       return all if params.blank? || params[:category_ids].blank?
 
       all.in(category_ids: params[:category_ids])
+    end
+
+    def search_group(params)
+      return all if params.blank? || params[:group_id].blank?
+
+      all.where(group_ids: params[:group_id].to_i)
+    end
+
+    def search_groups(params)
+      return all if params.blank? || params[:group_ids].blank?
+
+      all.in(group_ids: params[:group_ids])
     end
 
     def search_browsed_state(params)

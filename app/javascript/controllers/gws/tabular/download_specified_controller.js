@@ -35,9 +35,9 @@ export default class extends Controller {
       return;
     }
 
-    Dialog.showModal(this.dialogTarget.cloneNode(true)).then((dialog) => {
-      if (dialog.result === "download") {
-        const form = this.#buildForm(href, checkedItemIds, dialog.returnValue);
+    Dialog.showModal(this.dialogTarget.cloneNode(true)).then((dialogResult) => {
+      if (dialogResult.returnValue === "download") {
+        const form = this.#buildForm(href, checkedItemIds, dialogResult.formData);
         document.body.appendChild(form);
         form.requestSubmit();
 
@@ -68,7 +68,7 @@ export default class extends Controller {
     return otherController.getCheckedItems();
   }
 
-  #buildForm(href, ids, params) {
+  #buildForm(href, ids, formData) {
     const form = document.createElement("form");
     form.action = href;
     form.method = "post";
@@ -94,13 +94,15 @@ export default class extends Controller {
       form.appendChild(inputId);
     });
 
-    params.forEach((param) => {
-      const inputParam = document.createElement("input");
-      inputParam.type = "hidden";
-      inputParam.name = param[0];
-      inputParam.value = param[1];
-      form.appendChild(inputParam);
-    });
+    if (formData) {
+      for (const [ key, value ] of formData.entries()) {
+        const inputParam = document.createElement("input");
+        inputParam.type = "hidden";
+        inputParam.name = key;
+        inputParam.value = value;
+        form.appendChild(inputParam);
+      }
+    }
 
     return form
   }

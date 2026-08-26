@@ -1,0 +1,16 @@
+<span data-controller="ss--dialog"<% if open? %> data-ss--dialog-open-value="true"<% end %>>
+  <%=
+    if show_button?
+      button_tag content || name, **button_options
+    end
+  %>
+  <%= tag.template data: { "ss--dialog-target" => "content" } do %>
+    <% if template? %>
+      <%= template %>
+    <% else %>
+      <turbo-frame src="<%= url %>" id="ss-dialog-frame">
+        <%= helpers.loading %>
+      </turbo-frame>
+    <% end %>
+  <% end %>
+</span>

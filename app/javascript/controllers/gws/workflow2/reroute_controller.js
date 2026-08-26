@@ -36,14 +36,17 @@ export default class extends Controller {
 
   #onClick(ev) {
     ev.preventDefault()
-    Dialog.showModal(this.dialogSource).then((result) => this.#ok(ev.currentTarget, result))
+    Dialog.showModal(this.dialogSource).then((dialogResult) => this.#ok(ev.currentTarget, dialogResult))
   }
 
-  #ok(eventSourceElement, result) {
-    if (!result.returnValue) {
+  #ok(eventSourceElement, dialogResult) {
+    if (!dialogResult.items) {
       return
     }
-    const data = result.returnValue[0]
+    const data = dialogResult.items[0]
+    if (!data) {
+      return
+    }
     const form = this.#buildForm(data.id)
     this.#appendForm(form)
     form.addEventListener("turbo:submit-end", () => form.remove(), { once: true });

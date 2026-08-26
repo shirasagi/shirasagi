@@ -2,17 +2,12 @@ import DialogController from "../../ss/dialog_controller";
 
 export default class extends DialogController {
   apply(dialog) {
-    if (!dialog.returnValue) {
+    if (dialog.returnValue !== "send" || !dialog.formData) {
       // dialog is just closed
       return;
     }
 
-    let returnPath;
-    dialog.returnValue.forEach((value) => {
-      if (value[0] === "return_path") {
-        returnPath = value[1];
-      }
-    });
+    const returnPath = dialog.formData.get("return_path")
     if (returnPath) {
       location.href = returnPath;
     }

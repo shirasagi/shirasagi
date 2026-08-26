@@ -6,7 +6,7 @@
   <dl class="see addon-gws-system-menu-setting menu-setting-<%= name %>">
     <dt><%= @model.t("menu_#{name}_state") %></dt>
     <dd>
-      <div class="input-group gap-5 align-items-center">
+      <div class="input-group gap-5 align-items-center nowrap">
         <% if select_state %>
           <%= f.select "menu_#{name}_state", @item.send("menu_#{name}_state_options") %>
         <% else %>

@@ -1,0 +1,26 @@
+<%# download_all.html.erb に `data: { turbo: true }` を付けただけ %>
+<%= form_with scope: :item, url: url_for(action: :download_all), id: "item-form", method: :post, autocomplete: :off, data: { turbo: true } do |f| %>
+  <%= error_messages_for :item %>
+
+  <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t('gws/survey.confirm.download') %></h2></div>
+      <div class="addon-body">
+        <%= render template: '_download', locals: {f: f} %>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send ss-sticky ss-sticky-bottom">
+    <% if SS::DownloadPolicy.download_allowed? %>
+      <%= f.submit t('ss.buttons.download'), class: 'btn-primary save' %>
+    <% end %>
+    <%= link_to t('ss.buttons.cancel'), url_for(action: :index), { class: 'btn-default' } %>
+  </footer>
+<% end %>
+
+<%= jquery do %>
+  SS.confirmUnloading();
+<% end %>

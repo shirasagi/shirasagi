@@ -53,6 +53,12 @@ Rails.application.routes.draw do
           get :select, on: :member
         end
       end
+
+      get "file_gen_tasks/:id/status" => "file_gen_tasks#status", as: :file_gen_task_status
+    end
+
+    namespace "apis" do
+      get "file_gen_tasks/:id/download" => "file_gen_tasks#download", as: :file_gen_task_download
     end
   end
 

@@ -23,3 +23,8 @@ ja:
     message:
       notification:
         no_recents: 新着はありません
+    file_gen_task:
+      completed: ダウンロードの準備完了
+      failed: ダウンロード用データの作成失敗
+      running: ダウンロード用データの作成中
+      stop: 待機中

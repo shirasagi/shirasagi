@@ -9,6 +9,10 @@ class Cms::Apis::SiteUsagesController < ApplicationController
     raise "403" unless Cms::Site.allowed?(:edit, @cur_user, site: @cur_site)
   end
 
+  def set_item
+    @item ||= @cur_site
+  end
+
   public
 
   def reload

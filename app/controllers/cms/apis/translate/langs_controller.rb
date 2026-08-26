@@ -7,7 +7,8 @@ class Cms::Apis::Translate::LangsController < ApplicationController
     @single = params[:single].present?
     @multi = !@single
 
-    @items = @model.site(@cur_site).
+    set_items
+    @items = @items.
       search(params[:s]).
       page(params[:page]).per(50)
   end

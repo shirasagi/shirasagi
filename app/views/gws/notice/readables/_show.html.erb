@@ -9,27 +9,43 @@
   <% end %>
 <% end %>
 
-<div class="addon-view" id="addon-basic">
-  <div class="addon-head">
-    <h2 class="subject">
-      <%= @item.name %>
-    </h2>
-    <div class="main">
-      <% if @item.categories.present? %>
-        <span class="categories">
-        <% @item.categories.compact.each do |category| %>
-        <%= link_to category.trailing_name, url_for(action: :index, category_id: category.id), class: "gws-category-label", style: category_label_css(category) %>
+<div class="addon-view gws-notice gws-memo" id="addon-basic">
+  <div class="gws-memo">
+    <div class="addon-head">
+      <div class="d-flex">
+        <h2 class="subject">
+          <%= @item.name %>
+        </h2>
+        <div class="d-flex ml-auto">
+          <% if @id_index.present? %>
+            <div class="move-tool-wrap">
+              <div class="page-order"><span class="current"><%= @id_index + 1 %></span> / <span class="total"><%= @id_list.length %></span></div>
+              <div class="move-tool">
+                <%= move_to_prev_tag %>
+                <%= move_to_next_tag %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="main">
+        <% if @item.categories.present? %>
+          <span class="categories">
+          <% @item.categories.compact.each do |category| %>
+          <%= link_to category.trailing_name, url_for(action: :index, category_id: category.id), class: "gws-category-label", style: category_label_css(category) %>
+          <% end %>
+          </span>
         <% end %>
+      </div>
+      <div class="aside">
+        <span class="updated"><%= ss_time_tag @item.released || @item.updated %></span>
+        <span class="user"><%= gws_public_user_long_name(@item.contributor_name.presence || @item.user_long_name) %></span>
+        <span class="severity">
+          <span class="severity-label"><%= @model.t :severity %></span>
+          <span class="severity-value"><%= @item.label(:severity) %></span>
         </span>
-      <% end %>
-    </div>
-    <div class="aside">
-      <span class="updated"><%= ss_time_tag @item.released || @item.updated %></span>
-      <span class="user"><%= gws_public_user_long_name(@item.contributor_name.presence || @item.user_long_name) %></span>
-      <span class="severity">
-        <span class="severity-label"><%= @model.t :severity %></span>
-        <span class="severity-value"><%= @item.label(:severity) %></span>
-      </span>
+      </div>
     </div>
   </div>
   <div class="addon-body" id="post-<%= @item.id %>">
@@ -57,6 +73,9 @@
     <% end %>
   </div>
   <div class="menu">
+    <% if @item.files.present? && SS::DownloadPolicy.download_allowed? %>
+      <%= ss_button_to(t("gws/notice.links.download_attachment"), url_for(action: :download_attachment), confirm: t("ss.confirm.download"), class: 'btn btn-download') %>
+    <% end %>
     <% if @item.browsed?(@cur_user) %>
       <%= button_to(t('gws/notice.links.unset_seen'), url_for(action: :toggle_browsed), 'data-confirm': t('gws/notice.confirm.unset_seen'), class: 'btn') %>
     <% else %>

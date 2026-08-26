@@ -16,10 +16,18 @@ module Gws::ApiFilter
     end
   end
 
+  def set_items
+    # 運用目的で閲覧可能な項目を選択
+    # allow(:read, @cur_user, site: @cur_site) は管理目的で閲覧可能な項目を選択するので使用しない
+    @items ||= @model.site(@cur_site).without_deleted
+  end
+
   public
 
   def index
-    @items = @model.site(@cur_site).
+    set_items
+
+    @items = @items.
       search(params[:s]).
       order_by(_id: -1).
       page(params[:page]).per(50)

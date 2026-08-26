@@ -27,13 +27,18 @@ class Cms::Apis::FormsController < ApplicationController
     end
   end
 
+  def set_items
+    @items ||= @model.site(@cur_site)
+  end
+
   public
 
   def index
     @single = params[:single].present?
     @multi = !@single
 
-    @items = @model.site(@cur_site).
+    set_items
+    @items = @items.
       allow(:read, @cur_user, site: @cur_site).
       search(params[:s]).
       order_by(order: 1, name: 1).
@@ -41,20 +46,23 @@ class Cms::Apis::FormsController < ApplicationController
   end
 
   def form
-    @item = @model.site(@cur_site).find(params[:id])
+    set_items
+    @item = @items.find(params[:id])
     @cur_node = Cms::Node.find(params[:node]) rescue nil
     @target = Cms::Page.site(@cur_site).find(params[:item_id]) if params[:item_id].present?
     render layout: false
   end
 
   def column_names
-    @item = Cms::Form.site(@cur_site).find(params[:id])
+    set_items
+    @item = @items.find(params[:id])
     names = @item.columns.order(order: 1).map(&:name)
     render json: names.to_json
   end
 
   def new_column
-    @item = Cms::Form.site(@cur_site).find(params[:id])
+    set_items
+    @item = @items.find(params[:id])
     @cur_node = Cms::Node.find(params[:node]) rescue nil
     @cur_column = @item.columns.find(params[:column_id])
     render layout: false

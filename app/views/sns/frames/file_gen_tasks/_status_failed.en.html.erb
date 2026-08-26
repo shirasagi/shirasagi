@@ -1,0 +1,10 @@
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= t("sns.file_gen_task.failed") %></h2></div>
+    <div class="addon-body">
+      <p>An error occurred while creating the download data.</p>
+      <p>Please check the job log for details, such as the cause of the error.</p>
+      <p class="mt-2"><%= link_to t("mongoid.models.job/log"), job_sns_logs_path, data: { turbo: false } %></p>
+    </div>
+  </div>
+</div>

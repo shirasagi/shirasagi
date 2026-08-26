@@ -3,9 +3,12 @@ class Guide::Apis::QuestionsController < ApplicationController
 
   model Guide::Question
 
-  def index
-    @multi = params[:single].blank?
-    @node = Cms::Node.where(id: params[:nid]).first
+  private
+
+  def set_items
+    return @items if instance_variable_defined?(:@items)
+
+    @node = Cms::Node.site(@cur_site).where(id: params[:nid]).first
     @id = params[:id].to_i
 
     unless @node
@@ -16,7 +19,16 @@ class Guide::Apis::QuestionsController < ApplicationController
     @items = @model.site(@cur_site).
       node(@node).
       ne(id: @id).
-      allow(:read, @cur_user, site: @cur_site).
+      allow(:read, @cur_user, site: @cur_site)
+  end
+
+  public
+
+  def index
+    @multi = params[:single].blank?
+
+    set_items
+    @items = @items.
       search(params[:s]).
       page(params[:page]).per(50)
   end

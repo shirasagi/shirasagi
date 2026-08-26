@@ -49,6 +49,7 @@ Rails.application.routes.draw do
           scope path: "topic:topic_id" do
             resources :comments, concerns: [:deletion] do
               put :reply, on: :collection
+              get :download_attachment, on: :member
             end
           end
         end

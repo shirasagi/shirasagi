@@ -8,7 +8,8 @@ export default class extends Controller {
   dialog = undefined;
 
   connect() {
-    this.dialog = new Dialog(this.hasContentTarget ? this.contentTarget : this.element, { attach: this.attachValue });
+    const dialogSource = this.hasContentTarget ? this.contentTarget : this.element
+    this.dialog = new Dialog(dialogSource, { attach: this.attachValue, source: this.element });
     if (this.openValue) {
       this.open();
     }

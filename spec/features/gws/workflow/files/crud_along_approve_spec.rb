@@ -71,6 +71,13 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
         expect(item_file.owner_item_type).to eq item.class.name
       end
 
+      find("#addon-gws-agents-addons-history").click
+      scroll_to_bottom
+      wait_for_turbo_frame "#gws-addon-history-frame"
+      within "#addon-gws-agents-addons-history table tbody" do
+        expect(page.all("tr").count).to be >= 2
+      end
+
       #
       # Soft Delete
       #
