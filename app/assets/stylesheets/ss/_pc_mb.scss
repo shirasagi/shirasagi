@@ -3362,6 +3362,10 @@ form .CodeMirror {
   &.align-items-center {
     align-items: center;
   }
+
+  &.nowrap {
+    flex-wrap: nowrap;
+  }
 }
 
 // event-repeat-dates-ui
