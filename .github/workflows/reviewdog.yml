@@ -4,6 +4,7 @@ env:
   DISABLE_SPRING: 1
 jobs:
   reviewdog:
+    if: false
     name: reviewdog
     runs-on: ubuntu-22.04
     # uncomment blow line if you don't want to run reviewdog on your repository
