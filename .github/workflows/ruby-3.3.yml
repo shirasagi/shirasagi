@@ -10,8 +10,6 @@ name: Ruby-3.3
 on:
   push:
     branches: [ master, main ]
-  pull_request:
-    types: [ opened, synchronize, reopened ]
 
 env:
   DISABLE_SPRING: 1
@@ -23,8 +21,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        parallelism: [ 1 ]
-        id: [ 0 ]
+        parallelism: [ 12 ]
+        id: [ 0,1,2,3,4,5,6,7,8,9,10,11 ]
     steps:
       - name: Free Disk Space
         uses: jlumbroso/free-disk-space@v1.3.1
@@ -152,7 +150,11 @@ jobs:
         run: npx webpack-cli build
       - name: Run tests
         run: |
-          bundle exec rspec spec/jobs/gws/elasticsearch/indexer/notice_post_job_spec.rb
+          file_list=$(bundle exec ruby .travis.d/split_specs.rb -p ${{ matrix.parallelism }} -i ${{ matrix.id }})
+          if [ $? -ne 0 ]; then
+            exit 1
+          fi
+          echo $file_list | xargs bundle exec rspec --profile 10
         env:
           TZ: "Asia/Tokyo"
           LANG: ja_JP.UTF-8
@@ -170,12 +172,12 @@ jobs:
           GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
       #CI実行中にElasticsearchに問題が発生した場合、
       #このステップを有効にしElasticsearchのログを確認すること
-      - name: After test
-        if: always()
-        run: |
-          echo "curl -i http://localhost:9200"
-          curl -i http://localhost:9200 || true
-          echo "curl -i http://localhost:9200/_cluster/health"
-          curl -i http://localhost:9200/_cluster/health || true
-          echo "docker logs elasticsearch"
-          docker logs elasticsearch | tail
+      #- name: After test
+      #  if: always()
+      #  run: |
+      #    echo "curl -i http://localhost:9200"
+      #    curl -i http://localhost:9200 || true
+      #    echo "curl -i http://localhost:9200/_cluster/health"
+      #    curl -i http://localhost:9200/_cluster/health || true
+      #    echo "docker logs elasticsearch"
+      #    docker logs elasticsearch | tail
