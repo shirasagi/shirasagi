@@ -9,9 +9,7 @@ name: Ruby-3.4
 
 on:
   push:
-    branches: [ master, main ]
-  pull_request:
-    types: [ opened, synchronize, reopened ]
+    branches: [ abracadabra ]
 
 env:
   DISABLE_SPRING: 1
