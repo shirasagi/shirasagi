@@ -35,6 +35,7 @@ Rails.application.routes.draw do
         get :print
         put :send_mdn
         put :ignore_mdn
+        post :download_attachment
       end
     end
 

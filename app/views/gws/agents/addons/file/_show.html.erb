@@ -1,6 +1,6 @@
 <% return "" if @item.files.blank? %>
 
-<div class="see">
+<div class="see gws-addon-file">
   <div id="selected-files">
     <% @item.files.each do |file| %>
       <div id="file-<%= file.id %>" class="file-view" data-file-id="<%= file.id %>">
@@ -19,6 +19,11 @@
           </label><br />
         </div>
       </div>
+    <% end %>
+  </div>
+  <div class="menu">
+    <% if SS::DownloadPolicy.download_allowed? %>
+      <%= ss_button_to(t("gws/notice.links.download_attachment"), url_for(action: :download_attachment), confirm: t("ss.confirm.download"), class: 'btn btn-download') rescue nil %>
     <% end %>
   </div>
 </div>

@@ -29,6 +29,7 @@
         show_path_proc: ->(forum, topic) { url_for(action: :index) },
         edit_path_proc: ->(forum, topic, comment) { url_for(action: :edit, id: comment) },
         delete_path_proc: ->(forum, topic, comment) { url_for(action: :delete, id: comment) },
+        download_attachment_path_proc: ->(forum, topic, comment) { url_for(action: :download_attachment, id: comment) },
       }
     %>
     <%= render partial: 'gws/discussion/main/thread', locals: locals %>
