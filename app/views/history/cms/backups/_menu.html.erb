@@ -1,4 +1,9 @@
 <nav class="nav-menu">
-  <%= link_to t('ss.links.back'), CGI.unescape(params[:source]) %>
+  <%=
+    source = CGI.unescape(params[:source])
+    if UrlValidator.valid?(source, absolute_path: true) && Sys::TrustedUrlValidator.myself_url?(source)
+      link_to t('ss.links.back'), source
+    end
+  %>
   <%= link_to t("history.restore"), action: :restore if @item.restorable? %>
 </nav>
