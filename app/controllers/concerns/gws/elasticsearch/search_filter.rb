@@ -38,7 +38,7 @@ module Gws::Elasticsearch::SearchFilter
   end
 
   def fix_params
-    { setting: @setting, size: 30, sort: 'updated_desc' }
+    { setting: @setting }
   end
 
   def get_params
