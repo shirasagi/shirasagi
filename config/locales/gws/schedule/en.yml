@@ -32,6 +32,11 @@ en:
       manageable_todo: Other users’ to-do tasks
     calendar:
       buttonText:
+        allDay: all-day
+        today: Today
+        month: Month
+        week: Week
+        day: Day
         listMonth: List
         withTodo: ToDo
         withAbsence: Absence
@@ -39,10 +44,14 @@ en:
         month: "%m/%Y"
         week: "%a, %m/%d/%Y"
         day: "%a, %m/%d/%Y"
-      columnFormat:
-        month: "%a"
-        week: "%a, %m/%d"
-        day: "%a, %m/%d"
+        dayGridMonth: { year: 'numeric', month: '2-digit' }
+        dayGridWeek: { year: 'numeric', month: '2-digit', day: 'numeric', weekday: 'short' }
+        timeGridDay: { year: 'numeric', month: '2-digit', day: 'numeric', weekday: 'short' }
+        listMonth: { year: 'numeric', month: '2-digit' }
+      dayHeaderFormat:
+        dayGridWeek: { month: '2-digit', day: '2-digit', weekday: 'short' }
+        timeGridDay: { month: '2-digit', day: '2-digit', weekday: 'short' }
+        listMonth: { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' }
     links:
       add_plan: Create a plan
       download: Download

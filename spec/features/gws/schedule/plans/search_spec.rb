@@ -15,9 +15,9 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
     context "without keywords" do
       it do
         visit gws_schedule_plans_path(site: site)
-        expect(page).to have_css(".fc-basic-view", text: plan1.name)
-        expect(page).to have_css(".fc-basic-view", text: plan2.name)
-        expect(page).to have_css(".fc-basic-view", text: plan3.name)
+        expect(page).to have_css(".fc-view", text: plan1.name)
+        expect(page).to have_css(".fc-view", text: plan2.name)
+        expect(page).to have_css(".fc-view", text: plan3.name)
       end
     end
 
@@ -28,9 +28,9 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           fill_in "s[keyword]", with: plan1.name
           click_on I18n.t("ss.buttons.search")
         end
-        expect(page).to have_css(".fc-basic-view", text: plan1.name)
-        expect(page).to have_no_css(".fc-basic-view", text: plan2.name)
-        expect(page).to have_no_css(".fc-basic-view", text: plan3.name)
+        expect(page).to have_css(".fc-view", text: plan1.name)
+        expect(page).to have_no_css(".fc-view", text: plan2.name)
+        expect(page).to have_no_css(".fc-view", text: plan3.name)
       end
     end
 
@@ -41,9 +41,9 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           fill_in "s[keyword]", with: plan2.text
           click_on I18n.t("ss.buttons.search")
         end
-        expect(page).to have_css(".fc-basic-view", text: plan2.name)
-        expect(page).to have_no_css(".fc-basic-view", text: plan1.name)
-        expect(page).to have_no_css(".fc-basic-view", text: plan3.name)
+        expect(page).to have_css(".fc-view", text: plan2.name)
+        expect(page).to have_no_css(".fc-view", text: plan1.name)
+        expect(page).to have_no_css(".fc-view", text: plan3.name)
       end
     end
   end
@@ -52,9 +52,9 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
     context "without categories" do
       it do
         visit gws_schedule_plans_path(site: site)
-        expect(page).to have_css(".fc-basic-view", text: plan1.name)
-        expect(page).to have_css(".fc-basic-view", text: plan2.name)
-        expect(page).to have_css(".fc-basic-view", text: plan3.name)
+        expect(page).to have_css(".fc-view", text: plan1.name)
+        expect(page).to have_css(".fc-view", text: plan2.name)
+        expect(page).to have_css(".fc-view", text: plan3.name)
       end
     end
 
@@ -67,9 +67,9 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           # click_on I18n.t("ss.buttons.search")
         end
         wait_for_all_turbo_frames
-        expect(page).to have_css(".fc-basic-view", text: plan2.name)
-        expect(page).to have_no_css(".fc-basic-view", text: plan1.name)
-        expect(page).to have_no_css(".fc-basic-view", text: plan3.name)
+        expect(page).to have_css(".fc-view", text: plan2.name)
+        expect(page).to have_no_css(".fc-view", text: plan1.name)
+        expect(page).to have_no_css(".fc-view", text: plan3.name)
       end
     end
 
@@ -82,9 +82,9 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           # click_on I18n.t("ss.buttons.search")
         end
         wait_for_all_turbo_frames
-        expect(page).to have_css(".fc-basic-view", text: plan3.name)
-        expect(page).to have_no_css(".fc-basic-view", text: plan1.name)
-        expect(page).to have_no_css(".fc-basic-view", text: plan2.name)
+        expect(page).to have_css(".fc-view", text: plan3.name)
+        expect(page).to have_no_css(".fc-view", text: plan1.name)
+        expect(page).to have_no_css(".fc-view", text: plan2.name)
       end
     end
   end

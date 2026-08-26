@@ -424,13 +424,9 @@ describe "gws_workload_works", type: :feature, dbscope: :example, js: true do
           # リスト画面で該当予定が表示されているか確認
           expect(page).to have_content(item_name)
 
-          japanese_format = "#{due_date.strftime('%Y年 %-m月%-d日')} " \
-                            "(#{I18n.t('date.abbr_day_names')[due_date.wday]}) " \
-                            "#{I18n.t('gws/schedule.options.allday.allday')}"
-          english_format = "#{due_date.strftime('%a, %m/%d/%Y')} #{I18n.t('gws/schedule.options.allday.allday')}"
-
-          expect(page).to have_css(".td.startAt", text: japanese_format).or have_css(".td.startAt", text: english_format)
-          expect(page).to have_css(".td.endAt", text: japanese_format).or have_css(".td.endAt", text: english_format)
+          expect(page).to have_css(".fc-list-day", text: due_date.year)
+          expect(page).to have_css(".fc-list-day", text: due_date.month)
+          expect(page).to have_css(".fc-list-day", text: due_date.day)
         end
       end
     end

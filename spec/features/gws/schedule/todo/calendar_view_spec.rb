@@ -10,10 +10,11 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
     item
     visit group_index_path
     wait_for_js_ready
-    within("div#cal-#{gws_user.id}.calendar.multiple.fc.fc-ltr.fc-unthemed") do
+
+    within("div#cal-#{gws_user.id}.calendar.multiple.fc") do
       expect(page).to have_content(item.name)
     end
-    within("div#cal-#{sys_user.id}.calendar.multiple.fc.fc-ltr.fc-unthemed") do
+    within("div#cal-#{sys_user.id}.calendar.multiple.fc") do
       expect(page).to have_no_content(item.name)
     end
     expect(current_path).not_to eq sns_login_path
