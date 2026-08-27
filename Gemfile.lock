@@ -286,7 +286,7 @@ GEM
     httpauth (0.2.1)
     httpclient (2.9.0)
       mutex_m
-    i18n (1.15.2)
+    i18n (1.14.8)
       concurrent-ruby (~> 1.0)
     icalendar (2.12.3)
       base64
@@ -849,6 +849,7 @@ DEPENDENCIES
   guard-rubocop
   holiday_japan
   http_accept_language
+  i18n (~> 1.14.0)
   icalendar
   jbuilder
   jquery-rails
