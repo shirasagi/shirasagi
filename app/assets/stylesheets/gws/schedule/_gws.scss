@@ -351,10 +351,6 @@
   color: #000 !important;
   font-size: 1em;
 
-  &:focus {
-    outline: 0 !important;
-    box-shadow: none !important;
-  }
   &.fc-state-active, &[aria-pressed="true"] {
     background-color: #ccc !important;
     background-image: none;
@@ -374,6 +370,11 @@
       }
     }
   }
+}
+.fc .fc-button:focus {
+  z-index: 1 !important;
+  outline: auto;
+  outline: auto -webkit-focus-ring-color; /* for Chrome */
 }
 .fc-view-container {
   background-color: #fff;
