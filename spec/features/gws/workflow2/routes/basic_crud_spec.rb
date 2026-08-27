@@ -711,10 +711,12 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
             end
           end
           within_dialog do
-            within ".dd-group" do
-              click_on gws_user.groups.first.name
-              within ".dropdown-container" do
-                click_on site.name
+            wait_for_event_fired "turbo:frame-load" do
+              within ".dd-group" do
+                click_on gws_user.groups.first.name
+                within ".dropdown-container" do
+                  click_on site.name
+                end
               end
             end
             wait_for_cbox_closed { click_on approver_level1_user1.name }
@@ -738,10 +740,12 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
             end
           end
           within_dialog do
-            within ".dd-group" do
-              click_on gws_user.groups.first.name
-              within ".dropdown-container" do
-                click_on site.name
+            wait_for_event_fired "turbo:frame-load" do
+              within ".dd-group" do
+                click_on gws_user.groups.first.name
+                within ".dropdown-container" do
+                  click_on site.name
+                end
               end
             end
             wait_for_cbox_closed { click_on approver_level2_user1.name }
@@ -765,10 +769,12 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
             end
           end
           within_dialog do
-            within ".dd-group" do
-              click_on gws_user.groups.first.name
-              within ".dropdown-container" do
-                click_on site.name
+            wait_for_event_fired "turbo:frame-load" do
+              within ".dd-group" do
+                click_on gws_user.groups.first.name
+                within ".dropdown-container" do
+                  click_on site.name
+                end
               end
             end
             wait_for_cbox_closed { click_on approver_level3_user1.name }
@@ -789,10 +795,12 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
             end
           end
           within_dialog do
-            within ".dd-group" do
-              click_on gws_user.groups.first.name
-              within ".dropdown-container" do
-                click_on site.name
+            wait_for_event_fired "turbo:frame-load" do
+              within ".dd-group" do
+                click_on gws_user.groups.first.name
+                within ".dropdown-container" do
+                  click_on site.name
+                end
               end
             end
             wait_for_cbox_closed { click_on circulation_level1_user1.name }
@@ -809,10 +817,12 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
             end
           end
           within_dialog do
-            within ".dd-group" do
-              click_on gws_user.groups.first.name
-              within ".dropdown-container" do
-                click_on site.name
+            wait_for_event_fired "turbo:frame-load" do
+              within ".dd-group" do
+                click_on gws_user.groups.first.name
+                within ".dropdown-container" do
+                  click_on site.name
+                end
               end
             end
             wait_for_cbox_closed { click_on circulation_level2_user1.name }
@@ -829,10 +839,12 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
             end
           end
           within_dialog do
-            within ".dd-group" do
-              click_on gws_user.groups.first.name
-              within ".dropdown-container" do
-                click_on site.name
+            wait_for_event_fired "turbo:frame-load" do
+              within ".dd-group" do
+                click_on gws_user.groups.first.name
+                within ".dropdown-container" do
+                  click_on site.name
+                end
               end
             end
             wait_for_cbox_closed { click_on circulation_level3_user1.name }
