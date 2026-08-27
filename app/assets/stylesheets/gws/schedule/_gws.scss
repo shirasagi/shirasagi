@@ -291,9 +291,9 @@
 .fc-toolbar {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
   gap: 5px 10px;
-  align-items: center;
 }
 .fc-toolbar h2 {
   display: inline-block;
@@ -433,7 +433,7 @@
   border-radius: 0;
   border-radius: 3px;
   font-size: 90%;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   word-break: normal;
   white-space: normal;
   cursor: pointer;
@@ -456,7 +456,7 @@
   // 月以外 (別階層)
   .fc-event-main {
     color: #000;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
     word-break: normal;
     white-space: normal;
     &:hover {
@@ -852,7 +852,7 @@
   .popup-title {
     font-size: 120%;
     text-overflow: ellipsis;
-    word-wrap: normal;
+    overflow-wrap: normal;
     word-break: normal;
   }
   .popup-date {
