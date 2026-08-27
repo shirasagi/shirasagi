@@ -120,7 +120,10 @@ module SS
     end
 
     if user.try(:lang).present?
-      I18n.locale = user.lang.to_sym
+      locale = user.lang.to_sym
+      if I18n.locale != locale
+        I18n.locale = locale
+      end
     else
       I18n.locale = I18n.default_locale
     end
