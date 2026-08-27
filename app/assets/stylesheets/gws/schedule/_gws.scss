@@ -352,8 +352,8 @@
   font-size: 1em;
 
   &:focus {
-    box-shadow: none !important;
     outline: 0 !important;
+    box-shadow: none !important;
   }
   &.fc-state-active, &[aria-pressed="true"] {
     background-color: #ccc !important;
@@ -381,9 +381,6 @@
 @include init.mb {
   .fc-toolbar-chunk:nth-child(3) {
     margin: 0 0 10px;
-    .fc-button {
-      margin: 5px 5px 5px 0;
-    }
   }
 }
 
