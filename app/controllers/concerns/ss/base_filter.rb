@@ -13,12 +13,12 @@ module SS::BaseFilter
     helper SS::EditorHelper
     helper SS::JbuilderHelper
     helper_method :logout_path
+    prepend_around_action :reset_locale_and_timezone
     before_action :set_model
     before_action :set_setting
     before_action :set_ss_assets
     before_action :logged_in?
     before_action :check_api_user
-    after_action :reset_locale_and_timezone
     rescue_from StandardError, with: :rescue_action
     layout "ss/base"
   end
@@ -199,7 +199,11 @@ module SS::BaseFilter
     raise "403"
   end
 
-  delegate :reset_locale_and_timezone, to: SS
+  def reset_locale_and_timezone
+    yield
+  ensure
+    SS.reset_locale_and_timezone
+  end
 
   def logout_path
     @logout_path ||= session[:logout_path].presence || sns_logout_path

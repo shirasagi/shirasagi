@@ -44,8 +44,13 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         # admin: send request
         #
         within ".mod-workflow-request" do
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
           select route_name, from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
+
+          wait_for_js_ready
+          expect(page).to have_css(".request-setting", text: route_name)
 
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
@@ -323,6 +328,9 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
 
           select route_name, from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
+
+          wait_for_js_ready
+          expect(page).to have_css(".request-setting", text: route_name)
 
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
