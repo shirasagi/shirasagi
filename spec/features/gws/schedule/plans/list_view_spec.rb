@@ -51,34 +51,6 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         end
         # click_on I18n.t("gws/schedule.options.interval.weekly").capitalize
       end
-
-      # within ".fc-list-format" do
-      #   expect(page).to have_text(item1.name)
-      #   expect(page).to have_text(category1.name)
-      #   expect(page).to have_text(facility1.name)
-
-      #   expect(page).to have_text(item2.name)
-      #   expect(page).to have_text(category2.name)
-      #   expect(page).to have_text(facility2.name)
-
-      #   expect(page).to have_no_text(item3.name)
-      #   expect(page).to have_no_text(category3.name)
-      #   expect(page).to have_no_text(facility3.name)
-      #   click_on I18n.t("gws/schedule.options.interval.daily").downcase
-      # end
-      # within ".fc-list-format" do
-      #   expect(page).to have_text(item1.name)
-      #   expect(page).to have_text(category1.name)
-      #   expect(page).to have_text(facility1.name)
-
-      #   expect(page).to have_no_text(item2.name)
-      #   expect(page).to have_no_text(category2.name)
-      #   expect(page).to have_no_text(facility2.name)
-
-      #   expect(page).to have_no_text(item3.name)
-      #   expect(page).to have_no_text(category3.name)
-      #   expect(page).to have_no_text(facility3.name)
-      # end
     end
   end
 end

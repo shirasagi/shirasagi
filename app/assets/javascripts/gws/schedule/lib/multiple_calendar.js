@@ -43,17 +43,14 @@ SS.ready(function() {
     controller.find('.fc-next-button').on("click", function () {
       return controllerWrap.find('.calendar.multiple .fc-next-button').trigger("click");
     });
+    controller.find('.fc-reload-button').on("click", function () {
+      return controllerWrap.find('.calendar.multiple .fc-reload-button').trigger("click");
+    });
     controller.find('.fc-dayGridWeek-button').on("click", function () {
       return controllerWrap.find('.calendar.multiple .fc-dayGridWeek-button').trigger("click");
     });
     controller.find('.fc-timeGridDay-button').on("click", function () {
       return controllerWrap.find('.calendar.multiple .fc-timeGridDay-button').trigger("click");
-    });
-    controller.find('.fc-basicHour-button').on("click", function () {
-      return controllerWrap.find('.calendar.multiple .fc-basicHour-button').trigger("click");
-    });
-    controller.find('.fc-reload-button').on("click", function () {
-      return controllerWrap.find('.calendar.multiple .fc-reload-button').trigger("click");
     });
   };
 
@@ -128,11 +125,6 @@ SS.ready(function() {
       slotDuration: '00:30:00',
       slotLabelFormat: { hour: '2-digit', minute: '2-digit', meridiem: false, hour12: false },
       views: {
-        // basicHour: {
-        //   type: 'day',
-        //   buttonText: i18next.t("gws/schedule.options.interval.daily"),
-        //   contentHeight: 25
-        // },
         timeGridDay: {
           contentHeight: 25,
           slotMinTime: '08:00',

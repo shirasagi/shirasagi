@@ -224,9 +224,6 @@ SS.ready(function() {
         var nameEl = (el.querySelector('.fc-event-title') || el.querySelector('.fc-list-event-title a'))
         if (!nameEl) return;
 
-        var name = nameEl?.textContent;
-        var span = $('<span class="fc-event-name"></span>').text(name);
-        nameEl.innerHTML = span[0].outerHTML;
         el.style.color = event.textColor;
         el.style.backgroundColor = event.backgroundColor;
 
