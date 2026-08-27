@@ -311,6 +311,10 @@
     margin: 10px 0 !important;
     clear: both !important;
   }
+  @media only screen and (max-width: 768px) {
+    margin: 10px 0px 10px 10px !important;
+    clear: both !important;
+  }
 }
 .fc-view table {
   box-sizing: border-box;
@@ -344,16 +348,18 @@
   border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) rgba(0,0,0,.25) !important;
   background: #fff;
   background: linear-gradient(to bottom, #fff, #ebecec);
-  box-shadow: none !important;
   color: #000 !important;
   font-size: 1em;
 
+  &:focus {
+    box-shadow: none !important;
+    outline: 0 !important;
+  }
   &.fc-state-active, &[aria-pressed="true"] {
     background-color: #ccc !important;
     background-image: none;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,.15),0 1px 2px rgba(0,0,0,.05);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,.15),0 1px 2px rgba(0,0,0,.05) !important;
   }
-
   .fc-icon {
     font-size: 1em !important;
     line-height: 1em !important;
