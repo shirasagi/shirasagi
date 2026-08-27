@@ -37,8 +37,9 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
 
     context "last user pulls up a request. this is most usual case" do
       it do
-        login_cms_user
-        visit show_path
+        login_cms_user to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         #
         # admin: send request
@@ -88,8 +89,12 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         # user3: pull up request, he is the last one
         #
         login_user user3, to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: approve_comment3
           click_on I18n.t("workflow.buttons.pull_up")
         end
