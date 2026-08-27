@@ -6,7 +6,6 @@ module Cms::PublicFilter
 
   included do
     rescue_from StandardError, with: :rescue_action
-    before_action :ensure_default_locale
     before_action :ensure_site_presence
     before_action :set_request_path
     #before_action :redirect_slash, if: ->{ request.env["REQUEST_PATH"] =~ /\/[^\.]+[^\/]$/ }
@@ -39,10 +38,6 @@ module Cms::PublicFilter
   end
 
   private
-
-  def ensure_default_locale
-    SS.reset_locale_and_timezone # cms and webmail are currently not supported.
-  end
 
   def ensure_site_presence
     return if @cur_site

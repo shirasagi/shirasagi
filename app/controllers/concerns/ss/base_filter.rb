@@ -13,7 +13,6 @@ module SS::BaseFilter
     helper SS::EditorHelper
     helper SS::JbuilderHelper
     helper_method :logout_path
-    prepend_around_action :reset_locale_and_timezone
     before_action :set_model
     before_action :set_setting
     before_action :set_ss_assets
@@ -197,12 +196,6 @@ module SS::BaseFilter
 
     # api user only allowd .json
     raise "403"
-  end
-
-  def reset_locale_and_timezone
-    yield
-  ensure
-    SS.reset_locale_and_timezone
   end
 
   def logout_path
