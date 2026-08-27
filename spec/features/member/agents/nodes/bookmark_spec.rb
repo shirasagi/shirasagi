@@ -21,6 +21,14 @@ describe 'members/agents/nodes/bookmark', type: :feature, dbscope: :example, js:
   let!(:article_page) { create :article_page, cur_node: article_node, layout_id: layout1.id }
 
   describe 'without member login' do
+    before do
+      logout_member(site, login_node)
+    end
+
+    after do
+      logout_member(site, login_node)
+    end
+
     it do
       visit article_page.url
       within ".favorite" do
@@ -34,12 +42,12 @@ describe 'members/agents/nodes/bookmark', type: :feature, dbscope: :example, js:
       end
       expect(page).to have_css(".favorite", text: I18n.t("member.links.register_bookmark"))
       expect(current_path).to eq article_page.url
-      logout_member(site, login_node)
     end
   end
 
   describe 'with member login' do
     before do
+      logout_member(site, login_node)
       login_member(site, login_node)
     end
 

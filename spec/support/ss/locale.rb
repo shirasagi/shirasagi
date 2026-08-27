@@ -37,7 +37,9 @@ module SS
 
         # rubocop:disable Rails/I18nLocaleAssignment
         obj.after do
-          I18n.locale = I18n.default_locale if I18n.locale != I18n.default_locale
+          if I18n.locale != I18n.default_locale
+            I18n.locale = I18n.default_locale
+          end
         end
         # rubocop:enable Rails/I18nLocaleAssignment
       end
