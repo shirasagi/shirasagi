@@ -44,13 +44,13 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example, js: true
 
     it "click event" do
       visit index_path
-      first(".fc-event-name", text: item1.name).click
+      first(".fc-event-title", text: item1.name).click
       expect(current_path).to eq gws_schedule_group_plan_path(site, group, item1)
     end
 
     it "click allday event" do
       visit index_path
-      first(".fc-event-name", text: item2.name).click
+      first(".fc-event-title", text: item2.name).click
       expect(current_path).to eq gws_schedule_group_plan_path(site, group, item2)
     end
   end

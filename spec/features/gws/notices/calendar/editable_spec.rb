@@ -40,7 +40,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         expect(page).to have_link(folder.name)
       end
       within ".gws-schedule-box" do
-        expect(page).to have_css(".fc-event-name", text: name)
+        expect(page).to have_css(".fc-event-title", text: name)
       end
     end
   end
@@ -82,7 +82,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
           expect(page).to have_link(folder.name)
         end
         within ".gws-schedule-box" do
-          expect(page).to have_css(".fc-event-name", text: name)
+          expect(page).to have_css(".fc-event-title", text: name)
         end
       end
     end

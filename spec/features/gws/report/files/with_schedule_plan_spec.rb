@@ -81,7 +81,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         wait_for_notice I18n.t('ss.notice.saved')
 
         within ".fc-view" do
-          expect(page).to have_css(".fc-event-name", text: plan_name)
+          expect(page).to have_css(".fc-event-title", text: plan_name)
         end
 
         expect(Gws::Schedule::Plan.all.count).to eq 1
@@ -122,7 +122,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t('ss.notice.saved')
         within ".fc-view" do
-          expect(page).to have_css(".fc-event-name", text: plan_name)
+          expect(page).to have_css(".fc-event-title", text: plan_name)
         end
 
         expect(Gws::Schedule::Plan.all.count).to eq 1

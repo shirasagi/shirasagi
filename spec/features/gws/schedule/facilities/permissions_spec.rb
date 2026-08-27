@@ -58,7 +58,7 @@ describe "gws_schedule_facilities", type: :feature, dbscope: :example, js: true 
       within ".gws-schedule-box" do
         expect(page).to have_css("h2", text: I18n.t('gws/schedule.tabs.facility'))
         within first(".fc-event-facility") do
-          expect(page).to have_css(".fc-event-name", text: plan.name)
+          expect(page).to have_css(".fc-event-title", text: plan.name)
         end
         # click_on plan.name
         first(".fc-event-facility").click
@@ -102,7 +102,7 @@ describe "gws_schedule_facilities", type: :feature, dbscope: :example, js: true 
       end
       within ".fc-daygrid-body" do
         within first(".fc-event:not(.fc-holiday)") do
-          expect(page).to have_css(".fc-event-name", text: plan.name)
+          expect(page).to have_css(".fc-event-title", text: plan.name)
         end
         # click_on plan.name
         first(".fc-event:not(.fc-holiday)").click

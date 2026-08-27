@@ -71,12 +71,13 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       # show & edit
       visit index_path
       wait_for_js_ready
-      expect(page).to have_css(".fc-event-name", text: name)
+      expect(page).to have_css(".fc-event-title", text: name)
 
       # click_on name
-      within ".fc-daygrid-event-harness:not(:has(.fc-holiday))" do
-        first(".fc-event .fc-event-name", text: name).click
-      end
+      # within ".fc-daygrid-event-harness:not(:has(.fc-holiday))" do
+      #  first(".fc-event .fc-event-title", text: name).click
+      # end
+      first(".fc-event .fc-event-title", text: name).click
       wait_for_js_ready
       expect(page).to have_content(name)
 
@@ -100,9 +101,10 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       expect(page).to have_content(name2)
 
       # click_on name2
-      within ".fc-daygrid-event-harness:not(:has(.fc-holiday))" do
-        first(".fc-event .fc-event-name", text: name2).click
-      end
+      # within ".fc-daygrid-event-harness:not(:has(.fc-holiday))" do
+      #  first(".fc-event .fc-event-title", text: name2).click
+      # end
+      first(".fc-event .fc-event-title", text: name2).click
       wait_for_js_ready
       expect(page).to have_content(name2)
 

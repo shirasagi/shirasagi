@@ -73,19 +73,19 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".calendar-name", text: user.long_name)
           expect(page).to have_no_css(".calendar-name", text: sys_user.long_name)
 
-          expect(page).to have_css(".fc-event-name", text: item1.name)
-          expect(page).to have_no_css(".fc-event-name", text: item2.name)
-          expect(page).to have_no_css(".fc-event-name", text: item3.name)
-          expect(page).to have_no_css(".fc-event-name", text: item4.name)
+          expect(page).to have_css(".fc-event-title", text: item1.name)
+          expect(page).to have_no_css(".fc-event-title", text: item2.name)
+          expect(page).to have_no_css(".fc-event-title", text: item3.name)
+          expect(page).to have_no_css(".fc-event-title", text: item4.name)
         end
         within all(".portlet-model-schedule")[1] do
           expect(page).to have_no_css(".calendar-name", text: user.long_name)
           expect(page).to have_css(".calendar-name", text: sys_user.long_name)
 
-          expect(page).to have_no_css(".fc-event-name", text: item1.name)
-          expect(page).to have_no_css(".fc-event-name", text: item2.name)
-          expect(page).to have_css(".fc-event-name", text: item3.name)
-          expect(page).to have_no_css(".fc-event-name", text: item4.name)
+          expect(page).to have_no_css(".fc-event-title", text: item1.name)
+          expect(page).to have_no_css(".fc-event-title", text: item2.name)
+          expect(page).to have_css(".fc-event-title", text: item3.name)
+          expect(page).to have_no_css(".fc-event-title", text: item4.name)
         end
 
         # next week
@@ -93,19 +93,19 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           first(".fc-icon-chevron-right").click
           wait_for_js_ready
 
-          expect(page).to have_no_css(".fc-event-name", text: item1.name)
-          expect(page).to have_css(".fc-event-name", text: item2.name)
-          expect(page).to have_no_css(".fc-event-name", text: item3.name)
-          expect(page).to have_no_css(".fc-event-name", text: item4.name)
+          expect(page).to have_no_css(".fc-event-title", text: item1.name)
+          expect(page).to have_css(".fc-event-title", text: item2.name)
+          expect(page).to have_no_css(".fc-event-title", text: item3.name)
+          expect(page).to have_no_css(".fc-event-title", text: item4.name)
         end
         within all(".portlet-model-schedule")[1] do
           first(".fc-icon-chevron-right").click
           wait_for_js_ready
 
-          expect(page).to have_no_css(".fc-event-name", text: item1.name)
-          expect(page).to have_no_css(".fc-event-name", text: item2.name)
-          expect(page).to have_no_css(".fc-event-name", text: item3.name)
-          expect(page).to have_css(".fc-event-name", text: item4.name)
+          expect(page).to have_no_css(".fc-event-title", text: item1.name)
+          expect(page).to have_no_css(".fc-event-title", text: item2.name)
+          expect(page).to have_no_css(".fc-event-title", text: item3.name)
+          expect(page).to have_css(".fc-event-title", text: item4.name)
         end
       end
     end

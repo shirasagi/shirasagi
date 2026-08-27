@@ -19,7 +19,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
     it do
       login_user user2, to: gws_schedule_user_plans_path(site: site, user: user1)
       within ".fc-daygrid-body" do
-        expect(page).to have_css(".fc-event.fc-event-private .fc-event-name", text: I18n.t("gws/schedule.private_plan"))
+        expect(page).to have_css(".fc-event.fc-event-private .fc-event-title", text: I18n.t("gws/schedule.private_plan"))
 
         # click_on I18n.t("gws/schedule.private_plan")
         first(".fc-event.fc-event-private").click
