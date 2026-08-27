@@ -199,12 +199,8 @@ SS.ready(function() {
       eventDidMount: function(arg) {
         var event = arg.event;
         var el = arg.el;
-        // var view = arg.view;
-
         var start = moment(event.start)
-        var name = el.querySelector('.fc-event-title')?.textContent;
-        var span = $('<span class="fc-event-name"></span>').text(name);
-        el.querySelector('.fc-event-title').innerHTML = span[0].outerHTML;
+
         el.style.color = event.textColor;
 
         if (el.className.includes('fc-event-range')) {
