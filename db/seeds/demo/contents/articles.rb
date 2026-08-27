@@ -95,29 +95,25 @@ html_page5_1 = html_page5_1.join
 save_page route: "article/page", filename: "docs/page5.html", name: "市内の微小粒子状物質（PM2.5）の測定データ（速報値）を公開しています。",
   layout_id: @layouts["pages"].id, form_id: @form4.id, keywords: %w(記事 注目情報),
   column_values: [
-    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 0, head: 'h1', text: '見出し1'),
-    @form_columns4[0].value_type.new(
-      column: @form_columns4[0], order: 1, value: '記事の内容記事の内容記事の内容記事の内容記事の内容記事の内容記事の内容記事の内容'
-    ),
-    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 2, head: 'h2', text: '見出し2'),
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 0, head: 'h2', text: '見出し2'),
     @form_columns4[1].value_type.new(
-      column: @form_columns4[1], order: 3, value: "記事の内容記事の内容記事の内容記事の内容記事の内容記事の内容記事の内容記事の内容記事の内容記事の内容\n
+      column: @form_columns4[1], order: 1, value: "記事の内容記事の内容記事の内容記事の内容記事の内容記事の内容記事の内容記事の内容記事の内容記事の内容\n
         記事の内容記事の内容記事の内容記事の内容記事の内容記事の内容記事の内容記事の内容記事の内容記事の内容"
     ),
-    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 4, head: 'h3', text: '見出し3'),
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 2, head: 'h3', text: '見出し3'),
     @form_columns4[4].value_type.new(
-      column: @form_columns4[4], order: 5, file_id: file_page5_1.id, file_label: "ダミーイメージ", image_html_type: "image"
+      column: @form_columns4[4], order: 3, file_id: file_page5_1.id, file_label: "ダミーイメージ", image_html_type: "image"
     ),
-    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 6, head: 'h4', text: '見出し4'),
-    @form_columns4[6].value_type.new(
-      column: @form_columns4[6], order: 7, lists: %w(番号付きリスト 番号付きリスト 番号付きリスト)
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 4, head: 'h4', text: '見出し4'),
+    @form_columns4[9].value_type.new(
+      column: @form_columns4[9], order: 5, lists: %w(番号付きリスト 番号付きリスト 番号付きリスト)
     ),
+    @form_columns4[10].value_type.new(
+      column: @form_columns4[10], order: 6, lists: %w(番号なしリスト 番号なしリスト 番号なしリスト)
+    ),
+    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 7, value: html_page5_1),
     @form_columns4[7].value_type.new(
-      column: @form_columns4[7], order: 8, lists: %w(番号なしリスト 番号なしリスト 番号なしリスト)
-    ),
-    @form_columns4[8].value_type.new(column: @form_columns4[8], order: 9, value: html_page5_1),
-    @form_columns4[5].value_type.new(
-      column: @form_columns4[5], order: 10, file_id: file_page5_2.id, file_label: "ダミーイメージ"
+      column: @form_columns4[7], order: 8, file_id: file_page5_2.id, file_label: "ダミーイメージ"
     )
   ],
   category_ids: [@categories["attention"].id],
@@ -132,7 +128,8 @@ save_page route: "article/page", filename: "docs/page6.html", name: "還付金�
   contact_sub_group_ids: [g("シラサギ市/企画政策部/政策課/経営戦略係").id]
 save_page route: "article/page", filename: "docs/page7.html", name: "平成26年度　シラサギ市システム構築に係るの公募型企画競争",
   layout_id: @layouts["pages"].id,
-  category_ids: [@categories["oshirase"].id, @categories["shisei/soshiki"].id, @categories["shisei/soshiki/kikaku"].id],
+  category_ids: [@categories["oshirase"].id, @categories["shinchaku/oshirase"].id,
+                 @categories["shisei/soshiki"].id, @categories["shisei/soshiki/kikaku"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
@@ -141,7 +138,7 @@ save_page route: "article/page", filename: "docs/page7.html", name: "平成26年
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id],
   contact_sub_group_ids: @contact_sub_group_ids2
 save_page route: "article/page", filename: "docs/page8.html", name: "冬の感染症に備えましょう",
-  layout_id: @layouts["pages"].id, category_ids: [@categories["oshirase"].id],
+  layout_id: @layouts["pages"].id, category_ids: [@categories["oshirase"].id, @categories["shinchaku/oshirase"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
@@ -152,6 +149,7 @@ save_page route: "article/page", filename: "docs/page9.html", name: "広報SHIRA
   layout_id: @layouts["pages"].id,
   category_ids: [@categories["oshirase"].id,
                  @categories["oshirase/kurashi"].id,
+                 @categories["shinchaku/oshirase"].id,
                  @categories["shisei/soshiki"].id,
                  @categories["shisei/soshiki/kikaku"].id,
   ],
@@ -162,7 +160,7 @@ save_page route: "article/page", filename: "docs/page9.html", name: "広報SHIRA
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page10.html", name: "インフルエンザ流行警報がでています",
-  layout_id: @layouts["pages"].id, category_ids: [@categories["oshirase"].id],
+  layout_id: @layouts["pages"].id, category_ids: [@categories["oshirase"].id, @categories["shinchaku/oshirase"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
@@ -227,6 +225,7 @@ save_page route: "article/page", filename: "docs/page19.html", name: "自動交�
   layout_id: @layouts["pages"].id, keywords: %w(記事 お知らせ くらし・手続き 組織案内 企画政策部),
   category_ids: [@categories["oshirase"].id,
                  @categories["oshirase/kurashi"].id,
+                 @categories["shinchaku/oshirase"].id,
                  @categories["shisei/soshiki"].id,
                  @categories["shisei/soshiki/kikaku"].id,
   ],
@@ -245,7 +244,8 @@ save_page route: "article/page", filename: "docs/tenkyo.html", name: "転居届"
   contact_group_id: g("シラサギ市/総務部/市民課/戸籍係").id, contact_group_relation: "related",
   group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "oshirase/kurashi/page20.html", name: "犬・猫を譲り受けたい方",
-  layout_id: @layouts["pages"].id, category_ids: [@categories["oshirase"].id, @categories["oshirase/kurashi"].id],
+  layout_id: @layouts["pages"].id, category_ids: [@categories["oshirase"].id,
+                                                  @categories["oshirase/kurashi"].id, @categories["shinchaku/oshirase"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
@@ -253,7 +253,8 @@ save_page route: "article/page", filename: "oshirase/kurashi/page20.html", name:
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "oshirase/kurashi/page21.html", name: "平成26年度住宅補助金の募集について掲載しました。",
-  layout_id: @layouts["pages"].id, category_ids: [@categories["oshirase"].id, @categories["oshirase/kurashi"].id],
+  layout_id: @layouts["pages"].id,
+  category_ids: [@categories["oshirase"].id, @categories["oshirase/kurashi"].id, @categories["shinchaku/oshirase"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
@@ -264,6 +265,7 @@ save_page route: "article/page", filename: "oshirase/kurashi/page22.html", name:
   layout_id: @layouts["pages"].id,
   category_ids: [@categories["oshirase"].id,
                  @categories["oshirase/kurashi"].id,
+                 @categories["shinchaku/oshirase"].id,
                  @categories["shisei/soshiki"].id,
                  @categories["shisei/soshiki/kikaku"].id,
   ],
@@ -274,7 +276,8 @@ save_page route: "article/page", filename: "oshirase/kurashi/page22.html", name:
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "oshirase/kurashi/page23.html", name: "身体障害者手帳の認定基準が変更",
-  layout_id: @layouts["pages"].id, category_ids: [@categories["oshirase"].id, @categories["oshirase/kurashi"].id],
+  layout_id: @layouts["pages"].id,
+  category_ids: [@categories["oshirase"].id, @categories["oshirase/kurashi"].id, @categories["shinchaku/oshirase"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
@@ -285,6 +288,7 @@ save_page route: "article/page", filename: "oshirase/kurashi/page24.html", name:
   layout_id: @layouts["pages"].id,
   category_ids: [@categories["oshirase"].id,
                  @categories["oshirase/kurashi"].id,
+                 @categories["shinchaku/oshirase"].id
   ],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
@@ -334,6 +338,8 @@ save_page route: "article/page", filename: "docs/page27.html", name: "ふれあ�
   layout_id: @layouts["pages"].id, event_recurrences: [ recurrence ],
   category_ids: [@categories["oshirase"].id,
                  @categories["oshirase/event"].id,
+                 @categories["shinchaku/event"].id,
+                 @categories["shinchaku/oshirase"].id,
                  @categories["shisei/soshiki"].id,
                  @categories["shisei/soshiki/kikaku"].id,
   ],
@@ -426,7 +432,7 @@ save_page route: "article/page", filename: "docs/page29.html", name: "シラサ�
 
 save_page route: "article/page", filename: "docs/page30.html", name: "ふれあいフェスティバル開催報告",
   layout_id: @layouts["pages"].id, form_id: @form2.id, keywords: "記事, イベント",
-  category_ids: [@categories["oshirase/event"].id],
+  category_ids: [@categories["oshirase/event"].id, @categories["shinchaku/event"].id],
   column_values: [
     @form_columns2[0].value_type.new(column: @form_columns2[0], file_id: file_10_7.id, file_label: "画像1",
       image_html_type: "image"),
@@ -479,7 +485,7 @@ save_page route: "article/page", filename: "docs/page32.html", name: "インタ�
     # 名前
     @form_columns5[1].value_type.new(column: @form_columns5[1], order: 1, value: "白鷺 太郎さん"),
     # 質問
-    @form_columns5[2].value_type.new(column: @form_columns5[2], order: 2, head: "h1", text: "質問を入力します。"),
+    @form_columns5[2].value_type.new(column: @form_columns5[2], order: 2, head: "h2", text: "質問を入力します。"),
     # 画像左
     @form_columns5[4].value_type.new(column: @form_columns5[4], order: 3, file_id: file_12.id,
       file_label: "画像", image_html_type: "image"),
@@ -489,7 +495,7 @@ save_page route: "article/page", filename: "docs/page32.html", name: "インタ�
                                                                                   "回答を入力します。" * 10,
                                                                                   "回答を入力します。" * 10].join("\n")),
     # 質問
-    @form_columns5[2].value_type.new(column: @form_columns5[2], order: 5, head: "h1", text: "質問を入力します。" * 2),
+    @form_columns5[2].value_type.new(column: @form_columns5[2], order: 5, head: "h2", text: "質問を入力します。" * 2),
     # 画像右
     @form_columns5[5].value_type.new(column: @form_columns5[5], order: 6, file_id: file_13.id,
       file_label: "画像", image_html_type: "image"),
@@ -499,7 +505,7 @@ save_page route: "article/page", filename: "docs/page32.html", name: "インタ�
                                                                                   "回答を入力します。" * 10,
                                                                                   "回答を入力します。" * 10].join("\n")),
     # 質問
-    @form_columns5[2].value_type.new(column: @form_columns5[2], order: 8, head: "h1", text: "質問を入力します。" * 2),
+    @form_columns5[2].value_type.new(column: @form_columns5[2], order: 8, head: "h2", text: "質問を入力します。" * 2),
     # 回答
     @form_columns5[3].value_type.new(column: @form_columns5[3], order: 9, value: ["回答を入力します。" * 10,
                                                                                   "回答を入力します。" * 10,
@@ -512,10 +518,11 @@ recurrence = { kind: "date", start_at: Time.zone.tomorrow, frequency: "daily", u
 save_page route: "article/page", filename: "docs/page33.html", name: "第67回　小鷲町ひまわり祭りのお知らせ",
   layout_id: @layouts["pages"].id, form_id: @form4.id, keywords: %w(記事 観光 お知らせ イベント 観光・文化・スポーツ),
   column_values: [
-    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 0, value: ''),
+    @form_columns4[14].value_type.new(column: @form_columns4[14], order: 0, value: ''),
   ],
   category_ids: [
-    @categories["oshirase"].id, @categories["oshirase/event"].id, @categories["oshirase/kanko"].id
+    @categories["oshirase"].id, @categories["oshirase/event"].id,
+    @categories["oshirase/kanko"].id, @categories["shinchaku/event"].id, @categories["shinchaku/oshirase"].id
   ],
   event_name: '小鷲町　ひまわり祭り',
   event_recurrences: [ recurrence ],
@@ -531,7 +538,7 @@ save_page route: "article/page", filename: "docs/page33.html", name: "第67回�
 
 save_page route: "article/page", filename: "docs/page34.html", name: "会計年度任用職員（道路維持補修作業員）を募集します",
   layout_id: @layouts["pages"].id, form_id: @form4.id,
-  category_ids: [@categories["shisei/jinji"].id],
+  category_ids: [@categories["shisei/jinji"].id, @categories["shinchaku/jinji"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
@@ -542,7 +549,7 @@ save_page route: "article/page", filename: "docs/page34.html", name: "会計年�
 recurrence = { kind: "date", start_at: Time.zone.tomorrow, frequency: "daily", until_on: Time.zone.tomorrow }
 save_page route: "article/page", filename: "docs/page35.html", name: "第27回シラサギハーフマラソン　イベント開催！！",
   layout_id: @layouts["pages"].id, form_id: @form4.id,
-  category_ids: [@categories["oshirase/event"].id],
+  category_ids: [@categories["oshirase/event"].id, @categories["shinchaku/event"].id],
   event_recurrences: [ recurrence ],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
@@ -553,7 +560,7 @@ save_page route: "article/page", filename: "docs/page35.html", name: "第27回�
 
 save_page route: "article/page", filename: "docs/page36.html", name: "令和４年度　シラサギ市職員採用試験（後期試験）を実施します",
   layout_id: @layouts["pages"].id, form_id: @form4.id,
-  category_ids: [@categories["shisei/jinji"].id],
+  category_ids: [@categories["shisei/jinji"].id, @categories["shinchaku/jinji"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
@@ -606,8 +613,8 @@ save_page route: "article/page", filename: "docs/page40.html", name: "今月の�
       column: @form_columns4[4], order: 0, file_id: file_page40_1.id, file_label: "2022年4月号", image_html_type: "image"
     ),
     @form_columns4[2].value_type.new(column: @form_columns4[2], order: 1, head: 'h2', text: 'PDF版広報SHIRASAGI'),
-    @form_columns4[5].value_type.new(
-      column: @form_columns4[5], order: 2, file_id: file_page40_2.id, file_label: "2022年4月号"
+    @form_columns4[7].value_type.new(
+      column: @form_columns4[7], order: 2, file_id: file_page40_2.id, file_label: "2022年4月号"
     ),
   ],
   category_ids: [
@@ -670,7 +677,8 @@ save_page route: "article/page", filename: "docs/page44.html", name: "【募集�
 recurrence = { kind: "date", start_at: Time.zone.tomorrow, frequency: "daily", until_on: Time.zone.tomorrow + 1 }
 save_page route: "article/page", filename: "docs/page45.html", name: "「シラサギ市　秋の収穫祭り」開催告知",
   layout_id: @layouts["pages"].id, form_id: @form4.id,
-  category_ids: [@categories["oshirase"].id, @categories["oshirase/event"].id],
+  category_ids: [@categories["oshirase"].id, @categories["oshirase/event"].id,
+                 @categories["shinchaku/event"].id, @categories["shinchaku/oshirase"].id],
   event_name: 'シラサギ市　秋の収穫祭り',
   event_recurrences: [ recurrence ],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
@@ -708,8 +716,8 @@ save_page route: "article/page", filename: "docs/page49.html", name: "妊婦健�
   layout_id: @layouts["pages"].id, form_id: @form4.id,
   column_values: [
     @form_columns4[2].value_type.new(column: @form_columns4[2], order: 0, head: 'h2', text: '定期健診をうけましょう。'),
-    @form_columns4[7].value_type.new(
-      column: @form_columns4[7], order: 1,
+    @form_columns4[10].value_type.new(
+      column: @form_columns4[10], order: 1,
       lists: %w(妊娠初期より妊娠23週までは4週に1回 妊娠24週より妊娠35週までは2週に1回 妊娠36週以降分娩までは1週に1回)
     ),
     @form_columns4[2].value_type.new(column: @form_columns4[2], order: 2, head: 'h3', text: '対象者'),
@@ -757,7 +765,7 @@ save_page route: "article/page", filename: "docs/page50.html", name: "予防接�
 save_page route: "article/page", filename: "docs/page51.html", name: "小学校一覧",
   layout_id: @layouts["pages"].id, form_id: @form4.id, keywords: %w(記事 教育 小学校・中学校 子育て・教育),
   column_values: [
-    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 0, value: File.read("pages/docs/page51.html"))
+    @form_columns4[14].value_type.new(column: @form_columns4[14], order: 0, value: File.read("pages/docs/page51.html"))
   ],
   category_ids: [
     @categories["faq/kosodate"].id, @categories["guide/kyoiku"].id,
@@ -805,7 +813,7 @@ save_page route: "article/page", filename: "docs/page52.html", name: "移住・�
         あわせて、移住・定住を希望される方に対する支援策を展開し、住みよい地域づくりを推進しています。"
     ),
     @form_columns4[2].value_type.new(column: @form_columns4[2], order: 2, head: 'h3', text: '主な施策'),
-    @form_columns4[8].value_type.new(column: @form_columns4[8], order: 3, value: html_page52_1)
+    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 3, value: html_page52_1)
   ],
   category_ids: [
     @categories["attention"].id, @categories["faq/kurashi"].id,
@@ -865,15 +873,15 @@ save_page route: "article/page", filename: "docs/page53.html", name: "就労を�
       column: @form_columns4[2], order: 1, head: 'h2',
       text: 'ハローワーク（公共職業安定所）'
     ),
-    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 2, value: html_page53_1),
+    @form_columns4[14].value_type.new(column: @form_columns4[14], order: 2, value: html_page53_1),
     @form_columns4[2].value_type.new(
       column: @form_columns4[2], order: 3, head: 'h2', text: '移住者向け就業支援窓口（自治体独自）'
     ),
-    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 4, value: html_page53_2),
+    @form_columns4[14].value_type.new(column: @form_columns4[14], order: 4, value: html_page53_2),
     @form_columns4[2].value_type.new(
       column: @form_columns4[2], order: 5, head: 'h2', text: '職業訓練（公共訓練／求職者支援訓練）'
     ),
-    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 6, value: html_page53_3)
+    @form_columns4[14].value_type.new(column: @form_columns4[14], order: 6, value: html_page53_3)
   ],
   category_ids: [
     @categories["faq/sangyo"].id, @categories["guide/shushoku"].id,
@@ -979,15 +987,15 @@ save_page route: "article/page", filename: "docs/page54.html", name: "各種相�
       column: @form_columns4[2], order: 0, head: 'h2',
       text: '高齢者福祉の相談'
     ),
-    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 1, value: html_page54_1),
+    @form_columns4[14].value_type.new(column: @form_columns4[14], order: 1, value: html_page54_1),
     @form_columns4[2].value_type.new(
       column: @form_columns4[2], order: 2, head: 'h2', text: '障がい福祉の相談'
     ),
-    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 3, value: html_page54_2),
+    @form_columns4[14].value_type.new(column: @form_columns4[14], order: 3, value: html_page54_2),
     @form_columns4[2].value_type.new(
       column: @form_columns4[2], order: 4, head: 'h2', text: '子ども・家庭福祉の相談'
     ),
-    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 5, value: html_page54_3)
+    @form_columns4[14].value_type.new(column: @form_columns4[14], order: 5, value: html_page54_3)
   ],
   category_ids: [
     @categories["faq/kosodate"].id, @categories["faq/kenko"].id,
@@ -1043,8 +1051,8 @@ save_page route: "article/page", filename: "docs/page55.html", name: "被保険�
         速やかに関係窓口へご相談・届出をお願いいたします。"
     ),
     @form_columns4[2].value_type.new(column: @form_columns4[2], order: 1, head: 'h2', text: '必要なもの'),
-    @form_columns4[7].value_type.new(
-      column: @form_columns4[7], order: 2,
+    @form_columns4[10].value_type.new(
+      column: @form_columns4[10], order: 2,
       lists: %w(
         死亡診断書（死亡届に印刷されています。医師の証明）
         届出人の印鑑（届書への押印は任意ですが、埋火葬許可申請に必要なためご持参ください。）
@@ -1060,7 +1068,7 @@ save_page route: "article/page", filename: "docs/page55.html", name: "被保険�
     @form_columns4[2].value_type.new(
       column: @form_columns4[2], order: 5, head: 'h3', text: 'その他必要な手続きの一例'
     ),
-    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 6, value: html_page55_1)
+    @form_columns4[14].value_type.new(column: @form_columns4[14], order: 6, value: html_page55_1)
   ],
   category_ids: [
     @categories["faq/kurashi"].id, @categories["guide/okuyami"].id,
@@ -1091,23 +1099,23 @@ save_page route: "article/page", filename: "docs/page56.html", name: "葬斎場�
   keywords: %w(記事 おくやみ くらし・手続き),
   column_values: [
     @form_columns4[2].value_type.new(column: @form_columns4[2], order: 0, head: 'h2', text: '利用対象者'),
-    @form_columns4[7].value_type.new(
-      column: @form_columns4[7], order: 1,
+    @form_columns4[10].value_type.new(
+      column: @form_columns4[10], order: 1,
       lists: %w(
         市内に住民登録のある方が亡くなられた場合
         市外の方でも、一定の条件で使用可能（使用料が異なります）
       )
     ),
     @form_columns4[2].value_type.new(column: @form_columns4[2], order: 2, head: 'h2', text: '申請に必要なもの'),
-    @form_columns4[7].value_type.new(
-      column: @form_columns4[7], order: 3,
+    @form_columns4[10].value_type.new(
+      column: @form_columns4[10], order: 3,
       lists: %w(
         火葬（斎場）使用許可申請書
         死亡届受理証明書の写し
       )
     ),
     @form_columns4[2].value_type.new(column: @form_columns4[2], order: 4, head: 'h2', text: 'お問い合わせ先'),
-    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 5, value: html_page56_1),
+    @form_columns4[14].value_type.new(column: @form_columns4[14], order: 5, value: html_page56_1),
   ],
   category_ids: [
     @categories["faq/kurashi"].id, @categories["guide/okuyami"].id
@@ -1124,8 +1132,8 @@ save_page route: "article/page", filename: "docs/page57.html", name: "社会福�
         本市の福祉施策が、公正かつ効果的に実施されることを目的とし、専門的かつ中立的な立場から意見を述べる役割を担っています。"
     ),
     @form_columns4[2].value_type.new(column: @form_columns4[2], order: 1, head: 'h2', text: '主な役割'),
-    @form_columns4[7].value_type.new(
-      column: @form_columns4[7], order: 2,
+    @form_columns4[10].value_type.new(
+      column: @form_columns4[10], order: 2,
       lists: %w(
         地域福祉計画等に関する事項の審議
         社会福祉施設の設置・運営方針の検討
@@ -1437,4 +1445,174 @@ save_page route: "article/page", filename: "watersupply/page350.html", name: "�
 save_page route: "article/page", filename: "reiki/index.html", name: "例規集",
   layout_id: @layouts["pages"].id, keywords: %w(例規集),
   contact_group_id: @contact_group_id, contact_group_relation: "related",
+  group_ids: [@g_seisaku.id]
+
+file_page238_1 = save_ss_files "ss_files/article/taikyokuken.png", filename: "taikyokuken.png",
+  name: "taikyokuken.png", model: "ss/temp_file"
+recurrence = {
+  kind: "datetime", start_at: Time.zone.tomorrow + 13.hours, frequency: "weekly",
+  until_on: Time.zone.tomorrow + 7.days + 15.hours, by_days: [4]
+}
+save_page route: "article/page", filename: "courses/page238.html", name: "はじめての太極拳教室",
+  layout_id: @layouts["courses_detail"].id, form_id: @form9.id, keywords: %w(市民講座・サークル),
+  column_values: [
+    @form_columns9[0].value_type.new(column: @form_columns9[0], file_id: file_page238_1.id, file_label: "太極拳教室",
+      image_html_type: "image"),
+    @form_columns9[1].value_type.new(column: @form_columns9[1],
+      value: "ゆったりとした動きで体を整える、初心者向けの太極拳教室です。無理なく体を動かしながら、姿勢や呼吸を意識して健康づくりを行います。"),
+    @form_columns9[2].value_type.new(column: @form_columns9[2], values: %w(健康・運動)),
+    @form_columns9[3].value_type.new(column: @form_columns9[3], values: %w(一般 シニア)),
+    @form_columns9[4].value_type.new(column: @form_columns9[4], values: %w(市民センター)),
+    @form_columns9[5].value_type.new(column: @form_columns9[5], values: %w(木曜日)),
+    @form_columns9[6].value_type.new(column: @form_columns9[6], values: %w(午後)),
+    @form_columns9[7].value_type.new(column: @form_columns9[7], value: "有料"),
+    @form_columns9[8].value_type.new(column: @form_columns9[8], value: "毎週木曜日 13:00〜14:30"),
+    @form_columns9[9].value_type.new(column: @form_columns9[9], value: "月1,000円"),
+    @form_columns9[10].value_type.new(column: @form_columns9[10], value: "しらさぎ太極拳サークル"),
+    @form_columns9[11].value_type.new(column: @form_columns9[11], value: ""),
+    @form_columns9[12].value_type.new(column: @form_columns9[12], value: "動きやすい服装、室内シューズ、飲み物"),
+    @form_columns9[13].value_type.new(column: @form_columns9[13], value: "中央市民センター窓口または電話でお申し込みください。"),
+    @form_columns9[14].value_type.new(column: @form_columns9[14], value: "中央市民センター
+電話：000-000-0000"),
+    @form_columns9[15].value_type.new(column: @form_columns9[15], value: "体調に不安のある方は、事前に医師へご相談のうえご参加ください。")
+  ],
+  category_ids: [@categories["calendar/courses"].id],
+  event_name: "はじめての太極拳教室", event_recurrences: [recurrence],
+  group_ids: [@g_seisaku.id]
+file_page239_1 = save_ss_files "ss_files/article/parent_child_dance_class.jpg", filename: "parent_child_dance_class.jpg",
+  name: "parent_child_dance_class.png", model: "ss/temp_file"
+save_page route: "article/page", filename: "courses/page239.html", name: "親子リズムダンス教室",
+  layout_id: @layouts["courses_detail"].id, form_id: @form9.id, keywords: %w(市民講座・サークル),
+  column_values: [
+    @form_columns9[0].value_type.new(column: @form_columns9[0], file_id: file_page239_1.id, file_label: "親子リズムダンス教室",
+      image_html_type: "image"),
+    @form_columns9[1].value_type.new(column: @form_columns9[1],
+      value: "音楽に合わせて親子で楽しく体を動かすダンス教室です。簡単なステップやリズム遊びを通して、親子のふれあいを深めます。"),
+    @form_columns9[2].value_type.new(column: @form_columns9[2], values: %w(健康・運動 音楽)),
+    @form_columns9[3].value_type.new(column: @form_columns9[3], values: %w(子ども 親子)),
+    @form_columns9[4].value_type.new(column: @form_columns9[4], values: %w(交流センター)),
+    @form_columns9[5].value_type.new(column: @form_columns9[5], values: %w(土曜日)),
+    @form_columns9[6].value_type.new(column: @form_columns9[6], values: %w(午前)),
+    @form_columns9[7].value_type.new(column: @form_columns9[7], value: "無料"),
+    @form_columns9[8].value_type.new(column: @form_columns9[8], value: "第2・第4土曜日 10:00〜11:00"),
+    @form_columns9[9].value_type.new(column: @form_columns9[9], value: "無料"),
+    @form_columns9[10].value_type.new(column: @form_columns9[10], value: "リズムダンスクラブ"),
+    @form_columns9[11].value_type.new(column: @form_columns9[11], value: ""),
+    @form_columns9[12].value_type.new(column: @form_columns9[12], value: "動きやすい服装、飲み物、タオル"),
+    @form_columns9[13].value_type.new(column: @form_columns9[13], value: "事前申込は不要です。当日会場へお越しください。"),
+    @form_columns9[14].value_type.new(column: @form_columns9[14], value: "交流センター
+電話：000-000-0000"),
+    @form_columns9[15].value_type.new(column: @form_columns9[15], value: "未就学児は保護者同伴でご参加ください。")
+  ],
+  group_ids: [@g_seisaku.id]
+file_page240_1 = save_ss_files "ss_files/article/seasonal_cooking_class.jpg", filename: "seasonal_cooking_class.jpg",
+  name: "seasonal_cooking_class.jpg", model: "ss/temp_file"
+save_page route: "article/page", filename: "courses/page240.html", name: "季節の料理教室",
+  layout_id: @layouts["courses_detail"].id, form_id: @form9.id, keywords: %w(市民講座・サークル),
+  column_values: [
+    @form_columns9[0].value_type.new(column: @form_columns9[0], file_id: file_page240_1.id, file_label: "季節の料理教室",
+      image_html_type: "image"),
+    @form_columns9[1].value_type.new(column: @form_columns9[1],
+      value: "旬の食材を使った家庭料理を学ぶ教室です。調理の基本から盛り付けのコツまで、楽しく実践しながら身につけます。"),
+    @form_columns9[2].value_type.new(column: @form_columns9[2], values: %w(料理)),
+    @form_columns9[3].value_type.new(column: @form_columns9[3], values: %w(一般)),
+    @form_columns9[4].value_type.new(column: @form_columns9[4], values: %w(文化センター)),
+    @form_columns9[5].value_type.new(column: @form_columns9[5], values: %w(日曜日)),
+    @form_columns9[6].value_type.new(column: @form_columns9[6], values: %w(午前)),
+    @form_columns9[7].value_type.new(column: @form_columns9[7], value: "有料"),
+    @form_columns9[8].value_type.new(column: @form_columns9[8], value: "第1金曜日 18:30〜20:30"),
+    @form_columns9[9].value_type.new(column: @form_columns9[9], value: "1回500円(材料費別途)"),
+    @form_columns9[10].value_type.new(column: @form_columns9[10], value: "シラサギ料理研究会"),
+    @form_columns9[11].value_type.new(column: @form_columns9[11], value: "白鷺太郎 先生"),
+    @form_columns9[12].value_type.new(column: @form_columns9[12], value: "エプロン、三角巾、手拭きタオル"),
+    @form_columns9[13].value_type.new(column: @form_columns9[13], value: "文化センター窓口、またはお電話でお申し込みください。"),
+    @form_columns9[14].value_type.new(column: @form_columns9[14], value: "文化センター
+電話：000-000-0000"),
+    @form_columns9[15].value_type.new(column: @form_columns9[15], value: "食物アレルギーのある方は、申込時にお知らせください。")
+  ],
+  group_ids: [@g_seisaku.id]
+file_page242_1 = save_ss_files "ss_files/article/hula_dance.jpg", filename: "hula_dance.jpg",
+  name: "hula_dance.jpg", model: "ss/temp_file"
+save_page route: "article/page", filename: "courses/page242.html", name: "やさしいフラダンス",
+  layout_id: @layouts["courses_detail"].id, form_id: @form9.id, keywords: %w(市民講座・サークル),
+  column_values: [
+    @form_columns9[0].value_type.new(column: @form_columns9[0], file_id: file_page242_1.id, file_label: "シラサギフラサークル",
+      image_html_type: "image"),
+    @form_columns9[1].value_type.new(column: @form_columns9[1],
+      value: "ハワイの音楽に合わせて、ゆったり楽しく体を動かします。初心者の方も大歓迎です。"),
+    @form_columns9[2].value_type.new(column: @form_columns9[2], values: %w(健康・運動)),
+    @form_columns9[3].value_type.new(column: @form_columns9[3], values: %w(一般 シニア)),
+    @form_columns9[4].value_type.new(column: @form_columns9[4], values: %w(地域コミュニティセンター)),
+    @form_columns9[5].value_type.new(column: @form_columns9[5], values: %w(火曜日)),
+    @form_columns9[6].value_type.new(column: @form_columns9[6], values: %w(午後)),
+    @form_columns9[7].value_type.new(column: @form_columns9[7], value: "有料"),
+    @form_columns9[8].value_type.new(column: @form_columns9[8], value: "毎週火曜日 13:30〜15:00"),
+    @form_columns9[9].value_type.new(column: @form_columns9[9], value: "月2,000円"),
+    @form_columns9[10].value_type.new(column: @form_columns9[10], value: "シラサギフラサークル"),
+    @form_columns9[11].value_type.new(column: @form_columns9[11], value: "山本 花子"),
+    @form_columns9[12].value_type.new(column: @form_columns9[12], value: "動きやすい服装、タオル、飲み物"),
+    @form_columns9[13].value_type.new(column: @form_columns9[13], value: "地域コミュニティセンター窓口または電話でお申し込みください。"),
+    @form_columns9[14].value_type.new(column: @form_columns9[14], value: "山本 花子
+電話：000-000-0000"),
+    @form_columns9[15].value_type.new(column: @form_columns9[15], value: "見学・体験は随時受け付けています。事前にご連絡ください。")
+  ],
+  group_ids: [@g_seisaku.id]
+file_page243_1 = save_ss_files "ss_files/article/hyakusaitaisou.jpg", filename: "hyakusaitaisou.jpg",
+  name: "hyakusaitaisou.jpg", model: "ss/temp_file"
+save_page route: "article/page", filename: "courses/page243.html", name: "いきいき百歳体操",
+  layout_id: @layouts["courses_detail"].id, form_id: @form9.id, keywords: %w(市民講座・サークル),
+  column_values: [
+    @form_columns9[0].value_type.new(column: @form_columns9[0], file_id: file_page243_1.id, file_label: "いきいき百歳体操",
+      image_html_type: "image"),
+    @form_columns9[1].value_type.new(column: @form_columns9[1],
+      value: "椅子に座ったままでもできる、シニア向けの健康体操です。無理のない動きで筋力づくりや転倒予防を目指します。初めての方もお気軽にご参加ください。"),
+    @form_columns9[2].value_type.new(column: @form_columns9[2], values: %w(健康・運動)),
+    @form_columns9[3].value_type.new(column: @form_columns9[3], values: %w(シニア)),
+    @form_columns9[4].value_type.new(column: @form_columns9[4], values: %w(交流センター)),
+    @form_columns9[5].value_type.new(column: @form_columns9[5], values: %w(火曜日)),
+    @form_columns9[6].value_type.new(column: @form_columns9[6], values: %w(午前)),
+    @form_columns9[7].value_type.new(column: @form_columns9[7], value: "無料"),
+    @form_columns9[8].value_type.new(column: @form_columns9[8], value: "毎週火曜日 10:00〜11:00"),
+    @form_columns9[9].value_type.new(column: @form_columns9[9], value: "無料"),
+    @form_columns9[10].value_type.new(column: @form_columns9[10], value: "いきいき百歳体操クラブ"),
+    @form_columns9[11].value_type.new(column: @form_columns9[11], value: ""),
+    @form_columns9[12].value_type.new(column: @form_columns9[12], value: "動きやすい服装、室内シューズ、飲み物、タオル"),
+    @form_columns9[13].value_type.new(column: @form_columns9[13], value: "交流センター窓口または電話でお申し込みください。"),
+    @form_columns9[14].value_type.new(column: @form_columns9[14], value: "交流センター
+電話：000-000-0000"),
+    @form_columns9[15].value_type.new(column: @form_columns9[15], value: "体調に不安のある方は、事前に医師へご相談のうえご参加ください。")
+  ],
+  group_ids: [@g_seisaku.id]
+file_page244_1 = save_ss_files "ss_files/article/gardening.jpg", filename: "gardening.jpg",
+  name: "gardening.jpg", model: "ss/temp_file"
+recurrence = {
+  kind: "datetime", start_at: Time.zone.tomorrow + 9.hours, end_at: Time.zone.tomorrow + 11.hours,
+  frequency: "daily", until_on: Time.zone.tomorrow
+}
+save_page route: "article/page", filename: "courses/page244.html", name: "ガーデニング入門",
+  layout_id: @layouts["courses_detail"].id, form_id: @form9.id, keywords: %w(市民講座・サークル),
+  column_values: [
+    @form_columns9[0].value_type.new(column: @form_columns9[0], file_id: file_page244_1.id, file_label: "ガーデニング入門",
+      image_html_type: "image"),
+    @form_columns9[1].value_type.new(column: @form_columns9[1],
+      value: "季節の花や野菜を育てる楽しさを、基礎から学べるサークルです。土や植物にふれる癒しの時間を一緒に楽しみましょう。"),
+    @form_columns9[2].value_type.new(column: @form_columns9[2], values: %w(園芸・自然)),
+    @form_columns9[3].value_type.new(column: @form_columns9[3], values: %w(一般 シニア)),
+    @form_columns9[4].value_type.new(column: @form_columns9[4], values: %w(市民センター)),
+    @form_columns9[5].value_type.new(column: @form_columns9[5], values: %w(不定期)),
+    @form_columns9[6].value_type.new(column: @form_columns9[6], values: %w(午前)),
+    @form_columns9[7].value_type.new(column: @form_columns9[7], value: "有料"),
+    @form_columns9[8].value_type.new(column: @form_columns9[8], value: "毎月1回不定期"),
+    @form_columns9[9].value_type.new(column: @form_columns9[9], value: "材料費500円〜"),
+    @form_columns9[10].value_type.new(column: @form_columns9[10], value: "やさいくらぶ"),
+    @form_columns9[11].value_type.new(column: @form_columns9[11], value: "佐藤 みどり"),
+    @form_columns9[12].value_type.new(column: @form_columns9[12], value: "軍手、帽子、飲み物"),
+    @form_columns9[13].value_type.new(column: @form_columns9[13], value: "市民センター窓口または電話でお申し込みください。"),
+    @form_columns9[14].value_type.new(column: @form_columns9[14], value: "市民センター
+電話：000-000-0000"),
+    @form_columns9[15].value_type.new(column: @form_columns9[15], value: "雨天時は中止になる場合があります。
+道具がある方は持参くださっても大丈夫です。")
+  ],
+  category_ids: [@categories["calendar/courses"].id],
+  event_name: "ガーデニング入門", event_recurrences: [recurrence],
   group_ids: [@g_seisaku.id]

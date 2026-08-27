@@ -1,0 +1,107 @@
+<div class="date">
+  <div class="date__main">
+    <div class="date__head">
+      <div class="daily">
+        {% if active? and events.size > 0 %}
+          <a href="{{ daily_url }}">{{ day }}</a>
+        {% else %}
+          {{ day }}
+        {% endif %}
+      </div>
+
+      {% if holiday? %}
+        <div class="holiday">{{ holiday_name }}</div>
+      {% endif %}
+    </div>
+
+    {% if events.size == 0 %}
+      <div class="no-event">{{ substitute_html }}</div>
+    {% endif %}
+
+    <div class="event__wrap">
+      {% for event in events %}
+        {% unless event.url contains "courses" %}
+          <div class="page page--event {{ event.multiple_or_single_days }}"
+              data-id="{{ event.data_id }}"
+              data-start-date="{{ event.data_start_date }}"
+              data-end-date="{{ event.data_end_date }}">
+
+            <div class="event">
+              <a href="{{ event.url }}">
+                <span class="event__meta">
+                  {% if event.category %}
+                    <span class="event-cat data {{ event.category.basename }}">
+                      <span class="event-cat__icon" aria-hidden="true"></span>
+                      <span class="event-cat__text">{{ event.category.name }}</span>
+                    </span>
+                  {% endif %}
+
+                  {% assign has_datetime = false %}
+
+                  {% for specific in event.specifics %}
+                    {% if specific.datetime? %}
+                      {% assign has_datetime = true %}
+                      <span class="event__time {{ specific.kind }}">
+                        <time datetime="{{ specific.start_at | ss_time: "iso" }}" class="start">
+                          {{ specific.start_at | ss_time: "h_mm" }}
+                        </time>
+                      </span>
+                    {% endif %}
+                  {% endfor %}
+
+                  {% unless has_datetime %}
+                    <span class="event__time event__time--allday">終日</span>
+                  {% endunless %}
+                </span>
+
+                <span class="name">{{ event.name }}</span>
+              </a>
+            </div>
+          </div>
+        {% endunless %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="course__wrap">
+    {% for event in events %}
+      {% if event.url contains "courses" %}
+        <div class="page course page--course {{ event.multiple_or_single_days }}"
+            data-id="{{ event.data_id }}"
+            data-start-date="{{ event.data_start_date }}"
+            data-end-date="{{ event.data_end_date }}">
+
+          <a href="{{ event.url }}" class="course__link">
+            <span class="course__meta">
+              {% if event.category %}
+                <span class="event-cat data {{ event.category.basename }}">
+                  <span class="event-cat__icon" aria-hidden="true"></span>
+                  <span class="event-cat__text">{{ event.category.name }}</span>
+                </span>
+              {% endif %}
+
+              {% assign has_datetime = false %}
+
+              {% for specific in event.specifics %}
+                {% if specific.datetime? %}
+                  {% assign has_datetime = true %}
+                  <span class="course__time {{ specific.kind }}">
+                    <time datetime="{{ specific.start_at | ss_time: "iso" }}" class="course__start">
+                      {{ specific.start_at | ss_time: "h_mm" }}
+                    </time>
+                  </span>
+                {% endif %}
+              {% endfor %}
+
+              {% unless has_datetime %}
+                <span class="course__time course__time--allday">終日</span>
+              {% endunless %}
+            </span>
+
+            <span class="course__name">{{ event.name }}</span>
+          </a>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>

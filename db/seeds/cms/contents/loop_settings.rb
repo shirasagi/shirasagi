@@ -705,3 +705,20 @@ save_loop_setting(
   order: 381,
   html: "{{ page.event_recurrences | event_recurrence_summary }}"
 )
+
+save_loop_setting(
+  name: "カテゴリー/カテゴリーリスト",
+  loop_html_setting_type: "template",
+  description: "カテゴリーリストを表示",
+  html_format: "shirasagi",
+  state: "public",
+  html: '<article class="#{class}">
+  <header>
+    <h2><a href="#{url}">#{index_name}</a></h2>
+  </header>
+  <p>#{summary}</p>
+</article>'
+)
+
+array = Cms::LoopSetting.where(site_id: @site._id).map { |m| [m.name, m] }
+@loop_settings = Hash[*array.flatten]

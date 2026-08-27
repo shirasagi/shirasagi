@@ -10,7 +10,8 @@ def save_node(data)
   }
 
   item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_initialize_by(cond)
-  %w(html upper_html loop_html lower_html substitute_html loop_liquid summary_html).each do |field|
+  %w(html upper_html loop_html lower_html substitute_html loop_liquid summary_html
+     table_day_loop_liquid list_day_loop_liquid daily_list_loop_liquid).each do |field|
     item.try(:"#{field}=", File.read("nodes/" + data[:filename] + ".#{field}")) rescue nil
   end
   item.attributes = data
@@ -67,22 +68,28 @@ article_map_search.update
 
 ## category
 save_node route: "category/node", filename: "guide", name: "くらしのガイド", sort: 'order', loop_format: 'liquid'
-save_node route: "category/node", filename: "kanko", name: "観光・文化・スポーツ", order: 40
-save_node route: "category/node", filename: "kenko", name: "健康・福祉", order: 30
-save_node route: "category/node", filename: "kosodate", name: "子育て・教育", order: 20
-save_node route: "category/node", filename: "kurashi", name: "くらし・手続き", order: 10
+save_node route: "category/node", filename: "kanko", name: "観光・文化・スポーツ", order: 40,
+  loop_setting_id: @loop_settings['カテゴリー/カテゴリーリスト'].id
+save_node route: "category/node", filename: "kenko", name: "健康・福祉", order: 30,
+  loop_setting_id: @loop_settings['カテゴリー/カテゴリーリスト'].id
+save_node route: "category/node", filename: "kosodate", name: "子育て・教育", order: 20,
+  loop_setting_id: @loop_settings['カテゴリー/カテゴリーリスト'].id
+save_node route: "category/node", filename: "kurashi", name: "くらし・手続き", order: 10,
+  loop_setting_id: @loop_settings['カテゴリー/カテゴリーリスト'].id
 save_node route: "category/page", filename: "kurashi/anzen", name: "交通安全・防犯", order: 10
 save_node route: "category/page", filename: "kurashi/bosai", name: "防災情報", order: 20
 save_node route: "category/page", filename: "kurashi/kankyo", name: "環境", order: 40
 save_node route: "category/page", filename: "kurashi/koseki", name: "戸籍・印鑑登録・住民登録", order: 50
 save_node route: "category/page", filename: "kurashi/nenkin", name: "年金・保険", order: 60
 save_node route: "category/page", filename: "kurashi/zeikin", name: "税金", order: 110
-save_node route: "category/node", filename: "sangyo", name: "産業・仕事", order: 50
+save_node route: "category/node", filename: "sangyo", name: "産業・仕事", order: 50,
+  loop_setting_id: @loop_settings['カテゴリー/カテゴリーリスト'].id
 save_node route: "category/page", filename: "sangyo/keiei", name: "経営支援・金融支援・企業立", order: 20
 save_node route: "category/page", filename: "sangyo/nyusatsu", name: "入札・契約", order: 30
 save_node route: "category/page", filename: "sangyo/shinko", name: "産業振興", order: 40
 save_node route: "category/page", filename: "sangyo/todokede", name: "届出・証明・法令・規制", order: 70
-save_node route: "category/node", filename: "shisei", name: "市政情報", order: 60
+save_node route: "category/node", filename: "shisei", name: "市政情報", order: 60,
+  loop_setting_id: @loop_settings['カテゴリー/カテゴリーリスト'].id
 save_node route: "category/page", filename: "shisei/koho", name: "広報・広聴", order: 40
 save_node route: "category/page", filename: "attention", name: "注目情報"
 save_node route: "category/page", filename: "guide/fukushi", name: "福祉・介護", order: 70
@@ -201,7 +208,8 @@ save_node route: "category/node", filename: "shisei/soshiki/kikikanri", name: "�
 save_node route: "category/page", filename: "shisei/toke", name: "統計・人口", order: 90
 save_node route: "category/page", filename: "shisei/toshi", name: "都市整備", order: 100
 save_node route: "category/page", filename: "shisei/zaisei", name: "財政・行政改革", order: 110
-save_node route: "category/page", filename: "urgency", name: "緊急情報", shortcuts: %w(system quota)
+save_node route: "category/page", filename: "urgency", name: "緊急情報", shortcuts: %w(system quota),
+  view_route: 'article/page'
 save_node route: "category/node", filename: "faq", name: "よくある質問", sort: "order", loop_format: 'liquid'
 save_node route: "category/page", filename: "faq/kurashi", name: "くらし・手続き", order: 10
 save_node route: "category/page", filename: "faq/kosodate", name: "子育て・教育", order: 20
@@ -209,6 +217,8 @@ save_node route: "category/page", filename: "faq/kenko", name: "健康・福祉"
 save_node route: "category/page", filename: "faq/kanko", name: "観光・文化・スポーツ", order: 40
 save_node route: "category/page", filename: "faq/sangyo", name: "産業・仕事", order: 50
 save_node route: "category/page", filename: "faq/shisei", name: "市政情報", order: 60
+save_node route: "category/page", filename: "calendar/courses", name: "市民講座",
+  group_ids: [@g_seisaku.id]
 save_node route: "category/page", filename: "calendar/bunka", name: "文化・芸術", order: 10
 save_node route: "category/page", filename: "calendar/kohen", name: "講演・講座", order: 20
 save_node route: "category/page", filename: "calendar/sports", name: "スポーツ", order: 60
@@ -216,7 +226,8 @@ save_node route: "event/search", filename: "calendar/search", name: "イベン�
 save_node route: "category/node", filename: "download", name: "申請書ダウンロード",
   layout_id: @layouts["category-top"].id, sort: 'order', child_limit: 0
 save_node route: "category/node", filename: "kohoshi", name: "広報シラサギ",
-  layout_id: @layouts["category-top"].id, sort: 'order', child_limit: 0
+  layout_id: @layouts["category-top"].id, sort: 'order',
+  loop_setting_id: @loop_settings['カテゴリー/カテゴリーリスト'].id, child_limit: 0
 save_node route: "category/page", filename: "kohoshi/kongetsukoho", name: "今月の広報シラサギ",
   layout_id: @layouts["pages"].id, summary_html: "今月の広報シラサギを掲載しています。",
   order: 10, new_days: 0, loop_format: 'liquid'
@@ -224,14 +235,26 @@ save_node route: "category/page", filename: "kohoshi/kakopdf", name: "過去のP
   layout_id: @layouts["more"].id, summary_html: "過去の広報シラサギを掲載しています。",
   order: 20, new_days: 0
 save_node route: "category/page", filename: "topics", name: "街の話題", layout_id: @layouts["more"].id
+save_node route: "category/page", filename: "shinchaku", name: "新着情報", layout_id: @layouts["more"].id,
+  conditions: %w(shinchaku/oshirase shinchaku/event shinchaku/jinji), new_days: 0,
+  default_release_days_after: 3, default_close_days_after: 1000
+save_node route: "category/page", filename: "shinchaku/oshirase", name: "お知らせ",
+  order: 10, keywords: %w(新着情報), sort: 'released -1', new_days: 0,
+  default_release_days_after: 3, default_close_days_after: 1000, group_ids: [@g_seisaku.id]
+save_node route: "category/page", filename: "shinchaku/event", name: "イベント",
+  order: 20, keywords: %w(新着情報), sort: 'released -1', new_days: 0,
+  default_release_days_after: 3, default_close_days_after: 1000, group_ids: [@g_seisaku.id]
+save_node route: "category/page", filename: "shinchaku/jinji", name: "人事教員募集",
+  order: 30, keywords: %w(新着情報), sort: 'released -1', new_days: 0,
+  default_release_days_after: 3, default_close_days_after: 1000, group_ids: [@g_seisaku.id]
 
 array = Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename, m] }
 @categories = Hash[*array.flatten]
 
 ## node
 save_node route: "cms/node", filename: "use", name: "ご利用案内"
-save_node route: "cms/page", filename: "shinchaku", name: "新着情報", layout_id: @layouts["more"].id,
-  conditions: %w(oshirase oshirase/event shisei/jinji), new_days: 0
+save_node route: "cms/node", filename: "bosai-guide", name: "防災ガイド", new_days: 0,
+  group_ids: [@g_seisaku.id]
 
 ## archive
 save_node route: "cms/archive", filename: "docs/archive", name: "月別アーカイブ", layout_id: @layouts["more"].id,
@@ -259,9 +282,9 @@ save_node route: "cms/site_search", filename: "search", name: "サイト内検�
 save_node route: "sitemap/page", filename: "sitemap", name: "サイトマップ"
 
 ## event
-save_node route: "event/page", filename: "calendar", name: "イベントカレンダー", conditions: %w(docs),
+save_node route: "event/page", filename: "calendar", name: "イベントカレンダー", conditions: %w(docs courses),
   event_display: "table", event_display_tabs: %w(list table map),
-  st_category_ids: %w(calendar/bunka calendar/kohen calendar/sports).map { |c| @categories[c].id }
+  st_category_ids: %w(calendar/bunka calendar/kohen calendar/sports calendar/courses).map { |c| @categories[c].id }
 
 ## uploader
 save_node route: "uploader/file", filename: "css", name: "CSS", shortcuts: %w(system quota)
@@ -469,7 +492,8 @@ save_node route: "key_visual/image", filename: "key-visual", name: "キービジ
 
 ## guide
 @guide_node = save_node route: "guide/guide", filename: "purpose-guide", name: "移住目的別ガイド",
-  layout_id: @layouts["general"].id, guide_index_html: '<p class="guide__text">移住に必要な手続きをご案内いたします。</p>'
+  layout_id: @layouts["general"].id, guide_index_html: '<p class="guide__text">移住に必要な手続きをご案内いたします。</p>',
+  loop_format: 'liquid'
 
 ## line
 save_node route: "cms/line_hub", filename: "receiver", name: "LINE HUB", layout_id: @layouts["general"].id
@@ -513,7 +537,20 @@ save_node route: "article/form_export", filename: "export", name: "避難所情�
 @form_db3.node = @node_form_db3
 @form_db3.update
 
+## form search
+save_node route: "article/page", filename: "courses", name: "市民講座・サークル", limit: 100,
+  loop_format: 'liquid', st_form_ids: [@form9.id],
+  st_category_ids: [@categories["calendar/courses"].id], group_ids: [@g_seisaku.id]
+save_node route: "cms/form_search", filename: "courses/search", name: "市民講座・サークルを絞り込み",
+  layout_id: @layouts["courses_list"].id, new_days: 0, loop_format: 'liquid', group_ids: [@g_seisaku.id]
+
 ## lsorg
 @lsorg_node = save_node route: "lsorg/node", filename: "organization", name: "組織案内",
   layout_id: @layouts["organization"].id, root_group_ids: [@g_ss.id]
 Lsorg::ImportGroupsJob.bind(site_id: @site.id, node_id: @lsorg_node.id).perform_now
+
+## article search
+save_node route: "article/search", filename: "docs/search", name: "記事検索", keywords: %w(記事),
+  conditions: 'docs', sort: 'updated -1', new_days: 0,
+  st_category_ids: [@categories["oshirase"].id, @categories["oshirase/event"].id, @categories["shisei/jinji"].id],
+  group_ids: [@g_seisaku.id]

@@ -20,6 +20,9 @@ save_page route: "cms/page", filename: "list/two.html", name: "ページ２", la
   released_type: 'same_as_updated'
 save_page route: "cms/page", filename: "list/three.html", name: "ページ３", layout_id: @layouts["pages"].id,
   released_type: 'same_as_updated'
-save_page route: "cms/page", filename: "shisei/shicho/index.html ", name: "市長の部屋",
+save_page route: "cms/page", filename: "shisei/shicho/index.html", name: "市長の部屋",
   layout_id: @layouts["pages"].id, keywords: %w(市長の部屋),
+  contact_group_id: @contact_group_id, group_ids: [@g_seisaku.id]
+save_page route: "cms/page", filename: "bosai-guide/index.html ", name: "もしものときの防災ガイド",
+  layout_id: @layouts["bosai-guide/bosai-guide"].id, keywords: %w(防災ガイド),
   contact_group_id: @contact_group_id, group_ids: [@g_seisaku.id]

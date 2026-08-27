@@ -1,0 +1,76 @@
+<header class="courses-list__search-header">
+    <h3 class="courses-list__search-header-title">参加したい講座・サークルを探す</h3>
+</header>
+<div class="courses-list__search-body">
+  <form class="courses-list__search-form" action="/courses/search/" method="get">
+    <div class="courses-list__search-list">
+      <fieldset class="courses-list__search-item">
+        <legend class="courses-list__search-item-title">ジャンル</legend>
+        <div class="courses-list__search-item-box">
+          <label><input type="checkbox" name="s[col][絞り込み条件_ジャンル][]" value="健康・運動">健康・運動</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_ジャンル][]" value="文化・芸術">文化・芸術</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_ジャンル][]" value="音楽">音楽</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_ジャンル][]" value="料理">料理</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_ジャンル][]" value="語学">語学</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_ジャンル][]" value="パソコン・IT">パソコン・IT</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_ジャンル][]" value="園芸・自然">園芸・自然</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_ジャンル][]" value="歴史・郷土">歴史・郷土</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_ジャンル][]" value="その他">その他</label>
+        </div>
+      </fieldset>
+      <fieldset class="courses-list__search-item">
+        <legend class="courses-list__search-item-title">対象</legend>
+        <div class="courses-list__search-item-box">
+          <label><input type="checkbox" name="s[col][絞り込み条件_対象][]" value="子ども">子ども</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_対象][]" value="親子">親子</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_対象][]" value="一般">一般</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_対象][]" value="シニア">シニア</label>
+        </div>
+      </fieldset>
+      <fieldset class="courses-list__search-item">
+        <legend class="courses-list__search-item-title">活動場所</legend>
+        <div class="courses-list__search-item-box">
+          <label><input type="checkbox" name="s[col][絞り込み条件_活動場所][]" value="市民センター">市民センター</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_活動場所][]" value="交流センター">交流センター</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_活動場所][]" value="文化センター">文化センター</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_活動場所][]" value="生涯学習センター">生涯学習センター</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_活動場所][]" value="地域コミュニティセンター">地域コミュニティセンター</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_活動場所][]" value="オンライン">オンライン</label>
+        </div>
+      </fieldset>
+      <fieldset class="courses-list__search-item">
+        <legend class="courses-list__search-item-title">曜日</legend>
+        <div class="courses-list__search-item-box">
+          <label><input type="checkbox" name="s[col][絞り込み条件_曜日][]" value="月曜日">月曜日</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_曜日][]" value="火曜日">火曜日</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_曜日][]" value="水曜日">水曜日</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_曜日][]" value="木曜日">木曜日</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_曜日][]" value="金曜日">金曜日</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_曜日][]" value="土曜日">土曜日</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_曜日][]" value="日曜日">日曜日</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_曜日][]" value="不定期">不定期</label>
+        </div>
+      </fieldset>
+      <fieldset class="courses-list__search-item">
+        <legend class="courses-list__search-item-title">時間帯</legend>
+        <div class="courses-list__search-item-box">
+          <label><input type="checkbox" name="s[col][絞り込み条件_時間帯][]" value="午前">午前</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_時間帯][]" value="午後">午後</label>
+          <label><input type="checkbox" name="s[col][絞り込み条件_時間帯][]" value="夜間">夜間</label>
+        </div>
+      </fieldset>
+      <fieldset class="courses-list__search-item">
+        <legend class="courses-list__search-item-title">参加費</legend>
+        <div class="courses-list__search-item-box">
+          <label><input type="radio" name="s[col][絞り込み条件_参加費]" value="" checked>指定なし</label>
+          <label><input type="radio" name="s[col][絞り込み条件_参加費]" value="無料">無料</label>
+          <label><input type="radio" name="s[col][絞り込み条件_参加費]" value="有料">有料</label>
+        </div>
+      </fieldset>
+    </div>
+    <div class="courses-list__search-buttons">
+      <button type="submit">この条件で絞り込む</button>
+      <a class="courses-list__search-buttons-clear" href="/courses/">条件をクリア</a>
+    </div>
+  </form>
+</div>

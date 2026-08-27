@@ -23,32 +23,69 @@ end
 
 puts "# inquiry"
 
-column_name_html = File.read("columns/name.html") rescue nil
-column_company_html = File.read("columns/company.html") rescue nil
-column_email_html = File.read("columns/email.html") rescue nil
 column_gender_html = File.read("columns/gender.html") rescue nil
 column_age_html = File.read("columns/age.html") rescue nil
-column_category_html = File.read("columns/category.html") rescue nil
-column_question_html = File.read("columns/question.html") rescue nil
-save_inquiry_column node_id: @inquiry_node.id, name: "お名前", order: 0, input_type: "text_field",
-  html: column_name_html, select_options: [], required: "required", site_id: @site._id
-save_inquiry_column node_id: @inquiry_node.id, name: "企業・団体名", order: 10, input_type: "text_field",
-  html: column_company_html, select_options: [], required: "optional", site_id: @site._id
+column_master_section_html = File.read("columns/master_section.html") rescue nil
+column_file_html = File.read("columns/file.html") rescue nil
+column_privacy_html = File.read("columns/privacy.html") rescue nil
+column_master_section = save_inquiry_column node_id: @inquiry_node.id, name: "お問い合わせ種別", order: 0, input_type: "radio_button",
+  html: column_master_section_html,
+  select_options: %w(市政へのご意見・ご要望 手続・申請について 道路・公園・施設の不具合について イベント・講座について その他),
+  required: "required", additional_attr: 'class="inquiry-type"', site_id: @site._id
+column_branch_section1 = save_inquiry_column node_id: @inquiry_node.id, name: "市政へのご意見・ご要望", order: 1, input_type: "section",
+  site_id: @site._id
+save_inquiry_column node_id: @inquiry_node.id, name: "ご意見・ご要望内容", order: 2, input_type: "text_area",
+  required: "required", site_id: @site._id
+column_branch_section2 = save_inquiry_column node_id: @inquiry_node.id, name: "手続き・申請について", order: 3, input_type: "section",
+  site_id: @site._id
+save_inquiry_column node_id: @inquiry_node.id, name: "手続名", order: 4, input_type: "text_field",
+  required: "required", site_id: @site._id
+save_inquiry_column node_id: @inquiry_node.id, name: "手続でお困りの内容", order: 5, input_type: "text_area",
+  required: "required", site_id: @site._id
+column_branch_section3 = save_inquiry_column node_id: @inquiry_node.id, name: "道路・公園・施設の不具合について", order: 6, input_type: "section",
+  site_id: @site._id
+save_inquiry_column node_id: @inquiry_node.id, name: "手続名", order: 7, input_type: "text_field",
+  required: "required", site_id: @site._id
+save_inquiry_column node_id: @inquiry_node.id, name: "発見日時", order: 8, input_type: "datetime_field",
+  required: "required", additional_attr: 'class="discovery-date"', site_id: @site._id
+save_inquiry_column node_id: @inquiry_node.id, name: "状況の詳細", order: 9, input_type: "text_area",
+  required: "required", site_id: @site._id
+save_inquiry_column node_id: @inquiry_node.id, name: "添付ファイル", order: 10, input_type: "upload_file",
+  html: column_file_html, required: "optional", site_id: @site._id
+column_branch_section4 = save_inquiry_column node_id: @inquiry_node.id, name: "イベント・講座について", order: 11, input_type: "section",
+  site_id: @site._id
+save_inquiry_column node_id: @inquiry_node.id, name: "イベント名", order: 11, input_type: "text_field",
+  required: "required", site_id: @site._id
+save_inquiry_column node_id: @inquiry_node.id, name: "開催日", order: 12, input_type: "date_field",
+  required: "required", additional_attr: 'class="discovery-date"', site_id: @site._id
+save_inquiry_column node_id: @inquiry_node.id, name: "お問い合わせ内容", order: 13, input_type: "text_area",
+  required: "required", site_id: @site._id
+column_branch_section5 = save_inquiry_column node_id: @inquiry_node.id, name: "その他", order: 14, input_type: "section",
+  site_id: @site._id
+save_inquiry_column node_id: @inquiry_node.id, name: "お問い合わせ内容", order: 15, input_type: "text_area",
+  required: "required", site_id: @site._id
+save_inquiry_column node_id: @inquiry_node.id, name: "共通項目", order: 16, input_type: "section",
+  site_id: @site._id
+save_inquiry_column node_id: @inquiry_node.id, name: "お住まい", order: 17, input_type: "radio_button",
+  select_options: %w(市内 市外 その他),
+  required: "optional", site_id: @site._id
+save_inquiry_column node_id: @inquiry_node.id, name: "回答希望", order: 18, input_type: "form_select",
+  select_options: %w(回答を希望する 回答不要),
+  required: "required", site_id: @site._id
+save_inquiry_column node_id: @inquiry_node.id, name: "お名前", order: 19, input_type: "text_field",
+  required: "required", site_id: @site._id
 save_inquiry_column node_id: @inquiry_node.id, name: "メールアドレス", order: 20, input_type: "email_field",
-  html: column_email_html, select_options: [], required: "required",
-  input_confirm: "enabled", site_id: @site._id
-save_inquiry_column node_id: @inquiry_node.id, name: "性別", order: 30, input_type: "radio_button",
-  html: column_gender_html, select_options: %w(男性 女性), required: "required", site_id: @site._id
-save_inquiry_column node_id: @inquiry_node.id, name: "年齢", order: 40, input_type: "select",
-  html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代),
-  required: "required", site_id: @site._id
-save_inquiry_column node_id: @inquiry_node.id, name: "お問い合わせ区分", order: 50, input_type: "check_box",
-  html: column_category_html, select_options: %w(市政について ご意見・ご要望 申請について その他),
-  required: "required", site_id: @site._id
-save_inquiry_column node_id: @inquiry_node.id, name: "お問い合わせ内容", order: 60, input_type: "text_area",
-  html: column_question_html, select_options: [], required: "required", site_id: @site._id
-save_inquiry_column node_id: @inquiry_node.id, name: "添付ファイル", order: 70, input_type: "upload_file",
-  select_options: [], required: "optional", site_id: @site._id
+  required: "optional", required_in_select_form: %w(回答を希望する), site_id: @site._id
+save_inquiry_column node_id: @inquiry_node.id, name: "年齢", order: 21, input_type: "select",
+  select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代),
+  required: "optional", site_id: @site._id
+save_inquiry_column node_id: @inquiry_node.id, name: "個人情報の取り扱い", order: 22, input_type: "check_box",
+  select_options: %w(個人情報の取り扱いについて同意します。),
+  html: column_privacy_html, required: "required", site_id: @site._id
+column_master_section.update(branch_section_ids: [
+  column_branch_section1.id, column_branch_section2.id, column_branch_section3.id,
+  column_branch_section4.id, column_branch_section5.id
+])
 
 puts "# inquiry public comment"
 save_inquiry_column node_id: @inquiry_comment1.id, name: "性別", order: 0, input_type: "radio_button",
@@ -202,6 +239,8 @@ Cms::Node.where(site_id: @site._id, route: /^article\//, filename: "hinanjo").
   update_all(layout_id: @layouts["general"].id)
 Cms::Node.where(site_id: @site._id, route: /^article\//, filename: "watersupply").
   update_all(layout_id: @layouts["general"].id)
+Cms::Node.where(site_id: @site._id, route: /^article\//, filename: "courses").
+  update_all(layout_id: @layouts["courses_list"].id, page_layout_id: @layouts["courses_detail"].id)
 Cms::Node.where(site_id: @site._id, route: /^event\//, filename: "calendar").
   update_all(layout_id: @layouts["event-top"].id)
 Cms::Node.where(site_id: @site._id, route: /^event\//, filename: "calendar/search").
@@ -231,6 +270,8 @@ Cms::Node.where(site_id: @site._id, route: /^category\//, filename: /^guide\//).
 Cms::Node.where(site_id: @site._id, route: /^category\//, filename: /^hinanjo\//).
   update_all(layout_id: @layouts["more"].id)
 Cms::Node.where(site_id: @site._id, route: /^category\//, filename: /^oshirase\//).
+  update_all(layout_id: @layouts["more"].id)
+Cms::Node.where(site_id: @site._id, route: /^category\//, filename: /^shinchaku\//).
   update_all(layout_id: @layouts["more"].id)
 Cms::Node.where(site_id: @site._id, route: /^category\//, filename: "urgency").
   update_all(layout_id: @layouts["more"].id)

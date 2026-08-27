@@ -1,0 +1,152 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
+    <link href="/css/style.css" media="all" rel="stylesheet" />
+    <script src="/js/common.js"></script>
+    {{ part "/favicon" }}
+  </head>
+
+  <body class="general bosai-gaide">
+    <div id="page">
+      <div class="accessibility">
+        <div class="accessibility-inner">
+          <p class="accessibility__contentlink"><a href="#wrap">本文へ</a></p>
+          <p class="accessibility__uselink"><a href="/use/">ご利用案内</a></p>
+          <div class="accessibility__translate translate-wrap">
+            <div class="translate-box">
+              {{ part "/translate" }}
+            </div>
+          </div>
+          {{ part "/tool" }}
+        </div><!-- /.accessibility-inner -->
+      </div><!-- .accessibility -->
+
+      <header id="head">
+        <div class="head__utility-wrap">
+          <h1 class="siteinfo__logo">
+            <a href="/"><img src="/img/logo.png" alt="シラサギ市" title="シラサギ市 ポータルサイト" /></a>
+          </h1>
+          <div class="head__utility">
+            <div class="head__utility-inner head__utility-inner--upper">
+              <div class="head-inquiry">
+                <a href="/inquiry/">お問い合わせ</a>
+              </div>
+              <div class="head-organization">
+                <a href="/organization/">組織案内</a>
+              </div>
+              <div class="head-mypage">
+                {{ part "/login/login" }}
+              </div>
+            </div><!-- .head__utility-inner -->
+            <div class="head__utility-inner head__utility-inner--under">
+              {{ part "/search/search" }}
+              {{ part "/keyword" }}
+            </div>
+          </div><!-- /.head__utility -->
+        </div><!-- /.head__utility-wrap -->
+      </header>
+
+      {{ part "/navi" }}
+
+      <div id="wrap" class="wrap">
+        <div class="wrap__inner">
+          {{ part "/breadcrumb" }}
+
+          <div id="content">
+            <main id="main">
+              <div class="main-inner">
+                <header class="bosai-header">
+                  <h2 class="bosai-header__title">
+                    もしものときの防災ガイド
+                    <span>災害への備えや、発生時に確認したい情報をまとめています。</span>
+                  </h2>
+                </header>
+                {{ part "/kurashi/bosai/urgency-disaster-top-list" }}
+                <section class="bosai-check">
+                  <h2 class="bosai-section__title">備えよう・確認しよう</h2>
+                  <ul class="bosai-check-list">
+                    <li class="bosai-check-item bosai-check-item--shelter">
+                      <a class="bosai-check-item__link" href="/hinanjo/">
+                        <span class="bosai-check-item__title">避難所検索</span>
+                        <span class="bosai-check-item__text">近くの避難所を確認する</span>
+                      </a>
+                    </li>
+                    <li class="bosai-check-item bosai-check-item--hazard">
+                      <a class="bosai-check-item__link" href="/docs/page43.html">
+                        <span class="bosai-check-item__title">Web版<br>ハザードマップ</span>
+                        <span class="bosai-check-item__text">自宅周辺の危険箇所を確認する</span>
+                      </a>
+                    </li>
+                    <li class="bosai-check-item bosai-check-item--info">
+                      <a class="bosai-check-item__link" href="/kurashi/bosai/">
+                        <span class="bosai-check-item__title">防災情報</span>
+                        <span class="bosai-check-item__text">防災に関する情報を確認する</span>
+                      </a>
+                    </li>
+                    <li class="bosai-check-item bosai-check-item--emergency">
+                      <a class="bosai-check-item__link" href="/kurashi/bosai/shobo/">
+                        <span class="bosai-check-item__title">消防・救急</span>
+                        <span class="bosai-check-item__text">火災や救急時の情報を確認する</span>
+                      </a>
+                    </li>
+                    <li class="bosai-check-item bosai-check-item--weather">
+                      <a class="bosai-check-item__link" href="#">
+                        <span class="bosai-check-item__title">気象情報</span>
+                        <span class="bosai-check-item__text">天気や警報・注意報を確認する</span>
+                      </a>
+                    </li>
+                    <li class="bosai-check-item bosai-check-item--training">
+                      <a class="bosai-check-item__link" href="/kurashi/bosai/kunren/">
+                        <span class="bosai-check-item__title">防災訓練</span>
+                        <span class="bosai-check-item__text">日ごろの備えや訓練情報を確認する</span>
+                      </a>
+                    </li>
+                  </ul>
+                </section>
+                <section class="bosai-emergency">
+                  <h2 class="bosai-section__title">災害が起きたときは</h2>
+                  <ul class="bosai-emergency-list">
+                    <li class="bosai-emergency-item bosai-emergency-item--shelter">
+                      <a class="bosai-emergency-item__link" href="/hinanjo/">避難所を確認する</a>
+                    </li>
+                    <li class="bosai-emergency-item bosai-emergency-item--weather">
+                      <a class="bosai-emergency-item__link" href="">気象情報を確認する</a>
+                    </li>
+                    <li class="bosai-emergency-item bosai-emergency-item--rescue">
+                      <a class="bosai-emergency-item__link" href="/kurashi/bosai/shobo/">消防・救急へつなぐ</a>
+                    </li>
+                    <li class="bosai-emergency-item bosai-emergency-item--info">
+                      <a class="bosai-emergency-item__link" href="/kurashi/bosai/">防災情報を確認する</a>
+                    </li>
+                  </ul>
+                </section>
+                {{ part "/safety" }}
+              </div>
+            </main>
+          </div>
+
+        </div><!-- .wrap__inner -->
+      </div><!-- #wrap -->
+
+      <section id="chat" class="chat">
+        <div class="chat--close">
+          <p>なんでも聞いてね！</p>
+          <img src="/img/ic-chat.png" alt="chatbot" />
+        </div>
+        <div class="chat--open">
+          <header>
+            <h2>チャットボット</h2>
+            <span class="close-btn">
+              <img src="/img/chat-close.png" alt="閉じる" />
+            </span>
+          </header>
+          {{ part "/bot" }}
+        </div>
+      </section>
+
+      {{ part "/foot" }}
+
+    </div>
+    <div style="display: none;">{{ part "/browsing-history" }}</div>
+  </body>
+</html>

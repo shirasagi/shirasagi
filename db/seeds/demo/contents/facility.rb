@@ -57,7 +57,7 @@ save_page route: "facility/notice", filename: "institution/shisetsu/library/page
     @form_columns4[1].value_type.new(column: @form_columns4[1], value: values[1]),
     @form_columns4[2].value_type.new(column: @form_columns4[2], head: "h2", text: values[2]),
     @form_columns4[0].value_type.new(column: @form_columns4[0], value: values[3]),
-    @form_columns4[7].value_type.new(column: @form_columns4[7], lists: values[4])
+    @form_columns4[10].value_type.new(column: @form_columns4[10], lists: values[4])
   ],
   group_ids: [@g_seisaku.id]
 
