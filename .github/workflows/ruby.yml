@@ -20,6 +20,7 @@ jobs:
   test:
     permissions:
       contents: read
+      packages: read
     runs-on: ubuntu-22.04
     timeout-minutes: 50
     strategy:
