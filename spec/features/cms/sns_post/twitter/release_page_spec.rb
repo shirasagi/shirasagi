@@ -36,8 +36,10 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within "form#item-form" do
             ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
             within "#addon-cms-agents-addons-twitter_poster" do
-              expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
-              expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+              expected = I18n.t("ss.options.state.expired")
+              expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: expected)
+              expected = I18n.t("ss.options.state.disabled")
+              expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: expected)
 
               select I18n.t("ss.options.state.expired"), from: "item[twitter_auto_post]"
             end
@@ -97,8 +99,10 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within "form#item-form" do
             ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
             within "#addon-cms-agents-addons-twitter_poster" do
-              expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
-              expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+              expected = I18n.t("ss.options.state.expired")
+              expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: expected)
+              expected = I18n.t("ss.options.state.disabled")
+              expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: expected)
 
               select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
             end
@@ -179,8 +183,10 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within "form#item-form" do
             ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
             within "#addon-cms-agents-addons-twitter_poster" do
-              expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
-              expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+              expected = I18n.t("ss.options.state.expired")
+              expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: expected)
+              expected = I18n.t("ss.options.state.disabled")
+              expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: expected)
 
               select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
             end
@@ -315,8 +321,10 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within "form#item-form" do
             ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
             within "#addon-cms-agents-addons-twitter_poster" do
-              expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
-              expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+              expected = I18n.t("ss.options.state.expired")
+              expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: expected)
+              expected = I18n.t("ss.options.state.disabled")
+              expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: expected)
 
               select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
               select I18n.t("ss.options.state.active"), from: "item[twitter_edit_auto_post]"
@@ -355,8 +363,10 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within "form#item-form" do
             ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
             within "#addon-cms-agents-addons-twitter_poster" do
-              expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.active"))
-              expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+              expected = I18n.t("ss.options.state.active")
+              expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: expected)
+              expected = I18n.t("ss.options.state.disabled")
+              expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: expected)
 
               select I18n.t("ss.options.state.disabled"), from: "item[twitter_edit_auto_post]"
             end
@@ -410,8 +420,10 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within "form#item-form" do
             ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
             within "#addon-cms-agents-addons-twitter_poster" do
-              expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
-              expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+              expected = I18n.t("ss.options.state.expired")
+              expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: expected)
+              expected = I18n.t("ss.options.state.disabled")
+              expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: expected)
 
               select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
               select I18n.t("ss.options.state.active"), from: "item[twitter_edit_auto_post]"
@@ -450,8 +462,10 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within "form#item-form" do
             ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
             within "#addon-cms-agents-addons-twitter_poster" do
-              expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.active"))
-              expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+              expected = I18n.t("ss.options.state.active")
+              expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: expected)
+              expected = I18n.t("ss.options.state.disabled")
+              expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: expected)
 
               select I18n.t("ss.options.state.enabled"), from: "item[twitter_edit_auto_post]"
             end
@@ -512,8 +526,10 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within "form#item-form" do
             ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
             within "#addon-cms-agents-addons-twitter_poster" do
-              expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
-              expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+              expected = I18n.t("ss.options.state.expired")
+              expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: expected)
+              expected = I18n.t("ss.options.state.disabled")
+              expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: expected)
 
               select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
               select I18n.t("ss.options.state.active"), from: "item[twitter_edit_auto_post]"
@@ -569,8 +585,10 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within "form#item-form" do
             ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
             within "#addon-cms-agents-addons-twitter_poster" do
-              expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
-              expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+              expected = I18n.t("ss.options.state.expired")
+              expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: expected)
+              expected = I18n.t("ss.options.state.disabled")
+              expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: expected)
 
               select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
               select I18n.t("ss.options.state.active"), from: "item[twitter_edit_auto_post]"
