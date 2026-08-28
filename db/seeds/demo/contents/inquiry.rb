@@ -1,7 +1,12 @@
 ## inquiry
 def save_inquiry_column(data)
   puts data[:name]
-  cond = { site_id: data[:site_id], node_id: data[:node_id], name: data[:name] }
+  cond = { site_id: data[:site_id], node_id: data[:node_id] }
+  if data[:order].present?
+    cond[:order] = data[:order]
+  else
+    cond[:name] = data[:name]
+  end
 
   item = Inquiry::Column.find_or_create_by(cond)
   item.attributes = data
@@ -44,7 +49,7 @@ save_inquiry_column node_id: @inquiry_node.id, name: "手続でお困りの内�
   required: "required", site_id: @site._id
 column_branch_section3 = save_inquiry_column node_id: @inquiry_node.id, name: "道路・公園・施設の不具合について", order: 6, input_type: "section",
   site_id: @site._id
-save_inquiry_column node_id: @inquiry_node.id, name: "手続名", order: 7, input_type: "text_field",
+save_inquiry_column node_id: @inquiry_node.id, name: "発生場所", order: 7, input_type: "text_field",
   required: "required", site_id: @site._id
 save_inquiry_column node_id: @inquiry_node.id, name: "発見日時", order: 8, input_type: "datetime_field",
   required: "required", additional_attr: 'class="discovery-date"', site_id: @site._id
@@ -54,32 +59,33 @@ save_inquiry_column node_id: @inquiry_node.id, name: "添付ファイル", order
   html: column_file_html, required: "optional", site_id: @site._id
 column_branch_section4 = save_inquiry_column node_id: @inquiry_node.id, name: "イベント・講座について", order: 11, input_type: "section",
   site_id: @site._id
-save_inquiry_column node_id: @inquiry_node.id, name: "イベント名", order: 11, input_type: "text_field",
+save_inquiry_column node_id: @inquiry_node.id, name: "イベント名", order: 12, input_type: "text_field",
   required: "required", site_id: @site._id
-save_inquiry_column node_id: @inquiry_node.id, name: "開催日", order: 12, input_type: "date_field",
+save_inquiry_column node_id: @inquiry_node.id, name: "開催日", order: 13, input_type: "date_field",
   required: "required", additional_attr: 'class="discovery-date"', site_id: @site._id
-save_inquiry_column node_id: @inquiry_node.id, name: "お問い合わせ内容", order: 13, input_type: "text_area",
+save_inquiry_column node_id: @inquiry_node.id, name: "お問い合わせ内容", order: 14, input_type: "text_area",
   required: "required", site_id: @site._id
-column_branch_section5 = save_inquiry_column node_id: @inquiry_node.id, name: "その他", order: 14, input_type: "section",
+column_branch_section5 = save_inquiry_column node_id: @inquiry_node.id, name: "その他", order: 15, input_type: "section",
   site_id: @site._id
-save_inquiry_column node_id: @inquiry_node.id, name: "お問い合わせ内容", order: 15, input_type: "text_area",
+save_inquiry_column node_id: @inquiry_node.id, name: "お問い合わせ内容", order: 16, input_type: "text_area",
   required: "required", site_id: @site._id
-save_inquiry_column node_id: @inquiry_node.id, name: "共通項目", order: 16, input_type: "section",
+save_inquiry_column node_id: @inquiry_node.id, name: "共通項目", order: 17, input_type: "section",
   site_id: @site._id
-save_inquiry_column node_id: @inquiry_node.id, name: "お住まい", order: 17, input_type: "radio_button",
+save_inquiry_column node_id: @inquiry_node.id, name: "お住まい", order: 18, input_type: "radio_button",
   select_options: %w(市内 市外 その他),
   required: "optional", site_id: @site._id
-save_inquiry_column node_id: @inquiry_node.id, name: "回答希望", order: 18, input_type: "form_select",
+save_inquiry_column node_id: @inquiry_node.id, name: "回答希望", order: 19, input_type: "form_select",
   select_options: %w(回答を希望する 回答不要),
   required: "required", site_id: @site._id
-save_inquiry_column node_id: @inquiry_node.id, name: "お名前", order: 19, input_type: "text_field",
+save_inquiry_column node_id: @inquiry_node.id, name: "お名前", order: 20, input_type: "text_field",
   required: "required", site_id: @site._id
-save_inquiry_column node_id: @inquiry_node.id, name: "メールアドレス", order: 20, input_type: "email_field",
-  required: "optional", required_in_select_form: %w(回答を希望する), site_id: @site._id
-save_inquiry_column node_id: @inquiry_node.id, name: "年齢", order: 21, input_type: "select",
+save_inquiry_column node_id: @inquiry_node.id, name: "メールアドレス", order: 21, input_type: "email_field",
+  required: "optional", required_in_select_form: %w(回答を希望する), input_confirm: 'enabled',
+  site_id: @site._id
+save_inquiry_column node_id: @inquiry_node.id, name: "年齢", order: 22, input_type: "select",
   select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代),
   required: "optional", site_id: @site._id
-save_inquiry_column node_id: @inquiry_node.id, name: "個人情報の取り扱い", order: 22, input_type: "check_box",
+save_inquiry_column node_id: @inquiry_node.id, name: "個人情報の取り扱い", order: 23, input_type: "check_box",
   select_options: %w(個人情報の取り扱いについて同意します。),
   html: column_privacy_html, required: "required", site_id: @site._id
 column_master_section.update(branch_section_ids: [

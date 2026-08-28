@@ -297,7 +297,7 @@ save_page route: "article/page", filename: "oshirase/kurashi/page24.html", name:
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "urgency/page25.html", name: "黒鷺県沖で発生した地震による当市への影響について。",
-  layout_id: @layouts["oshirase"].id, category_ids: [@categories["urgency"].id],
+  layout_id: @layouts["pages"].id, category_ids: [@categories["urgency"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
@@ -305,7 +305,7 @@ save_page route: "article/page", filename: "urgency/page25.html", name: "黒鷺�
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "urgency/page26.html", name: "黒鷺県沖で発生した地震による津波被害について。",
-  layout_id: @layouts["more"].id, category_ids: [@categories["urgency"].id],
+  layout_id: @layouts["pages"].id, category_ids: [@categories["urgency"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,

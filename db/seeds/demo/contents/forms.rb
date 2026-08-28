@@ -177,7 +177,8 @@ column_multiple_images_slider_layout_html = File.read("columns/multiple_images_s
 @form_columns4 = [
   save_column(:text, form: @form4, name: '一行入力', order: 10, required: 'optional', input_type: 'text'),
   save_column(:text_area, form: @form4, name: '複数行入力', order: 20, required: 'optional'),
-  save_column(:head_line, form: @form4, name: '見出し', order: 30, required: 'optional'),
+  save_column(:head_line, form: @form4, name: '見出し', order: 30, required: 'optional',
+    max_headline_level: 'h6'),
   save_column(:url, form: @form4, name: 'リンク', order: 40, required: 'optional'),
   save_column(:file_upload, form: @form4, name: 'イメージ', order: 50, required: 'optional', file_type: 'image'),
   save_column(:multiple_files_upload, form: @form4, name: 'イメージ(複数-2カラム)', order: 60,
