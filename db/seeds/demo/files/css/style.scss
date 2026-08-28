@@ -3237,6 +3237,7 @@ body.general {
     > article.body {
       margin: 20px;
       @include docs;
+      @include article-attachments;
 
       @include tb{
         margin: 0;

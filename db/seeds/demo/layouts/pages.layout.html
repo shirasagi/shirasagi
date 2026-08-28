@@ -4,6 +4,12 @@
     <link href="/css/style.css" media="all" rel="stylesheet" />
     <script src="/js/common.js"></script>
     <script src="/js/jquery.rwdImageMaps.min.js"></script>
+
+    <!-- ブロック入力スライダー用 -->
+    <link rel="stylesheet" href="/assets/swiper.css" media="all">
+    <script src="/assets/swiper.js" defer="defer"></script>
+    <script src="/js/article_slider.js" defer="defer"></script>
+
     {{ part "favicon" }}
   </head>
 
@@ -87,6 +93,10 @@
             </div>
 
             <div id="side">
+              <!-- 記事検索へのリンク -->
+              <div class="article-search-nav">
+                <a href="/docs/search/">記事検索</a>
+              </div>
               {{ part "recent-tabsside" }}
               <section id="month">
                 <header class="title">
