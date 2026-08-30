@@ -257,9 +257,19 @@ module SS::Relation::File
       class_name.constantize.default_scoping.call.selector["model"]
     end
 
+    def owner_item_class(item)
+      owner_item = SS::Model.container_of(item)
+      if owner_item.is_a?(Cms::Model::Node)
+        Cms::Node.new(route: owner_item.route).becomes_with_route(owner_item.route).class
+      else
+        owner_item.class
+      end
+    end
+
     def update_relation(item, name, file, class_name:, default_resizing:)
       attributes = {}
       owner_item = SS::Model.container_of(item)
+      file.owner_item_type = owner_item_class(item).name
 
       return if file.frozen?
 
@@ -268,9 +278,11 @@ module SS::Relation::File
       return if is_branch && SS::File.file_owned?(file, owner_item.master)
 
       if !SS::File.file_owned?(file, owner_item)
-        attributes["owner_item"] = owner_item
+        if owner_item.class.instance_of?(owner_item_class(item))
+          attributes["owner_item"] = owner_item
+        end
         attributes["owner_item_id"] = owner_item.id
-        attributes["owner_item_type"] = owner_item.class.name
+        attributes["owner_item_type"] = owner_item_class(item).name
       end
 
       item.send("#{name}_file_state").tap do |file_state|
@@ -278,7 +290,7 @@ module SS::Relation::File
       end
 
       if class_name == DEFAULT_FILE_CLASS_NAME
-        expected_model = owner_item.class.name.underscore
+        expected_model = owner_item_class(item).name.underscore
       else
         expected_model = default_model(class_name)
       end
