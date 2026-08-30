@@ -1,6 +1,6 @@
 module SS
   module DownloadHelpers
-    TIMEOUT = ENV.fetch("DOWNLOAD_MAX_WAIT_TIME", 1).to_i
+    TIMEOUT = ENV.fetch("DOWNLOAD_MAX_WAIT_TIME", 3).to_i
 
     module_function
 
@@ -27,7 +27,10 @@ module SS
     end
 
     def downloading?
-      downloads.grep(/\.crdownload$/).any? || downloads.blank?
+      return true if downloads.grep(/\.crdownload$/).any?
+      return true if downloads.grep(/\/downloads\.html$/).any?
+      return true if downloads.blank?
+      FileTest.size(downloads.last) == 0
     end
 
     def clear_downloads
