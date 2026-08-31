@@ -36,6 +36,10 @@ class Article::Page::ExportJob < Cms::ApplicationJob
     Cms::PageExporter.new(mode: "article", site: site, truncate: truncate, criteria: criteria)
   end
 
+  def notification_subject
+    "[#{site.name}][#{node.name}] CSVダウンロード準備完了のお知らせ"
+  end
+
   def canonical_scheme
     site.mypage_scheme.presence || (site.https == "enabled" ? "https" : "http")
   end
