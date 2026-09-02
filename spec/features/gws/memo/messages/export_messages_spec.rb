@@ -32,9 +32,9 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.export")
         end
         wait_for_notice I18n.t("gws/memo/message.notice.start_export")
-      end
-      within '#addon-basic' do
-        expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+        within '#addon-basic' do
+          expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+        end
       end
 
       expect(Job::Log.count).to eq 1
@@ -293,16 +293,18 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       visit gws_memo_export_messages_path(site)
       within "form#item-form" do
         choose "item_export_filter_all"
-        wait_for_js_ready
+      end
+      wait_for_js_ready
 
-        perform_enqueued_jobs do
+      perform_enqueued_jobs do
+        within "form#item-form" do
           click_on I18n.t("ss.export")
         end
-      end
 
-      wait_for_notice I18n.t("gws/memo/message.notice.start_export")
-      within '#addon-basic' do
-        expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+        wait_for_notice I18n.t("gws/memo/message.notice.start_export")
+        within '#addon-basic' do
+          expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+        end
       end
 
       expect(Job::Log.count).to eq 1
@@ -367,16 +369,18 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       visit gws_memo_export_messages_path(site)
       within "form#item-form" do
         choose "item_export_filter_all"
-        wait_for_js_ready
+      end
+      wait_for_js_ready
 
-        perform_enqueued_jobs do
+      perform_enqueued_jobs do
+        within "form#item-form" do
           click_on I18n.t("ss.export")
         end
-      end
 
-      wait_for_notice I18n.t("gws/memo/message.notice.start_export")
-      within '#addon-basic' do
-        expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+        wait_for_notice I18n.t("gws/memo/message.notice.start_export")
+        within '#addon-basic' do
+          expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+        end
       end
 
       expect(Job::Log.count).to eq 1
@@ -447,16 +451,18 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       visit gws_memo_export_messages_path(site)
       within "form#item-form" do
         choose "item_export_filter_all"
-        wait_for_js_ready
+      end
+      wait_for_js_ready
 
-        perform_enqueued_jobs do
+      perform_enqueued_jobs do
+        within "form#item-form" do
           click_on I18n.t("ss.export")
         end
-      end
 
-      wait_for_notice I18n.t("gws/memo/message.notice.start_export")
-      within '#addon-basic' do
-        expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+        wait_for_notice I18n.t("gws/memo/message.notice.start_export")
+        within '#addon-basic' do
+          expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+        end
       end
 
       expect(Job::Log.count).to eq 1

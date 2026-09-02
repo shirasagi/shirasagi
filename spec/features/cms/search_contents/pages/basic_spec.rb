@@ -330,67 +330,101 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
     expect(page).to have_css("div.info a.title", text: "[TEST]B")
   end
 
-  it "search with sort options" do
-    visit pages_index_path
+  context "search with sort options" do
+    context "when search_sort set to 'name'" do
+      it do
+        visit pages_index_path
 
-    # sort by name
-    within "form.search-pages" do
-      select I18n.t("cms.sort_options.name.title"), from: "item[search_sort]"
-      click_button I18n.t('ss.buttons.search')
+        # sort by name
+        within "form.search-pages" do
+          select I18n.t("cms.sort_options.name.title"), from: "item[search_sort]"
+          click_button I18n.t('ss.buttons.search')
+        end
+        expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 5))
+
+        names = all("div.info a.title").map(&:text)
+        expect(names).to eq all_pages { |criteria| criteria.reorder(name: 1) }
+      end
     end
-    expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 5))
 
-    names = all("div.info a.title").map(&:text)
-    expect(names).to eq all_pages { |criteria| criteria.reorder(name: 1) }
+    context "when search_sort set to 'filename'" do
+      it do
+        visit pages_index_path
 
-    # sort by filename
-    within "form.search-pages" do
-      select I18n.t("cms.sort_options.filename.title"), from: "item[search_sort]"
-      click_button I18n.t('ss.buttons.search')
+        # sort by filename
+        within "form.search-pages" do
+          select I18n.t("cms.sort_options.filename.title"), from: "item[search_sort]"
+          click_button I18n.t('ss.buttons.search')
+        end
+        expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 5))
+
+        names = all("div.info a.title").map(&:text)
+        expect(names).to eq all_pages { |criteria| criteria.reorder(filename: 1) }
+      end
     end
-    expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 5))
 
-    names = all("div.info a.title").map(&:text)
-    expect(names).to eq all_pages { |criteria| criteria.reorder(filename: 1) }
+    context "when search_sort set to 'created'" do
+      it do
+        visit pages_index_path
 
-    # sort by creared
-    within "form.search-pages" do
-      select I18n.t("cms.sort_options.created.title"), from: "item[search_sort]"
-      click_button I18n.t('ss.buttons.search')
+        # sort by creared
+        within "form.search-pages" do
+          select I18n.t("cms.sort_options.created.title"), from: "item[search_sort]"
+          click_button I18n.t('ss.buttons.search')
+        end
+        expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 5))
+
+        names = all("div.info a.title").map(&:text)
+        expect(names).to eq all_pages { |criteria| criteria.reorder(created: 1) }
+      end
     end
-    expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 5))
 
-    names = all("div.info a.title").map(&:text)
-    expect(names).to eq all_pages { |criteria| criteria.reorder(created: 1) }
+    context "when search_sort set to 'updated_desc'" do
+      it do
+        visit pages_index_path
 
-    # sort by updated
-    within "form.search-pages" do
-      select I18n.t("cms.sort_options.updated_desc.title"), from: "item[search_sort]"
-      click_button I18n.t('ss.buttons.search')
+        # sort by updated
+        within "form.search-pages" do
+          select I18n.t("cms.sort_options.updated_desc.title"), from: "item[search_sort]"
+          click_button I18n.t('ss.buttons.search')
+        end
+        expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 5))
+
+        names = all("div.info a.title").map(&:text)
+        expect(names).to eq all_pages { |criteria| criteria.reorder(updated: -1) }
+      end
     end
-    expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 5))
 
-    names = all("div.info a.title").map(&:text)
-    expect(names).to eq all_pages { |criteria| criteria.reorder(updated: -1) }
+    context "when search_sort set to 'released_desc'" do
+      it do
+        visit pages_index_path
 
-    # sort by released
-    within "form.search-pages" do
-      select I18n.t("cms.sort_options.released_desc.title"), from: "item[search_sort]"
-      click_button I18n.t('ss.buttons.search')
+        # sort by released
+        within "form.search-pages" do
+          select I18n.t("cms.sort_options.released_desc.title"), from: "item[search_sort]"
+          click_button I18n.t('ss.buttons.search')
+        end
+        expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 5))
+
+        names = all("div.info a.title").map(&:text)
+        expect(names).to eq all_pages { |criteria| criteria.reorder(released: -1) }
+      end
     end
-    expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 5))
 
-    names = all("div.info a.title").map(&:text)
-    expect(names).to eq all_pages { |criteria| criteria.reorder(released: -1) }
+    context "when search_sort set to 'approved_desc'" do
+      it do
+        visit pages_index_path
 
-    # sort by approved
-    within "form.search-pages" do
-      select I18n.t("cms.sort_options.approved_desc.title"), from: "item[search_sort]"
-      click_button I18n.t('ss.buttons.search')
+        # sort by approved
+        within "form.search-pages" do
+          select I18n.t("cms.sort_options.approved_desc.title"), from: "item[search_sort]"
+          click_button I18n.t('ss.buttons.search')
+        end
+        expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 5))
+
+        names = all("div.info a.title").map(&:text)
+        expect(names).to eq all_pages { |criteria| criteria.reorder(approved: -1) }
+      end
     end
-    expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 5))
-
-    names = all("div.info a.title").map(&:text)
-    expect(names).to eq all_pages { |criteria| criteria.reorder(approved: -1) }
   end
 end
