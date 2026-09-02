@@ -7,7 +7,7 @@
         <%= link_to(I18n.t('sns.user_file'), cms_apis_user_files_path(cid: cur_node || "-"), class: "dropdown-item") %>
         <%= link_to(I18n.t('cms.file'), cms_apis_files_path(cid: cur_node || "-"), class: "dropdown-item") %>
       <% else %>
-        <%= link_to(I18n.t('sns.user_file'), sns_apis_user_files_path(user: cur_user), class: "dropdown-item") %>
+        <%= link_to(I18n.t('sns.user_file'), sns_apis_user_files_path, class: "dropdown-item") %>
       <% end %>
     </div>
   </span>

@@ -7,7 +7,7 @@ describe Gws::CompressJob, dbscope: :example do
   let(:zip) do
     zip = Gws::Compressor.new(user, model: Gws::Share::File.name, items: Gws::Share::File.site(site).all)
     zip.url = Rails.application.routes.url_helpers.sns_download_job_files_url(
-      host: "#{unique_id}.example.jp", user: zip.user, filename: zip.filename
+      host: "#{unique_id}.example.jp", filename: zip.filename
     )
     zip
   end

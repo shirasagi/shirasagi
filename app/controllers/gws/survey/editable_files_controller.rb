@@ -122,7 +122,7 @@ class Gws::Survey::EditableFilesController < ApplicationController
 
     zip_filename = "survey_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip"
     zip = Gws::Compressor.new(@cur_user, model: SS::File, items: SS::File.in(id: file_ids), filename: zip_filename)
-    zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename)
+    zip.url = sns_download_job_files_url(filename: zip.filename)
 
     if zip.deley_download?
       job = Gws::CompressJob.bind(site_id: @cur_site, user_id: @cur_user)

@@ -75,7 +75,7 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace "facility", path: ".u:user/facility", module: "facility", servicer: /\d+/ do
+  namespace "facility", path: ".u/facility", module: "facility", servicer: /\d+/ do
     namespace "apis" do
       resources :temp_files, concerns: [:deletion, :file_api] do
         get :contrast_ratio, on: :collection

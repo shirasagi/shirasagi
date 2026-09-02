@@ -14,7 +14,7 @@ class SS::DownloadJobFile
 
   def url(opts = {})
     Rails.application.routes.url_helpers.
-      sns_download_job_files_path(user: user.id, filename: filename, name: opts[:name])
+      sns_download_job_files_path(filename: filename, name: opts[:name])
   end
 
   def read
