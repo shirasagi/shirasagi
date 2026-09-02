@@ -13,6 +13,10 @@
   @media screen and (max-width: 768px) {
     margin: 0 auto;
   }
+
+  select, input, textarea, button {
+    scroll-margin-bottom: unset;
+  }
 }
 
 .ss-sticky {
@@ -38,4 +42,10 @@
 // footer.send の padding に負けないように
 footer.send.ss-sticky {
   @include ss-sticky;
+}
+
+body:has(.ss-sticky-bottom) {
+  a, button, input, select, textarea {
+    scroll-margin-bottom: 120px;
+  }
 }
