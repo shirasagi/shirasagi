@@ -16,6 +16,9 @@ env:
 
 jobs:
   test:
+    permissions:
+      contents: read
+      packages: read
     runs-on: ubuntu-22.04
     timeout-minutes: 50
     strategy:
@@ -169,15 +172,14 @@ jobs:
           driver: chrome
           # driver: firefox
           # driver: random
-          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
       #CI実行中にElasticsearchに問題が発生した場合、
       #このステップを有効にしElasticsearchのログを確認すること
       #- name: After test
       #  if: always()
       #  run: |
       #    echo "curl -i http://localhost:9200"
-      #    curl -i http://localhost:9200 || true
+      #    curl -i --connect-timeout 5 --max-time 30 http://localhost:9200 || true
       #    echo "curl -i http://localhost:9200/_cluster/health"
-      #    curl -i http://localhost:9200/_cluster/health || true
+      #    curl -i --connect-timeout 5 --max-time 30 http://localhost:9200/_cluster/health || true
       #    echo "docker logs elasticsearch"
       #    docker logs elasticsearch | tail
