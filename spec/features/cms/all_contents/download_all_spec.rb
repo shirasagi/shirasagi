@@ -48,7 +48,8 @@ describe "cms_all_contents", type: :feature, dbscope: :example, js: true do
       expect(notification.group_id).to be_blank
       expect(notification.member_ids).to eq [ user.id ]
       expect(notification.user_id).to eq user.id
-      expect(notification.subject).to eq "[#{site.name}] CSVダウンロード準備完了のお知らせ"
+      subject = "[#{site.name}][#{I18n.t("cms.all_contents")} #{I18n.t("cms.all_content.download_tab")}] CSVダウンロード準備完了のお知らせ"
+      expect(notification.subject).to eq subject
       expect(notification.text).to be_present
       path = Rails.application.routes.url_helpers.sns_apis_file_gen_task_download_path(id: task)
       expect(notification.text).to include(path)

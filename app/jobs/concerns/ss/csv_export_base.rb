@@ -47,6 +47,10 @@ module SS::CsvExportBase
     SS.config.gws.canonical_domain
   end
 
+  def notification_subject
+    raise NotImplementedError, "サブクラスで実装してください"
+  end
+
   def send_notification!
     return unless respond_to?(:user)
     return unless user
@@ -58,11 +62,7 @@ module SS::CsvExportBase
     message.cur_user = user
     message.member_ids = [ user.id ]
     message.send_date = Time.zone.now
-    if respond_to?(:site) && site
-      message.subject = "[#{site.name}] CSVダウンロード準備完了のお知らせ"
-    else
-      message.subject = "CSVダウンロード準備完了のお知らせ"
-    end
+    message.subject = notification_subject
     message.format = 'text'
     message.text = <<~TEXT
       ダウンロードの準備が完了しました。
