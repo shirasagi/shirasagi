@@ -222,7 +222,8 @@ save_node route: "category/page", filename: "calendar/courses", name: "市民講
 save_node route: "category/page", filename: "calendar/bunka", name: "文化・芸術", order: 10
 save_node route: "category/page", filename: "calendar/kohen", name: "講演・講座", order: 20
 save_node route: "category/page", filename: "calendar/sports", name: "スポーツ", order: 60
-save_node route: "event/search", filename: "calendar/search", name: "イベント検索", conditions: %w(calendar)
+save_node route: "event/search", filename: "calendar/search", name: "イベント検索",
+  conditions: %w(calendar courses)
 save_node route: "category/node", filename: "download", name: "申請書ダウンロード",
   layout_id: @layouts["category-top"].id, sort: 'order', child_limit: 0
 save_node route: "category/node", filename: "kohoshi", name: "広報シラサギ",

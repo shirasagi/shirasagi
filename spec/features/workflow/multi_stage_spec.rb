@@ -54,10 +54,18 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         login_cms_user to: show_path
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-request" do
-          select route_name, from: "workflow_route"
-          click_on I18n.t("workflow.buttons.select")
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+          wait_for_event_fired "ajaxComplete" do
+            select route_name, from: "workflow_route"
+            click_on I18n.t("workflow.buttons.select")
+          end
+
+          expect(page).to have_css(".request-setting", text: route_name)
+          wait_for_js_ready
         end
 
         expect(page).to have_css("[name='workflow[comment]']")
@@ -66,6 +74,8 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.request")
         end
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -111,13 +121,18 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         login_user user1, to: show_path
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
 
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -161,13 +176,18 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         login_user user2, to: show_path
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: approve_comment2
           click_on I18n.t("workflow.buttons.approve")
         end
 
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -212,13 +232,18 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         login_user user3, to: show_path
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: approve_comment3
           click_on I18n.t("workflow.buttons.approve")
         end
 
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment3)}/)
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_state).to eq "approve"
@@ -275,18 +300,28 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
       it do
         login_cms_user to: show_path
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         #
         # admin: send request
         #
         within ".mod-workflow-request" do
-          select route_name, from: "workflow_route"
-          click_on I18n.t("workflow.buttons.select")
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+          wait_for_event_fired "ajaxComplete" do
+            select route_name, from: "workflow_route"
+            click_on I18n.t("workflow.buttons.select")
+          end
+
+          expect(page).to have_css(".request-setting", text: route_name)
+          wait_for_js_ready
 
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -331,13 +366,18 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         login_user user1, to: show_path
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
 
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -362,13 +402,18 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         login_user user2, to: show_path
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: approve_comment2
           click_on I18n.t("workflow.buttons.approve")
         end
 
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -405,13 +450,18 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         login_user user3, to: show_path
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: approve_comment3
           click_on I18n.t("workflow.buttons.approve")
         end
 
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment3)}/)
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_state).to eq "approve"
@@ -460,18 +510,28 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
       it do
         login_cms_user to: show_path
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         #
         # admin: send request
         #
         within ".mod-workflow-request" do
-          select route_name, from: "workflow_route"
-          click_on I18n.t("workflow.buttons.select")
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+          wait_for_event_fired "ajaxComplete" do
+            select route_name, from: "workflow_route"
+            click_on I18n.t("workflow.buttons.select")
+          end
+
+          expect(page).to have_css(".request-setting", text: route_name)
+          wait_for_js_ready
 
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -516,13 +576,18 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         login_user user1, to: show_path
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
 
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -565,13 +630,18 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         login_user user2, to: show_path
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: approve_comment2
           click_on I18n.t("workflow.buttons.approve")
         end
 
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -615,13 +685,18 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         login_user user3, to: show_path
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: remand_comment3
           click_on I18n.t("workflow.buttons.remand")
         end
 
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment3)}/)
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_state).to eq "remand"
@@ -681,18 +756,28 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
       it do
         login_cms_user to: show_path
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         #
         # admin: send request
         #
         within ".mod-workflow-request" do
-          select route_name, from: "workflow_route"
-          click_on I18n.t("workflow.buttons.select")
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+          wait_for_event_fired "ajaxComplete" do
+            select route_name, from: "workflow_route"
+            click_on I18n.t("workflow.buttons.select")
+          end
+
+          expect(page).to have_css(".request-setting", text: route_name)
+          wait_for_js_ready
 
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -737,13 +822,18 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         login_user user1, to: show_path
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
 
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -780,13 +870,18 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         login_user user3, to: show_path
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: approve_comment3
           click_on I18n.t("workflow.buttons.approve")
         end
 
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment3)}/)
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_state).to eq "approve"

@@ -15,6 +15,7 @@ describe "cms_login", type: :feature, dbscope: :example, js: true do
         fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
+      expect(page).to have_css(".error-message", text: I18n.t("sns.errors.invalid_login"))
       expect(current_path).to eq login_path
     end
 
@@ -37,6 +38,7 @@ describe "cms_login", type: :feature, dbscope: :example, js: true do
           fill_in "item[password]", with: ss_pass
           click_button I18n.t("ss.login")
         end
+        expect(page).to have_css(".error-message", text: I18n.t("sns.errors.invalid_login"))
         expect(current_path).to eq login_path
       end
     end
@@ -50,6 +52,7 @@ describe "cms_login", type: :feature, dbscope: :example, js: true do
         fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
+      expect(page).to have_css(".main-navi", text: I18n.t("cms.shortcut"))
       expect(current_path).to eq main_path
     end
 
@@ -60,16 +63,18 @@ describe "cms_login", type: :feature, dbscope: :example, js: true do
         fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
+      expect(page).to have_css(".main-navi", text: I18n.t("cms.shortcut"))
       expect(current_path).to eq main_path
       within ".user-navigation" do
         wait_for_event_fired("turbo:frame-load") { click_on cms_user.name }
         expect(page).to have_link(I18n.t("ss.logout"), href: logout_path)
         click_on I18n.t("ss.logout")
       end
-
+      expect(page).to have_css(".login-box", text: SS.version)
       expect(current_path).to eq login_path
 
       visit main_path
+      expect(page).to have_css(".login-box", text: SS.version)
       expect(current_path).to eq login_path
     end
   end
@@ -100,6 +105,7 @@ describe "cms_login", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.login")
       end
       wait_for_js_ready
+      expect(page).to have_css(".main-navi", text: I18n.t("cms.shortcut"))
 
       expect(current_path).to eq cms_layouts_path(site: site)
     end
@@ -124,6 +130,7 @@ describe "cms_login", type: :feature, dbscope: :example, js: true do
         fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
+      expect(page).to have_css(".main-navi", text: I18n.t("cms.shortcut"))
 
       expect(current_path).to eq main_path
     end
