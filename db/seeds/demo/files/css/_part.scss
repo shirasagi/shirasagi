@@ -184,50 +184,50 @@ $smart-margin: 10px;
 
 /* 装飾 */
 @mixin r-arrow-bk5 {
-  content: "";
   position: absolute;
-  top: 34%;
-  right: 6px;
+  content: "";
   width: 0;
   height: 0;
+  top: 34%;
+  right: 6px;
+  border-left: 5px solid $black;
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
-  border-left: 5px solid $black;
 }
 
 @mixin r-arrow-gr5 {
-  content: "";
-  display: inline-block;
   position: relative;
-  top: -2px;
-  right: -10px;
+  content: "";
   width: 0;
   height: 0;
+  top: -2px;
+  right: -10px;
+  display: inline-block;
+  border-left: 9px solid $green;
   border-top: 7px solid transparent;
   border-bottom: 7px solid transparent;
-  border-left: 9px solid $green;
 }
 
 @mixin r-arrow-w4 {
+  position: static;
   content: "";
   display: inline-block;
-  position: static;
-  margin-left: 4px;
+  border-left: 4px solid #fff;
   border-top: 4px solid transparent;
   border-bottom: 4px solid transparent;
-  border-left: 4px solid #fff;
+  margin-left: 4px;
 }
 
 @mixin r-arrow-gr4 {
-  content: "";
   position: absolute;
-  top: 24%;
-  right: -16px;
+  content: "";
   width: 0;
   height: 0;
+  top: 24%;
+  right: -16px;
+  border-left: 5px solid $green;
   border-top: 4px solid transparent;
   border-bottom: 4px solid transparent;
-  border-left: 5px solid $green;
 }
 
 @mixin li {
@@ -237,12 +237,12 @@ $smart-margin: 10px;
 }
 
 @mixin border-b-bk {
-  content: "";
   position: absolute;
-  bottom: -16px;
-  left: 0;
+  content: "";
   width: 100%;
   height: 1px;
+  bottom: -16px;
+  left: 0;
   border-bottom: 1px dotted $black;
 }
 
@@ -251,14 +251,14 @@ $smart-margin: 10px;
 
 @mixin btn-blue {
   padding: 8px 50px;
-  transition: .3s ease-in-out;
-  border: 1px solid #003bbc;
-  border-radius: 21px;
-  background-color: #003bbc;
-  color: #fff;
   font-size: $px14;
   font-weight: bold;
   text-decoration: none;
+  border: 1px solid #003bbc;
+  border-radius: 21px;
+  color: #fff;
+  background-color: #003bbc;
+  transition: .3s ease-in-out;
 
   @include tb {
     padding: 7px 42px;
@@ -269,9 +269,9 @@ $smart-margin: 10px;
   }
 
   &:hover {
-    transition: .3s ease-in-out;
-    background-color: #fff;
     color: #003bbc;
+    background-color: #fff;
+    transition: .3s ease-in-out;
 
     @include tb {}
   }
@@ -279,14 +279,14 @@ $smart-margin: 10px;
 
 @mixin btn-lightblue {
   padding: 8px 50px;
-  transition: .3s ease-in-out;
-  border: 1px solid #ccf0ff;
-  border-radius: 21px;
-  background-color: #ccf0ff;
-  color: #000;
   font-size: $px14;
   font-weight: bold;
   text-decoration: none;
+  border: 1px solid #ccf0ff;
+  border-radius: 21px;
+  color: #000;
+  background-color: #ccf0ff;
+  transition: .3s ease-in-out;
 
   @include tb {
     padding: 7px 42px;
@@ -297,17 +297,15 @@ $smart-margin: 10px;
   }
 
   &:hover {
-    transition: .3s ease-in-out;
     opacity: .7;
+    transition: .3s ease-in-out;
 
     @include tb {}
   }
 }
 
 @mixin btn-green {
-  box-sizing: border-box;
   padding: 16px 22px;
-  transition: .3s ease-in-out;
   border: 1px solid $green;
   border-radius: 10px;
   background: $green;
@@ -315,6 +313,9 @@ $smart-margin: 10px;
   font-size: $px14;
   font-weight: bold;
   text-decoration: none;
+  background: $green;
+  box-sizing: border-box;
+  transition: .3s ease-in-out;
   cursor: pointer;
 
   &:hover,
@@ -340,9 +341,7 @@ $smart-margin: 10px;
 }
 
 @mixin btn-darkblue {
-  box-sizing: border-box;
   padding: 16px 22px;
-  transition: .3s ease-in-out;
   border: 1px solid $darkblue;
   border-radius: 10px;
   background: $darkblue;
@@ -350,6 +349,9 @@ $smart-margin: 10px;
   font-size: $px14;
   font-weight: bold;
   text-decoration: none;
+  background: $darkblue;
+  box-sizing: border-box;
+  transition: .3s ease-in-out;
   cursor: pointer;
 
   &:hover,
@@ -372,17 +374,17 @@ $smart-margin: 10px;
 $PATH_IMG: "/img/";
 @mixin submenu-ic($url){
   height: 40px;
+  background-size: auto 40px;
   background-image: url($PATH_IMG + $url);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: auto 40px;
 }
 
 /* 短縮 */
 @mixin border-radius($value: 0px) {
+  border-radius: $value;
   -webkit-border-radius: $value;
   -moz-border-radius: $value;
-  border-radius: $value;
 }
 
 @mixin border-radius-tl($value: 0px) {
@@ -398,14 +400,14 @@ $PATH_IMG: "/img/";
 }
 
 @mixin border-radius-bl($value: 0px) {
-  -webkit-border-bottom-left-radius: $value;
   border-bottom-left-radius: $value;
+  -webkit-border-bottom-left-radius: $value;
   -moz-border-radius-bottomleft: $value;
 }
 
 @mixin border-radius-br($value: 0px) {
-  -webkit-border-bottom-right-radius: $value;
   border-bottom-right-radius: $value;
+  -webkit-border-bottom-right-radius: $value;
   -moz-border-radius-bottomright: $value;
 }
 
@@ -423,27 +425,27 @@ $PATH_IMG: "/img/";
   height: 30px;
   margin: 0 auto;
   overflow: hidden;
-  border: 1px solid #dedcdb;
-  background: $white;
   line-height: 1;
   text-align: center;
+  background: $white;
+  border: 1px solid #dedcdb;
 
   @include tb {
     width: calc(7em + 8px);
     line-height: normal;
   }
 
-  &::before {
-    content: '';
+  &:before {
     position: absolute;
+    content: '';
     top: 33%;
     right: 6%;
     width: 0;
     height: 0;
     padding: 0;
-    border-top: 9px solid #666;
-    border-right: 5px solid transparent;
     border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 9px solid #666;
     pointer-events: none;
 
     @include tb {
@@ -454,21 +456,21 @@ $PATH_IMG: "/img/";
   select {
     width: 100%;
     padding: 8px 17px 4px 9px;
+    color: #666666;
     padding-right: 1em;
+    cursor: pointer;
+    text-indent: 0.01px;
+    text-overflow: ellipsis;
     border: 0;
     border-radius: 0;
     outline: none;
     background: transparent;
     background-image: none;
     box-shadow: none;
-    color: #666666;
-    font-size: $px12;
-    text-indent: 0.01px;
-    text-overflow: ellipsis;
-    cursor: pointer;
     -moz-appearance: none;
-    -webkit-appearance: none;
     appearance: none;
+    -webkit-appearance: none;
+    font-size: $px12;
 
     @include tb {
       padding: 3px 17px 3px 7px;
@@ -480,8 +482,8 @@ $PATH_IMG: "/img/";
 // 記事レイアウト
 
 @mixin docs{
-  order: 1;
   padding-bottom: 30px;
+  order: 1;
 
   p {
     margin-bottom: 20px;
@@ -505,76 +507,120 @@ $PATH_IMG: "/img/";
   }
 
   h2 {
-    margin: 30px 0 12px;
-    padding: 8px 12px;
-    background-color: #ccf0ff;
-    font-size: $px18;
+    margin: 0px 0 10px;
+    padding: 5px 15px;
+    font-size: $px20;
     font-weight: bold;
-
+    background-color: #ccf0ff;
+    border-bottom: 3px solid $lyblue;
+    line-height: 1.6;
     @include tb {
-      // margin-top: 32px;
-      // padding: 6px 0 18px;
-      font-size: $px14;
+      margin: 5% 0 2%;
+      padding: 2% 4% 1% 4%;
+      font-size: $px16;
     }
   }
 
   h3 {
-    // margin-top: 20px;
-    margin-bottom: 12px;
-    padding: 0 8px;
-    border-left: 2px solid $main-blue;
-    font-size: $px16;
+    margin: 25px 0 5px 0;
+    padding: 0px 12px 6px 12px;
+    font-size: $px19;
     font-weight: bold;
-
+    border-bottom: 2px solid $lyblue;
+    border-left: 6px solid $lyblue;
+    line-height: 1.6;
     @include tb {
-      // margin-top: 18px;
-      font-size: $px12;
+      padding: 1% 3%;
+      font-size: $px16;
+      line-height: 1.6;
     }
   }
 
   h4 {
-    // margin-top: 20px; */
-    margin-bottom: 12px;
-    // color: #800000;
-    color: $main-blue;
+    margin: 20px 0 15px 0;
+    color: #000;
+    font-size: $px18;
+    font-weight: bold;
+    line-height: 1.6;
+    &:after{
+      content: "";
+      display: block;
+      width: 70px;
+      height: 4px;
+      margin-top: 8px;
+      background-color: #96d7ff;
+      @include tb{
+        width: 8%;
+        max-width: 70px;
+        height: 3px;
+        margin-top: 5px;
+      }
+    }
+    @include tb {
+      font-size: $px16;
+    }
+  }
+
+  h5 {
+    margin: 20px 0 8px 0;
+    padding-bottom: 3px;
+    font-size: $px17;
+    font-weight: bold;
+    border-bottom: 2px solid #d6d6d6;
+    line-height: 1.6;
+    @include tb {
+      font-size: $px16;
+    }
+  }
+
+  h6 {
+    margin: 20px 0 0px 0;
     font-size: $px16;
     font-weight: bold;
-
+    color: #004098;
+    line-height: 1.6;
     @include tb {
-      // margin-top: 18px;
-      font-size: $px12;
+      font-size: $px16;
     }
   }
 
   ul,
   ol {
-    margin-bottom: 20px;
+    margin:30px 0 0 0;
     padding-left: 1em;
     font-size: $px16;
 
     @include tb {
-      font-size: $px12;
+      margin-top: 4%;
+      font-size: $px14;
     }
 
-    li {}
+    li {
+      ul,
+      ol{
+        margin:0;
+      }
+    }
   }
 
   ul {
     list-style-type: disc;
   }
 
+  .attachment-list{
+    margin:0;
+  }
+
   table {
     width: 100%;
-    margin-bottom: 24px;
-
-    @include tb {
-      font-size: $px14;
-    }
+    margin:20px 0 0 0;
+    line-height: normal;
 
     caption {
-      padding: 0 10px;
+      padding:0;
       color: $main-blue;
       text-align: left;
+      font-weight: bold;
     }
 
     p {
@@ -582,15 +628,24 @@ $PATH_IMG: "/img/";
     }
 
     th {
-      padding: 3px 8px 0;
+      padding: 2px 10px;
       border: 1px solid $hgry;
       background: $ivory;
       text-align: left;
+      @include tb{
+        font-size: $px15;
+      }
     }
 
     td {
-      padding: 3px 8px 0;
+      padding: 5px 10px;
       border: 1px solid $hgry;
+      font-size: $px15;
+      line-height: normal;
+      text-align: justify;
+      @include tb{
+        font-size: $px14;
+      }
     }
   }
 
@@ -605,9 +660,9 @@ $PATH_IMG: "/img/";
 
   .genres{
     ul{
-      display: flex;
       padding: 20px 0;
       list-style: none;
+      display: flex;
       gap: 10px;
 
       li{
@@ -675,7 +730,7 @@ $PATH_IMG: "/img/";
   }
 
     /* Files */
-  a[class^="icon-"]::after {
+  a[class^="icon-"]:after {
     content: "";
     display: inline-block;
     width: 20px;
@@ -737,5 +792,125 @@ $PATH_IMG: "/img/";
 
   .ss-cke-underline {
     text-decoration: underline;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 記事レイアウト-添付ファイル
+@mixin article-attachments {
+  // 添付ファイル(複数)
+  .attachments{
+    margin-top: 30px;
+    padding: 15px 20px 20px 20px;
+    background-color: #eaf8ff;
+    border-radius: 10px;
+    @include tb{
+      padding: 4% 5% 5% 5%;
+    }
+    .attachment-header{
+      p{
+        margin: 0px;
+        font-size: $px16;
+        font-weight: bold;
+      }
+    }
+    .attachment-list{
+      margin: 0;
+      li{
+        margin-bottom: 3px;
+        &:last-child{
+          margin: 0;
+        }
+        @include tb{
+          margin:0;
+        }
+      }
+    }
+  }
+
+  // 添付ファイル(複数-スライダー)
+  .article-slider {
+    margin: 20px 0 0 0;
+    .article-slider__header {
+      margin-bottom: 10px;
+      p {
+        margin: 0;
+        font-weight: bold;
+        font-size: $px16;
+      }
+    }
+    .article-slider__body {
+      position: relative;
+      max-width: 520px;
+      margin: 0 auto;
+      overflow: visible;
+      @include tb {
+        max-width: 100%;
+      }
+      .article-slider__container {
+        display: block;
+        width: 100%;
+        overflow: hidden;
+      }
+      .article-slider__item {
+        height: 240px;
+        overflow: hidden;
+        @include tb {
+          height: 210px;
+        }
+        img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+      }
+      .article-slider__prev,
+      .article-slider__next {
+        position: absolute;
+        top: 50%;
+        z-index: 10;
+        width: 35px;
+        height: 35px;
+        margin-top: 0;
+        background-color: #0c53b7;
+        border: 2px solid #0c53b7;
+        border-radius: 50%;
+        transform: translateY(-50%);
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &:after {
+          font-size: 17px;
+          color: #fff;
+          line-height: 1;
+          transition: 0.3s;
+        }
+        &:hover {
+          background-color: #fff;
+          &:after {
+            color: #0c53b7;
+          }
+        }
+      }
+      .article-slider__prev {
+        left: 12px;
+        @include tb {
+          left: 2%;
+        }
+      }
+      .article-slider__next {
+        right: 12px;
+        @include tb {
+          right: 2%;
+        }
+      }
+    }
+    .article-slider__pagination {
+      position: static;
+      margin-top: 10px;
+      text-align: center;
+    }
   }
 }

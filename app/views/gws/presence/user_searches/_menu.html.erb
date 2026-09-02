@@ -1,0 +1,9 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <% if @manageable && @cur_user.group_ids.include?(@s[:group_id].to_i) && @s[:custom_group_id].blank? && @s[:title_id].blank? && @s[:keyword].blank? %>
+      <%= link_to t('ss.links.edit'), { action: :user_edit, page: params[:page], s: @s.to_h } %>
+    <% end %>
+  <% else %>
+    <%= link_to t('ss.links.back_to_index'), { action: :index, page: params[:page], s: @s.to_h } %>
+  <% end %>
+</nav>

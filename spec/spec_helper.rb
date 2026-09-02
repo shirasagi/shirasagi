@@ -90,8 +90,8 @@ RSpec.configure do |config|
   # order dependency and want to debug it, you can fix the order by providing
   # the seed, which is printed after each run.
   #     --seed 1234
-  #config.order = "random"
-  config.order = "defined"
+  #config.order = :random
+  config.order = :defined
   Kernel.srand config.seed
 
   config.include Rails.application.routes.url_helpers
@@ -133,10 +133,6 @@ RSpec.configure do |config|
 
   config.after(:example) do |example|
     Rails.cache.clear if Rails.cache
-
-    # GWSのテスト後にCMSの公開画面のテストを実行するとロケールが英語になってしまいうまく行かない。
-    # テスト後にロケールをリセットする。
-    I18n.locale = I18n.default_locale
   end
 
   config.after(:example, type: :feature) do

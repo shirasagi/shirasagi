@@ -50,6 +50,7 @@ gem 'geocoder'
 gem 'google-api-client'
 gem 'holiday_japan'
 gem 'http_accept_language'
+gem 'i18n', '~> 1.14.0' # 1.15.2 にはマルチスレッドのバグがあり Puma で動作しない
 gem 'icalendar'
 gem 'kaminari'
 gem 'kaminari-mongoid'

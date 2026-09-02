@@ -37,20 +37,29 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
 
     context "last user pulls up a request. this is most usual case" do
       it do
-        login_cms_user
-        visit show_path
+        login_cms_user to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         #
         # admin: send request
         #
         within ".mod-workflow-request" do
-          select route_name, from: "workflow_route"
-          click_on I18n.t("workflow.buttons.select")
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+          wait_for_event_fired "ajaxComplete" do
+            select route_name, from: "workflow_route"
+            click_on I18n.t("workflow.buttons.select")
+          end
+          expect(page).to have_css(".request-setting", text: route_name)
+          wait_for_js_ready
 
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -83,13 +92,20 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         # user3: pull up request, he is the last one
         #
         login_user user3, to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: approve_comment3
           click_on I18n.t("workflow.buttons.pull_up")
         end
 
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment3)}/)
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_state).to eq "approve"
@@ -120,20 +136,29 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
 
     context "intermediate user pulls up a request" do
       it do
-        login_cms_user
-        visit show_path
+        login_cms_user to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         #
         # admin: send request
         #
         within ".mod-workflow-request" do
-          select route_name, from: "workflow_route"
-          click_on I18n.t("workflow.buttons.select")
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+          wait_for_event_fired "ajaxComplete" do
+            select route_name, from: "workflow_route"
+            click_on I18n.t("workflow.buttons.select")
+          end
+          expect(page).to have_css(".request-setting", text: route_name)
+          wait_for_js_ready
 
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -166,13 +191,20 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         # user2: pull up request
         #
         login_user user2, to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: approve_comment2
           click_on I18n.t("workflow.buttons.pull_up")
         end
 
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -208,20 +240,29 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
 
     context "last user pulls up a request. this is most usual case" do
       it do
-        login_cms_user
-        visit show_path
+        login_cms_user to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         #
         # admin: send request
         #
         within ".mod-workflow-request" do
-          select route_name, from: "workflow_route"
-          click_on I18n.t("workflow.buttons.select")
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+          wait_for_event_fired "ajaxComplete" do
+            select route_name, from: "workflow_route"
+            click_on I18n.t("workflow.buttons.select")
+          end
+          expect(page).to have_css(".request-setting", text: route_name)
+          wait_for_js_ready
 
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -254,13 +295,20 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         # user3: pull up request, he is the last one
         #
         login_user user3, to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: approve_comment3
           click_on I18n.t("workflow.buttons.pull_up")
         end
 
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment3)}/)
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_state).to eq "approve"
@@ -291,20 +339,29 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
 
     context "intermediate user pulls up a request" do
       it do
-        login_cms_user
-        visit show_path
+        login_cms_user to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         #
         # admin: send request
         #
         within ".mod-workflow-request" do
-          select route_name, from: "workflow_route"
-          click_on I18n.t("workflow.buttons.select")
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+          wait_for_event_fired "ajaxComplete" do
+            select route_name, from: "workflow_route"
+            click_on I18n.t("workflow.buttons.select")
+          end
+          expect(page).to have_css(".request-setting", text: route_name)
+          wait_for_js_ready
 
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -337,13 +394,20 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         # user2: pull up request
         #
         login_user user2, to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: approve_comment2
           click_on I18n.t("workflow.buttons.pull_up")
         end
 
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         item.reload
         expect(item.workflow_state).to eq "request"

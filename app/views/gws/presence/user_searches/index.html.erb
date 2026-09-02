@@ -1,0 +1,145 @@
+<%
+  group = @group || @custom_group
+  send_message = Gws::Memo::Message.allowed?(:edit, @cur_user, site: @cur_site)
+%>
+
+<%= jquery do %>
+Gws_Presence_User.render();
+$(".user-detail").colorbox({
+  maxWidth: "80%",
+  maxHeight: "80%",
+  fixed: true
+});
+<% end %>
+
+<div class="list-search gws-presence-list-search">
+  <%= render partial: 'search' %>
+</div>
+
+<div class="main-box presence-users presence-user-search">
+  <p class="lead-scroll"><%= t('gws/presence.lead_scroll') %></p>
+  <div class="data-table-wrap wrap-table js-scrollable">
+    <table class="index data-table">
+      <thead>
+      <tr>
+        <th><%= Gws::UserPresence.t :presence_status %></th>
+        <th><%= Gws::UserPresence.t :plan %></th>
+        <th><%= Gws::UserPresence.t :memo %></th>
+        <th><%= Gws::UserPresence.t :affiliation %></th>
+        <th><%= Gws::UserPresence.t :manager_name %></th>
+        <th><%= br Gws::UserPresence.t(:title_id).sub('（', "\n（") %></th>
+        <th><%= Gws::UserPresence.t :staff_name %></th>
+        <th><%= br Gws::UserPresence.t(:staff_kana).sub('（', "\n（") %></th>
+        <th><%= @model.t :tel_ext %></th>
+        <th><%= br Gws::UserPresence.t(:department).sub('（', "\n（") %></th>
+        <% if send_message %>
+          <th class="presence-send-message">
+            <span class="material-icons-outlined">
+              comment
+            </span>
+          </th>
+        <% end %>
+      </tr>
+      </thead>
+      <tbody>
+      <% @items.each do |item| %>
+        <% user_presence = item.user_presence(@cur_site) %>
+        <% if @manageable %>
+          <tr class="editable" data-id="<%= item.id %>">
+            <td class="presence-state-toggle">
+              <div class="no-overflow">
+                <span class="presence-state <%= user_presence.state_style %>">
+                  <%= user_presence.label :state %>
+                </span>
+              </div>
+              <%== user_presence_state_selector(item) %>
+            </td>
+            <td class="no-overflow">
+              <%= render_edit_presence_plan(item) %>
+            </td>
+            <td class="no-overflow">
+              <%= render_edit_presence_memo(item) %>
+            </td>
+            <td class="no-overflow">
+              <%= link_to item.gws_main_group(@cur_site).trailing_name, { action: :index, s: { group_id: item.gws_main_group(@cur_site).id } }, class: "group-name" %>
+            </td>
+            <td class="no-overflow">
+              <%= user_presence.manager_name %>
+            </td>
+            <td class="no-overflow">
+              <%= tryb { item.title(@cur_site).name } %>
+            </td>
+            <td class="no-overflow">
+              <%= link_to item.name, gws_apis_user_detail_path(id: item), class: 'user-detail link' %>
+            </td>
+            <td class="no-overflow">
+              <%= item.send :kana %>
+            </td>
+            <td class="no-overflow">
+              <%= item.send :tel_ext %>
+            </td>
+            <td class="no-overflow">
+              <%= user_presence.department %>
+            </td>
+            <% if send_message %>
+              <td class="no-overflow">
+                <%= link_to new_gws_memo_message_path(to: item.id), { "aria-label": t("ss.links.send_message") } do %>
+                  <span class="material-icons-outlined">
+                    mail
+                  </span>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+        <% else %>
+          <tr>
+            <td class="no-overflow">
+              <span class="presence-state <%= user_presence.state_style %>">
+                <%= user_presence.label :state %>
+              </span>
+            </td>
+            <td class="no-overflow">
+              <%= user_presence.plan %>
+            </td>
+            <td class="no-overflow">
+              <%= user_presence.memo %>
+            </td>
+            <td class="no-overflow">
+              <%= link_to item.gws_main_group(@cur_site).trailing_name, { action: :index, s: { group_id: item.gws_main_group(@cur_site).id } }, class: "group-name" %>
+            </td>
+            <td class="no-overflow">
+              <%= user_presence.manager_name %>
+            </td>
+            <td class="no-overflow">
+              <%= tryb { item.title(@cur_site).name } %>
+            </td>
+            <td class="no-overflow">
+              <%= link_to item.name, gws_apis_user_detail_path(id: item), class: 'user-detail link' %>
+            </td>
+            <td class="no-overflow">
+              <%= item.send :kana %>
+            </td>
+            <td class="no-overflow">
+              <%= item.send :tel_ext %>
+            </td>
+            <td class="no-overflow">
+              <%= user_presence.department %>
+            </td>
+            <% if send_message %>
+              <td class="no-overflow">
+                <%= link_to new_gws_memo_message_path(to: item.id), { "aria-label": t("ss.links.send_message") } do %>
+                  <span class="material-icons-outlined">
+                    mail
+                  </span>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

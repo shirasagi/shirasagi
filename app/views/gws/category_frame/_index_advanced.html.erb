@@ -40,7 +40,7 @@
           </div>
         <% end %>
 
-        <%= link_to t('gws.apis.categories.index'), url_for_category_decide, class: "btn btn-open-category-dialog" %>
+        <%= button_tag t('gws.apis.categories.index'), type: :button, name: "btn-open-category-dialog", class: "btn btn-open-category-dialog", data: { href: url_for_category_decide } %>
       </div>
     </fieldset>
     <div class="individual-criteria-action">

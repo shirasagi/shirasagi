@@ -95,4 +95,37 @@ class Gws::Discussion::Thread::CommentsController < ApplicationController
       render_create false, location: { action: :index }, render: { template: "index" }
     end
   end
+
+  def download_attachment
+    raise "404" if SS::DownloadPolicy.download_disallowed?
+
+    if params[:topic_id] == params[:id]
+      set_items
+      @item = @topic
+    else
+      set_item
+    end
+
+    files = @item.files
+    if files.blank?
+      redirect_to({ action: :index }, { notice: t("gws/workflow.notice.no_files") })
+      return
+    end
+
+    filename = "discussion_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip"
+    name = "#{@item.name}.zip"
+    zip = Gws::Compressor.new(@cur_user, model: SS::File, items: files, filename: filename, name: name)
+    zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename, name: name)
+
+    if zip.deley_download?
+      job = Gws::CompressJob.bind(site_id: @cur_site, user_id: @cur_user)
+      job.perform_later(zip.serialize)
+
+      flash[:notice_options] = { timeout: 0 }
+      redirect_to({ action: :index }, { notice: zip.delay_message })
+    else
+      raise '500' unless zip.save
+      send_file(zip.path, type: zip.type, filename: zip.name, disposition: 'attachment', x_sendfile: true)
+    end
+  end
 end

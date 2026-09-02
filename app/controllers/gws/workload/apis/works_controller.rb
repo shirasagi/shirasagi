@@ -6,11 +6,15 @@ class Gws::Workload::Apis::WorksController < ApplicationController
   helper_method :category_options, :load_options, :client_options, :cycle_options
 
   def form_options
-    @item = @model.find(params[:id]) rescue nil
-    @item ||= @model.new
+    @item = @model.site(@cur_site).readable_or_manageable(@cur_user, site: @cur_site).find(params[:id]) rescue nil
+    @item ||= begin
+      item = @model.new
+      item.cur_site = @cur_site
+      item
+    end
 
     @year = params[:year].to_i if params[:year].match?(/\A\d+\z/)
-    @group = Gws::Group.find(params[:group]) rescue nil
+    @group = Gws::Group.site(@cur_site).find(params[:group]) rescue nil
 
     if @year && @group
       @categories = Gws::Workload::Category.site(@cur_site).member_group(@group).search_year(year: @year).to_a
@@ -21,6 +25,8 @@ class Gws::Workload::Apis::WorksController < ApplicationController
 
     render layout: false
   end
+
+  private
 
   def category_options
     @categories.to_a.map { |c| [c.name, c.id] }

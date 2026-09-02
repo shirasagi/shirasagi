@@ -18,7 +18,7 @@
       <% if column.prefix_label.present? -%>
         <span class="prefix"><%= column.prefix_label %></span>
       <% end -%>
-      <%= link_to(column.place_holder.presence || t('ss.links.upload'), sns_apis_temp_files_path(user: @cur_user),
+      <%= link_to(column.place_holder.presence || t('ss.links.upload'), sns_apis_temp_files_path,
         class: %w(ajax-box btn btn-file-upload), data: { column_id: column.id.to_s, index: index }) %>
       <span class="humanized-name column-<%= column.id %> ml-1">
         <%= file.try(:humanized_name) %>

@@ -1,0 +1,34 @@
+<div class="gws-addon-history">
+  <table class="index">
+    <thead>
+      <tr>
+        <th style="width: 80px"><%= Gws::History.t :mode %></th>
+        <th style="width: 140px"><%= Gws::History.t :created %></th>
+        <th><%= Gws::History.t :user_name %></th>
+        <% if @cur_site.user_profile_public?("tel") %>
+          <th><%= Gws::History.t :user_tel %></th>
+        <% end %>
+        <th><%= Gws::History.t :updated_fields %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @items.each do |item| %>
+      <tr>
+        <td><%= item.mode_name %></td>
+        <td><%= ss_time_tag item.created %></td>
+        <td><%= gws_public_user_long_name(item.user_long_name) %></td>
+        <% if @cur_site.user_profile_public?("tel") %>
+          <td><%= item.user_tel %></td>
+        <% end %>
+        <td>
+          <% if (names = item.updated_field_names).present? %>
+          <%= ss_truncate names.join(', '), length: 30 %>
+          <% end %>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

@@ -167,16 +167,33 @@ end
 richmenu_group = create_richmenu_group name: "リッチメニュー", state: "public"
 richmenu_group.menus.destroy_all
 
-image = Fs::UploadedFile.create_from_file("ss_files/line/richmenu.png")
-richmenu_in_areas = [
-  { x: "16", y: "15", width: "252", height: "219", type: "uri", uri: @site.full_url },
-  { x: "276", y: "14", width: "248", height: "222", type: "postback", data: "チャットボット"},
-  { x: "533", y: "14", width: "251", height: "221", type: "uri", uri: ::File.join(@site.full_url, "calendar") }
+image = Fs::UploadedFile.create_from_file("ss_files/line/richmenu_gyosei.png")
+richmenu1 = create_richmenu_menu richmenu_group,
+  name: "行政情報", target: "default",
+  area_size: 4, width: 800, height: 300, chat_bar_text: "shirasagi",
+  in_image: image
+
+image = Fs::UploadedFile.create_from_file("ss_files/line/richmenu_bousai.png")
+richmenu2 = create_richmenu_menu richmenu_group,
+  name: "防災情報 ", target: "switch",
+  area_size: 4, width: 800, height: 300, chat_bar_text: "防災メニュー",
+  in_image: image
+
+richmenu1_in_areas = [
+  { x: "402", y: "1", width: "393", height: "49", type: "richmenuswitch", menu_id: richmenu2.id },
+  { x: "21", y: "64", width: "248", height: "220", type: "uri", uri: @site.full_url },
+  { x: "272", y: "65", width: "251", height: "221", type: "message", text: 'チャットボット' },
+  { x: "534", y: "65", width: "251", height: "220", type: "message", text: 'イベントカレンダー' }
 ]
-richmenu = create_richmenu_menu richmenu_group,
-  name: "シラサギリッチメニュー ", target: "default",
-  area_size: 3, width: 800, height: 250, chat_bar_text: "shirasagi",
-  in_image: image, in_areas: richmenu_in_areas
+richmenu1.update(in_areas: richmenu1_in_areas)
+
+richmenu2_in_areas = [
+  { x: "0", y: "0", width: "400", height: "50", type: "richmenuswitch", menu_id: richmenu1.id },
+  { x: "17", y: "66", width: "251", height: "219", type: "message", text: '緊急情報' },
+  { x: "273", y: "63", width: "248", height: "221", type: "message", text: '避難所' },
+  { x: "534", y: "64", width: "248", height: "220", type: "uri", uri: @site.full_url }
+]
+richmenu2.update(in_areas: richmenu2_in_areas)
 
 # サービス
 def create_service_group(data)

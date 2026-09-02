@@ -37,12 +37,19 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         #
         # admin: send request
         #
-        login_cms_user
-        visit show_path
+        login_cms_user to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-request" do
-          select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
-          click_on I18n.t("workflow.buttons.select")
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+          wait_for_event_fired "ajaxComplete" do
+            select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
+            click_on I18n.t("workflow.buttons.select")
+          end
+          wait_for_js_ready
+
           wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
         end
         within_cbox do
@@ -118,8 +125,12 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         # user1: approve request
         #
         login_user user1, to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
@@ -164,8 +175,12 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         # user2: approve request
         #
         login_user user2, to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: approve_comment2
           click_on I18n.t("workflow.buttons.approve")
         end
@@ -228,12 +243,19 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         #
         # admin: send request
         #
-        login_cms_user
-        visit show_path
+        login_cms_user to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-request" do
-          select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
-          click_on I18n.t("workflow.buttons.select")
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+          wait_for_event_fired "ajaxComplete" do
+            select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
+            click_on I18n.t("workflow.buttons.select")
+          end
+          wait_for_js_ready
+
           wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
         end
         within_cbox do
@@ -305,8 +327,12 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         # user1: remand request
         #
         login_user user1, to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: remand_comment1
           click_on I18n.t("workflow.buttons.remand")
         end
@@ -368,12 +394,19 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         #
         # admin: send request
         #
-        login_cms_user
-        visit show_path
+        login_cms_user to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-request" do
-          select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
-          click_on I18n.t("workflow.buttons.select")
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+          wait_for_event_fired "ajaxComplete" do
+            select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
+            click_on I18n.t("workflow.buttons.select")
+          end
+          wait_for_js_ready
+
           wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
         end
         within_cbox do
@@ -428,8 +461,12 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         # user1: approve request
         #
         login_user user1, to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
@@ -475,8 +512,12 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         # user2: remand request
         #
         login_user user2, to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-approve" do
+          expect(page).to have_content(I18n.t("ss.options.state.public"))
+
           fill_in "remand[comment]", with: remand_comment2
           click_on I18n.t("workflow.buttons.remand")
         end
@@ -538,12 +579,19 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         #
         # admin: send request
         #
-        login_cms_user
-        visit show_path
+        login_cms_user to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within ".mod-workflow-request" do
-          select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
-          click_on I18n.t("workflow.buttons.select")
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+          wait_for_event_fired "ajaxComplete" do
+            select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
+            click_on I18n.t("workflow.buttons.select")
+          end
+          wait_for_js_ready
+
           wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
         end
         within_cbox do
@@ -597,9 +645,11 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         #
         # admin: cancel request
         #
-        login_cms_user
-        visit show_path
+        login_cms_user to: show_path
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         page.accept_confirm do
           within ".mod-workflow-view" do
             click_on I18n.t("workflow.buttons.cancel")

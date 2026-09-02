@@ -23,11 +23,11 @@
 <% end %>
 
 <div class="gws-category-navi-dialog">
-  <form method="dialog" class="gws-category-navi-dialog-form" data-controller="gws--category--simple-editing" data-gws--category--simple-editing-url-value="<%= return_path %>">
+  <form method="dialog" class="gws-category-navi-dialog-form" data-controller="ss--clear-all-checkbox">
     <%= hidden_field_tag "base64_filter" %>
     <%= hidden_field_tag "return_path" %>
 
-    <div><%= button_tag t("ss.buttons.clear"), name: nil, type: "button", class: "btn btn-clear", data: { controller: "ss--clear-all-checkbox" } %></div>
+    <div><%= button_tag t("ss.buttons.clear"), name: nil, type: "button", class: "btn btn-clear", data: { action: "ss--clear-all-checkbox#clear" } %></div>
     <div class="category-list">
       <% grouped_categories.select { |categories| categories.length == 1 }.each do |categories| %>
         <% cate = categories.first %>
@@ -53,7 +53,7 @@
       <% else %>
         <%= button_tag t("ss.buttons.search"), name: nil, value: "send", class: "btn-primary save btn-send" %>
       <% end %>
-      <%= button_tag t("ss.buttons.close"), name: nil, value: "close", class: "btn-default btn-close" %>
+      <%= button_tag t("ss.buttons.close"), name: nil, value: "close", class: "btn-default btn-close", data: { action: "ss--dialog-container#closeDialog" } %>
     </footer>
   </form>
 </div>

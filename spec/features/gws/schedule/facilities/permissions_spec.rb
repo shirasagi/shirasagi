@@ -48,7 +48,7 @@ describe "gws_schedule_facilities", type: :feature, dbscope: :example, js: true 
         expect(page).to have_css('a.group-all', text: I18n.t("gws/schedule.tabs.group"))
         expect(page).to have_css('a.facility', text: I18n.t("gws/schedule.tabs.facility"))
       end
-      within ".fc-day-grid-container" do
+      within ".fc-daygrid-body" do
         expect(page).to have_css(".fc-event:not(.fc-holiday)", text: plan.name)
       end
       within ".current-navi" do
@@ -58,7 +58,7 @@ describe "gws_schedule_facilities", type: :feature, dbscope: :example, js: true 
       within ".gws-schedule-box" do
         expect(page).to have_css("h2", text: I18n.t('gws/schedule.tabs.facility'))
         within first(".fc-event-facility") do
-          expect(page).to have_css(".fc-event-name", text: plan.name)
+          expect(page).to have_css(".fc-event-title", text: plan.name)
         end
         # click_on plan.name
         first(".fc-event-facility").click
@@ -100,9 +100,9 @@ describe "gws_schedule_facilities", type: :feature, dbscope: :example, js: true 
         expect(page).to have_css('a.group-all', text: I18n.t("gws/schedule.tabs.group"))
         expect(page).to have_no_css('a.facility', text: I18n.t("gws/schedule.tabs.facility"))
       end
-      within ".fc-day-grid-container" do
+      within ".fc-daygrid-body" do
         within first(".fc-event:not(.fc-holiday)") do
-          expect(page).to have_css(".fc-event-name", text: plan.name)
+          expect(page).to have_css(".fc-event-title", text: plan.name)
         end
         # click_on plan.name
         first(".fc-event:not(.fc-holiday)").click

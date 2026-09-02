@@ -93,4 +93,17 @@
 
 // others like image
 
+
+
+// 3rd-party
+
+// from @claviska/jquery-minicolors
+
+
+// from jquery-ui
+
+
+
+
+
 ;

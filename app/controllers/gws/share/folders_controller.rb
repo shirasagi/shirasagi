@@ -103,7 +103,7 @@ class Gws::Share::FoldersController < ApplicationController
     @items = SS::File.where(folder_id: params[:id].to_i, deleted: nil)
 
     zip = Gws::Compressor.new(@cur_user, model: Gws::Share::File, items: @items, name: "#{@item.trailing_name}.zip")
-    zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename, name: zip.name)
+    zip.url = sns_download_job_files_url(filename: zip.filename, name: zip.name)
 
     if zip.deley_download?
       job = Gws::CompressJob.bind(site_id: @cur_site, user_id: @cur_user)

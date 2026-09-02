@@ -38,7 +38,7 @@ $(".presence-id-" + presence_id + ".presence-users .reload").trigger('click');
 <div class="main-box presence-users portlet-users presence-id-<%= @portlet.id %>">
   <div class="portlet-title">
     <span class="group"><%= group.try(:trailing_name) || group.try(:name) %></span>
-    （<time datetime="<%= time %>>"><%=l time, format: :long %></time>）
+    （<%= ss_time_tag(time) %>）
     <i class="material-icons md-18 editicon reload">refresh</i>
   </div>
   <div class="portlet-content"></div>

@@ -35,7 +35,8 @@
             f: f, topic: item, limit: 5, reply_menu: @comment.blank?,
             show_path_proc: ->(forum, topic) { gws_discussion_forum_thread_comments_path(topic_id: topic) },
             edit_path_proc: ->(forum, topic, comment) { edit_gws_discussion_forum_portal_comment_path(topic_id: topic, id: comment) },
-            delete_path_proc: ->(forum, topic, comment) { delete_gws_discussion_forum_portal_comment_path(topic_id: topic, id: comment) }
+            delete_path_proc: ->(forum, topic, comment) { delete_gws_discussion_forum_portal_comment_path(topic_id: topic, id: comment) },
+            download_attachment_path_proc: ->(forum, topic, comment) { download_attachment_gws_discussion_forum_thread_comment_path(topic_id: topic, id: comment) },
           }
         %>
         <%= render partial: 'gws/discussion/main/thread', locals: locals %>

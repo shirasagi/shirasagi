@@ -3,11 +3,11 @@ require 'spec_helper'
 describe "sns_apis_temp_files", type: :feature, dbscope: :example do
   let(:user) { ss_user }
   let(:item) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: user, model: 'ss/temp_file') }
-  let(:index_path) { sns_apis_temp_files_path user.id }
-  let(:new_path) { new_sns_apis_temp_file_path user.id }
-  let(:show_path) { sns_apis_temp_file_path user.id, item }
-  let(:edit_path) { edit_sns_apis_temp_file_path user.id, item }
-  let(:delete_path) { delete_sns_apis_temp_file_path user.id, item }
+  let(:index_path) { sns_apis_temp_files_path }
+  let(:new_path) { new_sns_apis_temp_file_path }
+  let(:show_path) { sns_apis_temp_file_path item }
+  let(:edit_path) { edit_sns_apis_temp_file_path item }
+  let(:delete_path) { delete_sns_apis_temp_file_path item }
 
   context "with auth" do
     before { login_ss_user }

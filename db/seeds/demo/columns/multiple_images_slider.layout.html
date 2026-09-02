@@ -1,0 +1,24 @@
+{% if value.items.size > 0 %}
+  <div class="article-slider">
+    <div class="article-slider__header">
+      <p>{{ value.header }}</p>
+    </div>
+
+    <div class="article-slider__body">
+      <swiper-container class="article-slider__container" init="false">
+        {% for item in value.items %}
+          {% if item.file.image? %}
+            <swiper-slide class="article-slider__item">
+              <img src="{{ item.file.url }}" alt="{{ item.label }}">
+            </swiper-slide>
+          {% endif %}
+        {% endfor %}
+      </swiper-container>
+
+      <div class="swiper-button-prev article-slider__prev"></div>
+      <div class="swiper-button-next article-slider__next"></div>
+    </div>
+
+    <div class="swiper-pagination article-slider__pagination"></div>
+  </div>
+{% endif %}

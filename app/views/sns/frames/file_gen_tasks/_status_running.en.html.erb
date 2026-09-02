@@ -1,0 +1,17 @@
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= t("sns.file_gen_task.running") %></h2></div>
+    <div class="addon-body">
+      <p>We are currently generating data for download in the background.</p>
+      <p><%= @item.current_count %> processed</p>
+
+      <p class="mt-2">Once the download is ready, the dialog box will close automatically and the download will begin.</p>
+      <p>
+        Once the download is ready, you'll receive a Bell notification containing the download URL.
+        If you close this dialog box, please wait until you receive a notification, and then proceed to the download from the notification.
+      </p>
+
+      <%= render "status_refresh" %>
+    </div>
+  </div>
+</div>

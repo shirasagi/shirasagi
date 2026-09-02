@@ -1,0 +1,52 @@
+<div class="courses-list__result">
+  <p class="courses-list__result-count">検索結果：<span>{{ pages.size }}</span>件</p>
+  <div class="courses-list__result-list">
+    {% for page in pages %}
+      <article class="courses-list__result-list-item">
+        <a href="{{ page.url }}" class="courses-list__result-list-link">
+          {% if page.values["メイン画像"].file.url %}
+            <div class="courses-list__result-list-img">
+              <img src="{{ page.values["メイン画像"].file.url }}" alt="{{ page.values["メイン画像"].image_text | default: page.name }}">
+            </div>
+          {% endif %}
+
+          <div class="courses-list__result-list-content">
+            <div class="courses-list__result-list-tags">
+              {% assign genres = page.values["絞り込み条件_ジャンル"].value | split: "," %}
+              {% for genre in genres %}
+                {% if genre != "" %}
+                  <span class="courses-list__result-list-tag courses-list__result-list-tag--genre">
+                    {{ genre | strip }}
+                  </span>
+                {% endif %}
+              {% endfor %}
+
+              {% assign targets = page.values["絞り込み条件_対象"].value | split: "," %}
+              {% for target in targets %}
+                {% if target != "" %}
+                  <span class="courses-list__result-list-tag courses-list__result-list-tag--target">
+                    {{ target | strip }}
+                  </span>
+                {% endif %}
+              {% endfor %}
+            </div>
+
+            <h3 class="courses-list__result-list-title">
+              {{ page.index_name | default: page.name }}
+            </h3>
+
+            <p class="courses-list__result-list-place">
+              {{ page.values["絞り込み条件_活動場所"] }}
+            </p>
+
+            <ul class="courses-list__result-list-meta">
+              <li class="courses-list__result-list-meta--day">{{ page.values["絞り込み条件_曜日"] }}</li>
+              <li class="courses-list__result-list-meta--time">{{ page.values["絞り込み条件_時間帯"] }}</li>
+              <li class="courses-list__result-list-meta--fee">{{ page.values["絞り込み条件_参加費"] }}</li>
+            </ul>
+          </div>
+        </a>
+      </article>
+    {% endfor %}
+  </div>
+</div>

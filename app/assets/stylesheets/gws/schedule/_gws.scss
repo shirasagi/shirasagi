@@ -284,40 +284,60 @@
     height: 15px;
   }
 }
+
 /*
  * FullCalendar
  */
+.fc-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px 10px;
+}
 .fc-toolbar h2 {
-  margin: 2px 0 -2px;
-  border-bottom: 1px solid #333;
-  font-size: 120%;
-  cursor: pointer;
+  display: inline-block;
+  margin: 10px 0px 10px 10px !important;
+  clear: both !important;
+  border-bottom: 1px solid #333 !important;
+  font-size: 120% !important;
+  vertical-align: middle;
+  cursor: pointer !important;
   &:hover {
-    border-color: init.$orange;
-    color: init.$orange;
+    border-color: init.$orange !important;
+    color: init.$orange !important;
   }
   @include init.mb {
     margin: 10px 0 !important;
-    clear: both;
+    clear: both !important;
+  }
+  @media only screen and (max-width: 768px) {
+    margin: 10px 0px 10px 10px !important;
+    clear: both !important;
   }
 }
 .fc-view table {
   box-sizing: border-box;
 }
-.fc-right .fc-button,
+.fc-toolbar-chunk:nth-child(3) .fc-button,
 .fc-today-button {
-  min-width: 50px;
+  min-width: 50px !important;
 }
-.fc-month-view .fc-body .fc-row {
-  min-height: 7em;
+.fc-dayGridMonth-view .fc-daygrid-day-frame {
+  min-height: 7em !important;
 }
-.fc-basicWeek-view .fc-body .fc-row {
+.fc-dayGridWeek-view .fc-scrollgrid-sync-table {
   min-height: 35em;
 }
-.calendar.multiple .fc-basicWeek-view .fc-body .fc-row {
-  min-height: 4em;
+.calendar.multiple {
+  .fc-dayGridWeek-view .fc-scrollgrid-section-header {
+    display: none;
+  }
+  .fc-dayGridWeek-view .fc-scrollgrid-sync-table {
+    min-height: 7.5em;
+  }
 }
-.fc-head {
+.fc-col-header-cell {
   background-color: #eee;
   th {
     padding: 4px;
@@ -325,8 +345,21 @@
 }
 .fc-button {
   z-index: 0 !important;
+  border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) rgba(0,0,0,.25) !important;
+  background: #fff;
+  background: linear-gradient(to bottom, #fff, #ebecec);
+  color: #000 !important;
+  font-size: 1em;
 
+  &.fc-state-active, &[aria-pressed="true"] {
+    background-color: #ccc !important;
+    background-image: none;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,.15),0 1px 2px rgba(0,0,0,.05) !important;
+  }
   .fc-icon {
+    font-size: 1em !important;
+    line-height: 1em !important;
+
     &.fc-icon-gws-schedule-calendar-reload {
       &::after {
         content: "\E5D5";
@@ -338,43 +371,55 @@
     }
   }
 }
+.fc .fc-button:focus {
+  z-index: 1 !important;
+  outline: auto;
+  outline: auto -webkit-focus-ring-color; /* for Chrome */
+}
 .fc-view-container {
   background-color: #fff;
 }
 @include init.mb {
-  .fc-right {
+  .fc-toolbar-chunk:nth-child(3) {
     margin: 0 0 10px;
-    .fc-button {
-      margin: 5px 5px 5px 0;
-    }
   }
 }
 
 // days
-.fc-day-header.fc-sun {
+.fc-col-header-cell.fc-day-sun {
   background: #fff0f0;
 }
-.fc-day-header.fc-sat {
+.fc-col-header-cell.fc-day-sat {
   background: #e0f4ff;
 }
-.fc-ltr .fc-basic-view .fc-day-number {
+.fc-ltr .fc-basic-view .fc-daygrid-day-number {
   padding-left: 4px;
   text-align: left;
 }
-.fc-sun {
+.fc-col-header-cell-cushion {
+  color: #000;
+}
+.fc-day-sun .fc-col-header-cell-cushion {
   color: #e00;
 }
-.fc-sat {
+.fc-day-sat .fc-col-header-cell-cushion {
   color: #04d;
 }
-.fc-day.fc-sun {
+.fc-day.fc-day-sun {
   //background: #fff8f8;
 }
-.fc-day.fc-sat {
+.fc-day.fc-day-sat {
   //background: #f6faff;
 }
-.fc-unthemed .fc-today {
-  background: #ffb;
+.fc-daygrid-day.fc-day-today, .fc-timegrid-col.fc-day-today {
+  background: #ffb !important;
+}
+.fc-daygrid-day-top {
+  flex-direction: row !important;
+  .fc-daygrid-day-number {
+    color: #000;
+    text-decoration: none !important;
+  }
 }
 
 // events
@@ -392,34 +437,137 @@
   border-radius: 0;
   border-radius: 3px;
   font-size: 90%;
+  overflow-wrap: break-word;
+  word-break: normal;
+  white-space: normal;
   cursor: pointer;
   &:hover {
     color: init.$black;
   }
-  .fc-content {
-    word-wrap: break-word;
+  .fc-daygrid-event-dot,
+  .fc-list-event-dot {
+    display: none;
+  }
+  .fc-category {
+    @include fc_event_prefix;
+    background-color: init.$orange;
+  }
+  .fc-facility::before {
+    @include fc_event_prefix;
+    content: "設";
+    background-color: #777;
+  }
+  // 月以外 (別階層)
+  .fc-event-main {
+    color: #000;
+    overflow-wrap: break-word;
     word-break: normal;
     white-space: normal;
-    .fc-date + .fc-title {
+    &:hover {
+      color: #000;
+    }
+    .fc-event-main-frame {
+      // display: inline-block !important;
+    }
+    .fc-date + .fc-event-title,
+    .fc-datetime + .fc-event-title {
       margin-left: 0;
       padding-left: 4px;
     }
-    .fc-category {
-      @include fc_event_prefix;
-      background-color: init.$orange;
-    }
-    .fc-facility::before {
-      @include fc_event_prefix;
-      content: "設";
-      background-color: #777;
-    }
-    .fc-title,
+  }
+}
+.fc-dayGridMonth-view,
+.fc-dayGridWeek-view,
+.fc-timeGridDay-view {
+  .fc-event {
+    display: block;
+  }
+
+  // 月 (同階層)
+  .fc-event.fc-event-point {
+    display: block;
     .fc-facility {
       display: block;
     }
   }
+  .fc-event-title {
+    display: block;
+  }
+  .fc-category {
+    margin-right: 2px;
+  }
+  .fc-facility::before {
+    margin-right: 2px;
+  }
+  .fc-facility {
+    display: block;
+  }
+
+  // 予定 (ブロック)
+  .fc-daygrid-block-event {
+    .fc-facility {
+      margin-left: 2px;
+    }
+  }
 }
-.fc-time-grid-event {
+// 日
+.fc-timeGridDay-view {
+  .fc-event-point {
+    background-color: rgb(0 0 0 / 8%);
+  }
+  .fc-event-point:hover {
+    background-color: rgb(0 0 0 / 12%);
+  }
+  .fc-date {
+    font-size: 100%;
+  }
+  .fc-event-title {
+    font-size: 100%;
+  }
+  .fc-facility {
+    display: inline-block !important;
+    margin-left: 4px;
+  }
+}
+// リスト
+.fc-list-table {
+  th {
+    background: #eee !important;
+  }
+  .fc-list-day-text {
+    color: #000;
+    text-decoration: none !important;
+  }
+  .fc-event {
+    text-decoration: none !important;
+  }
+  .fc-event a {
+    border-radius: 3px;
+  }
+  // .fc-event-main {
+  //   color: transparent;
+  // }
+  .fc-event-allday a {
+    background-color: #fd8;
+    background-image: url(/assets/img/gws/bg-plan.png);
+    color: #000;
+  }
+  .fc-list-event-title a {
+    padding: 2px 3px;
+    &:hover { text-decoration: none; }
+  }
+  .fc-category {
+    margin-right: 2px;
+  }
+  .fc-facility::before {
+    margin-right: 2px;
+  }
+  .fc-facility {
+    margin-left: 4px;
+  }
+}
+
+.fc-timegrid-event {
   margin-bottom: 1px;
   background-color: #2eb0f2;
   color: init.$black;
@@ -427,26 +575,35 @@
     color: init.$black;
   }
 }
-.fc-time-grid-event .fc-content::before {
+.fc-timegrid-event .fc-event-main::before {
   float: left;
 }
-.fc-time-grid-event .fc-time,
-.fc-time-grid-event.fc-short .fc-title {
+.fc-timegrid-event .fc-time,
+.fc-timegrid-event.fc-short .fc-event-title {
   font-size: 90%;
 }
-.fc-time-grid-event .fc-resizer {
+.fc-timegrid-event .fc-resizer {
   display: none;
 }
-.fc-time-grid-event:hover .fc-resizer {
+.fc-timegrid-event:hover .fc-resizer {
   display: block;
 }
-.fc-event-point {
+
+.fc-event-main,.fc-event-point {
   background-color: transparent;
   color: #f25a38;
   cursor: pointer;
   &:hover {
     color: #f25a38;
     text-decoration: underline;
+  }
+  .fc-event-time {
+    font-size: 100% !important;
+    font-weight: bold;
+  }
+  .fc-event-title {
+    display: block;
+    font-weight: normal;
   }
 }
 .fc-event-range {
@@ -458,9 +615,9 @@
     color: #000;
     text-decoration: underline;
   }
-  .fc-content {
+  .fc-event-main {
     //text-overflow: ellipsis;
-    .fc-title,
+    .fc-event-title,
     .fc-facility {
       display: inline;
     }
@@ -481,43 +638,42 @@
   background-color: #bdf;
   color: #000;
 }
-.fc-event-private .fc-title::before {
+.fc-event-private .fc-event-title::before {
   @include fc_event_prefix;
   content: "秘";
   background-color: #f0b;
 }
-.fc-event-user-attendance-unknown .fc-title::before {
+.fc-event-user-attendance-unknown .fc-event-title::before {
   @include fc_event_prefix;
   content: "未";
   background-color: #f0b;
 }
-.fc-event-user-attendance-absence .fc-title::before {
+.fc-event-user-attendance-absence .fc-event-title::before {
   @include fc_event_prefix;
   content: "不";
   background-color: #f0b;
 }
-.fc-event-approval-request .fc-title::before {
+.fc-event-approval-request .fc-event-title::before {
   @include fc_event_prefix;
   content: "申";
   background-color: #84e;
 }
-.fc-event-approval-approve .fc-title::before {
+.fc-event-approval-approve .fc-event-title::before {
   @include fc_event_prefix;
   content: "認";
   background-color: #84e;
 }
-.fc-event-approval-deny .fc-title::before {
+.fc-event-approval-deny .fc-event-title::before {
   @include fc_event_prefix;
   content: "否";
   background-color: #84e;
 }
-
-.fc-holiday {
+.fc-holiday .fc-event-main {
   background: #9d6;
   background-image: url(/assets/img/gws/bg-plan.png);
   color: #000;
   &:hover {
-    color: #000;
+    color: #000 !important;
   }
 }
 
@@ -525,31 +681,11 @@
   border-right: 0px;
 }
 
-// View: agendaDay
-.fc-agendaDay-view {
-  .fc-time-grid-event {
-    margin-right: 5px;
-  }
-  .fc-event {
-    div.fc-title {
-      display: flex;
-      white-space: nowrap;
-      .fc-event-name {
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .fc-facility {
-        padding-right: 5px;
-        padding-left: 5px;
-      }
-    }
-  }
-}
-
 // View: listMonth
 .fc-listMonth-view {
-  table {
-    display: none;
+  .fc-list-day {
+    position: relative;
+    z-index: 1;
   }
 }
 .fc-listMonth-view-table {
@@ -594,8 +730,9 @@
     white-space: normal;
   }
 }
-// View: timelineDay
-.fc-timelineDay-view {
+
+// View: timeGridDay
+.fc-timeGridDay-view {
   .fc-scrollpane,
   .fc-scrollpane-inner {
     overflow: visible;
@@ -614,68 +751,26 @@
     margin-left: 1px;
     border-bottom: 1px solid #d8d8d8;
   }
+  .fc-event-main {
+    text-decoration: none !important;
+  }
   .fc-timeline-event {
     min-width: calc(1em + 5px);
     background: #2eb0f2;
     color: init.$black;
-    .fc-title {
+    .fc-event-title {
       max-height: 230px;
     }
   }
 }
-// View: basicHour
-.fc-basicHour-view {
-  .fc-hour- {
-    &0,
-    &1,
-    &2,
-    &3,
-    &4,
-    &5,
-    &6,
-    &7 {
-      background-color: #f4f4f4;
-    }
-    &8,
-    &9,
-    &10,
-    &11 {
-      background: #ffebeb;
-      color: #e00;
-    }
-    &12,
-    &13,
-    &14,
-    &15,
-    &16,
-    &17 {
-      background: #fff0d0;
-      color: #f60;
-    }
-    &18,
-    &19,
-    &20,
-    &21,
-    &22,
-    &23 {
-      background: #e0f4ff;
-      color: #04d;
-    }
-  }
-  .fc-body .fc-row {
-    min-height: 23px;
-  }
-  .fc-event {
-    z-index: 0;
-    border-left: 1px solid #555;
-  }
-}
+
+// (View: listMonth)
 .fc-list-format {
   .info {
     a {
       padding: 2px;
-      .fc-content {
-        .fc-title {
+      .fc-event-main {
+        .fc-event-title {
           display: inline-block;
         }
         .fc-facility {
@@ -690,14 +785,29 @@
     }
   }
 }
+
 // Print View
 .print-preview {
-  .fc-unthemed {
+  .calendar-multiple-container {
+    > div {
+      border-color: #000 !important;
+    }
+  }
+  .calendar-multiple-header {
+    border-color: #000;
+  }
+  .add-plan {
+    display: none;
+  }
+  .fc, .fc-unthemed {
     th,
     td {
       border-style: solid;
       border-color: #000;
     }
+  }
+  .fc-theme-standard .fc-scrollgrid {
+    border-color: #000;
   }
   .fc-listMonth-view-table {
     .tr {
@@ -705,9 +815,14 @@
     }
   }
   .fc-event {
-    color: #333 !important;
+    border-bottom: 1px solid #555 !important;
+    background-color: #f4f4f4 !important;
+    color: #000 !important;
   }
-  .fc-event .fc-content {
+  .fc-event-main {
+    color: #000 !important;
+  }
+  .fc-event .fc-event-main {
     white-space: normal !important;
   }
   .fc-day-grid-event,
@@ -716,7 +831,7 @@
     border-bottom: 1px solid #555;
     background-color: #f4f4f4 !important;
   }
-  .fc-event .fc-content::before {
+  .fc-event .fc-event-main::before {
     border: 1px solid #333;
     border-width: 0 1px;
     background-color: transparent;
@@ -741,7 +856,7 @@
   .popup-title {
     font-size: 120%;
     text-overflow: ellipsis;
-    word-wrap: normal;
+    overflow-wrap: normal;
     word-break: normal;
   }
   .popup-date {
@@ -806,16 +921,23 @@
   display: inline-block;
   position: absolute;
   z-index: 2;
+  margin-top: 65px;
   padding: 0 5px;
   background-color: #6ad;
   color: #fff;
 }
+.calendar.multiple .fc-loading {
+  margin-top: 0;
+}
 
 // multiple calendar
 .calendar-controller {
-  .fc-view-container .fc-timelineDay-view {
+  .fc-view-container .fc-timeGridDay-view {
     height: 35px;
     overflow: hidden;
+  }
+  .fc-scrollgrid-section-body {
+    display: none;
   }
 }
 .calendar.multiple {
@@ -867,9 +989,61 @@
   }
 }
 .calendar {
+  // for print
+  width: 100% !important;
+  .fc-col-header, .fc-daygrid-body, .fc-scrollgrid-sync-table {
+    width: 100% !important;
+  }
+
   ~ .calendar .fc-row-name td {
     border-top-width: 0;
   }
+}
+
+// timeGridDay
+.calendar-controller .fc-timeGridDay-view {
+  table.fc-scrollgrid {
+    display: none;
+  }
+}
+.calendar-multiple-container[data-view-type="timeGridDay"] {
+  display: flex;
+  overflow-y: auto;
+  > div {
+    width: 250px;
+    min-width: 250px;
+    border-top: 1px solid #ddd;
+  }
+  > div:nth-child(n+2) {
+    margin-left: -1px;
+  }
+  .calendar {
+    background-color: #fff;
+  }
+  .calendar-multiple-header {
+    min-height: 48px;
+    .calendar-attr {
+      display: block;
+      text-align: right;
+      .user-occupation, .email, .tel {
+        display: none;
+      }
+    }
+  }
+  .fc-scrollgrid-sync-table {
+    min-height: 83px;
+  }
+  .calendar-name, .calendar-attr {
+    display: block;
+  }
+  .add-plan {
+    margin-left: 0;
+  }
+}
+
+// dayGridWeek
+.calendar-multiple-container[data-view-type="dayGridWeek"] {
+  // border-top: 1px solid #ddd;
 }
 
 // facility calendar

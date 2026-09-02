@@ -12,7 +12,7 @@ def login_member(site, node, member = cms_member(site: site))
   within 'form.form-login' do
     fill_in 'item[email]', with: member.email
     fill_in 'item[password]', with: member.in_password
-    click_button 'ログイン'
+    click_button I18n.t("ss.login")
   end
   expect(page).to have_no_css('.member-login-box [name="item[password]"]')
 rescue => e

@@ -31,10 +31,10 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         expect(page).to have_link(folder2.name)
       end
       within ".gws-schedule-box" do
-        expect(page).to have_css(".fc-event-name", text: item1.name)
-        expect(page).to have_css(".fc-event-name", text: item2.name)
-        expect(page).to have_css(".fc-event-name", text: item3.name)
-        expect(page).to have_css(".fc-event-name", text: item4.name)
+        expect(page).to have_css(".fc-event-title", text: item1.name)
+        expect(page).to have_css(".fc-event-title", text: item2.name)
+        expect(page).to have_css(".fc-event-title", text: item3.name)
+        expect(page).to have_css(".fc-event-title", text: item4.name)
       end
 
       # select category1
@@ -51,10 +51,10 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         expect(page).to have_link(folder2.name)
       end
       within ".gws-schedule-box" do
-        expect(page).to have_css(".fc-event-name", text: item1.name)
-        expect(page).to have_no_css(".fc-event-name", text: item2.name)
-        expect(page).to have_css(".fc-event-name", text: item3.name)
-        expect(page).to have_no_css(".fc-event-name", text: item4.name)
+        expect(page).to have_css(".fc-event-title", text: item1.name)
+        expect(page).to have_no_css(".fc-event-title", text: item2.name)
+        expect(page).to have_css(".fc-event-title", text: item3.name)
+        expect(page).to have_no_css(".fc-event-title", text: item4.name)
       end
 
       within "#content-navi-core .gws-notice-folder" do
@@ -68,10 +68,10 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         expect(page).to have_link(folder2.name)
       end
       within ".gws-schedule-box" do
-        expect(page).to have_css(".fc-event-name", text: item1.name)
-        expect(page).to have_no_css(".fc-event-name", text: item2.name)
-        expect(page).to have_no_css(".fc-event-name", text: item3.name)
-        expect(page).to have_no_css(".fc-event-name", text: item4.name)
+        expect(page).to have_css(".fc-event-title", text: item1.name)
+        expect(page).to have_no_css(".fc-event-title", text: item2.name)
+        expect(page).to have_no_css(".fc-event-title", text: item3.name)
+        expect(page).to have_no_css(".fc-event-title", text: item4.name)
       end
 
       within "#content-navi-core .gws-notice-folder" do
@@ -85,10 +85,10 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         expect(page).to have_link(folder2.name)
       end
       within ".gws-schedule-box" do
-        expect(page).to have_no_css(".fc-event-name", text: item1.name)
-        expect(page).to have_no_css(".fc-event-name", text: item2.name)
-        expect(page).to have_css(".fc-event-name", text: item3.name)
-        expect(page).to have_no_css(".fc-event-name", text: item4.name)
+        expect(page).to have_no_css(".fc-event-title", text: item1.name)
+        expect(page).to have_no_css(".fc-event-title", text: item2.name)
+        expect(page).to have_css(".fc-event-title", text: item3.name)
+        expect(page).to have_no_css(".fc-event-title", text: item4.name)
       end
     end
   end

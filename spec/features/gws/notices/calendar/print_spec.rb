@@ -23,7 +23,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         expect(page).to have_link(folder.name)
       end
       within ".gws-schedule-box" do
-        expect(page).to have_css(".fc-event-name", text: item.name)
+        expect(page).to have_css(".fc-event-title", text: item.name)
         within ".operations" do
           click_on I18n.t('ss.buttons.print')
         end
@@ -32,7 +32,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       end
       within "#main.print-preview" do
         within ".gws-schedule-box" do
-          expect(page).to have_css(".fc-event-name", text: item.name)
+          expect(page).to have_css(".fc-event-title", text: item.name)
         end
       end
     end

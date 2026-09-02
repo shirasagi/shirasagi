@@ -12,6 +12,7 @@ module Gws::Schedule
     Gws::Role.permission :delete_private_gws_schedule_plans, module_name: 'gws/schedule'
     Gws::Role.permission :trash_other_gws_schedule_plans, module_name: 'gws/schedule'
     Gws::Role.permission :trash_private_gws_schedule_plans, module_name: 'gws/schedule'
+    Gws::Role.permission :import_approval_other_gws_schedule_plans, module_name: 'gws/schedule'
     Gws::Role.permission :use_private_gws_schedule_plans, module_name: 'gws/schedule'
 
     Gws::Role.permission :read_other_gws_schedule_categories, module_name: 'gws/schedule'

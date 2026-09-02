@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
+    <link href="/css/style.css" media="all" rel="stylesheet" />
+    <script src="/js/common.js"></script>
+    <script src="/js/jquery.rwdImageMaps.min.js"></script>
+    {{ part "/favicon" }}
+  </head>
+  <body class="general courses__layout">
+    <div id="page">
+      <div class="accessibility">
+        <div class="accessibility-inner">
+          <p class="accessibility__contentlink"><a href="#wrap">本文へ</a></p>
+          <p class="accessibility__uselink"><a href="/use/">ご利用案内</a></p>
+          <div class="accessibility__translate translate-wrap">
+            <div class="translate-box">
+              {{ part "/translate" }}
+            </div>
+          </div>
+          {{ part "/tool" }}
+        </div><!-- /.accessibility-inner -->
+      </div><!-- .accessibility -->
+
+      <header id="head">
+        <div class="head__utility-wrap">
+          <h1 class="siteinfo__logo">
+            <a href="/"><img src="/img/logo.png" alt="シラサギ市" title="シラサギ市 ポータルサイト" /></a>
+          </h1>
+          <div class="head__utility">
+            <div class="head__utility-inner head__utility-inner--upper">
+              <div class="head-inquiry">
+                <a href="/inquiry/">お問い合わせ</a>
+              </div>
+              <div class="head-organization">
+                <a href="/organization/">組織案内</a>
+              </div>
+              <div class="head-mypage">
+                {{ part "/login/login" }}
+              </div>
+            </div><!-- .head__utility-inner -->
+            <div class="head__utility-inner head__utility-inner--under">
+            {{ part "/search/search" }}
+            {{ part "/keyword" }}
+            </div>
+          </div><!-- /.head__utility -->
+        </div><!-- /.head__utility-wrap -->
+      </header>
+
+      {{ part "/navi" }}
+
+      <div id="wrap" class="wrap">
+        <div class="wrap__inner">
+          {{ part "/breadcrumb" }}
+          <div class="courses-detail">
+            {{ yield }}
+            <div class="courses-detail__back">
+              <a href="/courses/" class="courses-detail__back-link">一覧へ戻る</a>
+            </div>
+          </div>
+        </div><!-- .wrap__inner -->
+      </div><!-- #wrap -->
+
+      <section id="chat" class="chat">
+        <div class="chat--close">
+          <p>なんでも聞いてね！</p>
+          <img src="/img/ic-chat.png" alt="chatbot" />
+        </div>
+        <div class="chat--open">
+          <header>
+            <h2>チャットボット</h2>
+            <span class="close-btn">
+              <img src="/img/chat-close.png" alt="閉じる" />
+            </span>
+          </header>
+          {{ part "/bot" }}
+        </div>
+      </section>
+
+      {{ part "/foot" }}
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<%= jquery do %>
+$('#s_group_id').on('change', function(){
+  if($(this).val() == ""){
+    $(this).find('option[value=""]').first().text('<%= t('gws/presence.search.group_id') %>');
+  } else {
+    $(this).find('option[value=""]').first().text('');
+  }
+});
+$('#s_custom_group_id').on('change', function(){
+  if($(this).val() == ""){
+    $(this).find('option[value=""]').first().text('<%= Gws::CustomGroup.model_name.human %>');
+  } else {
+    $(this).find('option[value=""]').first().text('');
+  }
+});
+$('#s_title_id').on('change', function(){
+  if($(this).val() == ""){
+    $(this).find('option[value=""]').first().text('<%= t('gws/presence.search.title_id') %>');
+  } else {
+    $(this).find('option[value=""]').first().text('');
+  }
+});
+$("#s_limit").on('change', function() {
+  $('form.search').submit();
+});
+$('#s_group_id').trigger('change');
+$('#s_custom_group_id').trigger('change');
+$('#s_title_id').trigger('change');
+<% end %>
+
+<%= form_for :s, url: { action: :index }, html: { method: :get, class: :search } do |f| %>
+  <%= f.select :group_id, options_from_collection_for_select(@groups, :id, :section_name, @s[:group_id]), include_blank: t('gws/presence.search.group_id') %>
+  <%= f.select :custom_group_id, options_from_collection_for_select(@custom_groups, :id, :name, @s[:custom_group_id]), include_blank: Gws::CustomGroup.model_name.human %>
+  <%= f.select :title_id, options_from_collection_for_select(@titles, :id, :name, @s[:title_id]), include_blank: t('gws/presence.search.title_id') %>
+  <div class="search-inner">
+    <%= f.text_field :keyword, placeholder: t('gws/presence.search.keyword'), aria: { label: t('gws/presence.search.keyword') }, style: "width: 500px;" %>
+    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+
+    <span class="limit">
+      <%= f.label(:limit, @model.t(:limit)) %>
+      <%= f.select :limit, %w(20 50 100), selected: @s[:limit] %>
+    </span>
+  </div>
+<% end %>

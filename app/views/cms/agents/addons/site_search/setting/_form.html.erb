@@ -21,6 +21,12 @@
   <dt><%= @model.t :organization_state %><%= @model.tt :organization_state %></dt>
   <dd><%= f.select :organization_state, @item.organization_state_options %></dd>
 
+  <dt><%= @model.t :sort_state %><%= @model.tt :sort_state %></dt>
+  <dd><%= f.select :sort_state, @item.sort_state_options %></dd>
+
+  <dt><%= @model.t :sort_type %><%= @model.tt :sort_type %></dt>
+  <dd><%= f.select :sort_type, @item.sort_type_options %></dd>
+
   <dt><%= t("cms.node_config") %><%= @model.tt :st_article_node_ids %></dt>
   <dd class="wide" style="line-height: 2.5">
     <%= f.hidden_field "st_article_node_ids[]", value: "", class: "hidden-ids", id: nil %>

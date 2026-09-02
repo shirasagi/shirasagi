@@ -12,14 +12,18 @@ class Gws::UserPresence
   field :state, type: String, default: ""
   field :plan, type: String, default: ""
   field :memo, type: String, default: ""
+  field :manager_name, type: String, default: ""
+  field :department, type: String, default: ""
   field :sync_available_state, type: String, default: "disabled"
   field :sync_unavailable_state, type: String, default: "disabled"
   field :sync_timecard_state, type: String, default: "enabled"
-  permit_params :state, :plan, :memo
+  permit_params :state, :plan, :memo, :manager_name, :post, :department
 
   validates :state, inclusion: { in: ::SS.config.gws["presence"]["state"].map(&:keys).flatten }
   validates :plan, length: { maximum: 400 }
   validates :memo, length: { maximum: 400 }
+  validates :manager_name, length: { maximum: 80 }
+  validates :department, length: { maximum: 80 }
 
   before_validation :set_presence_attributes
 

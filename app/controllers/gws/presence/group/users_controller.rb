@@ -22,7 +22,7 @@ class Gws::Presence::Group::UsersController < ApplicationController
   end
 
   def items
-    @items = @group.users.active.search(params[:s]).order_by_title(@cur_site).
+    @items = @group.users.active.readable_users(@cur_user, site: @cur_site).search(params[:s]).order_by_title(@cur_site).
       page(params[:page]).per(25)
   end
 
@@ -40,7 +40,7 @@ class Gws::Presence::Group::UsersController < ApplicationController
   end
 
   def portlet
-    @items = @group.users.active.search(params[:s]).order_by_title(@cur_site)
+    @items = @group.users.active.readable_users(@cur_user, site: @cur_site).search(params[:s]).order_by_title(@cur_site)
     @manageable_users, @group_users = @items.partition { |item| @editable_user_ids.include?(item.id) }
     render template: "portlet", layout: false
   end

@@ -65,7 +65,7 @@ export default class extends Controller {
       this.#turboFrameElement.removeEventListener("turbo:submit-end", this.#submitEndHandler)
     }
     if (this.#dialogElement) {
-      this.#dialogElement.removeEventListener("ss:dialog:closing", this.#dialogClosingHandler)
+      this.#dialogElement.removeEventListener("cancel", this.#dialogClosingHandler)
     }
     ConfirmationService.remove(this);
   }
@@ -88,7 +88,7 @@ export default class extends Controller {
       return
     }
 
-    this.#dialogElement.addEventListener("ss:dialog:closing", this.#dialogClosingHandler)
+    this.#dialogElement.addEventListener("cancel", this.#dialogClosingHandler)
   }
 
   get #turboFrameElement() {

@@ -4,10 +4,24 @@
 <section class="main-box">
   <header><h2><%= t("history.confirm.restore") %></h2></header>
   <dl class="see">
-    <dt class="wide"><%= t :"history.current_version" %></dt>
+    <dt class="wide"><%= t :"history.current_data" %></dt>
+    <dd class="wide"></dd>
+
+    <% if ref_item.present? %>
+      <dt><%= @model.t :updated %></dt>
+      <dd><%= I18n.l(ref_item.updated) rescue nil %></dd>
+    <% end %>
+
+    <dt><%= @model.t :version %></dt>
     <dd><%= SS.version %></dd>
 
-    <dt class="wide"><%= t :"history.backup_version" %></dt>
+    <dt class="wide"><%= t :"history.backup_data" %></dt>
+    <dd class="wide"></dd>
+
+    <dt><%= @model.t :updated %></dt>
+    <dd><%= I18n.l(@item.data['updated'].in_time_zone) rescue nil %></dd>
+
+    <dt><%= @model.t :version %></dt>
     <dd><%= @item.version %></dd>
   </dl>
 </section>

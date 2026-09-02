@@ -30,17 +30,6 @@ class Inquiry::Frames::ColumnsController < ApplicationController
     @item ? @item.class : Inquiry::Column
   end
 
-  def set_item
-    @item ||= begin
-      item = @model.find(params[:id].to_i)
-      item.attributes = fix_params
-      item
-    end
-  rescue Mongoid::Errors::DocumentNotFound => e
-    return render_destroy(true) if params[:action] == 'destroy'
-    raise e
-  end
-
   public
 
   def show

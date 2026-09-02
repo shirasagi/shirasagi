@@ -10,10 +10,12 @@ module Cms::Addon::SiteSearch
       field :category_state, type: String
       field :organization_state, type: String
       field :site_search_type, type: String
+      field :sort_state, type: String
+      field :sort_type, type: String
       embeds_ids :st_article_nodes, class_name: "Article::Node::Page"
       permit_params :link_target, :search_type_state,
         :article_node_state, :category_state, :organization_state,
-        :site_search_type, st_article_node_ids: []
+        :site_search_type, :sort_state, :sort_type, st_article_node_ids: []
     end
 
     def link_target_options
@@ -26,6 +28,7 @@ module Cms::Addon::SiteSearch
     def search_type_state_options
       %w(show hide).collect { |k| [I18n.t("ss.options.state.#{k}"), k == 'show' ? nil : k] }
     end
+    alias sort_state_options search_type_state_options
 
     def article_node_state_options
       %w(show hide).collect { |k| [I18n.t("ss.options.state.#{k}"), k == 'show' ? nil : k] }
@@ -41,6 +44,10 @@ module Cms::Addon::SiteSearch
 
     def site_search_type_options
       %w(page file all).collect { |k| [I18n.t("cms.options.site_search_type.#{k}"), k] }
+    end
+
+    def sort_type_options
+      %w(score released).collect { |k| [I18n.t("cms.search_sort_options.#{k}"), k] }
     end
   end
 end

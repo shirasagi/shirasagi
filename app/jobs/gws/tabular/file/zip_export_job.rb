@@ -55,7 +55,7 @@ class Gws::Tabular::File::ZipExportJob < Gws::ApplicationJob
     scheme = site.canonical_scheme.presence || SS.config.gws.canonical_scheme.presence || "http"
     domain = site.canonical_domain.presence || SS.config.gws.canonical_domain
     Rails.application.routes.url_helpers.sns_download_job_files_url(
-      protocol: scheme, host: domain, user: user, filename: filename)
+      protocol: scheme, host: domain, filename: filename)
   end
 
   def export_csv_to_zip(zip, encoding)

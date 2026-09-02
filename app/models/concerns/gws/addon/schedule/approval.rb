@@ -14,6 +14,8 @@ module Gws::Addon::Schedule::Approval
     #validates :approval_check_state, inclusion: { in: %w(disabled enabled), allow_blank: true }
     validate :valdiate_approval_state
     validate :valdiate_reset_approvals, if: -> { @reset_approvals }
+
+    after_save :set_approvals
   end
 
   private
@@ -31,6 +33,21 @@ module Gws::Addon::Schedule::Approval
     else
       self.approval_state = approval_present? ? 'request' : nil
       self.approvals = []
+    end
+  end
+
+  def set_approvals
+    return if !approval_present?
+    return if approval_state == 'request'
+    return if approvals.present?
+
+    approval_members.each do |user|
+      approval = approval_member(user)
+      approval.update(approval_state: approval_state)
+    end
+    approval_facilities.each do |user|
+      approval = approval_facility_member(user)
+      approval.update(approval_state: approval_state)
     end
   end
 

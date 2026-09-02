@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sns_user_files", type: :feature, dbscope: :example, js: true do
+describe "cur_user_files", type: :feature, dbscope: :example, js: true do
   before { login_ss_user }
 
   context "basic crud" do
