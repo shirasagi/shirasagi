@@ -54,7 +54,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(notification.group_id).to be_blank
       expect(notification.member_ids).to eq [ cms_user.id ]
       expect(notification.user_id).to eq cms_user.id
-      expect(notification.subject).to eq "[#{site.name}] CSVダウンロード準備完了のお知らせ"
+      expect(notification.subject).to eq "[#{site.name}][#{node.name}] CSVダウンロード準備完了のお知らせ"
       expect(notification.text).to be_present
       path = Rails.application.routes.url_helpers.sns_apis_file_gen_task_download_path(id: task)
       expect(notification.text).to include(path)
@@ -117,7 +117,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(notification.group_id).to be_blank
       expect(notification.member_ids).to eq [ cms_user.id ]
       expect(notification.user_id).to eq cms_user.id
-      expect(notification.subject).to eq "[#{site.name}] CSVダウンロード準備完了のお知らせ"
+      expect(notification.subject).to eq "[#{site.name}][#{node.name}] CSVダウンロード準備完了のお知らせ"
       expect(notification.text).to be_present
       path = Rails.application.routes.url_helpers.sns_apis_file_gen_task_download_path(id: task)
       expect(notification.text).to include(path)
@@ -180,7 +180,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(notification.group_id).to be_blank
       expect(notification.member_ids).to eq [ cms_user.id ]
       expect(notification.user_id).to eq cms_user.id
-      expect(notification.subject).to eq "[#{site.name}] CSVダウンロード準備完了のお知らせ"
+      expect(notification.subject).to eq "[#{site.name}][#{node.name}] CSVダウンロード準備完了のお知らせ"
       expect(notification.text).to be_present
       path = Rails.application.routes.url_helpers.sns_apis_file_gen_task_download_path(id: task)
       expect(notification.text).to include(path)
@@ -244,7 +244,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(notification.group_id).to be_blank
       expect(notification.member_ids).to eq [ cms_user.id ]
       expect(notification.user_id).to eq cms_user.id
-      expect(notification.subject).to eq "[#{site.name}] CSVダウンロード準備完了のお知らせ"
+      expect(notification.subject).to eq "[#{site.name}][#{node.name}] CSVダウンロード準備完了のお知らせ"
       expect(notification.text).to be_present
       path = Rails.application.routes.url_helpers.sns_apis_file_gen_task_download_path(id: task)
       expect(notification.text).to include(path)
@@ -324,7 +324,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(notification.group_id).to be_blank
         expect(notification.member_ids).to eq [ cms_user.id ]
         expect(notification.user_id).to eq cms_user.id
-        expect(notification.subject).to eq "[#{site.name}] CSVダウンロード準備完了のお知らせ"
+        expect(notification.subject).to eq "[#{site.name}][#{node.name}] CSVダウンロード準備完了のお知らせ"
         expect(notification.text).to be_present
         path = Rails.application.routes.url_helpers.sns_apis_file_gen_task_download_path(id: task)
         expect(notification.text).to include(path)
@@ -415,7 +415,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(notification.group_id).to be_blank
         expect(notification.member_ids).to eq [ cms_user.id ]
         expect(notification.user_id).to eq cms_user.id
-        expect(notification.subject).to eq "[#{site.name}] CSVダウンロード準備完了のお知らせ"
+        expect(notification.subject).to eq "[#{site.name}][#{node.name}] CSVダウンロード準備完了のお知らせ"
         expect(notification.text).to be_present
         path = Rails.application.routes.url_helpers.sns_apis_file_gen_task_download_path(id: task)
         expect(notification.text).to include(path)

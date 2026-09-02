@@ -18,6 +18,10 @@ class Cms::AllContentsExportJob < Cms::ApplicationJob
     Cms::AllContent.new(site: site, truncate: truncate)
   end
 
+  def notification_subject
+    "[#{site.name}][#{I18n.t("cms.all_contents")} #{I18n.t("cms.all_content.download_tab")}] CSVダウンロード準備完了のお知らせ"
+  end
+
   def canonical_scheme
     site.mypage_scheme.presence || (site.https == "enabled" ? "https" : "http")
   end
