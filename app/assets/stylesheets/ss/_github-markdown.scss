@@ -9,7 +9,7 @@
 
 .markdown-body {
   overflow: hidden;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .markdown-body a {
@@ -475,7 +475,7 @@
 }
 
 .markdown-body pre {
-  word-wrap: normal;
+  overflow-wrap: normal;
 }
 
 .markdown-body pre code {
@@ -485,7 +485,7 @@
   margin: 0;
   overflow: initial;
   line-height: inherit;
-  word-wrap: normal;
+  overflow-wrap: normal;
   background-color: transparent;
   border: 0;
 }

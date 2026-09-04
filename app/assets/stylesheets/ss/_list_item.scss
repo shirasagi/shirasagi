@@ -71,6 +71,7 @@
     }
     .meta {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       gap: 10px;
       .label {
@@ -105,7 +106,7 @@
       }
     }
     .links {
-      word-wrap: normal;
+      overflow-wrap: normal;
       white-space: nowrap;
       .btn {
         margin-top: 4px;
