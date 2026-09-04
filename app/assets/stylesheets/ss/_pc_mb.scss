@@ -54,7 +54,7 @@ body {
   background: init.$gray1;
   font-family: init.$font-base;
   line-height: 1.4;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 #page {
   position: relative;
@@ -2828,7 +2828,7 @@ div.index {
       max-width: 200px;
       overflow: visible;
       text-overflow: clip;
-      word-wrap: normal;
+      overflow-wrap: normal;
       word-break: normal;
       white-space: nowrap;
     }
@@ -4190,7 +4190,7 @@ table.check-links-erros {
     background: #fff;
     letter-spacing: 0.1em;
     line-height: 1.3;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
     .error {
       color: #ff0000;
       line-height: 1.5;
