@@ -40,6 +40,7 @@ module.exports = {
   mail: buildConfig("mail"),
   map: buildConfig("map"),
   // michecker: buildConfig("michecker"),
+  minicolors_swatches: buildConfig("minicolors_swatches"),
   // opendata: buildConfig("opendata"),
   // proxy: buildConfig("proxy"),
   recommend: buildConfig("recommend"),

@@ -9,6 +9,7 @@ module SS::ColorPickerHelper
 
     html_options['class'] = Array(html_options['class']) + %w(js-color)
     html_options['aria-busy'] = true
+    html_options['data-controller'] = "ss--color-picker"
 
     text_field(object_name, method, html_options)
   end
@@ -23,6 +24,7 @@ module SS::ColorPickerHelper
 
     html_options['class'] = Array(html_options['class']) + %w(js-color)
     html_options['aria-busy'] = true
+    html_options['data-controller'] = "ss--color-picker"
 
     text_field_tag(name, value, html_options)
   end

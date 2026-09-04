@@ -48,7 +48,6 @@
 //= require ss/lib/dropdown
 //= require ss/lib/dropdown_toggle
 //= require ss/lib/clipboard
-//= require ss/lib/color
 //= require ss/lib/workflow
 //= require ss/lib/sortable_form
 //= require ss/lib/start_end_synchronizer
@@ -214,7 +213,6 @@ SS.ready(function () {
   SS_Form.render();
   SS_Popup.render(".tooltip", { "ss-popup-inline": true, "ss-popup-href": ".tooltip-content", "tippy-theme": "light-border ss-tooltip" });
   SS_SearchUI.render();
-  SS_Color.render();
   SS_TextZoom.render();
   SS_PopupNotice.render();
   SS_CascadeMenu.render();
