@@ -120,5 +120,126 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
       end
     end
+
+    context 'with free' do
+      let!(:column3) { create(:cms_column_free, cur_site: site, cur_form: form, required: 'optional') }
+
+      it do
+        visit new_article_page_path(site: site, cid: node, form_id: form.id)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
+        within 'form#item-form' do
+          fill_in 'item[name]', with: name
+          fill_in 'item[index_name]', with: index_name
+          within first(".column-value-cms-column-textfield") do
+            fill_in "item[column_values][][in_wrap][value]", with: column1_value
+          end
+          within first(".column-value-cms-column-free") do
+            fill_in_ckeditor "item[column_values][][in_wrap][value]", with: unique_id
+          end
+
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/logo.png", addon: ".column-value-cms-column-free"
+
+          expect(page).to have_css('.file-view', text: 'logo')
+          click_on I18n.t('ss.buttons.publish_save')
+        end
+
+        wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
+        expect(Article::Page.all.count).to eq 1
+        Article::Page.all.find_by(name: name).tap do |item|
+          expect(item.column_values.length).to eq 2
+          item.column_values.where(column_id: column3.id).first.tap do |column_value|
+            expect(column_value.file_ids).not_to be_nil
+          end
+        end
+
+        visit article_pages_path(site: site, cid: node)
+        click_on name
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
+        click_on I18n.t('ss.links.copy')
+
+        within 'form#item-form' do
+          click_on I18n.t('ss.buttons.save')
+        end
+        wait_for_notice I18n.t('ss.notice.saved')
+        expect(Article::Page.all.count).to eq 2
+
+        visit article_pages_path(site: site, cid: node)
+        click_on "[#{I18n.t('workflow.cloned_name_prefix')}] #{name}"
+        expect(page).to have_content(column1_value)
+
+        Article::Page.all.find_by(name: "[#{I18n.t('workflow.cloned_name_prefix')}] #{name}").tap do |item|
+          expect(item.index_name).to eq "[#{I18n.t('workflow.cloned_name_prefix')}] #{index_name}"
+          expect(item.column_values.length).to eq 2
+          item.column_values.where(column_id: column3.id).first.tap do |column_value|
+            expect(column_value.file_ids).not_to be_nil
+          end
+        end
+      end
+
+      context "when html is blank" do
+        it do
+          visit new_article_page_path(site: site, cid: node, form_id: form.id)
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
+
+          within 'form#item-form' do
+            fill_in 'item[name]', with: name
+            fill_in 'item[index_name]', with: index_name
+            within first(".column-value-cms-column-textfield") do
+              fill_in "item[column_values][][in_wrap][value]", with: column1_value
+            end
+
+            ss_upload_file "#{Rails.root}/spec/fixtures/ss/logo.png", addon: ".column-value-cms-column-free"
+
+            expect(page).to have_css('.file-view', text: 'logo')
+            click_on I18n.t('ss.buttons.publish_save')
+          end
+
+          wait_for_notice I18n.t('ss.notice.saved')
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
+
+          expect(Article::Page.all.count).to eq 1
+          Article::Page.all.find_by(name: name).tap do |item|
+            expect(item.column_values.length).to eq 2
+            item.column_values.where(column_id: column3.id).first.tap do |column_value|
+              expect(column_value.file_ids).not_to be_nil
+            end
+          end
+
+          visit article_pages_path(site: site, cid: node)
+          click_on name
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
+
+          click_on I18n.t('ss.links.copy')
+
+          within 'form#item-form' do
+            click_on I18n.t('ss.buttons.save')
+          end
+          wait_for_notice I18n.t('ss.notice.saved')
+          expect(Article::Page.all.count).to eq 2
+
+          visit article_pages_path(site: site, cid: node)
+          click_on "[#{I18n.t('workflow.cloned_name_prefix')}] #{name}"
+          expect(page).to have_content(column1_value)
+
+          Article::Page.all.find_by(name: "[#{I18n.t('workflow.cloned_name_prefix')}] #{name}").tap do |item|
+            expect(item.index_name).to eq "[#{I18n.t('workflow.cloned_name_prefix')}] #{index_name}"
+            expect(item.column_values.length).to eq 2
+            item.column_values.where(column_id: column3.id).first.tap do |column_value|
+              expect(column_value.file_ids).not_to be_nil
+            end
+          end
+        end
+      end
+    end
   end
 end
