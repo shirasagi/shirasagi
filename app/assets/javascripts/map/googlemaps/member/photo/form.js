@@ -6,9 +6,9 @@ this.Member_Photo_Form = (function () {
 
   Member_Photo_Form.maxPointForm = 10;
 
-  Member_Photo_Form.deleteMessage = <%= I18n.t('map.confirm.delete_marker').to_json %>;
+  Member_Photo_Form.deleteMessage = function() { return i18next.t('map.confirm.delete_marker'); }
 
-  Member_Photo_Form.setExifMessage = <%= I18n.t('map.confirm.find_exif').to_json %>;
+  Member_Photo_Form.setExifMessage = function() { return i18next.t('map.confirm.find_exif'); }
 
   Member_Photo_Form.dataID = 0;
 
@@ -64,7 +64,7 @@ this.Member_Photo_Form = (function () {
     var dataId;
     dataId = 0;
     if (ele.val() !== "") {
-      if (confirm(Member_Photo_Form.deleteMessage)) {
+      if (confirm(Member_Photo_Form.deleteMessage())) {
         if (Googlemaps_Map.markers[dataId]) {
           Googlemaps_Map.markers[dataId].setMap(null);
           ele.val("");
@@ -88,7 +88,7 @@ this.Member_Photo_Form = (function () {
       Googlemaps_Map.markers[dataId] = new google.maps.Marker({
         position: Member_Photo_Form.getMapLoc($(".mod-map .marker-loc")),
         map: Googlemaps_Map.map,
-        icon: Googlemaps_Map.markerIcon
+        icon: Googlemaps_Map.markerIcon()
       });
       Member_Photo_Form.attachMessage(dataId);
     }
@@ -115,7 +115,7 @@ this.Member_Photo_Form = (function () {
         Googlemaps_Map.markers[Member_Photo_Form.dataID] = new google.maps.Marker({
           position: loc,
           map: Googlemaps_Map.map,
-          icon: Googlemaps_Map.markerIcon
+          icon: Googlemaps_Map.markerIcon()
         });
         Member_Photo_Form.attachMessage(Member_Photo_Form.dataID);
         markerBounds.extend(loc);
@@ -139,7 +139,7 @@ this.Member_Photo_Form = (function () {
         if (!(lat && lon)) {
           return false;
         }
-        if (!confirm(Member_Photo_Form.setExifMessage)) {
+        if (!confirm(Member_Photo_Form.setExifMessage())) {
           return false;
         }
         latRef = latRef === "N" ? 1 : -1;

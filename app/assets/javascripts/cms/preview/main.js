@@ -74,8 +74,6 @@ SS_Preview = (function () {
 
   SS_Preview.jqueryDialogMargin = { height: 60 };
 
-  SS_Preview.pageTitle = <%= I18n.t("modules.addons.cms/body").to_json %>;
-
   SS_Preview.userInplaceEdit = true;
 
   SS_Preview.render = function (opts) {
@@ -170,11 +168,11 @@ SS_Preview = (function () {
 
   SS_Preview.preventExternalPrevew = function () {
     let preventPreview = function (ev) {
-      alert('<%= I18n.t("cms.notices.prevent_external_preview") %>');
+      alert(i18next.t("cms.notices.prevent_external_preview"));
       return false;
     };
     let preventSubmit = function (ev) {
-      alert('<%= I18n.t("cms.notices.prevent_external_submit") %>');
+      alert(i18next.t("cms.notices.prevent_external_submit"));
       return false;
     };
     $(document).on("click", "a[data-external-preview]", preventPreview);
@@ -185,13 +183,13 @@ SS_Preview = (function () {
     let preventPreview = function (ev) {
       ev.stopPropagation();
       ev.preventDefault();
-      alert('<%= I18n.t("cms.notices.prevent_external_preview") %>');
+      alert(i18next.t("cms.notices.prevent_external_preview"));
       return;
     };
     let preventSubmit = function (ev) {
       ev.stopPropagation();
       ev.preventDefault();
-      alert('<%= I18n.t("cms.notices.prevent_external_submit") %>');
+      alert(i18next.t("cms.notices.prevent_external_submit"));
       return;
     };
     document.querySelectorAll("a[data-external-preview]").forEach(function(element) {
@@ -1505,7 +1503,7 @@ SS_Preview = (function () {
     }
 
     this.moveTo(rect);
-    this.setInfo({ mode: "page", id: $page.data("page-id"), name: SS_Preview.pageTitle });
+    this.setInfo({ mode: "page", id: $page.data("page-id"), name: i18next.t("modules.addons.cms/body") });
 
     this.$overlay.find(".ss-preview-overlay-btn-group-move").addClass("ss-preview-hide");
     this.$overlay.find(".ss-preview-overlay-btn-group-delete").addClass("ss-preview-hide");

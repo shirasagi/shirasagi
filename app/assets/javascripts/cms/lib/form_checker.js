@@ -19,7 +19,7 @@ this.Form_Checker = (function () {
     }
 
     $div = $("<div/>", { id: 'errorFormChecker', class: 'errorExplanation' });
-    $div.append("<h2>" + Form_Checker.message.header + "</h2>");
+    $div.append("<h2>" + Form_Checker.message.header() + "</h2>");
 
     var $body = $("<div/>", { class: 'errorExplanationBody' });
     $div.append($body);
@@ -50,7 +50,7 @@ this.Form_Checker = (function () {
   ResultBox.prototype.showResult = function (errors) {
     if (!errors || errors.length == 0) {
       this.$elBody.html("");
-      this.$elBody.append("<p>" + Form_Checker.message.noErrors + "</p>");
+      this.$elBody.append("<p>" + Form_Checker.message.noErrors() + "</p>");
       return;
     }
 
@@ -60,7 +60,7 @@ this.Form_Checker = (function () {
      });
 
     this.$elBody.html("");
-    this.$elBody.append("<p>" + Form_Checker.message["body"] + "</p>");
+    this.$elBody.append("<p>" + Form_Checker.message.body() + "</p>");
     this.$elBody.append($ul);
 
     return this.moveLast();
@@ -73,10 +73,10 @@ this.Form_Checker = (function () {
   }
 
   Form_Checker.message = {
-    header: <%= I18n.t('cms.form_check').to_json %>,
-    body: <%= I18n.t('errors.template.body').to_json %>,
-    noErrors: <%= I18n.t('errors.template.no_errors').to_json %>,
-    formCheckerError: <%= I18n.t('errors.messages.form_check_failed_to_connect').to_json %>
+    header: function() { return i18next.t('cms.form_check'); },
+    body: function() { return i18next.t('errors.template.body'); },
+    noErrors: function() { return i18next.t('errors.template.no_errors'); },
+    formCheckerError: function() { return i18next.t('errors.messages.form_check_failed_to_connect'); }
   };
 
   Form_Checker.render = function (form) {
@@ -121,7 +121,7 @@ this.Form_Checker = (function () {
         defer.resolve({ status: (data && data.length > 0) ? "error" : "ok" });
       },
       error: function (xhr, status, error) {
-        var msg = Form_Checker.message.formCheckerError + ": " + form.form_check_path;
+        var msg = Form_Checker.message.formCheckerError() + ": " + form.form_check_path;
         Form_Checker.resultBox.showMessage("<p>" + msg + "</p>");
         defer.reject(xhr, status, error);
       }

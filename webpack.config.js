@@ -19,6 +19,7 @@ module.exports = {
     colorbox: "./app/javascript/colorbox.js",
     swiper: "./app/javascript/swiper.js",
     jplayer: "./app/javascript/jplayer.js",
+    "opendata/form": "./app/javascript/legacy/opendata/form.js",
   },
   externals: [
     {
@@ -58,7 +59,10 @@ module.exports = {
       RAILS_ENV: JSON.stringify(RAILS_ENV),
       AVAILABLE_LOCALES: JSON.stringify(Config.environment.available_locales),
       I18NEXT_RESOURCES: JSON.stringify(RAILS_ENV === "production" ? i18nextResourceGen.generate() : {}),
-      DEFAULT_SWATCHES: JSON.stringify(Config.minicolors_swatches.color_codes)
+      DEFAULT_SWATCHES: JSON.stringify(Config.minicolors_swatches.color_codes),
+      MAP_CONFIG: JSON.stringify(Config.map[RAILS_ENV]),
+      OPENDATA_AVAILABLE_RESOURCE_FORMATS_CONFIG: JSON.stringify(Config.opendata[RAILS_ENV].available_resource_formats),
+      SS_CONFIG: JSON.stringify(Config.ss[RAILS_ENV])
     }),
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1

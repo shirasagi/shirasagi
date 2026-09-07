@@ -19,7 +19,7 @@ this.Syntax_Checker = (function () {
     }
 
     $div = $("<div/>", { id: 'errorSyntaxChecker', class: 'errorExplanation' });
-    $div.append("<h2>" + "<%= I18n.t('cms.syntax_check') %>" + "</h2>");
+    $div.append("<h2>" + i18next.t('cms.syntax_check') + "</h2>");
 
     var $body = $("<div/>", { class: 'errorExplanationBody' });
     $div.append($body);
@@ -43,7 +43,7 @@ this.Syntax_Checker = (function () {
   }
 
   ResultBox.prototype.showServerError = function() {
-    this.showMessage(<%= raw I18n.t("errors.messages.syntax_check_server_error").to_json %>);
+    this.showMessage(i18next.t("errors.messages.syntax_check_server_error"));
   }
 
   ResultBox.prototype.showChecking = function() {
@@ -52,7 +52,7 @@ this.Syntax_Checker = (function () {
 
   ResultBox.prototype.showResult = function (checks, errors) {
     if (errors.length === 0) {
-      this.showMessage("<p>" + "<%= I18n.t('errors.template.no_errors') %>" + "</p>");
+      this.showMessage("<p>" + i18next.t('errors.template.no_errors') + "</p>");
       return;
     }
 
@@ -63,7 +63,7 @@ this.Syntax_Checker = (function () {
     this.appendMessage(ul, checks, errors);
 
     this.$elBody.html("")
-    this.$elBody.append("<p>" + "<%= I18n.t('errors.template.body') %>" + "</p>");
+    this.$elBody.append("<p>" + i18next.t('errors.template.body') + "</p>");
     this.$elBody.append(ul);
 
     this.moveLast();
@@ -122,7 +122,7 @@ this.Syntax_Checker = (function () {
 
         // append correct
         if (error["correctContent"]) {
-          correct = $('<a href="#" class="correct">' + "<%= I18n.t('cms.auto_correct.link') %>" + '</a>');
+          correct = $('<a href="#" class="correct">' + i18next.t('cms.auto_correct.link') + '</a>');
           correct.on("click", function (e) {
             var correctContent = error["correctContent"];
             check.setContent(correctContent(id, { content: check.getContent(), resolve: check.resolve, type: check.type }, error));
@@ -133,7 +133,7 @@ this.Syntax_Checker = (function () {
           li.append(correct)
         }
         if (error["collector"]) {
-          correct = $('<button />', { type: "button", class: "btn btn-auto-correct" }).text("<%= I18n.t('cms.auto_correct.link') %>");
+          correct = $('<button />', { type: "button", class: "btn btn-auto-correct" }).text(i18next.t('cms.auto_correct.link'));
           correct.on("click", function (ev) {
             ev.target.disabled = true;
 
@@ -154,7 +154,7 @@ this.Syntax_Checker = (function () {
               },
               error: function (xhr, status, error) {
                 console.warn(error);
-                alert("<%= I18n.t("cms.auto_correct.failed") %>");
+                alert(i18next.t("cms.auto_correct.failed"));
               },
               complete: function (xhr, status) {
                 ev.target.disabled = false;
@@ -316,8 +316,8 @@ this.Syntax_Checker = (function () {
     if (text && text.length <= 3) {
       Syntax_Checker.errors.push({
         id: id, idx: 0, code: text,
-        msg: Syntax_Checker.message["checkLinkText"],
-        detail: Syntax_Checker.detail["checkLinkText"]
+        msg: Syntax_Checker.message.checkLinkText(),
+        detail: Syntax_Checker.detail.checkLinkText()
       });
     }
   };
@@ -497,7 +497,7 @@ this.Syntax_Checker = (function () {
       Syntax_Checker.afterCheck();
     }
 
-    var warnMessages = <%= [I18n.t('cms.confirm.disallow_edit_ignore_syntax_check'), I18n.t('errors.messages.check_embedded_media')].to_json %>;
+    var warnMessages = [i18next.t('cms.confirm.disallow_edit_ignore_syntax_check'), i18next.t('errors.messages.check_embedded_media')];
     var allowEdit = true;
     $.each(Syntax_Checker.errors, function(id, error) {
       if (warnMessages.includes(error['msg'])) {
@@ -519,14 +519,14 @@ this.Syntax_Checker = (function () {
   // javascript syntax check
 
   Syntax_Checker.message = {
-    invalidFirstHeadingLevel: "<%= I18n.t('errors.messages.invalid_first_heading_level') %>",
-    invalidHeadingLevelSkip: "<%= I18n.t('errors.messages.invalid_heading_level_skip') %>",
-    checkLinkText: "<%= I18n.t('errors.messages.check_link_text') %>",
+    invalidFirstHeadingLevel: function() { return i18next.t('errors.messages.invalid_first_heading_level'); },
+    invalidHeadingLevelSkip: function() { return i18next.t('errors.messages.invalid_heading_level_skip'); },
+    checkLinkText: function() { return i18next.t('errors.messages.check_link_text'); },
   };
   Syntax_Checker.detail = {
-    invalidFirstHeadingLevel: <%= I18n.t('errors.messages.syntax_check_detail.invalid_first_heading_level').to_json %>,
-    invalidHeadingLevelSkip: <%= I18n.t('errors.messages.syntax_check_detail.invalid_heading_level_skip').to_json %>,
-    checkLinkText: <%= I18n.t('errors.messages.syntax_check_detail.check_link_text').to_json %>,
+    invalidFirstHeadingLevel: function() { return i18next.t('errors.messages.syntax_check_detail.invalid_first_heading_level', { returnObjects: true }); },
+    invalidHeadingLevelSkip: function() { return i18next.t('errors.messages.syntax_check_detail.invalid_heading_level_skip', { returnObjects: true }); },
+    checkLinkText: function() { return i18next.t('errors.messages.syntax_check_detail.check_link_text', { returnObjects: true }); },
   };
 
   return Syntax_Checker;

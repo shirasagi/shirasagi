@@ -91,7 +91,7 @@ this.Cms_Form = (function () {
             id: id,
             idx: 0,
             code: attr,
-            msg: (attr + <%= I18n.t("errors.messages.blank").to_json %>),
+            msg: (attr + i18next.t("errors.messages.blank")),
             ele: this
           }
         );
@@ -134,8 +134,8 @@ this.Cms_Form = (function () {
           id: ids[entry.idx],
           idx: 0,
           code: h[entry.idx],
-          msg: Syntax_Checker.message[entry.key],
-          detail: Syntax_Checker.detail[entry.key]
+          msg: Syntax_Checker.message[entry.key](),
+          detail: Syntax_Checker.detail[entry.key]()
         }
       );
     }

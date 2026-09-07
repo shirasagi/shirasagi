@@ -14,7 +14,7 @@ this.Openlayers_Map = (function () {
     if (opts["center"] && this.validateLatLon(opts["center"][1], opts["center"][0])) {
       this.center = opts["center"];
     }
-    this.defaultCenter = Openlayers_Map.defaultCenter.reverse();
+    this.defaultCenter = function() { return Openlayers_Map.defaultCenter().reverse(); };
 
     this.showGoogleMapsSearch = false;
     if (opts["showGoogleMapsSearch"]) {
@@ -29,20 +29,20 @@ this.Openlayers_Map = (function () {
     this.render();
   }
 
-  Openlayers_Map.defaultCenter = <%= SS.config.map.map_center %>;
+  Openlayers_Map.defaultCenter = function() { return SS.config.map.map_center; };
 
-  Openlayers_Map.defaultZoom = <%= SS.config.map.openlayers_zoom_level %>;
+  Openlayers_Map.defaultZoom = function() { return SS.config.map.openlayers_zoom_level; };
 
-  Openlayers_Map.markerIcon = <%= SS.config.map.dig("map_marker_images", "openlayers", "default", "marker").to_json %>;
+  Openlayers_Map.markerIcon = function() { return SS.config.map?.map_marker_images?.openlayers?.default?.marker; };
 
-  Openlayers_Map.clickIcon = <%= SS.config.map.dig("map_marker_images", "openlayers", "default", "click").to_json %>;
+  Openlayers_Map.clickIcon = function() { return SS.config.map?.map_marker_images?.openlayers?.default?.click; };
 
   Openlayers_Map.prototype.getCenter = function () {
-    return (this.center ? this.center : this.defaultCenter);
+    return (this.center ? this.center : this.defaultCenter());
   };
 
   Openlayers_Map.prototype.getZoom = function () {
-    return (this.zoom ? this.zoom : this.defaultZoom);
+    return (this.zoom ? this.zoom : this.defaultZoom());
   };
 
   Openlayers_Map.prototype.render = function () {
@@ -180,7 +180,7 @@ this.Openlayers_Map = (function () {
     if (opts == null) {
       opts = {};
     }
-    iconSrc = this.markerIcon;
+    iconSrc = this.markerIcon();
     if (opts['image']) {
       iconSrc = opts['image'];
     }
@@ -252,7 +252,7 @@ this.Openlayers_Map = (function () {
 
   Openlayers_Map.prototype.renderMarkers = function (markers) {
     markers.forEach(marker => {
-      const iconSrc = marker['image'] || this.markerIcon || '/assets/img/openlayers/marker1.png';
+      const iconSrc = marker['image'] || this.markerIcon() || '/assets/img/openlayers/marker1.png';
       const style = this.createMarkerStyle(iconSrc);
 
       const name = marker['name'];

@@ -4,7 +4,7 @@ this.Map_Lgwan_Form = (function () {
 
   Map_Lgwan_Form.maxPointForm = 10;
 
-  Map_Lgwan_Form.deleteMessage = <%= I18n.t('map.confirm.delete_marker').to_json %>;
+  Map_Lgwan_Form.deleteMessage = function() { return i18next.t('map.confirm.delete_marker'); };
 
   Map_Lgwan_Form.renderEvents = function () {
     $(".mod-map .add-marker").on('click', function (_e) {
@@ -69,7 +69,7 @@ this.Map_Lgwan_Form = (function () {
 
   Map_Lgwan_Form.clearPointForm = function (ele) {
     if (ele.find(".marker-loc-input").val()) {
-      if (confirm(Map_Lgwan_Form.deleteMessage)) {
+      if (confirm(Map_Lgwan_Form.deleteMessage())) {
         ele.removeClass("active");
         ele.find("input,textarea").val("");
         if ($(".mod-map dd.marker").length > 1) {
@@ -100,7 +100,7 @@ this.Map_Lgwan_Form = (function () {
       if (Map_Lgwan_Form.validateLoc(ele.find(".marker-loc-input").val())) {
         loc = ele.find(".marker-loc-input").val();
       } else {
-        alert(<%= Array(I18n.t('map.alert.invalid_location')).join('\n').to_json %>);
+        alert(i18next.t('map.alert.invalid_location', { returnObjects: true }).join('\n'));
       }
     }
     if (loc) {

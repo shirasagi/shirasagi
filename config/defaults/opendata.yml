@@ -7,6 +7,11 @@ production: &production
   # 104857600 = 100MB(1024*1024*100)
   bulk_download_max_filesize: 104857600
 
+  available_resource_formats: [
+    "AVI", "BMP", "CSV", "DOC", "DOCX", "DOT", "GIF", "HTML", "JPG", "LZH", "MOV",
+    "MP3", "MPG", "ODS", "ODT", "OTS", "OTT", "PDF", "PNG", "PPT", "PPTX", "RAR",
+    "RTF", "RDF", "TAR", "TGZ", "TTL", "TXT", "WAV", "XLS", "XLT", "XLSX", "XML", "ZIP" ]
+
   preview:
     map:
       latitude_header:

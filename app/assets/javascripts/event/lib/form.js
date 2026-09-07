@@ -6,7 +6,7 @@ this.Event_Form = (function () {
     this.render();
   }
 
-  Event_Form.deleteMessage = <%= I18n.t('event.confirm.delete_date').to_json %>;
+  Event_Form.deleteMessage = undefined;
 
   Event_Form.prototype.render = function() {
     var self = this;
@@ -77,7 +77,15 @@ this.Event_Form = (function () {
     var self = this;
     var $button = $(buttonEl);
 
-    if (confirm(Event_Form.deleteMessage)) {
+    var deleteMessage = Event_Form.deleteMessage;
+    if (!deleteMessage) {
+      if ("i18next" in window) {
+        deleteMessage = i18next.t('event.confirm.delete_date');
+      } else {
+        deleteMessage = "イベント日を削除してよろしいですか？";
+      }
+    }
+    if (confirm(deleteMessage)) {
       $button.closest(".event-recurrence").remove();
       self.resetIndex();
     }

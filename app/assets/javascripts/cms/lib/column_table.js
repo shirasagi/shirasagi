@@ -214,7 +214,7 @@ Cms_Column_Table.prototype.appendTop = function () {
   for (var i = 0; i < columnNum - 1; i++) {
     if (parent[0].cells[i].tagName == "TH") {
       if (!parent[0].cells[i + 1]) {
-        alert(<%= I18n.t("cms.column_table.cant_append_top").to_json %>);
+        alert(i18next.t("cms.column_table.cant_append_top"));
         this.addControlTable();
         var tableMenu = $('.table-menu');
         if (tableMenu.hasClass('show')) {
@@ -223,7 +223,7 @@ Cms_Column_Table.prototype.appendTop = function () {
         return false;
       }
       if (parent[0].cells[i + 1].tagName == "TH") {
-        alert(<%= I18n.t("cms.column_table.cant_append_top").to_json %>);
+        alert(i18next.t("cms.column_table.cant_append_top"));
         this.addControlTable();
         var tableMenu = $('.table-menu');
         if (tableMenu.hasClass('show')) {
@@ -347,7 +347,7 @@ Cms_Column_Table.prototype.appendLeft = function () {
   for (var i = 1 - thead.length; i < tbody[0].rows.length; i++) {
     if (tbody[0].rows[i].cells[cellIndex].tagName == "TH") {
       if (!tbody[0].rows[i + 1]) {
-        alert(<%= I18n.t("cms.column_table.cant_append_left").to_json %>);
+        alert(i18next.t("cms.column_table.cant_append_left"));
         this.addControlTable();
         var tableMenu = $('.table-menu');
         if (tableMenu.hasClass('show')) {
@@ -356,7 +356,7 @@ Cms_Column_Table.prototype.appendLeft = function () {
         return false;
       }
       if (tbody[0].rows[i + 1].cells[cellIndex].tagName == "TH") {
-        alert(<%= I18n.t("cms.column_table.cant_append_left").to_json %>);
+        alert(i18next.t("cms.column_table.cant_append_left"));
         this.addControlTable();
         var tableMenu = $('.table-menu');
         if (tableMenu.hasClass('show')) {
@@ -373,7 +373,7 @@ Cms_Column_Table.prototype.appendLeft = function () {
     for (var i = 0; i < thead[0].rows.length; i++) {
       if (thead[0].rows[i].cells[cellIndex].tagName == "TH") {
         if (!tbody[0].rows[i + 1]) {
-          alert(<%= I18n.t("cms.column_table.cant_append_left").to_json %>);
+          alert(i18next.t("cms.column_table.cant_append_left"));
           this.addControlTable();
           var tableMenu = $('.table-menu');
           if (tableMenu.hasClass('show')) {
@@ -382,7 +382,7 @@ Cms_Column_Table.prototype.appendLeft = function () {
           return false;
         }
         if (tbody[0].rows[i + 1].cells[cellIndex].tagName == "TH") {
-          alert(<%= I18n.t("cms.column_table.cant_append_left").to_json %>);
+          alert(i18next.t("cms.column_table.cant_append_left"));
           this.addControlTable();
           var tableMenu = $('.table-menu');
           if (tableMenu.hasClass('show')) {

@@ -85,11 +85,11 @@ Gws_Affair_OvertimeFile.prototype.toggleCompensatory = function(startDate) {
     }
     if (data["weekly_leave_day"]) {
       $('.overtime-date').addClass("weekly-leave-day");
-      label.push('<%= I18n.t("gws/affair.labels.weekly_leave_day") %>');
+      label.push(i18next.t("gws/affair.labels.weekly_leave_day"));
     }
     if (data["holiday"]) {
       $('.overtime-date').addClass("holiday");
-      label.push('<%= I18n.t("gws/affair.labels.holiday") %>');
+      label.push(i18next.t("gws/affair.labels.holiday"));
     }
     if (label.length > 0) {
       $('.overtime-date').text(" (" + label.join(",") + "）");
@@ -150,12 +150,14 @@ Gws_Affair_OvertimeFile.prototype.compensatoryFormAlert = function(e) {
 
   // show alert
   var div = $('<div id="alertExplanation" class="errorExplanation">');
-  div.append("<h2><%= I18n.t('modules.gws/affair/overtime') %></h2>");
-  div.append("<p><%= I18n.t("gws/affair.form_alert.title.overtime_compensatory") %></p>")
-  div.append('<ul><li style="white-space: nowrap;"><%= I18n.t("gws/affair.form_alert.message.not_set_overtime_compensatory").join("<br />") %></li></ul>');
+  div.append($("<h2/>").text(i18next.t('modules.gws/affair/overtime')));
+  div.append($("<p/>").text(i18next.t("gws/affair.form_alert.title.overtime_compensatory")))
+  var liHtml = i18next.t("gws/affair.form_alert.message.not_set_overtime_compensatory", { returnObjects: true }).join("<br />");
+  var $li = $("<li/>", { style: "white-space: nowrap;" }).html(liHtml);
+  div.append($("<ul/>").append($li));
   var footer = $(document.createElement("footer")).addClass('send');
-  footer.append('<button name="button" type="button" class="btn-primary save"><%= I18n.t("gws/affair.links.ignore_and_save") %></button>');
-  footer.append('<button name="button" type="button" class="btn-default cancel"><%= I18n.t("gws/affair.links.back_to_form") %></button>');
+  footer.append($('<button/>', { name: "button", type: "button", class: "btn-primary save" }).text(i18next.t("gws/affair.links.ignore_and_save")));
+  footer.append($('<button/>', { name: "button", type: "button", class: "btn-default cancel" }).text(i18next.t("gws/affair.links.back_to_form")));
   $.colorbox({
     html: div.get(0).outerHTML + footer.get(0).outerHTML,
     maxHeight: "80%",
@@ -194,7 +196,7 @@ Gws_Affair_OvertimeFile.prototype.selectCapital = function($item) {
   var name = data.data("name") || data.find(".select-item").text() || item.text() || data.text();
   var input1 = anchorAjaxBox.closest("dl").find(".hidden-ids").clone(false);
   var input2 = anchorAjaxBox.closest("dl").find(".capital-state").clone(false);
-  var a = $('<a class="deselect btn" href="#"><%= "取消" %></a>');
+  var a = $('<a class="deselect btn" href="#">取消</a>');
 
   a.on("click", function() {
     $(".selected-capital").html("");
