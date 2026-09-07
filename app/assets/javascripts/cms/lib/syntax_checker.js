@@ -19,7 +19,7 @@ this.Syntax_Checker = (function () {
     }
 
     $div = $("<div/>", { id: 'errorSyntaxChecker', class: 'errorExplanation' });
-    $div.append("<h2>" + i18next.t('cms.syntax_check') + "</h2>");
+    $div.append($("<h2/>").text(i18next.t('cms.syntax_check')));
 
     var $body = $("<div/>", { class: 'errorExplanationBody' });
     $div.append($body);
@@ -52,7 +52,7 @@ this.Syntax_Checker = (function () {
 
   ResultBox.prototype.showResult = function (checks, errors) {
     if (errors.length === 0) {
-      this.showMessage("<p>" + i18next.t('errors.template.no_errors') + "</p>");
+      this.showMessage($("<p/>").text(i18next.t('errors.template.no_errors')));
       return;
     }
 
@@ -63,7 +63,7 @@ this.Syntax_Checker = (function () {
     this.appendMessage(ul, checks, errors);
 
     this.$elBody.html("")
-    this.$elBody.append("<p>" + i18next.t('errors.template.body') + "</p>");
+    this.$elBody.append($("<p/>").text(i18next.t('errors.template.body')));
     this.$elBody.append(ul);
 
     this.moveLast();
@@ -110,7 +110,7 @@ this.Syntax_Checker = (function () {
         ul.append('<ul>');
         ul.find('> ul:last').append('<li>');
         li = ul.find('> ul:last li:last');
-        message = $('<span class="message detail">' + error["msg"] + '</span>');
+        message = $('<span/>', { class: "message detail" }).text(error["msg"]);
         if (error["detail"]) {
           var tooltip = $('<div class="tooltip">!</div>').appendTo(message);
           var detail = $('<ul class="tooltip-content">').appendTo(tooltip);
@@ -122,7 +122,7 @@ this.Syntax_Checker = (function () {
 
         // append correct
         if (error["correctContent"]) {
-          correct = $('<a href="#" class="correct">' + i18next.t('cms.auto_correct.link') + '</a>');
+          correct = $('<a/>', { href: "#", class: "correct" }).text(i18next.t('cms.auto_correct.link'));
           correct.on("click", function (e) {
             var correctContent = error["correctContent"];
             check.setContent(correctContent(id, { content: check.getContent(), resolve: check.resolve, type: check.type }, error));

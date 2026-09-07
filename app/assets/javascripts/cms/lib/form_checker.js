@@ -19,7 +19,7 @@ this.Form_Checker = (function () {
     }
 
     $div = $("<div/>", { id: 'errorFormChecker', class: 'errorExplanation' });
-    $div.append("<h2>" + Form_Checker.message.header() + "</h2>");
+    $div.append($("<h2/>").text(Form_Checker.message.header()));
 
     var $body = $("<div/>", { class: 'errorExplanationBody' });
     $div.append($body);
@@ -50,17 +50,17 @@ this.Form_Checker = (function () {
   ResultBox.prototype.showResult = function (errors) {
     if (!errors || errors.length == 0) {
       this.$elBody.html("");
-      this.$elBody.append("<p>" + Form_Checker.message.noErrors() + "</p>");
+      this.$elBody.append($("<p/>").text(Form_Checker.message.noErrors()));
       return;
     }
 
      var $ul = $("<ul/>");
      $.each(errors, function() {
-       $ul.append('<li>' + this + '</li>');
+       $ul.append($('<li/>').text(this));
      });
 
     this.$elBody.html("");
-    this.$elBody.append("<p>" + Form_Checker.message.body() + "</p>");
+    this.$elBody.append($("<p/>").text(Form_Checker.message.body()));
     this.$elBody.append($ul);
 
     return this.moveLast();
@@ -122,7 +122,7 @@ this.Form_Checker = (function () {
       },
       error: function (xhr, status, error) {
         var msg = Form_Checker.message.formCheckerError() + ": " + form.form_check_path;
-        Form_Checker.resultBox.showMessage("<p>" + msg + "</p>");
+        Form_Checker.resultBox.showMessage($("<p/>").text(msg));
         defer.reject(xhr, status, error);
       }
     });

@@ -19,7 +19,7 @@ this.Link_Checker = (function () {
     }
 
     $div = $("<div/>", { id: 'errorLinkChecker', class: 'errorExplanation' });
-    $div.append("<h2>" + Link_Checker.message.header() + "</h2>");
+    $div.append($("<h2/>").text(Link_Checker.message.header()));
 
     var $body = $("<div/>", { class: 'errorExplanationBody' });
     $div.append($body);
@@ -179,7 +179,7 @@ this.Link_Checker = (function () {
       },
       error: function (xhr, status, error) {
         var msg = Link_Checker.message.linkCheckerError() + ": " + Link_Checker.url;
-        self.resultBox.showMessage("<p>" + msg + "</p>");
+        self.resultBox.showMessage($("<p/>").text(msg));
         defer.reject(xhr, status, error);
       }
     });
@@ -196,7 +196,7 @@ this.Link_Checker = (function () {
     if (! this.form.form_link_check_path) {
       var msg = "form link check path is not configured";
 
-      this.resultBox.showMessage("<p>" + msg + "</p>");
+      this.resultBox.showMessage($("<p/>").text(msg));
       defer.reject(null, null, msg);
       return;
     }
@@ -215,7 +215,7 @@ this.Link_Checker = (function () {
       cache: false,
       success: function(data) {
         if (!data || data.length === 0) {
-          self.resultBox.showMessage("<p>" + Link_Checker.message.noLinks() + "</p>");
+          self.resultBox.showMessage($("<p/>").text(Link_Checker.message.noLinks()));
           defer.resolve({ status: status });
           return;
         }
@@ -233,7 +233,7 @@ this.Link_Checker = (function () {
       },
       error: function(xhr, status, error) {
         var msg = Link_Checker.message.linkCheckerError() + ": " + self.form.form_link_check_path;
-        self.resultBox.showMessage("<p>" + msg + "</p>");
+        self.resultBox.showMessage($("<p/>").text(msg));
         defer.reject(xhr, status, error);
       }
     });
@@ -260,18 +260,16 @@ this.Link_Checker = (function () {
     var html = "";
 
     if (state) {
-      html += '<span class="success">' + Link_Checker.message.success() + '</span> ';
-      html += '<span class="url">' + link + '</span> ';
+      html += $('<span/>', { class: "success" }).text(Link_Checker.message.success()).prop("outerHTML") + ' ';
+      html += $('<span/>', { class: "url" }).text(link).prop("outerHTML") + ' ';
     } else {
-      html += '<span class="failure">' + Link_Checker.message.failure() + '</span> ';
-      html += '<span class="url">' + link + '</span> ';
+      html += $('<span/>', { class: "failure" }).text(Link_Checker.message.failure()).prop("outerHTML") + ' ';
+      html += $('<span/>', { class: "url" }).text(link).prop("outerHTML") + ' ';
       this.linkErrorCount++;
     }
 
     if (message) {
-      html += '<div class="message detail">'
-      html += message;
-      html += '</div>'
+      html += $('<div/>', { class: "message detail" }).text(message).prop("outerHTML");
     }
 
     this.links[link] = html;
