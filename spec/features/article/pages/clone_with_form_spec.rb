@@ -154,6 +154,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(item.column_values.length).to eq 2
           item.column_values.where(column_id: column3.id).first.tap do |column_value|
             expect(column_value.file_ids).not_to be_nil
+            @source_file_id = column_value.files.pick(:id)
           end
         end
 
@@ -179,6 +180,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(item.column_values.length).to eq 2
           item.column_values.where(column_id: column3.id).first.tap do |column_value|
             expect(column_value.file_ids).not_to be_nil
+            # cloned file has individual file id
+            expect(column_value.file_ids).not_to eq [ @source_file_id ]
           end
         end
       end
@@ -211,6 +214,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             expect(item.column_values.length).to eq 2
             item.column_values.where(column_id: column3.id).first.tap do |column_value|
               expect(column_value.file_ids).not_to be_nil
+              @source_file_id = column_value.files.pick(:id)
             end
           end
 
@@ -236,6 +240,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             expect(item.column_values.length).to eq 2
             item.column_values.where(column_id: column3.id).first.tap do |column_value|
               expect(column_value.file_ids).not_to be_nil
+              # cloned file has individual file id
+              expect(column_value.file_ids).not_to eq [ @source_file_id ]
             end
           end
         end
