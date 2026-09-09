@@ -101,10 +101,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
 
       cloned_file_ids << clone_file.id
 
-      cloned_value = self.value.to_s
-      cloned_value.gsub!("=\"#{source_file.url}\"", "=\"#{clone_file.url}\"")
-      cloned_value.gsub!("=\"#{source_file.thumb_url}\"", "=\"#{clone_file.thumb_url}\"")
-      self.value = cloned_value
+      update_value_with_clone_file(source_file, clone_file)
     end
 
     self.file_ids = cloned_file_ids
@@ -172,7 +169,8 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
 
   def set_contains_urls
     if value.blank?
-      self.contains_urls.clear if self.contains_urls.present?
+      # self.contains_urls = self.fields['contains_urls'].default_val
+      self.contains_urls = []
     else
       begin
         self.contains_urls = value.scan(/(?:href|src)="(.*?)"/).flatten.uniq.compact.collect(&:strip)
