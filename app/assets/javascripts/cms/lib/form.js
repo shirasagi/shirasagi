@@ -1,7 +1,6 @@
 //= require cms/lib/form
 //= require cms/lib/form_alert
 //= require cms/lib/form_preview
-//= require cms/lib/form_save_event
 //= require cms/lib/inplace_form
 //= require cms/lib/syntax_checker
 //= require cms/lib/form_checker
