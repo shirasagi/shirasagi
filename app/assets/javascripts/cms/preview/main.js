@@ -74,6 +74,30 @@ SS_Preview = (function () {
 
   SS_Preview.jqueryDialogMargin = { height: 60 };
 
+  SS_Preview.pageTitle = function() {
+    if ("i18next" in window) {
+      return i18next.t("modules.addons.cms/body");
+    } else {
+      return "本文";
+    }
+  };
+
+  SS_Preview.preventExternalPreview = function() {
+    if ("i18next" in window) {
+      return i18next.t("cms.notices.prevent_external_preview");
+    } else {
+      return "別サイトに遷移しようとしています。プレビュー時は別サイトへは遷移できません。";
+    }
+  }
+
+  SS_Preview.preventExternalSubmit = function() {
+    if ("i18next" in window) {
+      return i18next.t("cms.notices.prevent_external_submit");
+    } else {
+      return "プレビューでフォームデータの送信(POST)はできません。";
+    }
+  }
+
   SS_Preview.userInplaceEdit = true;
 
   SS_Preview.render = function (opts) {
@@ -168,11 +192,11 @@ SS_Preview = (function () {
 
   SS_Preview.preventExternalPrevew = function () {
     let preventPreview = function (ev) {
-      alert(i18next.t("cms.notices.prevent_external_preview"));
+      alert(SS_Preview.preventExternalPreview());
       return false;
     };
     let preventSubmit = function (ev) {
-      alert(i18next.t("cms.notices.prevent_external_submit"));
+      alert(SS_Preview.preventExternalSubmit());
       return false;
     };
     $(document).on("click", "a[data-external-preview]", preventPreview);
@@ -183,13 +207,13 @@ SS_Preview = (function () {
     let preventPreview = function (ev) {
       ev.stopPropagation();
       ev.preventDefault();
-      alert(i18next.t("cms.notices.prevent_external_preview"));
+      alert(SS_Preview.preventExternalPreview());
       return;
     };
     let preventSubmit = function (ev) {
       ev.stopPropagation();
       ev.preventDefault();
-      alert(i18next.t("cms.notices.prevent_external_submit"));
+      alert(SS_Preview.preventExternalSubmit());
       return;
     };
     document.querySelectorAll("a[data-external-preview]").forEach(function(element) {
@@ -1503,7 +1527,7 @@ SS_Preview = (function () {
     }
 
     this.moveTo(rect);
-    this.setInfo({ mode: "page", id: $page.data("page-id"), name: i18next.t("modules.addons.cms/body") });
+    this.setInfo({ mode: "page", id: $page.data("page-id"), name: SS_Preview.pageTitle() });
 
     this.$overlay.find(".ss-preview-overlay-btn-group-move").addClass("ss-preview-hide");
     this.$overlay.find(".ss-preview-overlay-btn-group-delete").addClass("ss-preview-hide");
