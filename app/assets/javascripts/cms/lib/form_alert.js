@@ -106,9 +106,13 @@ this.Form_Alert = (function () {
       });
     }
     if (allowEdit) {
-      $footer.append($('<button/>'), { name: "button", type: "button", class: "btn-primary save" }).text(i18next.t("ss.buttons.ignore_alert"));
+      var $ignoreAlertButton = $('<button/>', { name: "button", type: "button", class: "btn-primary save" })
+        .text(i18next.t("ss.buttons.ignore_alert"));
+      $footer.append($ignoreAlertButton);
     }
-    $footer.append($('<button/>', { name: "button", type: "button", class: "btn-default cancel" }).text(i18next.t("ss.buttons.cancel")));
+    var $cancelButton = $('<button/>', { name: "button", type: "button", class: "btn-default cancel" })
+      .text(i18next.t("ss.buttons.cancel"));
+    $footer.append($cancelButton);
     $.colorbox({
       html: $div.get(0).outerHTML + $footer.get(0).outerHTML,
       maxHeight: "80%",
