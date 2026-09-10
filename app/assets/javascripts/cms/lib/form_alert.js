@@ -119,7 +119,7 @@ this.Form_Alert = (function () {
       $(submitter).off(".form_alert");
       return $(submitter).trigger("click");
     });
-    $("#cboxLoadedContent").find(".cancel").on("click", function (e) {
+    $("#cboxLoadedContent").find(".cancel").on("click", function (_e) {
       $.colorbox.close();
       return false;
     });
@@ -129,7 +129,7 @@ this.Form_Alert = (function () {
     return Form_Alert.beforeSaves.push(callback);
   };
 
-  Form_Alert.asyncValidateSyntaxCheck = function ($form, submitter, opts) {
+  Form_Alert.asyncValidateSyntaxCheck = function ($form, submitter, _opts) {
     var promise = Syntax_Checker.asyncCheck2($form, submitter);
     promise.done(function() {
       $.each(Syntax_Checker.errors, function(id, error) {
@@ -154,7 +154,7 @@ this.Form_Alert = (function () {
 
   Form_Alert.clonedName = function ($form, submitter, _opts) {
     var $name = $form.find("#addon-basic #item_name");
-    if ($(submitter).hasClass("publish_save") && new RegExp(`^\[${i18next.t('workflow.cloned_name_prefix')}\]`).test($name.val())) {
+    if ($(submitter).hasClass("publish_save") && new RegExp(`^\\[${RegExp.escape(i18next.t('workflow.cloned_name_prefix'))}\\]`).test($name.val())) {
       var addonName = $name.closest(".addon-view").find("header").text();
       return Form_Alert.add(addonName, $name, i18next.t('errors.messages.cloned_name'));
     }
