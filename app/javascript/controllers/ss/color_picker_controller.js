@@ -1,18 +1,21 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
+
+  #onColorChange = (ev) => {
+    const rgb = ev.detail?.rgb;
+    if (rgb) {
+      $(this.element).minicolors("value", rgb);
+    }
+  }
+
   connect() {
     SS.justOnce(this.element, "js-color", () => this.#render());
-
-    this.element.addEventListener("ss:colorchange", (ev) => {
-      const rgb = ev.detail?.rgb;
-      if (rgb) {
-        $(this.element).minicolors("value", rgb);
-      }
-    })
+    this.element.addEventListener("ss:colorchange", this.#onColorChange)
   }
 
   disconnect() {
+    this.element.removeEventListener("ss:colorchange", this.#onColorChange);
   }
 
   #render() {
