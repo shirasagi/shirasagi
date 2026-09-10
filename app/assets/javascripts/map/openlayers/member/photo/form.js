@@ -17,7 +17,10 @@ this.Openlayers_Member_Photo_Form = (function () {
     if (opts["center"] && this.validateLatLon(opts["center"][1], opts["center"][0])) {
       this.center = opts["center"];
     }
-    this.defaultCenter = function() { return Openlayers_Map.defaultCenter().reverse(); };
+    this.defaultCenter = function() {
+      var copy = [...Openlayers_Map.defaultCenter()];
+      return copy.reverse();
+    };
 
     this.markerFeature = null;
     this.markerLayer = null;
