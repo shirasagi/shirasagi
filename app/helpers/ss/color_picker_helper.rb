@@ -9,6 +9,11 @@ module SS::ColorPickerHelper
 
     html_options['class'] = Array(html_options['class']) + %w(js-color)
     html_options['aria-busy'] = true
+    if html_options.key?('data-controller')
+      html_options['data-controller'] = [html_options['data-controller'], "ss--color-picker"].compact.join(" ")
+    else
+      html_options['data-controller'] = "ss--color-picker"
+    end
 
     text_field(object_name, method, html_options)
   end
@@ -23,6 +28,11 @@ module SS::ColorPickerHelper
 
     html_options['class'] = Array(html_options['class']) + %w(js-color)
     html_options['aria-busy'] = true
+    if html_options.key?('data-controller')
+      html_options['data-controller'] = [html_options['data-controller'], "ss--color-picker"].compact.join(" ")
+    else
+      html_options['data-controller'] = "ss--color-picker"
+    end
 
     text_field_tag(name, value, html_options)
   end

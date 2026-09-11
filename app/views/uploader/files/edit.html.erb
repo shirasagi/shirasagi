@@ -1,6 +1,5 @@
 <%= jquery do %>
 SS.confirmUnloading();
-Form_Save_Event.render();
 <% end %>
 
 <%= form_for :item, url: { action: :update, filename: @item.filename }, html: { id: "item-form", method: :put, multipart: true } do |f| %>

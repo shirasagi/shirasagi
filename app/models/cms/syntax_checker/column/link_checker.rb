@@ -34,8 +34,8 @@ class Cms::SyntaxChecker::Column::LinkChecker
   #   if (text && text.length <= 3) {
   #     Syntax_Checker.errors.push({
   #       id: id, idx: 0, code: text,
-  #       msg: Syntax_Checker.message["checkLinkText"],
-  #       detail: Syntax_Checker.detail["checkLinkText"]
+  #       msg: Syntax_Checker.message.checkLinkText(),
+  #       detail: Syntax_Checker.detail.checkLinkText()
   #     });
   #   }
   # };

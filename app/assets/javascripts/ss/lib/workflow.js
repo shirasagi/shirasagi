@@ -588,8 +588,6 @@ SS_WorkflowApprover.prototype.render = function () {
       .attr("value", true)
       .appendTo("#item-form");
   }
-
-  Form_Save_Event.render();
 };
 
 SS_WorkflowApprover.prototype.onClickSave = function () {

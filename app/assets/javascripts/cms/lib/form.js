@@ -1,7 +1,6 @@
 //= require cms/lib/form
 //= require cms/lib/form_alert
 //= require cms/lib/form_preview
-//= require cms/lib/form_save_event
 //= require cms/lib/inplace_form
 //= require cms/lib/syntax_checker
 //= require cms/lib/form_checker
@@ -91,7 +90,7 @@ this.Cms_Form = (function () {
             id: id,
             idx: 0,
             code: attr,
-            msg: (attr + <%= I18n.t("errors.messages.blank").to_json %>),
+            msg: (attr + i18next.t("errors.messages.blank")),
             ele: this
           }
         );
@@ -134,8 +133,8 @@ this.Cms_Form = (function () {
           id: ids[entry.idx],
           idx: 0,
           code: h[entry.idx],
-          msg: Syntax_Checker.message[entry.key],
-          detail: Syntax_Checker.detail[entry.key]
+          msg: Syntax_Checker.message[entry.key](),
+          detail: Syntax_Checker.detail[entry.key]()
         }
       );
     }

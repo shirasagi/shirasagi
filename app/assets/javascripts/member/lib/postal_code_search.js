@@ -5,8 +5,7 @@ PostalCodeSearch = (function () {
   PostalCodeSearch.prototype.defaults = {
     postal_code: "input[name='item[postal_code]']",
     addr: "input[name='item[addr]']",
-    error: '.postal-code-search-error',
-    error_message: <%= I18n.t('errors.messages.not_found_postal_code').to_json %>
+    error: '.postal-code-search-error'
   };
 
   function PostalCodeSearch(el, options) {
@@ -67,7 +66,15 @@ PostalCodeSearch = (function () {
   };
 
   PostalCodeSearch.prototype.set_error = function () {
-    return $(this.options.error).html(this.options.error_message);
+    var error_message = this.options.error_message;
+    if (!error_message) {
+      if ("i18next" in window) {
+        error_message = i18next.t('errors.messages.not_found_postal_code');
+      } else {
+        error_message = "郵便番号が見つかりません";
+      }
+    }
+    return $(this.options.error).html(error_message);
   };
 
   PostalCodeSearch.prototype.clear_error = function () {

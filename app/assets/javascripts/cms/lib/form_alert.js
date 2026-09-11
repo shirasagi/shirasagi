@@ -71,7 +71,7 @@ this.Form_Alert = (function () {
 
   Form_Alert.showAlert = function ($form, submitter) {
     var $div = $('<div/>', { id: "alertExplanation", class: "errorExplanation" });
-    $div.append("<h2><%= I18n.t('cms.alert') %></h2>");
+    $div.append($("<h2/>").text(i18next.t('cms.alert')));
 
     var appendAlerts = function (alerts) {
       for (var addon in alerts) {
@@ -92,11 +92,11 @@ this.Form_Alert = (function () {
     // caution: below IE8, you must use document.createElement() method to create <footer>
     var $footer = $(document.createElement("footer")).addClass('send');
     var allowEdit = true;
-    if (!SS.isEmptyObject(Form_Alert.alerts[<%= I18n.t("cms.backlink_check").to_json %>])) {
+    if (!SS.isEmptyObject(Form_Alert.alerts[i18next.t("cms.backlink_check")])) {
       allowEdit = false;
-    } else if (!SS.isEmptyObject(Form_Alert.alerts[<%= I18n.t("cms.syntax_check").to_json %>])) {
-      $.each(Form_Alert.alerts[<%= I18n.t("cms.syntax_check").to_json %>], function(id, alert) {
-        if (alert["msg"] === <%= I18n.t('cms.confirm.disallow_edit_ignore_syntax_check').to_json %>) {
+    } else if (!SS.isEmptyObject(Form_Alert.alerts[i18next.t("cms.syntax_check")])) {
+      $.each(Form_Alert.alerts[i18next.t("cms.syntax_check")], function(id, alert) {
+        if (alert["msg"] === i18next.t('cms.confirm.disallow_edit_ignore_syntax_check')) {
           if (submitter.name === "draft_save" || submitter.name === "branch_save") {
             allowEdit = true;
           } else {
@@ -106,9 +106,13 @@ this.Form_Alert = (function () {
       });
     }
     if (allowEdit) {
-      $footer.append('<button name="button" type="button" class="btn-primary save"><%= I18n.t("ss.buttons.ignore_alert") %></button>');
+      var $ignoreAlertButton = $('<button/>', { name: "button", type: "button", class: "btn-primary save" })
+        .text(i18next.t("ss.buttons.ignore_alert"));
+      $footer.append($ignoreAlertButton);
     }
-    $footer.append('<button name="button" type="button" class="btn-default cancel"><%= I18n.t("ss.buttons.cancel") %></button>');
+    var $cancelButton = $('<button/>', { name: "button", type: "button", class: "btn-default cancel" })
+      .text(i18next.t("ss.buttons.cancel"));
+    $footer.append($cancelButton);
     $.colorbox({
       html: $div.get(0).outerHTML + $footer.get(0).outerHTML,
       maxHeight: "80%",
@@ -119,7 +123,7 @@ this.Form_Alert = (function () {
       $(submitter).off(".form_alert");
       return $(submitter).trigger("click");
     });
-    $("#cboxLoadedContent").find(".cancel").on("click", function (e) {
+    $("#cboxLoadedContent").find(".cancel").on("click", function (_e) {
       $.colorbox.close();
       return false;
     });
@@ -129,11 +133,11 @@ this.Form_Alert = (function () {
     return Form_Alert.beforeSaves.push(callback);
   };
 
-  Form_Alert.asyncValidateSyntaxCheck = function ($form, submitter, opts) {
+  Form_Alert.asyncValidateSyntaxCheck = function ($form, submitter, _opts) {
     var promise = Syntax_Checker.asyncCheck2($form, submitter);
     promise.done(function() {
       $.each(Syntax_Checker.errors, function(id, error) {
-        Form_Alert.add(<%= I18n.t('cms.syntax_check').to_json %>, error["ele"], error["msg"]);
+        Form_Alert.add(i18next.t('cms.syntax_check'), error["ele"], error["msg"]);
       });
     });
     return promise;
@@ -154,20 +158,20 @@ this.Form_Alert = (function () {
 
   Form_Alert.clonedName = function ($form, submitter, _opts) {
     var $name = $form.find("#addon-basic #item_name");
-    if ($(submitter).hasClass("publish_save") && /^\[<%= I18n.t('workflow.cloned_name_prefix') %>\]/.test($name.val())) {
+    if ($(submitter).hasClass("publish_save") && new RegExp(`^\\[${RegExp.escape(i18next.t('workflow.cloned_name_prefix'))}\\]`).test($name.val())) {
       var addonName = $name.closest(".addon-view").find("header").text();
-      return Form_Alert.add(addonName, $name, <%= I18n.t('errors.messages.cloned_name').to_json %>);
+      return Form_Alert.add(addonName, $name, i18next.t('errors.messages.cloned_name'));
     }
   };
 
   Form_Alert.closeConfirmation = function ($form, submitter, _opts) {
     var addonName, msg;
     if ($(submitter).attr("data-close-confirmation")) {
-      addonName = <%= I18n.t("cms.confirm.close").to_json %>;
+      addonName = i18next.t("cms.confirm.close");
       msg = null;
       if ($(submitter).attr("data-contain-links-path")) {
         msg = $("<a/>", { href: $(submitter).attr("data-contain-links-path"), target: "_blank", ref: "noopener" })
-          .text(<%= I18n.t("cms.confirm.check_contains_urls").to_json %>)
+          .text(i18next.t("cms.confirm.check_contains_urls"))
           .prop("outerHTML");
       }
       return Form_Alert.add(addonName, null, msg);
@@ -183,7 +187,7 @@ this.Form_Alert = (function () {
       messages = f();
     }
 
-    addonName = <%= I18n.t("cms.sns_post").to_json %>;
+    addonName = i18next.t("cms.sns_post");
     $.each(messages, function() {
       Form_Alert.add(addonName, null, this);
     });

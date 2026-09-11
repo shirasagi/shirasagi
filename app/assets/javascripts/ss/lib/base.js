@@ -1,18 +1,22 @@
-this.SS = (function () {
-  function SS() {
-  }
+(function () {
+  const SS = {};
 
   SS.config = {};
+
+  SS.updateConfig = function(config) {
+    $.extend(true, SS.config, config);
+  };
 
   SS.head = "";
 
   SS.href = "";
 
-  SS.loading = <%= ApplicationController.helpers.loading.to_json %>;
+  // SS.loading = <%= ApplicationController.helpers.loading.to_json %>;
+  SS.loading = `<img style="vertical-align: middle;" alt="loading.." width="16" height="11" class="ss-base-loading" src="/assets/img/loading.gif" />`;
 
   SS.noticeTimeoutId = null;
 
-  SS.noticeTimeoutDelay = <%= SS.config.ss.notice["timeout_delay"].to_json %>;
+  SS.noticeTimeoutDelay = function() { return SS.config?.ss?.notice?.timeout_delay || 3600; };
 
   SS.page = "";
 
@@ -24,7 +28,7 @@ this.SS = (function () {
 
   SS.debug = false;
 
-  SS.defaultTimeoutMillis = <%= SS.config.ss.dc_guard_timeout_millis %>;
+  SS.defaultTimeoutMillis = function() { return SS.config?.ss?.dc_guard_timeout_millis || 5000; };
 
   SS.KEY_ENTER = 13;
   SS.DEFAULT_DATE_FORMAT = '%Y/%m/%d';
@@ -405,7 +409,7 @@ this.SS = (function () {
     }
     SS.noticeTimeoutId = setTimeout((function () {
       return $('#notice').slideUp('normal');
-    }), SS.noticeTimeoutDelay);
+    }), SS.noticeTimeoutDelay());
 
     return SS.noticeTimeoutId;
   };
@@ -783,7 +787,7 @@ this.SS = (function () {
   SS.timeoutAfterSubmit = function() {
     $(document).on("submit", "form", function (ev) {
       var $form = $(ev.target);
-      var timeout = $form.data("ss-timeout") || SS.defaultTimeoutMillis;
+      var timeout = $form.data("ss-timeout") || SS.defaultTimeoutMillis();
 
       if (timeout > -1) {
         setTimeout(function () {
@@ -802,7 +806,7 @@ this.SS = (function () {
 
   SS.onDoubleClickGuardClick = function(ev) {
     var $element = $(ev.target);
-    var timeout = $element.data("ss-timeout") || SS.defaultTimeoutMillis;
+    var timeout = $element.data("ss-timeout") || SS.defaultTimeoutMillis();
     // NOTE:
     // - `ss_button_to` uses JS to build and submit a form and calls `ev.preventDefault()` even on "OK".
     // - So, `defaultPrevented` alone can't distinguish "canceled" vs "will submit".
@@ -838,6 +842,5 @@ this.SS = (function () {
     }
   };
 
-  return SS;
-
+  window.SS = SS;
 })();

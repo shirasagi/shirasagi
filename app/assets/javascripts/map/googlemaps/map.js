@@ -10,17 +10,17 @@ this.Googlemaps_Map = (function () {
 
   Googlemaps_Map.zoom = null; // null means auto
 
-  Googlemaps_Map.defaultCenter = <%= SS.config.map.map_center %>;
+  Googlemaps_Map.defaultCenter = function() { return SS.config.map.map_center; };
 
-  Googlemaps_Map.defaultZoom = <%= SS.config.map.googlemaps_zoom_level %>;
+  Googlemaps_Map.defaultZoom = function() { return SS.config.map.googlemaps_zoom_level; };
 
   Googlemaps_Map.markers = null;
 
   Googlemaps_Map.markerClusterer = null;
 
-  Googlemaps_Map.markerIcon = <%= SS.config.map.dig("map_marker_images", "googlemaps", "default", "marker").to_json %>;
+  Googlemaps_Map.markerIcon = function() { return SS.config.map?.map_marker_images?.googlemaps?.default?.marker; };
 
-  Googlemaps_Map.clickIcon = <%= SS.config.map.dig("map_marker_images", "googlemaps", "default", "click").to_json %>;
+  Googlemaps_Map.clickIcon = function() { return SS.config.map?.map_marker_images?.googlemaps?.default?.click; };
 
   Googlemaps_Map.openedInfo = null;
 
@@ -30,7 +30,7 @@ this.Googlemaps_Map = (function () {
 
   Googlemaps_Map.showGoogleMapsSearch = false;
 
-  Googlemaps_Map.mapsSearchUrl = "<%= SS.config.map.googlemaps_search_end_point %>";
+  Googlemaps_Map.mapsSearchUrl = function() { return SS.config.map.googlemaps_search_end_point; };
 
   Googlemaps_Map.attachMessage = function (id) {
     google.maps.event.addListener(Googlemaps_Map.markers[id]["marker"], 'click', function (_event) {
@@ -93,11 +93,11 @@ this.Googlemaps_Map = (function () {
   };
 
   Googlemaps_Map.getCenter = function () {
-    return (Googlemaps_Map.center ? Googlemaps_Map.center : Googlemaps_Map.defaultCenter);
+    return (Googlemaps_Map.center ? Googlemaps_Map.center : Googlemaps_Map.defaultCenter());
   }
 
   Googlemaps_Map.getZoom = function () {
-    return (Googlemaps_Map.zoom ? Googlemaps_Map.zoom : Googlemaps_Map.defaultZoom);
+    return (Googlemaps_Map.zoom ? Googlemaps_Map.zoom : Googlemaps_Map.defaultZoom());
   }
 
   Googlemaps_Map.resize = function () {
@@ -134,7 +134,7 @@ this.Googlemaps_Map = (function () {
       const markerOpts = {
         position: position,
         map: Googlemaps_Map.map,
-        icon: value["image"] || Googlemaps_Map.markerIcon
+        icon: value["image"] || Googlemaps_Map.markerIcon()
       };
 
       Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker(markerOpts);
@@ -315,8 +315,10 @@ this.Googlemaps_Map = (function () {
   };
 
   Googlemaps_Map.getMapsSearchHtml = function(lat, lng) {
-    const url = `${Googlemaps_Map.mapsSearchUrl}${lat},${lng}`;
-    return `<p class="marker-link"><a href="${url}" target="_blank" rel="noopener"><%= I18n.t("map.links.google_maps_search") %></a></p>`;
+    const url = `${Googlemaps_Map.mapsSearchUrl()}${lat},${lng}`;
+    const $link = $("<a/>", { href: url, target: "_blank", rel: "noopener" }).text(i18next.t("map.links.google_maps_search"));
+    const $html = $("<p/>", { class: "marker-link" }).append($link);
+    return $html.prop("outerHTML");
   };
 
   return Googlemaps_Map;
