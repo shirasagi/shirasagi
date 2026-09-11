@@ -11,7 +11,6 @@
 
 SS.ready(function() {
   setTimeout(function() {
-    // $(document).trigger("gws:calendarInitialized");
     document.dispatchEvent(new Event('gws:calendarInitialized'));
   }, 0)
 });

@@ -2,6 +2,8 @@ SS.ready(function() {
   function Gws_Schedule_Multiple_Calendar() {
   }
 
+  Gws_Schedule_Multiple_Calendar.controller = null;
+
   Gws_Schedule_Multiple_Calendar.renderController = function (selector, opts, init) {
     var controller, controllerWrap, params;
     if (opts == null) {
@@ -28,6 +30,7 @@ SS.ready(function() {
     var calendar = new FullCalendar.Calendar(calendarEl, params);
     calendar.render();
     calendarEl.calendar = calendar;
+    Gws_Schedule_Multiple_Calendar.controller = calendar;
 
     Gws_Schedule_Calendar.renderInitialize(selector, init);
     Gws_Schedule_Calendar.overrideAddLink(selector);
@@ -63,10 +66,10 @@ SS.ready(function() {
       init = {};
     }
     params = Gws_Schedule_Calendar.defaultParams(selector, opts);
-    if (opts['events']) {
+    if (opts['pageUrl']) {
       $.extend(true, params, Gws_Schedule_Calendar.editableParams(selector, opts));
     }
-    if (opts['events']) {
+    if (opts['pageUrl']) {
       $.extend(true, params, Gws_Schedule_Calendar.tapMenuParams(selector, opts));
     }
     for (var i in opts.eventSources) {
@@ -80,6 +83,9 @@ SS.ready(function() {
     }
     if (init && init["view"]) {
       params["initialView"] = init["view"];
+    }
+    if (Gws_Schedule_Multiple_Calendar.controller) {
+      params["initialView"] = Gws_Schedule_Multiple_Calendar.controller.view.type;
     }
 
     // custom params

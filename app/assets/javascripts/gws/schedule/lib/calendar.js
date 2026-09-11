@@ -26,10 +26,10 @@ SS.ready(function() {
       init = {};
     }
     params = this.defaultParams(selector, opts);
-    if (opts['events']) {
+    if (opts['pageUrl']) {
       $.extend(true, params, this.editableParams(selector, opts));
     }
-    if (opts['events']) {
+    if (opts['pageUrl']) {
       $.extend(true, params, this.tapMenuParams(selector, opts));
     }
     for (var i in opts.eventSources) {
@@ -95,6 +95,11 @@ SS.ready(function() {
         day: i18next.t('gws/schedule.calendar.buttonText.day'),
         listMonth: i18next.t('gws/schedule.calendar.buttonText.listMonth'),
         listWeek: i18next.t('gws/schedule.calendar.buttonText.listMonth')
+      },
+      buttonHints: {
+        today: i18next.t('gws/schedule.calendar.buttonText.today'),
+        prev: i18next.t('ss.links.prev'),
+        next: i18next.t('ss.links.next')
       },
       customButtons: {
         withTodo: {
@@ -178,6 +183,9 @@ SS.ready(function() {
           listDayFormat: i18next.t('gws/schedule.calendar.dayHeaderFormat.listMonth', { returnObjects: true }),
           listDaySideFormat: false
         }
+      },
+      viewHint: function(buttonText, _buttonName) {
+        return buttonText;
       },
       loading: function (isLoading) {
         var calendar = document.querySelector(selector).calendar;
@@ -292,7 +300,7 @@ SS.ready(function() {
   };
 
   Gws_Schedule_Calendar.tapMenuParams = function (selector, opts) {
-    var url = opts['events'].replace(/\.json/, '');
+    var url = opts['pageUrl'];
 
     return {
       dateClick: function (info) {
@@ -361,7 +369,7 @@ SS.ready(function() {
   };
 
   Gws_Schedule_Calendar.editableParams = function (selector, opts) {
-    var url = opts['events'].replace(/\.json/, '');
+    var url = opts['pageUrl'];
     var token = $('meta[name="csrf-token"]').attr('content');
 
     return {

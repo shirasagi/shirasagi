@@ -56,7 +56,7 @@
             tapMenu: item.reservable?(@cur_user),
             initialView: 'timeGridDay',
             headerToolbar: { left: 'today prev next title reload', right: 'dayGridWeek,timeGridDay' },
-            events: gws_schedule_facility_plans_path(facility: item.id, format: :json),
+            pageUrl: gws_schedule_facility_plans_path(facility: item.id),
             eventSources: [{ url: "#{events_gws_schedule_facility_plans_path(facility: item.id, format: :json)}?#{search_query}" }],
             firstDay: @cur_site.schedule_first_day,
             views: {
@@ -70,7 +70,15 @@
         %>
         <%= jquery do %>
           $(document).on("gws:calendarInitialized", function() {
-            Gws_Schedule_Multiple_Calendar.render('#cal-<%= item.id %>', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+            var observer = new IntersectionObserver((entries, observer) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  observer.unobserve(entry.target);
+                  Gws_Schedule_Multiple_Calendar.render('#cal-<%= item.id %>', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+                }
+              });
+            });
+            observer.observe(document.getElementById('cal-<%= item.id %>'));
           });
         <% end %>
       </div>
