@@ -215,7 +215,15 @@ Opendata_Graph.prototype.drawPie = function() {
   });
 };
 
-Opendata_Graph.graphTypes = function(type) { return i18next.t("opendata.graph_types", { returnObjects: true })[type]; };
+Opendata_Graph.defaultGraphTypes = { "bar": "棒グラフ", "line": "線グラフ", "pie": "円グラフ" };
+
+Opendata_Graph.graphTypes = function(type) {
+  if ("i18next" in window) {
+    return i18next.t("opendata.graph_types", { returnObjects: true })[type];
+  } else {
+    return Opendata_Graph.defaultGraphTypes[type];
+  }
+};
 
 Opendata_Graph.prototype.renderController = function(types, headers, callback) {
   var self = this;
