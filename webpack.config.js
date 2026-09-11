@@ -59,7 +59,7 @@ module.exports = {
       RAILS_ENV: JSON.stringify(RAILS_ENV),
       AVAILABLE_LOCALES: JSON.stringify(Config.environment.available_locales),
       I18NEXT_RESOURCES: JSON.stringify(RAILS_ENV === "production" ? i18nextResourceGen.generate() : {}),
-      DEFAULT_SWATCHES: JSON.stringify(Config.minicolors_swatches.color_codes),
+      DEFAULT_SWATCHES: JSON.stringify(Config.minicolors_swatches[RAILS_ENV]?.color_codes),
       // API KEY などが漏洩しないようにホワイトリスト方式でエクスポートする
       MAP_CONFIG_EXPORTS: JSON.stringify({
         map_center: Config.map[RAILS_ENV]?.map_center,
