@@ -32,13 +32,21 @@ this.Openlayers_Map = (function () {
     this.render();
   }
 
-  Openlayers_Map.defaultCenter = function() { return SS.config.map.map_center; };
+  Openlayers_Map.defaultCenter = function() {
+    return SS.config?.map?.map_center || [36.204824, 138.252924];
+  };
 
-  Openlayers_Map.defaultZoom = function() { return SS.config.map.openlayers_zoom_level; };
+  Openlayers_Map.defaultZoom = function() {
+    return SS.config?.map?.openlayers_zoom_level || 10;
+  };
 
-  Openlayers_Map.markerIcon = function() { return SS.config.map?.map_marker_images?.openlayers?.default?.marker; };
+  Openlayers_Map.markerIcon = function() {
+    return SS.config.map?.map_marker_images?.openlayers?.default?.marker || "/assets/img/googlemaps/marker1.png";
+  };
 
-  Openlayers_Map.clickIcon = function() { return SS.config.map?.map_marker_images?.openlayers?.default?.click; };
+  Openlayers_Map.clickIcon = function() {
+    return SS.config.map?.map_marker_images?.openlayers?.default?.click || "/assets/img/googlemaps/marker17.png";
+  };
 
   Openlayers_Map.prototype.getCenter = function () {
     return (this.center ? this.center : this.defaultCenter());
