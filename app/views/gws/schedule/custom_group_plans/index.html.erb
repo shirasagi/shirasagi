@@ -63,7 +63,7 @@
         %>
         <%= jquery do %>
           $(document).on("gws:calendarInitialized", function() {
-            var observer = new IntersectionObserver((entries, observer) => {
+            const observer = new IntersectionObserver((entries, observer) => {
               entries.forEach(entry => {
                 if (entry.isIntersecting) {
                   observer.unobserve(entry.target);

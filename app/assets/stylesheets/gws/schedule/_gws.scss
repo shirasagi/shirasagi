@@ -1032,7 +1032,10 @@
     }
   }
   .fc-scrollgrid-sync-table {
-    min-height: 83px;
+    min-height: 130px;
+  }
+  .fc-daygrid-block-event {
+    max-height: 3em;
   }
   .calendar-name, .calendar-attr {
     display: block;

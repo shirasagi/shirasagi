@@ -60,15 +60,17 @@
           init_options = params[:calendar] || {}
         %>
         <%= jquery do %>
-          const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) {
-                observer.unobserve(entry.target);
-                Gws_Schedule_Multiple_Calendar.render('#cal-<%= item.id %>', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
-              }
+          $(document).on("gws:calendarInitialized", function() {
+            const observer = new IntersectionObserver((entries, observer) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  observer.unobserve(entry.target);
+                  Gws_Schedule_Multiple_Calendar.render('#cal-<%= item.id %>', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+                }
+              });
             });
+            observer.observe(document.getElementById('cal-<%= item.id %>'));
           });
-          observer.observe(document.getElementById('cal-<%= item.id %>'));
         <% end %>
       </div>
     <% end %>

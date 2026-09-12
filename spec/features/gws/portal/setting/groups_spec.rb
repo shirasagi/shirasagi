@@ -73,6 +73,7 @@ describe "gws_portal_setting_groups", type: :feature, dbscope: :example, js: tru
 
     it do
       visit gws_portal_path(site: site)
+      scroll_to_bottom('.gws-schedule-box')
       expect(page).to have_css(".gws-notices", text: notice_post.name)
       expect(page).to have_css(".gws-portlets .portlet-model-schedule", text: schedule_plan.name)
       group = user.groups.first
@@ -234,6 +235,7 @@ describe "gws_portal_setting_groups", type: :feature, dbscope: :example, js: tru
 
     it do
       visit gws_portal_path(site: site)
+      scroll_to_bottom('.gws-schedule-box')
       expect(page).to have_css(".gws-notices", text: notice_post.name)
       expect(page).to have_css(".gws-portlets .portlet-model-schedule", text: schedule_plan.name)
       within ".current-navi" do

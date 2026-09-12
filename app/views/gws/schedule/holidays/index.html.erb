@@ -1,11 +1,11 @@
 <%
   calendar_options = {
     tapMenu: @model.allowed?(:create, @cur_user, site: @cur_site),
-    events: url_for(action: :index, format: :json),
+    pageUrl: url_for(action: :index),
+    eventSources: [{ url: "#{url_for(action: :events, format: :json)}?#{search_query}" }],
     firstDay: @cur_site.schedule_first_day,
     slotMinTime: @cur_site.schedule_min_time,
-    slotMaxTime: @cur_site.schedule_max_time,
-    eventSources: [{ url: "#{url_for(action: :events, format: :json)}?#{search_query}" }]
+    slotMaxTime: @cur_site.schedule_max_time
   }
   init_options = params[:calendar] || {}
 %>
