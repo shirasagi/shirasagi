@@ -89,6 +89,7 @@ SS.ready(function() {
     }
 
     // custom params
+    delete params.pageUrl;
     delete params.tapMenu
     delete params.useWorkload
 
@@ -207,6 +208,7 @@ SS.ready(function() {
         var el = arg.el;
         var start = moment(event.start)
 
+        el.title = event.title;
         el.style.color = event.textColor;
 
         if (el.className.includes('fc-event-range')) {
@@ -231,10 +233,12 @@ SS.ready(function() {
         if (event.extendedProps.category) {
           var categorySpan = $('<span class="fc-category"></span>').append(event.extendedProps.category);
           el.querySelector('.fc-event-title').prepend(categorySpan[0]);
+          el.title = `${event.extendedProps.category} | ${el.title}`;
         }
         if (event.extendedProps.facility) {
           var facilitySpan = $('<span class="fc-facility"></span>').append(event.extendedProps.facility);
           el.querySelector('.fc-event-title').append(facilitySpan[0]);
+          el.title += ` | ${event.extendedProps.facility}`;
         }
 
         if (el.className.includes('fc-event-work')) {

@@ -493,6 +493,7 @@
   }
   .fc-event-title {
     display: block;
+    word-break: break-all;
   }
   .fc-category {
     margin-right: 2px;
@@ -1034,8 +1035,9 @@
   .fc-scrollgrid-sync-table {
     min-height: 130px;
   }
-  .fc-daygrid-block-event {
-    max-height: 3em;
+  .fc-event.fc-event-allday {
+    max-height: 1.8em;
+    overflow: hidden;
   }
   .calendar-name, .calendar-attr {
     display: block;

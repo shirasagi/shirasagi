@@ -44,8 +44,9 @@ SS.ready(function() {
     }
 
     // custom params
-    delete params.useWorkload
-    delete params.tapMenu
+    delete params.pageUrl;
+    delete params.useWorkload;
+    delete params.tapMenu;
 
     var calendarEl = document.querySelector(selector);
     var calendar = new FullCalendar.Calendar(calendarEl, params);
@@ -189,7 +190,7 @@ SS.ready(function() {
       },
       loading: function (isLoading) {
         var calendar = document.querySelector(selector).calendar;
-        var target = document.querySelector(selector)
+        var target = document.querySelector(selector);
 
         target.querySelector('.fc-loading')?.remove();
 
@@ -229,7 +230,7 @@ SS.ready(function() {
         var event = arg.event;
         var el = arg.el;
 
-        var nameEl = (el.querySelector('.fc-event-title') || el.querySelector('.fc-list-event-title a'))
+        var nameEl = (el.querySelector('.fc-event-title') || el.querySelector('.fc-list-event-title a'));
         if (!nameEl) return;
 
         el.style.color = event.textColor;
@@ -243,7 +244,7 @@ SS.ready(function() {
           if (el.className.includes('fc-event-allday')) {
             fcClass = 'fc-date';
             format = 'MM/DD';
-            end = end.add(-1, 'days')
+            end = end.add(-1, 'days');
           } else {
             el.querySelector('span.fc-event-time')?.remove();
           }
@@ -404,10 +405,11 @@ SS.ready(function() {
 
         if (event.allDay) {
           start = moment(event.start).format('YYYY/MM/DD');
-          if (event.end) end = event.end;
         } else {
           start = moment(event.start).format('YYYY/MM/DDTHH:mm:ss');
-          end = new Date(event.start.getTime() + (1000 * 60 * 60 * 1)); // + 1 hour
+        }
+        if (event.end) {
+          end = event.end;
         }
 
         return $.ajax({
@@ -435,8 +437,9 @@ SS.ready(function() {
       },
       eventResize: function (info) {
         var event = info.event;
-
         var start, end = null;
+        var asyncUrl = event.extendedProps?.events ? event.extendedProps.events.replace(/\.json/, '') : url;
+
         if (event.allDay) {
           start = Gws_Schedule_Calendar.dateToString(event.start);
           if (event.end) end = Gws_Schedule_Calendar.dateToString(event.end);
@@ -444,8 +447,6 @@ SS.ready(function() {
           start = Gws_Schedule_Calendar.datetimeToString(event.start);
           if (event.end) end = Gws_Schedule_Calendar.datetimeToString(event.end);
         }
-
-        var asyncUrl = event.extendedProps?.events ? event.extendedProps.events.replace(/\.json/, '') : url;
 
         return $.ajax({
           type: 'PUT',

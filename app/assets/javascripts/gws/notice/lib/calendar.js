@@ -35,8 +35,9 @@ SS.ready(function() {
     }
 
     // custom params
-    delete params.tapMenu
-    delete params.useWorkload
+    delete params.pageUrl;
+    delete params.tapMenu;
+    delete params.useWorkload;
 
     var calendarEl = document.querySelector(selector);
     var calendar = new FullCalendar.Calendar(calendarEl, params);
