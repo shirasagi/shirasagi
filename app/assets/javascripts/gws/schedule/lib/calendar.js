@@ -430,7 +430,11 @@ SS.ready(function() {
             });
           },
           error: function (xhr, _status, _error) {
-            alert(xhr.responseJSON.join("\n"));
+            if (xhr.responseJSON) {
+              alert(xhr.responseJSON.join("\n"));
+            } else {
+              alert('Error');
+            }
             return info.revert();
           }
         });
@@ -466,7 +470,11 @@ SS.ready(function() {
             });
           },
           error: function (xhr, _status, _error) {
-            alert(xhr.responseJSON.join("\n"));
+            if (xhr.responseJSON) {
+              alert(xhr.responseJSON.join("\n"));
+            } else {
+              alert('Error');
+            }
             return info.revert();
           }
         });
