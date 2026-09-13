@@ -33,7 +33,7 @@ describe "gws_portal_setting_groups", type: :feature, dbscope: :example, js: tru
   context "least required permissions to manage" do
     let!(:notice_folder) { create(:gws_notice_folder, cur_site: site) }
     let!(:notice_post) { create(:gws_notice_post, cur_site: site, folder_id: notice_folder.id) }
-    let!(:schedule_plan) { create(:gws_schedule_plan, cur_site: site) }
+    let!(:schedule_plan) { create(:gws_schedule_plan, cur_site: site, member_ids: [sys_user.id, user.id]) }
     let(:permissions) do
       permissions = []
       permissions << 'use_gws_portal_group_settings'
@@ -73,6 +73,7 @@ describe "gws_portal_setting_groups", type: :feature, dbscope: :example, js: tru
 
     it do
       visit gws_portal_path(site: site)
+      scroll_to_bottom('.gws-schedule-box')
       expect(page).to have_css(".gws-notices", text: notice_post.name)
       expect(page).to have_css(".gws-portlets .portlet-model-schedule", text: schedule_plan.name)
       group = user.groups.first
@@ -234,6 +235,7 @@ describe "gws_portal_setting_groups", type: :feature, dbscope: :example, js: tru
 
     it do
       visit gws_portal_path(site: site)
+      scroll_to_bottom('.gws-schedule-box')
       expect(page).to have_css(".gws-notices", text: notice_post.name)
       expect(page).to have_css(".gws-portlets .portlet-model-schedule", text: schedule_plan.name)
       within ".current-navi" do

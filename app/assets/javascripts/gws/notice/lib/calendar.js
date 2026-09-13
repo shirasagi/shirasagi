@@ -17,10 +17,10 @@ SS.ready(function() {
       init = {};
     }
     params = this.defaultParams(selector, opts);
-    if (opts['events']) {
+    if (opts['pageUrl']) {
       $.extend(true, params, this.editableParams(selector, opts));
     }
-    if (opts['events']) {
+    if (opts['pageUrl']) {
       $.extend(true, params, this.tapMenuParams(selector, opts));
     }
     for (var i in opts.eventSources) {
@@ -35,8 +35,9 @@ SS.ready(function() {
     }
 
     // custom params
-    delete params.tapMenu
-    delete params.useWorkload
+    delete params.pageUrl;
+    delete params.tapMenu;
+    delete params.useWorkload;
 
     var calendarEl = document.querySelector(selector);
     var calendar = new FullCalendar.Calendar(calendarEl, params);
@@ -248,7 +249,7 @@ SS.ready(function() {
   };
 
   Gws_Notice_Calendar.editableParams = function (selector, opts) {
-    var url = opts['events'].replace(/\.json/, '');
+    var url = opts['pageUrl'].replace(/\.json/, '');
     return {
       editable: true,
       eventClick: function (info) {
