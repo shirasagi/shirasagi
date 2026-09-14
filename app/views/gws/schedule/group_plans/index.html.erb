@@ -46,7 +46,7 @@
           calendar_options = {
             tapMenu: user.id == @cur_user.id,
             useWorkload: use_workload?,
-            events: url_for(action: :index, format: :json),
+            pageUrl: url_for(action: :index),
             eventSources: [{ url: "#{events_gws_schedule_user_plans_path(user: user.id, format: :json)}?#{search_query}" }],
             firstDay: @cur_site.schedule_first_day,
             views: {
@@ -64,7 +64,15 @@
         %>
         <%= jquery do %>
           $(document).on("gws:calendarInitialized", function() {
-            Gws_Schedule_Multiple_Calendar.render('#cal-<%= user.id %>', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+            const observer = new IntersectionObserver((entries, observer) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  observer.unobserve(entry.target);
+                  Gws_Schedule_Multiple_Calendar.render('#cal-<%= user.id %>', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+                }
+              });
+            });
+            observer.observe(document.getElementById('cal-<%= user.id %>'));
           });
         <% end %>
       </div>

@@ -24,6 +24,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
     it do
       visit gws_schedule_group_plans_path(site: site, group: group)
       wait_for_js_ready
+      resize_to_full_screen
 
       within "\#cal-#{user.id} .fc-scrollgrid-section-body" do
         expect(page).to have_no_css(".fc-event:not(.fc-holiday)")

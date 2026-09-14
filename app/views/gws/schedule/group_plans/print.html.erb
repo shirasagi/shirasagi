@@ -41,7 +41,7 @@
         <%
           calendar_options = {
             tapMenu: user.id == @cur_user.id,
-            events: url_for(action: :index, format: :json),
+            pageUrl: url_for(action: :index),
             eventSources: [{ url: "#{events_gws_schedule_user_plans_path(user: user.id, format: :json)}?#{search_query}" }],
             useWorkload: use_workload?,
             firstDay: @cur_site.schedule_first_day,

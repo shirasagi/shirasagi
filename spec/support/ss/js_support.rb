@@ -564,6 +564,14 @@ module SS
     end
 
     def save_full_screenshot(**opts)
+      resize_to_full_screen
+      filename = opts[:filename].presence || "#{Rails.root}/tmp/screenshots-#{Time.zone.now.to_f}.png"
+      page.save_screenshot(filename)
+      puts "screenshot: #{filename}"
+    rescue
+    end
+
+    def resize_to_full_screen
       width = page.execute_script(
         "return Math.max(document.body.scrollWidth, document.body.offsetWidth, document.documentElement.clientWidth, " \
         "document.documentElement.scrollWidth, document.documentElement.offsetWidth);")
@@ -572,14 +580,14 @@ module SS
         "document.documentElement.scrollHeight, document.documentElement.offsetHeight);")
       window = Capybara.current_session.driver.browser.manage.window
       window.resize_to(width + 100, height + 100)
-      filename = opts[:filename].presence || "#{Rails.root}/tmp/screenshots-#{Time.zone.now.to_f}.png"
-      page.save_screenshot(filename)
-      puts "screenshot: #{filename}"
-    rescue
     end
 
-    def scroll_to_bottom
-      page.execute_script('window.scrollTo(0, document.body.scrollHeight);')
+    def scroll_to_bottom(target = nil)
+      if target
+        page.execute_script("const el = document.querySelector('#{target}'); el.scrollTop = el.scrollHeight;")
+      else
+        page.execute_script('window.scrollTo(0, document.body.scrollHeight);')
+      end
     end
 
     def jquery_migrate_warnings

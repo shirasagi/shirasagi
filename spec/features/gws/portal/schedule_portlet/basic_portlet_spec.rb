@@ -79,12 +79,14 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
 
       it "click event" do
         visit group_portal_path
+        scroll_to_bottom('.gws-schedule-box')
         first(".fc-event-title", text: item1.name).click
         expect(current_path).to eq gws_schedule_user_plan_path(site, gws_user, item1)
       end
 
       it "click allday event" do
         visit group_portal_path
+        scroll_to_bottom('.gws-schedule-box')
         first(".fc-event-title", text: item2.name).click
         expect(current_path).to eq gws_schedule_user_plan_path(site, gws_user, item2)
       end

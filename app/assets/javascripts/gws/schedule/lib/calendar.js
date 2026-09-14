@@ -26,10 +26,10 @@ SS.ready(function() {
       init = {};
     }
     params = this.defaultParams(selector, opts);
-    if (opts['events']) {
+    if (opts['pageUrl']) {
       $.extend(true, params, this.editableParams(selector, opts));
     }
-    if (opts['events']) {
+    if (opts['pageUrl']) {
       $.extend(true, params, this.tapMenuParams(selector, opts));
     }
     for (var i in opts.eventSources) {
@@ -44,8 +44,9 @@ SS.ready(function() {
     }
 
     // custom params
-    delete params.useWorkload
-    delete params.tapMenu
+    delete params.pageUrl;
+    delete params.useWorkload;
+    delete params.tapMenu;
 
     var calendarEl = document.querySelector(selector);
     var calendar = new FullCalendar.Calendar(calendarEl, params);
@@ -95,6 +96,11 @@ SS.ready(function() {
         day: i18next.t('gws/schedule.calendar.buttonText.day'),
         listMonth: i18next.t('gws/schedule.calendar.buttonText.listMonth'),
         listWeek: i18next.t('gws/schedule.calendar.buttonText.listMonth')
+      },
+      buttonHints: {
+        today: i18next.t('gws/schedule.calendar.buttonText.today'),
+        prev: i18next.t('ss.links.prev'),
+        next: i18next.t('ss.links.next')
       },
       customButtons: {
         withTodo: {
@@ -179,9 +185,12 @@ SS.ready(function() {
           listDaySideFormat: false
         }
       },
+      viewHint: function(buttonText, _buttonName) {
+        return buttonText;
+      },
       loading: function (isLoading) {
         var calendar = document.querySelector(selector).calendar;
-        var target = document.querySelector(selector)
+        var target = document.querySelector(selector);
 
         target.querySelector('.fc-loading')?.remove();
 
@@ -221,7 +230,7 @@ SS.ready(function() {
         var event = arg.event;
         var el = arg.el;
 
-        var nameEl = (el.querySelector('.fc-event-title') || el.querySelector('.fc-list-event-title a'))
+        var nameEl = (el.querySelector('.fc-event-title') || el.querySelector('.fc-list-event-title a'));
         if (!nameEl) return;
 
         el.style.color = event.textColor;
@@ -235,7 +244,7 @@ SS.ready(function() {
           if (el.className.includes('fc-event-allday')) {
             fcClass = 'fc-date';
             format = 'MM/DD';
-            end = end.add(-1, 'days')
+            end = end.add(-1, 'days');
           } else {
             el.querySelector('span.fc-event-time')?.remove();
           }
@@ -292,7 +301,7 @@ SS.ready(function() {
   };
 
   Gws_Schedule_Calendar.tapMenuParams = function (selector, opts) {
-    var url = opts['events'].replace(/\.json/, '');
+    var url = opts['pageUrl'];
 
     return {
       dateClick: function (info) {
@@ -361,7 +370,7 @@ SS.ready(function() {
   };
 
   Gws_Schedule_Calendar.editableParams = function (selector, opts) {
-    var url = opts['events'].replace(/\.json/, '');
+    var url = opts['pageUrl'];
     var token = $('meta[name="csrf-token"]').attr('content');
 
     return {
@@ -396,10 +405,11 @@ SS.ready(function() {
 
         if (event.allDay) {
           start = moment(event.start).format('YYYY/MM/DD');
-          if (event.end) end = event.end;
         } else {
           start = moment(event.start).format('YYYY/MM/DDTHH:mm:ss');
-          end = new Date(event.start.getTime() + (1000 * 60 * 60 * 1)); // + 1 hour
+        }
+        if (event.end) {
+          end = event.end;
         }
 
         return $.ajax({
@@ -420,15 +430,20 @@ SS.ready(function() {
             });
           },
           error: function (xhr, _status, _error) {
-            alert(xhr.responseJSON.join("\n"));
+            if (xhr.responseJSON) {
+              alert(xhr.responseJSON.join("\n"));
+            } else {
+              alert('Error');
+            }
             return info.revert();
           }
         });
       },
       eventResize: function (info) {
         var event = info.event;
-
         var start, end = null;
+        var asyncUrl = event.extendedProps?.events ? event.extendedProps.events.replace(/\.json/, '') : url;
+
         if (event.allDay) {
           start = Gws_Schedule_Calendar.dateToString(event.start);
           if (event.end) end = Gws_Schedule_Calendar.dateToString(event.end);
@@ -436,8 +451,6 @@ SS.ready(function() {
           start = Gws_Schedule_Calendar.datetimeToString(event.start);
           if (event.end) end = Gws_Schedule_Calendar.datetimeToString(event.end);
         }
-
-        var asyncUrl = event.extendedProps?.events ? event.extendedProps.events.replace(/\.json/, '') : url;
 
         return $.ajax({
           type: 'PUT',
@@ -457,7 +470,11 @@ SS.ready(function() {
             });
           },
           error: function (xhr, _status, _error) {
-            alert(xhr.responseJSON.join("\n"));
+            if (xhr.responseJSON) {
+              alert(xhr.responseJSON.join("\n"));
+            } else {
+              alert('Error');
+            }
             return info.revert();
           }
         });
