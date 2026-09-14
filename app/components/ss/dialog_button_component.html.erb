@@ -1,4 +1,4 @@
-<span data-controller="ss--dialog"<% if open? %> data-ss--dialog-open-value="true"<% end %>>
+<%= tag.span **dialog_options do %>
   <%=
     if show_button?
       button_tag content || name, **button_options
@@ -13,4 +13,4 @@
       </turbo-frame>
     <% end %>
   <% end %>
-</span>
+<% end %>

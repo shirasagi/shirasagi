@@ -167,8 +167,10 @@ export default class Dialog {
   }
 
   modalResult(ev) {
+    const source = this.options?.source
+    const result = ev?.detail
     if (this._dialogClosed) {
-      this._dialogClosed(ev.detail)
+      this._dialogClosed(result)
     }
     if (this._dialogFrame?._dialog) {
       dispatchEvent(this._dialogFrame._dialog, "ss:dialog:closed")
@@ -177,8 +179,8 @@ export default class Dialog {
       if (this._dialogFrame) {
         this._dialogFrame.disconnect()
       }
-      if (this.options?.source) {
-        dispatchEvent(this.options.source, "modalresult", ev.detail, { cancelable: false })
+      if (source) {
+        dispatchEvent(source, "modalresult", result, { cancelable: false })
       }
     })
   }
