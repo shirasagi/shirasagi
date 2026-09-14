@@ -44,7 +44,7 @@
             tapMenu: item.reservable?(@cur_user),
             initialView: 'timeGridDay',
             headerToolbar: { left: 'today prev next title reload', right: 'dayGridWeek,timeGridDay' },
-            events: gws_schedule_facility_plans_path(facility: item.id, format: :json),
+            pageUrl: gws_schedule_facility_plans_path(facility: item.id),
             eventSources: [{ url: "#{events_gws_schedule_facility_plans_path(facility: item.id, format: :json)}?#{search_query}" }],
             firstDay: @cur_site.schedule_first_day,
             views: {
