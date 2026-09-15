@@ -156,9 +156,26 @@ this.Form_Alert = (function () {
     };
   };
 
+  var _clonedNameMatcher = undefined;
+
+  Form_Alert.clonedNameMatcher = function() {
+    if (_clonedNameMatcher) {
+      return _clonedNameMatcher;
+    }
+
+    var prefix = i18next.t('workflow.cloned_name_prefix');
+    if ("escape" in RegExp) {
+      // RegExp.escape は Baseline 2025 の機能のため 2025年5月以前のブラウザでは動作しない
+      prefix = RegExp.escape(prefix);
+    }
+
+    _clonedNameMatcher = new RegExp(`^\\[${prefix}\\]`);
+    return _clonedNameMatcher;
+  }
+
   Form_Alert.clonedName = function ($form, submitter, _opts) {
     var $name = $form.find("#addon-basic #item_name");
-    if ($(submitter).hasClass("publish_save") && new RegExp(`^\\[${RegExp.escape(i18next.t('workflow.cloned_name_prefix'))}\\]`).test($name.val())) {
+    if ($(submitter).hasClass("publish_save") && Form_Alert.clonedNameMatcher().test($name.val())) {
       var addonName = $name.closest(".addon-view").find("header").text();
       return Form_Alert.add(addonName, $name, i18next.t('errors.messages.cloned_name'));
     }
