@@ -177,7 +177,7 @@ this.Board_Map = (function () {
     if (opts == null) {
       opts = {};
     }
-    src = SS.config.map?.map_marker_images?.googlemaps?.default?.marker;
+    src = SS.config.map?.map_marker_images?.openlayers?.default?.marker;
     if (opts['image']) {
       src = opts['image'];
     }
