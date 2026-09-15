@@ -117,6 +117,7 @@ this.Link_Checker = (function () {
     if (this.form.addonSelector === ".mod-cms-body") {
       console.error("link check in .mod-cms-body is no longer supported")
 //      return this.asyncCheckInEditor();
+      return Promise.resolve({ status: "unsupported" });
     } else {
       return this.asyncCheckInForm();
     }
