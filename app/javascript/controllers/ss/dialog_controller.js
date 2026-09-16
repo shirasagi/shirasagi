@@ -15,13 +15,19 @@ export default class extends Controller {
     }
   }
 
-  open() {
+  open(ev) {
     if (!this.dialog) {
       return;
+    }
+    if (ev?.currentTarget) {
+      this.dialog.options.source = ev.currentTarget
+    } else {
+      this.dialog.options.source = this.element
     }
     this.dialog.showModal().then((result) => this.apply(result));
   }
 
   apply(_dialog) {
+    this.dialog.options.source = this.element
   }
 }

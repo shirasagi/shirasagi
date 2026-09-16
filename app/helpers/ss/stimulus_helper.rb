@@ -77,8 +77,9 @@ module SS::StimulusHelper
   end
 
   # ボタンクリックでダイアログを開きたい場合
-  def ss_dialog_button(name = nil, options = nil, html_options = nil, &block)
+  def ss_dialog_button(name = nil, options = nil, html_options = nil, wrapper_options = nil, &block)
     if block_given?
+      wrapper_options = html_options
       html_options = options
       options = name
       name = nil
@@ -90,7 +91,8 @@ module SS::StimulusHelper
     url = url_target(name, options)
 
     component = SS::DialogButtonComponent.new(
-      cur_site: @cur_site, cur_user: @cur_user, name: name, url: url, html_options: html_options)
+      cur_site: @cur_site, cur_user: @cur_user, name: name, url: url,
+      html_options: html_options, wrapper_options: wrapper_options)
     render component, &block
   end
 

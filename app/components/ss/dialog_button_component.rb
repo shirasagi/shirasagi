@@ -3,7 +3,7 @@
 class SS::DialogButtonComponent < ApplicationComponent
   include ActiveModel::API
 
-  attr_accessor :cur_site, :cur_user, :name, :url, :html_options
+  attr_accessor :cur_site, :cur_user, :name, :url, :html_options, :wrapper_options
   attr_writer :show_button, :open
 
   renders_one :template
@@ -20,13 +20,40 @@ class SS::DialogButtonComponent < ApplicationComponent
   end
   alias open? open
 
+  def dialog_options
+    @dialog_options ||= begin
+      options = wrapper_options.present? ? wrapper_options.stringify_keys : {}
+      if options.key?("data")
+        data_options = options.delete("data")
+        data_options.each do |key, value|
+          options["data-#{key}"] = value
+        end
+      end
+      if options.key?("data-controller")
+        options["data-controller"] = "ss--dialog #{options["data-controller"]}"
+      else
+        options["data-controller"] = "ss--dialog"
+      end
+      if open?
+        options["data-ss--dialog-open-value"] = "true"
+      end
+      options
+    end
+  end
+
   def button_options
     @button_options ||= begin
       options = html_options.present? ? html_options.stringify_keys : {}
       options["type"] = "button" unless options.key?("type")
       options["name"] = nil unless options.key?("name")
+      if options.key?("data")
+        data_options = options.delete("data")
+        data_options.each do |key, value|
+          options["data-#{key}"] = value
+        end
+      end
       if options.key?("data-action")
-        options["data-action"] = "#{options["data-action"]} ss--dialog#open"
+        options["data-action"] = "ss--dialog#open #{options["data-action"]}"
       else
         options["data-action"] = "ss--dialog#open"
       end
