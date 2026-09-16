@@ -120,9 +120,6 @@ production: &production
     public_side_options:
       templates:
 
-  # Link Check Ajax URL
-  link_check_url: /.cms/link_check/check.json
-
   editor_template_thumb: "/assets/img/editor-template.png"
 
   # Session Lifetime in seconds

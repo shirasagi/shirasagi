@@ -27,8 +27,6 @@
 <% else %>
   <%= html_editor ".mod-cms-body .html", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
   <%= jquery do %>
-    Link_Checker.url               = "<%= SS.config.cms.link_check_url %>";
-    Link_Checker.rootUrl           = "<%= @cur_site.full_root_url %>";
     Mobile_Size_Checker.enabled    = <%= @cur_site.mobile_enabled? %>;
     Mobile_Size_Checker.url        = <%== cms_apis_mobile_size_check_path(format: "json").to_json %>;
     <% if params[:action] =~ /edit|delete/ && @item.is_a?(Cms::Model::Page) && @item.persisted? %>
