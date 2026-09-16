@@ -83,8 +83,7 @@ module Opendata::Resource::Model
 
   module ClassMethods
     def format_options
-      %w(AVI BMP CSV DOC DOCX DOT GIF HTML JPG LZH MOV MP3 MPG ODS
-         ODT OTS OTT PDF PNG PPT PPTX RAR RTF RDF TAR TGZ TTL TXT WAV XLS XLT XLSX XML ZIP)
+      SS.config.opendata.available_resource_formats
     end
 
     def search(params)

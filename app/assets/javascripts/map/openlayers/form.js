@@ -21,7 +21,10 @@ this.Openlayers_Map_Form = (function () {
     if (opts["center"] && this.validateLatLon(opts["center"][1], opts["center"][0])) {
       this.center = opts["center"];
     }
-    this.defaultCenter = Openlayers_Map.defaultCenter.reverse();
+    this.defaultCenter = function() {
+      var copy = [...Openlayers_Map.defaultCenter()];
+      return copy.reverse();
+    };
 
     this.showGoogleMapsSearch = false;
     if (opts["showGoogleMapsSearch"]) {
@@ -33,7 +36,7 @@ this.Openlayers_Map_Form = (function () {
 
     this.popup = null;
     this.maxPointForm = opts['max_point_form'] || 10;
-    this.deleteMessage = <%= I18n.t('map.confirm.delete_marker').to_json %>;
+    this.deleteMessage = function() { return i18next.t('map.confirm.delete_marker'); };
     this.dataID = 0;
     this.markerIcon = Openlayers_Map.markerIcon;
     this.clickIcon = Openlayers_Map.clickIcon;
@@ -75,11 +78,11 @@ this.Openlayers_Map_Form = (function () {
   };
 
   Openlayers_Map_Form.prototype.getCenter = function () {
-    return (this.center ? this.center : this.defaultCenter);
+    return (this.center ? this.center : this.defaultCenter());
   };
 
   Openlayers_Map_Form.prototype.getZoom = function () {
-    return (this.zoom ? this.zoom : this.defaultZoom);
+    return (this.zoom ? this.zoom : this.defaultZoom());
   };
 
   Openlayers_Map_Form.prototype.setCenter = function (pos) {
@@ -258,7 +261,7 @@ this.Openlayers_Map_Form = (function () {
     if (opts == null) {
       opts = {};
     }
-    iconSrc = this.markerIcon;
+    iconSrc = this.markerIcon();
     if (opts['image']) {
       iconSrc = opts['image'];
     }
@@ -351,7 +354,7 @@ this.Openlayers_Map_Form = (function () {
         }
         _this.clickMarkerId = "click";
         _this.setMarker(pos, {
-          image: _this.clickIcon,
+          image: _this.clickIcon(),
           id: _this.clickMarkerId
         });
         return _this.setMapLoc($(".mod-map .clicked"), pos[0], pos[1]);
@@ -492,7 +495,7 @@ this.Openlayers_Map_Form = (function () {
           return false;
         };
       })(this));
-      cln.find(".marker-thumb").html($('<img src="' + this.markerIcon + '">'));
+      cln.find(".marker-thumb").html($('<img/>', { src: this.markerIcon() }));
       cln.find(".images .image").on("click", (function (_this) {
         return function (e) {
           _this.selectMarkerImage(e.target);
@@ -522,7 +525,7 @@ this.Openlayers_Map_Form = (function () {
     var dataId, opts, image;
 
     if (!Openlayers_Map_Form.validateLoc(loc)) {
-      alert(<%= Array(I18n.t('map.alert.invalid_location')).join('\n').to_json %>);
+      alert(i18next.t('map.alert.invalid_location', { returnObjects: true }).join('\n'));
       return;
     }
 
@@ -544,7 +547,7 @@ this.Openlayers_Map_Form = (function () {
   Openlayers_Map_Form.prototype.clearPointForm = function (ele) {
     var dataId;
     if (ele.find(".marker-loc").val() !== "") {
-      if (confirm(this.deleteMessage)) {
+      if (confirm(this.deleteMessage())) {
         ele.removeClass("active");
         dataId = parseInt(ele.attr("data-id"));
         this.removeMarker(dataId);
@@ -641,9 +644,9 @@ this.Openlayers_Map_Form = (function () {
     var url = $(marker).find('[name="item[map_points][][image]"]').val();
 
     if (url) {
-      $(thumb).html($('<img src="' + url + '">'));
+      $(thumb).html($('<img/>', { src: url }));
     } else {
-      $(thumb).html($('<img src="' + this.markerIcon + '">'));
+      $(thumb).html($('<img/>', { src: this.markerIcon() }));
     }
   };
 

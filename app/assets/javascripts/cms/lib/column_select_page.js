@@ -3,9 +3,9 @@ Cms_Column_Select_Page = function(el) {
 };
 
 Cms_Column_Select_Page.defaultTemplate = '\
-  <tr data-id="<%%= data.id %>"> \
-    <td><%%= data.name %></td> \
-    <td><a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a></td> \
+  <tr data-id="<%= data.id %>"> \
+    <td><%= data.name %></td> \
+    <td><a class="deselect btn" href="#"><%= label.delete %></a></td> \
   </tr>';
 
 Cms_Column_Select_Page.render = function(el) {
@@ -22,7 +22,8 @@ Cms_Column_Select_Page.prototype.render = function() {
     var id = $data.data("id");
     self.$el.find(".hidden-ids").val(id);
 
-    var tr = ejs.render(Cms_Column_Select_Page.defaultTemplate, { data: $data[0].dataset });
+    var  deleteLabel = i18next.t("ss.buttons.delete");
+    var tr = ejs.render(Cms_Column_Select_Page.defaultTemplate, { data: $data[0].dataset, label: { delete: deleteLabel } });
 
     self.$el.find(".ajax-selected tbody tr:not(.selected-self)").remove();
     self.$el.find(".ajax-selected tbody").prepend(tr);

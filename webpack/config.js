@@ -3,12 +3,14 @@ const merge = require('deepmerge')
 const path = require("path")
 const yaml = require('js-yaml')
 
+const schema = yaml.CORE_SCHEMA.withTags(yaml.mergeTag);
+
 function loadYaml(path) {
   if (! fs.existsSync(path)) {
     return
   }
 
-  return yaml.load(fs.readFileSync(path, 'utf8'))
+  return yaml.load(fs.readFileSync(path, 'utf8'), { schema })
 }
 
 function buildConfig(section) {
@@ -40,13 +42,14 @@ module.exports = {
   mail: buildConfig("mail"),
   map: buildConfig("map"),
   // michecker: buildConfig("michecker"),
-  // opendata: buildConfig("opendata"),
+  minicolors_swatches: buildConfig("minicolors_swatches"),
+  opendata: buildConfig("opendata"),
   // proxy: buildConfig("proxy"),
   recommend: buildConfig("recommend"),
   // rss: buildConfig("rss"),
   // service: buildConfig("service"),
   // sns: buildConfig("sns"),
-  // ss: buildConfig("ss"),
+  ss: buildConfig("ss"),
   // translate: buildConfig("translate"),
   // voice: buildConfig("voice"),
   // webmail: buildConfig("webmail"),

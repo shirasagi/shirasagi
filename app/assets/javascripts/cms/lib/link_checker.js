@@ -19,7 +19,7 @@ this.Link_Checker = (function () {
     }
 
     $div = $("<div/>", { id: 'errorLinkChecker', class: 'errorExplanation' });
-    $div.append("<h2>" + Link_Checker.message["header"] + "</h2>");
+    $div.append($("<h2/>").text(Link_Checker.message.header()));
 
     var $body = $("<div/>", { class: 'errorExplanationBody' });
     $div.append($body);
@@ -54,7 +54,7 @@ this.Link_Checker = (function () {
     });
 
     this.$elBody.html("");
-    this.$elBody.append($("<p/>").text(Link_Checker.message["checkLinks"]));
+    this.$elBody.append($("<p/>").text(Link_Checker.message.checkLinks()));
     this.$elBody.append($ul);
 
     return this.moveLast();
@@ -69,12 +69,12 @@ this.Link_Checker = (function () {
   }
 
   Link_Checker.message = {
-    header: <%= I18n.t('cms.link_check').to_json %>,
-    noLinks: <%= I18n.t('errors.template.no_links').to_json %>,
-    checkLinks: <%= I18n.t('errors.template.check_links').to_json %>,
-    success: <%= I18n.t('errors.messages.link_check_success').to_json %>,
-    failure: <%= I18n.t('errors.messages.link_check_failure').to_json %>,
-    linkCheckerError: <%= I18n.t('errors.messages.link_check_failed_to_connect').to_json %>
+    header: function() { return i18next.t('cms.link_check'); },
+    noLinks: function() { return i18next.t('errors.template.no_links'); },
+    checkLinks: function() { return i18next.t('errors.template.check_links'); },
+    success: function() { return i18next.t('errors.messages.link_check_success'); },
+    failure: function() { return i18next.t('errors.messages.link_check_failure'); },
+    linkCheckerError: function() { return i18next.t('errors.messages.link_check_failed_to_connect'); }
   };
 
   Link_Checker.url = "/.cms/link_check/check.json";
@@ -149,7 +149,7 @@ this.Link_Checker = (function () {
 
     if (links.length === 0) {
       if (SS.isEmptyObject(this.links)) {
-        this.resultBox.showMessage("<p>" + Link_Checker.message["noLinks"] + "</p>");
+        this.resultBox.showMessage("<p>" + Link_Checker.message.noLinks() + "</p>");
       } else {
         this.resultBox.showResult(this.links);
       }
@@ -178,8 +178,8 @@ this.Link_Checker = (function () {
         defer.resolve({ status: (self.linkErrorCount === 0 ? "ok" : "failed") });
       },
       error: function (xhr, status, error) {
-        var msg = Link_Checker.message["linkCheckerError"] + ": " + Link_Checker.url;
-        self.resultBox.showMessage("<p>" + msg + "</p>");
+        var msg = Link_Checker.message.linkCheckerError() + ": " + Link_Checker.url;
+        self.resultBox.showMessage($("<p/>").text(msg));
         defer.reject(xhr, status, error);
       }
     });
@@ -196,7 +196,7 @@ this.Link_Checker = (function () {
     if (! this.form.form_link_check_path) {
       var msg = "form link check path is not configured";
 
-      this.resultBox.showMessage("<p>" + msg + "</p>");
+      this.resultBox.showMessage($("<p/>").text(msg));
       defer.reject(null, null, msg);
       return;
     }
@@ -215,7 +215,7 @@ this.Link_Checker = (function () {
       cache: false,
       success: function(data) {
         if (!data || data.length === 0) {
-          self.resultBox.showMessage("<p>" + Link_Checker.message["noLinks"] + "</p>");
+          self.resultBox.showMessage($("<p/>").text(Link_Checker.message.noLinks()));
           defer.resolve({ status: status });
           return;
         }
@@ -232,8 +232,8 @@ this.Link_Checker = (function () {
         defer.resolve({ status: status });
       },
       error: function(xhr, status, error) {
-        var msg = Link_Checker.message["linkCheckerError"] + ": " + self.form.form_link_check_path;
-        self.resultBox.showMessage("<p>" + msg + "</p>");
+        var msg = Link_Checker.message.linkCheckerError() + ": " + self.form.form_link_check_path;
+        self.resultBox.showMessage($("<p/>").text(msg));
         defer.reject(xhr, status, error);
       }
     });
@@ -260,18 +260,16 @@ this.Link_Checker = (function () {
     var html = "";
 
     if (state) {
-      html += '<span class="success">' + Link_Checker.message["success"] + '</span> ';
-      html += '<span class="url">' + link + '</span> ';
+      html += $('<span/>', { class: "success" }).text(Link_Checker.message.success()).prop("outerHTML") + ' ';
+      html += $('<span/>', { class: "url" }).text(link).prop("outerHTML") + ' ';
     } else {
-      html += '<span class="failure">' + Link_Checker.message["failure"] + '</span> ';
-      html += '<span class="url">' + link + '</span> ';
+      html += $('<span/>', { class: "failure" }).text(Link_Checker.message.failure()).prop("outerHTML") + ' ';
+      html += $('<span/>', { class: "url" }).text(link).prop("outerHTML") + ' ';
       this.linkErrorCount++;
     }
 
     if (message) {
-      html += '<div class="message detail">'
-      html += message;
-      html += '</div>'
+      html += $('<div/>', { class: "message detail" }).text(message).prop("outerHTML");
     }
 
     this.links[link] = html;

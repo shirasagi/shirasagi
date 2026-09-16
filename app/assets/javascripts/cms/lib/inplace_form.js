@@ -43,7 +43,7 @@ this.Cms_Inplace_Form = (function () {
             id: id,
             idx: 0,
             code: attr,
-            msg: (attr + <%= I18n.t("errors.messages.blank").to_json %>),
+            msg: (attr + i18next.t("errors.messages.blank")),
             ele: this
           }
         );
