@@ -77,9 +77,9 @@ this.Link_Checker = (function () {
     linkCheckerError: function() { return i18next.t('errors.messages.link_check_failed_to_connect'); }
   };
 
-  Link_Checker.url = "/.cms/link_check/check.json";
+  // Link_Checker.url = "/.cms/link_check/check.json";
 
-  Link_Checker.rootUrl = "";
+  // Link_Checker.rootUrl = "";
 
   Link_Checker.instance = null;
 
@@ -113,79 +113,86 @@ this.Link_Checker = (function () {
     });
   };
 
+  // Link_Checker.prototype.asyncCheck = function () {
+  //   if (this.form.addonSelector === ".mod-cms-body") {
+  //     return this.asyncCheckInEditor();
+  //   } else {
+  //     return this.asyncCheckInForm();
+  //   }
+  // };
   Link_Checker.prototype.asyncCheck = function () {
     if (this.form.addonSelector === ".mod-cms-body") {
-      return this.asyncCheckInEditor();
-    } else {
-      return this.asyncCheckInForm();
-    }
-  };
-
-  Link_Checker.prototype.asyncCheckInEditor = function () {
-    var self = this;
-    var defer = $.Deferred();
-
-    this.beforeCheck();
-
-    var $html = $(this.form.getEditorHtml());
-
-    var links = [];
-    $html.find('a[href]').each(function() {
-      var link = $(this).attr('href');
-      if (link === "#") {
-        return;
-      }
-
-      if (link[0] === "#") {
-        var code = ($html.find(link).length != 0) ? 200 : 0;
-        self.addMessage(link, { code: code });
-      } else {
-        if (/^\//.test(link)) {
-          link = Link_Checker.rootUrl + link.slice(1);
-        }
-        links.push(link);
-      }
-    });
-
-    if (links.length === 0) {
-      if (SS.isEmptyObject(this.links)) {
-        this.resultBox.showMessage("<p>" + Link_Checker.message.noLinks() + "</p>");
-      } else {
-        this.resultBox.showResult(this.links);
-      }
-
-      defer.resolve({ status: (this.linkErrorCount === 0 ? "ok" : "failed") });
-      return defer.promise();
+      console.error("link check in .mod-cms-body is no longer supported")
     }
 
-    $.ajax({
-      type: "POST",
-      url: Link_Checker.url,
-      cache: false,
-      data: JSON.stringify({
-        "url": links,
-        "root_url": Link_Checker.rootUrl
-      }),
-      contentType: 'application/json',
-      dataType: "json",
-      crossDomain: true,
-      success: function (res, status) {
-        $.each(res, function(link, result) {
-          self.addMessage(link, result);
-        });
-
-        self.resultBox.showResult(self.links);
-        defer.resolve({ status: (self.linkErrorCount === 0 ? "ok" : "failed") });
-      },
-      error: function (xhr, status, error) {
-        var msg = Link_Checker.message.linkCheckerError() + ": " + Link_Checker.url;
-        self.resultBox.showMessage($("<p/>").text(msg));
-        defer.reject(xhr, status, error);
-      }
-    });
-
-    return defer.promise();
+    return this.asyncCheckInForm();
   };
+
+  // Link_Checker.prototype.asyncCheckInEditor = function () {
+  //   var self = this;
+  //   var defer = $.Deferred();
+  //
+  //   this.beforeCheck();
+  //
+  //   var $html = $(this.form.getEditorHtml());
+  //
+  //   var links = [];
+  //   $html.find('a[href]').each(function() {
+  //     var link = $(this).attr('href');
+  //     if (link === "#") {
+  //       return;
+  //     }
+  //
+  //     if (link[0] === "#") {
+  //       var code = ($html.find(link).length != 0) ? 200 : 0;
+  //       self.addMessage(link, { code: code });
+  //     } else {
+  //       if (/^\//.test(link)) {
+  //         link = Link_Checker.rootUrl + link.slice(1);
+  //       }
+  //       links.push(link);
+  //     }
+  //   });
+  //
+  //   if (links.length === 0) {
+  //     if (SS.isEmptyObject(this.links)) {
+  //       this.resultBox.showMessage("<p>" + Link_Checker.message.noLinks() + "</p>");
+  //     } else {
+  //       this.resultBox.showResult(this.links);
+  //     }
+  //
+  //     defer.resolve({ status: (this.linkErrorCount === 0 ? "ok" : "failed") });
+  //     return defer.promise();
+  //   }
+  //
+  //   $.ajax({
+  //     type: "POST",
+  //     url: Link_Checker.url,
+  //     cache: false,
+  //     data: JSON.stringify({
+  //       "url": links,
+  //       "root_url": Link_Checker.rootUrl
+  //     }),
+  //     contentType: 'application/json',
+  //     dataType: "json",
+  //     crossDomain: true,
+  //     success: function (res, status) {
+  //       $.each(res, function(link, result) {
+  //         self.addMessage(link, result);
+  //       });
+  //
+  //       self.resultBox.showResult(self.links);
+  //       defer.resolve({ status: (self.linkErrorCount === 0 ? "ok" : "failed") });
+  //     },
+  //     error: function (xhr, status, error) {
+  //       var msg = Link_Checker.message.linkCheckerError() + ": " + Link_Checker.url;
+  //       self.resultBox.showMessage($("<p/>").text(msg));
+  //       defer.reject(xhr, status, error);
+  //     }
+  //   });
+  //
+  //   return defer.promise();
+  // };
 
   Link_Checker.prototype.asyncCheckInForm = function () {
     var self = this;

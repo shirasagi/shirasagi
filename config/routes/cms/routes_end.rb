@@ -533,10 +533,6 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace "cms", path: ".cms" do
-    match "link_check/check" => "link_check#check", via: [:post, :options], as: "link_check"
-  end
-
   content "cms", name: "node", module: "cms/node" do
     get "/" => redirect { |p, req| "#{req.path}/nodes" }, as: :main
     get "generate_nodes" => "generate_nodes#index"
