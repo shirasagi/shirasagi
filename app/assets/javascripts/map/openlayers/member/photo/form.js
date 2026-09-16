@@ -17,15 +17,18 @@ this.Openlayers_Member_Photo_Form = (function () {
     if (opts["center"] && this.validateLatLon(opts["center"][1], opts["center"][0])) {
       this.center = opts["center"];
     }
-    this.defaultCenter = Openlayers_Map.defaultCenter.reverse();
+    this.defaultCenter = function() {
+      var copy = [...Openlayers_Map.defaultCenter()];
+      return copy.reverse();
+    };
 
     this.markerFeature = null;
     this.markerLayer = null;
 
     this.popup = null;
     this.maxPointForm = 10;
-    this.deleteMessage = <%= I18n.t('map.confirm.delete_marker').to_json %>;
-    this.setExifMessage = <%= I18n.t('map.confirm.find_exif').to_json %>;
+    this.deleteMessage = function() { return i18next.t('map.confirm.delete_marker'); };
+    this.setExifMessage = function() { return i18next.t('map.confirm.find_exif'); };
     this.dataID = 0;
     this.markerIcon = Openlayers_Map.markerIcon;
     this.clickIcon = Openlayers_Map.clickIcon;
@@ -104,11 +107,11 @@ this.Openlayers_Member_Photo_Form = (function () {
   };
 
   Openlayers_Member_Photo_Form.prototype.getCenter = function () {
-    return (this.center ? this.center : this.defaultCenter);
+    return (this.center ? this.center : this.defaultCenter());
   };
 
   Openlayers_Member_Photo_Form.prototype.getZoom = function () {
-    return (this.zoom ? this.zoom : this.defaultZoom);
+    return (this.zoom ? this.zoom : this.defaultZoom());
   };
 
   Openlayers_Member_Photo_Form.prototype.setCenter = function (pos) {
@@ -140,7 +143,7 @@ this.Openlayers_Member_Photo_Form = (function () {
     if (opts == null) {
       opts = {};
     }
-    src = this.markerIcon;
+    src = this.markerIcon();
     if (opts['image']) {
       src = opts['image'];
     }
@@ -256,7 +259,7 @@ this.Openlayers_Member_Photo_Form = (function () {
     var dataId;
     dataId = 0;
     if (ele.val() !== "") {
-      if (confirm(this.deleteMessage)) {
+      if (confirm(this.deleteMessage())) {
         this.removeMarker(dataId);
         ele.val("");
       }
@@ -282,7 +285,7 @@ this.Openlayers_Member_Photo_Form = (function () {
           if (!(lat && lon)) {
             return false;
           }
-          if (!confirm(self.setExifMessage)) {
+          if (!confirm(self.setExifMessage())) {
             return false;
           }
           latRef = latRef === "N" ? 1 : -1;

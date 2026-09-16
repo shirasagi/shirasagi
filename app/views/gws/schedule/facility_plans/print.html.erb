@@ -1,7 +1,7 @@
 <%
   calendar_options = {
     tapMenu: @user.blank? || @user.id == @cur_user.id,
-    events: url_for(action: :index, format: :json),
+    pageUrl: url_for(action: :index),
     eventSources: [{ url: "#{url_for(action: :events, format: :json)}?#{search_query}" }],
     firstDay: @cur_site.schedule_first_day,
     slotMinTime: @cur_site.facility_min_time,

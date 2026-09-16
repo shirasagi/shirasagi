@@ -1,4 +1,4 @@
-//= require jquery-ui/dist/jquery-ui.js
+import 'jquery-ui/dist/jquery-ui.js';
 
 // opendata resource form
 $(function () {
@@ -10,9 +10,11 @@ this.Opendata_ResourceForm = (function () {
   function Opendata_ResourceForm() {
   }
 
+  Opendata_ResourceForm.availableFormats = OPENDATA_AVAILABLE_RESOURCE_FORMATS_CONFIG.sort();
+
   Opendata_ResourceForm.render = function () {
     var formats;
-    formats = <%= Opendata::Resource.format_options.sort.to_json %>;
+    formats = Opendata_ResourceForm.availableFormats;
     $("#item_format").autocomplete({
       source: function (request, response) {
         return response($.grep(formats, function (value) {

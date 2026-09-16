@@ -116,6 +116,8 @@ this.Openlayers_Facility_Search = (function () {
     $('.map-search-condition .category-settings').each(function() {
       var settings = $(this).attr('data-category-settings');
       if (!settings) return false;
+      try { settings = JSON.parse(settings); } catch (_e) { settings = undefined; }
+      if (!settings) return false;
       $('.map-search-index .filters a').each(function() {
         var $btn = $(this);
         if (!settings.includes($btn.text())) {

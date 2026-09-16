@@ -190,9 +190,8 @@ module ApplicationHelper
 
   def loading(options = {})
     options = options.dup
-    options[:style] ||= "vertical-align:middle"
+    options[:style] ||= "vertical-align: middle;"
     options[:alt] ||= "loading.."
-    options[:border] ||= 0
     options[:width] ||= 16
     options[:height] ||= 11
     options[:class] ||= %w(ss-base-loading)

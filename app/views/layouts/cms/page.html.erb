@@ -17,7 +17,7 @@
   <%= javascript_include_tag path, options || {} %>
 <% end %>
 <%= javascript_tag do %>
-  SS.config = <%= raw controller.javascript_configs.to_json %>;
+  SS.updateConfig(<%= raw controller.javascript_configs.to_json %>);
 <% end %>
 <%== render_template_variables(render_layout_parts(@cur_layout.head, previewable: false)) %>
 <%= render "layouts/cms/opengraph" %>

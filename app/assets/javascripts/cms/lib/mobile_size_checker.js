@@ -18,7 +18,7 @@ this.Mobile_Size_Checker = (function () {
     }
 
     $div = $("<div/>", { id: 'errorMobileChecker', class: 'errorExplanation' });
-    $div.append("<h2>" + Mobile_Size_Checker.message["header"] + "</h2>");
+    $div.append("<h2>" + Mobile_Size_Checker.message.header() + "</h2>");
 
     var $body = $("<div/>", { class: 'errorExplanationBody' });
     $div.append($body);
@@ -48,7 +48,7 @@ this.Mobile_Size_Checker = (function () {
 
   ResultBox.prototype.showResult = function () {
     if (Mobile_Size_Checker.errors.length === 0) {
-      return this.showMessage("<p>" + Mobile_Size_Checker.message["mobileCheck"] + "</p>");
+      return this.showMessage("<p>" + Mobile_Size_Checker.message.mobileCheck() + "</p>");
     }
 
     var ref = Mobile_Size_Checker.errors;
@@ -69,9 +69,9 @@ this.Mobile_Size_Checker = (function () {
   Mobile_Size_Checker.url = null;
 
   Mobile_Size_Checker.message = {
-    header: <%= I18n.t('cms.mobile_size_check').to_json %>,
-    mobileCheck: <%= I18n.t('errors.messages.mobile_size_check_size').to_json %>,
-    sizeCheckServerError: <%= I18n.t('errors.messages.mobile_size_check_server_error').to_json %>
+    header: function() { return i18next.t('cms.mobile_size_check'); },
+    mobileCheck: function() { return i18next.t('errors.messages.mobile_size_check_size'); },
+    sizeCheckServerError: function() { return i18next.t('errors.messages.mobile_size_check_server_error'); }
   };
 
   Mobile_Size_Checker.errors = [];
@@ -106,7 +106,7 @@ this.Mobile_Size_Checker = (function () {
     };
 
     var rejected = function(xhr, status, error) {
-      Mobile_Size_Checker.resultBox.showMessage("<p>" + Mobile_Size_Checker.message["sizeCheckServerError"] + "</p>");
+      Mobile_Size_Checker.resultBox.showMessage("<p>" + Mobile_Size_Checker.message.sizeCheckServerError() + "</p>");
       button.disabled = false;
       $(button).trigger("ss:mobileSizeCheckCompleted");
     }
@@ -151,7 +151,7 @@ this.Mobile_Size_Checker = (function () {
   }
 
   Mobile_Size_Checker.showError = function() {
-    Mobile_Size_Checker.errors.push("<p class=\"error\">" + Mobile_Size_Checker.message["sizeCheckServerError"] + "</p>");
+    Mobile_Size_Checker.errors.push("<p class=\"error\">" + Mobile_Size_Checker.message.sizeCheckServerError() + "</p>");
   }
 
   Mobile_Size_Checker.asyncCheckHtmlSize = function (html) {
@@ -181,7 +181,7 @@ this.Mobile_Size_Checker = (function () {
 
       for (var j = 0, len = Mobile_Size_Checker.errors.length; j < len; j++) {
         var err = Mobile_Size_Checker.errors[j];
-        Form_Alert.add(<%= I18n.t('cms.mobile_size_check').to_json %>, this, err);
+        Form_Alert.add(i18next.t('cms.mobile_size_check'), this, err);
       }
     });
 

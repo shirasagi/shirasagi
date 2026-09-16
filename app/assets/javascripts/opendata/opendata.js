@@ -39,8 +39,6 @@ this.Opendata = (function () {
   function Opendata() {
   }
 
-  Opendata.loading = <%= ApplicationController.helpers.loading.to_json %>;
-
   Opendata.render = function (box) {
     var anchorCallback;
     anchorCallback = function () {
@@ -103,7 +101,7 @@ this.Opendata = (function () {
       defaults = {
         url: self.attr("href"),
         beforeSend: function () {
-          return self.html(Opendata.loading);
+          return self.html(SS.loading);
         },
         success: function () {
         },
@@ -123,7 +121,7 @@ this.Opendata = (function () {
     }
     return $(elem).on("click", function (e) {
       var defaults, self;
-      if (!confirm(<%= I18n.t('ss.confirm.delete').to_json %>)) {
+      if (!confirm(i18next.t('ss.confirm.delete'))) {
         return false;
       }
       self = $(this);
@@ -133,7 +131,7 @@ this.Opendata = (function () {
         url: self.attr("href") + ".json",
         dataType: "json",
         beforeSend: function () {
-          return self.html(Opendata.loading);
+          return self.html(SS.loading);
         },
         success: function () {
           if (self.data("remove")) {
@@ -204,7 +202,12 @@ this.Opendata_ListUI = (function () {
       tbody = tr.parent();
       tr.find(".tap-menu a").each(function () {
         if ($(this).attr("href").slice(-7) === "/delete") {
-          return tr.find(".tap-menu").after("<nav class='multiple-menu'><a href='multipleDelete' ><%= I18n.t 'ss.links.delete_all' %></a></nav>");
+          var $nav = $("<nav/>", { class: 'multiple-menu' })
+            .append(
+              $("<a/>", { href: 'multipleDelete' })
+                .text(i18next.t('ss.links.delete_all'))
+            )
+          return tr.find(".tap-menu").after($nav);
         }
       });
       tr.find("input[type=checkbox]").each(function () {

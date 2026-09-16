@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import { dispatchEvent } from "../../ss/tool";
 
 export default class extends Controller {
-  static targets = [ "container", "dialog", "content" ]
+  static targets = [ "container", "dialog", "content", "form" ]
 
   connect() {
     // console.log(`[${this.identifier}] connected`, this.hasDialogTarget);
@@ -56,12 +56,29 @@ export default class extends Controller {
     }
 
     if (this.hasDialogTarget) {
-      const formElement = this.dialogTarget.querySelector("form")
+      const formElement = this.#findForm();
       if (formElement) {
         result.formData = new FormData(formElement)
       }
     }
 
     return result
+  }
+
+  #findForm() {
+    if (this.hasFormTarget) {
+      return this.formTarget
+    }
+
+    if (!this.hasDialogTarget) {
+      return
+    }
+
+    const dialogForm = this.dialogTarget.querySelector("form[method='dialog']")
+    if (dialogForm) {
+      return dialogForm
+    }
+
+    return this.dialogTarget.querySelector("form")
   }
 }

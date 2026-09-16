@@ -41,8 +41,6 @@ function SS_FileView(el, options) {
   $.when(d1.promise(), d2.promise())
     .done(this.initializationComplete.bind(this))
     .fail(function(msg) { self.$canvasContainer.html(msg); });
-
-  SS_Color.render();
 }
 
 SS_FileView.HEX_DECIMAL = "0123456789abcdef";
@@ -503,23 +501,27 @@ SS_FileView.prototype.pickUpColor = function(ev) {
     return;
   }
 
-  var x = ev.offsetX;
-  var y = ev.offsetY;
-  if (x < 0) {
-    x = 0;
-  }
-  if (x >= this.canvas.width) {
-    x = this.canvas.width - 1;
-  }
-  if (y < 0) {
-    y = 0;
-  }
-  if (y >= this.canvas.height) {
-    y = this.canvas.height - 1;
-  }
+  var $jsColor = this.$el.find(".btn-color-picker.btn-active").closest(".btn-group").find(".js-color");
+  if ($jsColor[0]) {
+    var x = ev.offsetX;
+    var y = ev.offsetY;
+    if (x < 0) {
+      x = 0;
+    }
+    if (x >= this.canvas.width) {
+      x = this.canvas.width - 1;
+    }
+    if (y < 0) {
+      y = 0;
+    }
+    if (y >= this.canvas.height) {
+      y = this.canvas.height - 1;
+    }
 
-  var rgb = this.rgbAt(x, y);
-  this.$el.find(".btn-color-picker.btn-active").closest(".btn-group").find(".js-color").minicolors("value", rgb);
+    var rgb = this.rgbAt(x, y);
+    var event = new CustomEvent("ss:colorchange", { detail: { rgb } });
+    $jsColor[0].dispatchEvent(event);
+  }
 
   this.canvas.style.cursor = "auto";
   this.$el.find(".btn-color-picker").removeClass("btn-active");

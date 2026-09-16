@@ -13,7 +13,7 @@
 
   <% if @categories %>
     <dt class="category"><%= t("facility.category.name") %></dt>
-    <dd class="category-settings" data-category-settings="<%= @categories.join(',') %>">
+    <dd class="category-settings" data-category-settings="<%= @categories.to_json %>">
       <%= @categories.join(', ') %>
     </dd>
   <% end %>

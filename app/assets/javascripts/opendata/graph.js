@@ -215,7 +215,15 @@ Opendata_Graph.prototype.drawPie = function() {
   });
 };
 
-Opendata_Graph.graphTypes = <%= I18n.t("opendata.graph_types").to_json %>;
+Opendata_Graph.defaultGraphTypes = { "bar": "棒グラフ", "line": "線グラフ", "pie": "円グラフ" };
+
+Opendata_Graph.graphTypes = function(type) {
+  if ("i18next" in window) {
+    return i18next.t("opendata.graph_types", { returnObjects: true })[type];
+  } else {
+    return Opendata_Graph.defaultGraphTypes[type];
+  }
+};
 
 Opendata_Graph.prototype.renderController = function(types, headers, callback) {
   var self = this;
@@ -227,7 +235,7 @@ Opendata_Graph.prototype.renderController = function(types, headers, callback) {
   var divTypes = $('<div class="graph-types"></div>');
   $.each(this.types, function() {
     var type = this;
-    var button = $('<button />', { type: "button", "data-type": type }).text(Opendata_Graph.graphTypes[type]);
+    var button = $('<button />', { type: "button", "data-type": type }).text(Opendata_Graph.graphTypes(type));
 
     if (self.type === type) {
       button.addClass("current");

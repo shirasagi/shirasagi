@@ -4,7 +4,7 @@ this.Map_Form = (function () {
 
   Map_Form.maxPointForm = 10;
 
-  Map_Form.deleteMessage = <%= I18n.t('map.confirm.delete_marker').to_json %>;
+  Map_Form.deleteMessage = function() { return i18next.t('map.confirm.delete_marker'); };
 
   Map_Form.dataID = 0;
 
@@ -98,7 +98,7 @@ this.Map_Form = (function () {
           Googlemaps_Map.map.fitBounds(result.geometry.viewport);
         }
       } else {
-        alert(<%= I18n.t('map.alert.invalid_center').to_json %>);
+        alert(i18next.t('map.alert.invalid_center'));
       }
     });
     return false;
@@ -151,7 +151,7 @@ this.Map_Form = (function () {
         Map_Form.openMarkerImages(marker);
         return false;
       });
-      cln.find(".marker-thumb").html($('<img src="' + Googlemaps_Map.markerIcon + '">'));
+      cln.find(".marker-thumb").html($('<img/>', { src: Googlemaps_Map.markerIcon() }));
       cln.find(".images .image").on("click", function (e) {
         Map_Form.selectMarkerImage(e.target);
         Map_Form.setMarkerThumb($(e.target).closest(".marker"));
@@ -166,7 +166,7 @@ this.Map_Form = (function () {
 
   Map_Form.clearPointForm = function (ele) {
     if (ele.find(".marker-loc").val() !== "") {
-      if (confirm(Map_Form.deleteMessage)) {
+      if (confirm(Map_Form.deleteMessage())) {
         ele.removeClass("active");
         if (Googlemaps_Map.markers[parseInt(ele.attr("data-id"))]) {
           Googlemaps_Map.markers[parseInt(ele.attr("data-id"))].setMap(null);
@@ -238,9 +238,9 @@ this.Map_Form = (function () {
     var url = $(marker).find('[name="item[map_points][][image]"]').val();
 
     if (url) {
-      $(thumb).html($('<img src="' + url + '">'));
+      $(thumb).html($('<img/>', { src: url }));
     } else {
-      $(thumb).html($('<img src="' + Googlemaps_Map.markerIcon + '">'));
+      $(thumb).html($('<img/>', { src: Googlemaps_Map.markerIcon() }));
     }
   };
 
@@ -268,7 +268,7 @@ this.Map_Form = (function () {
     var dataId, opts, image;
 
     if (!Map_Form.validateLoc(loc)) {
-      alert(<%= Array(I18n.t('map.alert.invalid_location')).join('\n').to_json %>);
+      alert(i18next.t('map.alert.invalid_location', { returnObjects: true }).join('\n'));
       return;
     }
 
@@ -288,7 +288,7 @@ this.Map_Form = (function () {
     if (image) {
       opts["icon"] = image;
     } else {
-      opts["icon"] = Googlemaps_Map.markerIcon;
+      opts["icon"] = Googlemaps_Map.markerIcon();
     }
 
     Googlemaps_Map.markers[dataId] = new google.maps.Marker(opts);
@@ -322,7 +322,7 @@ this.Map_Form = (function () {
         if (image) {
           opts["icon"] = image;
         } else {
-          opts["icon"] = Googlemaps_Map.markerIcon;
+          opts["icon"] = Googlemaps_Map.markerIcon();
         }
         Googlemaps_Map.markers[Map_Form.dataID] = new google.maps.Marker(opts);
         Map_Form.attachMessage(Map_Form.dataID);
@@ -343,7 +343,7 @@ this.Map_Form = (function () {
       }
       return Map_Form.clickMarker = new google.maps.Marker({
         position: new google.maps.LatLng(event.latLng.lat(), event.latLng.lng()),
-        icon: Googlemaps_Map.clickIcon,
+        icon: Googlemaps_Map.clickIcon(),
         map: Googlemaps_Map.map
       });
     });

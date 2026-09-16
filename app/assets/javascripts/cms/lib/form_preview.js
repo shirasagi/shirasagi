@@ -10,7 +10,7 @@ this.Form_Preview = (function () {
 
   Form_Preview.render = function () {
     $("button.preview").not(".form-preview-rendered").on("click", function (_e) {
-      var basename, errors, form, height, i, name, ref, token, v, width;
+      var basename, errors, height, i, name, v, width;
       name = $("#" + Form_Preview.form_id + " input[name='item[name]']").val();
       basename = $("#" + Form_Preview.form_id + " input[name='item[basename]']").val();
       errors = [];
@@ -33,12 +33,12 @@ this.Form_Preview = (function () {
         alert(errors.join("\n"));
         return false;
       }
-      token = $('meta[name="csrf-token"]').attr('content');
-      form = $("<form>");
-      $(form).attr("method", "post");
-      $(form).attr("action", Form_Preview.form_preview_path);
-      $(form).attr("target", "FormPreview");
-      ref = $("#" + Form_Preview.form_id).serializeArray();
+      var token = $('meta[name="csrf-token"]').attr('content');
+      var $form = $("<form/>");
+      $form.attr("method", "post");
+      $form.attr("action", Form_Preview.form_preview_path);
+      $form.attr("target", "FormPreview");
+      var ref = $("#" + Form_Preview.form_id).serializeArray();
       for (i in ref) {
         v = ref[i];
         if (!/^item\[/.test(v["name"])) {
@@ -50,7 +50,7 @@ this.Form_Preview = (function () {
         if ("item[body_parts][]" === v["name"]) {
           continue;
         }
-        form.append($("<input/>", {
+        $form.append($("<input/>", {
           name: v["name"].replace(/^item\[/, "preview_item["),
           value: v["value"],
           type: "hidden"
@@ -60,23 +60,23 @@ this.Form_Preview = (function () {
         var id;
         id = $(this).attr("id");
         name = $(this).attr("name").replace(/^item\[/, "preview_item[");
-        return form.append($("<input/>", {
+        return $form.append($("<input/>", {
           name: name,
           value: Cms_Form.getEditorHtml(id),
           type: "hidden"
         }));
       });
-      form.append($("<input/>", {
+      $form.append($("<input/>", {
         name: "preview_item[route]",
         value: Form_Preview.page_route,
         type: "hidden"
       }));
-      form.append($("<input/>", {
+      $form.append($("<input/>", {
         name: "preview_item[html]",
         value: Cms_Form.getEditorHtml("item_html"),
         type: "hidden"
       }));
-      form.append($("<input/>", {
+      $form.append($("<input/>", {
         name: "authenticity_token",
         value: token,
         type: "hidden"
@@ -84,8 +84,11 @@ this.Form_Preview = (function () {
       width = $(window).width();
       height = $(window).height();
       window.open("about:blank", "FormPreview", "width=" + width + ",height=" + height + ",resizable=yes,scrollbars=yes");
-      form.appendTo("body");
-      form[0].requestSubmit();
+      $form.appendTo("body");
+      $form[0].requestSubmit();
+      setTimeout(function () {
+        $form.remove();
+      }, 11);
       return false;
     });
 
