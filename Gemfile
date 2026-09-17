@@ -25,13 +25,9 @@ gem 'puma_worker_killer'
 gem 'unicorn'
 gem 'unicorn-worker-killer'
 
-
 # Database
 gem 'mongoid'
 gem 'mongo_session_store'
-
-# Assets
-gem 'jquery-rails'
 
 # Additional (alphabetical order)
 gem 'addressable', require: 'addressable/uri'
