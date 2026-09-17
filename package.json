@@ -27,7 +27,7 @@
     "i18next-http-backend": "^4.0.0",
     "i18next-multiload-backend-adapter": "^2.3.0",
     "jplayer": "^2.9.2",
-    "jquery": "3.7.1",
+    "jquery": "^3.7.1",
     "jquery-colorbox": "^1.6.4",
     "jquery-datetimepicker": "^2.5.21",
     "jquery-form": "^4.3.0",
