@@ -73,14 +73,14 @@ describe "opendata_agents_nodes_dataset", type: :feature, dbscope: :example, js:
       end
     end
 
-    within "article#cms-tab-#{node_dataset.id}-0-view" do
-      within "div.pages" do
-        click_link 'ダウンロード'
+    wait_for_download("shift_jis", extname: ".csv") do
+      within "article#cms-tab-#{node_dataset.id}-0-view" do
+        within "div.pages" do
+          click_link 'ダウンロード'
+        end
       end
     end
-
-    wait_for_download
-    expect(File.size(downloads.first)).to be > 0
+    expect(File.size(downloaded_path)).to be > 0
   end
 
   it "#rss" do
@@ -113,14 +113,14 @@ describe "opendata_agents_nodes_dataset", type: :feature, dbscope: :example, js:
     end
 
     visit index_path
-    within ".list-footer" do
-      click_on "RSS"
+    wait_for_download("rss", extname: ".xml") do
+      within ".list-footer" do
+        click_on "RSS"
+      end
     end
+    expect(File.size(downloaded_path)).to be > 0
 
-    wait_for_download
-    expect(File.size(downloads.first)).to be > 0
-
-    REXML::Document.new(File.read(downloads.first)).tap do |xmldoc|
+    REXML::Document.new(File.read(downloaded_path)).tap do |xmldoc|
       title = REXML::XPath.first(xmldoc, "/rss/channel/title/text()").to_s.strip
       expect(title).to start_with(node_dataset.name)
       link = REXML::XPath.first(xmldoc, "/rss/channel/link/text()").to_s.strip

@@ -181,12 +181,13 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         click_on "CSV"
       end
 
-      within "form#item-form" do
-        click_on I18n.t("ss.buttons.download")
+      wait_for_download("survey", extname: ".csv") do
+        within "form#item-form" do
+          click_on I18n.t("ss.buttons.download")
+        end
       end
-      wait_for_download
 
-      csv = ::CSV.read(downloads.first, headers: true)
+      csv = ::CSV.read(downloaded_path, headers: true)
       expect(csv.length).to eq 2
       expect(csv[0][0].present?).to be_truthy
       expect(csv[0][1]).to eq user1.name

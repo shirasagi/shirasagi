@@ -23,10 +23,10 @@ describe "cms/line/statistic", type: :feature, dbscope: :example, js: true do
     context "multicast case" do
       it "#download" do
         visit index_path
-        click_on I18n.t("ss.buttons.download")
-
-        wait_for_download
-        csv = ::CSV.read(downloads.first, headers: true, encoding: 'UTF-8')
+        wait_for_download("cms_line_statistics", extname: ".csv") do
+          click_on I18n.t("ss.buttons.download")
+        end
+        csv = ::CSV.read(downloaded_path, headers: true, encoding: 'UTF-8')
         expect(csv.length).to eq 2
 
         expect(csv[0][0]).to eq item2.name

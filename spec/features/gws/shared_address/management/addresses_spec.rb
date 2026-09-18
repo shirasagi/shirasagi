@@ -17,14 +17,14 @@ describe "gws_shared_address_management_addresses", type: :feature, dbscope: :ex
       it do
         visit index_path
         click_link I18n.t('ss.links.download')
-        within "form#item-form" do
-          click_on I18n.t('ss.buttons.download')
+        wait_for_download("shared_addresses", extname: ".csv") do
+          within "form#item-form" do
+            click_on I18n.t('ss.buttons.download')
+          end
         end
 
-        wait_for_download
-
         I18n.with_locale(I18n.default_locale) do
-          SS::Csv.open(downloads.first) do |csv|
+          SS::Csv.open(downloaded_path) do |csv|
             csv_table = csv.read
             expect(csv_table.length).to eq 1
             expect(csv_table[0][Gws::SharedAddress::Address.t(:member_id)]).to eq item.member.uid
@@ -53,12 +53,12 @@ describe "gws_shared_address_management_addresses", type: :feature, dbscope: :ex
       it do
         visit index_path
         click_on I18n.t('ss.links.import')
-        click_on I18n.t('ss.links.download_template')
-
-        wait_for_download
+        wait_for_download("shared_addresses_template", extname: ".csv") do
+          click_on I18n.t('ss.links.download_template')
+        end
 
         I18n.with_locale(I18n.default_locale) do
-          SS::Csv.open(downloads.first) do |csv|
+          SS::Csv.open(downloaded_path) do |csv|
             csv_table = csv.read
             expect(csv_table.length).to eq 0
             %i[id member_id address_group_id name kana company title tel email memo].each do |k|

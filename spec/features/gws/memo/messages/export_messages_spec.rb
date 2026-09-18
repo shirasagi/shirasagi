@@ -13,8 +13,6 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     before { login_gws_user }
 
     def export_memo(memo, format: nil)
-      clear_downloads
-
       visit gws_memo_export_messages_path(site)
       within "form#item-form" do
         choose "item_export_filter_selected"
@@ -55,19 +53,17 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
       end
 
-      within ".gws-memo-notices .body" do
-        message = I18n.t("gws/memo/message.export.notify_message", link: "", locale: I18n.default_locale).split("\n").first
-        expect(page).to have_content(message)
-        expect(page).to have_link(href: /\.zip$/)
-        first("a").click
+      wait_for_download("gws-memo-messages", extname: ".zip") do
+        within ".gws-memo-notices .body" do
+          message = I18n.t("gws/memo/message.export.notify_message", link: "", locale: I18n.default_locale).split("\n").first
+          expect(page).to have_content(message)
+          expect(page).to have_link(href: /\.zip$/)
+          first("a").click
+        end
       end
-      wait_for_js_ready
-
-      wait_for_download
-      expect(downloads.count).to eq 1
 
       exported = {}
-      Zip::File.open(downloads.first) do |zip_file|
+      Zip::File.open(downloaded_path) do |zip_file|
         zip_file.each do |entry|
           name = NKF.nkf("-w", entry.name)
           mail = ::Mail.read_from_string(entry.get_input_stream.read)
@@ -397,18 +393,17 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
       end
 
-      within ".gws-memo-notices .body" do
-        message = I18n.t("gws/memo/message.export.notify_message", link: "", locale: I18n.default_locale).split("\n").first
-        expect(page).to have_content(message)
-        expect(page).to have_link(href: /\.zip$/)
-        first("a").click
+      wait_for_download("gws-memo-messages", extname: ".zip") do
+        within ".gws-memo-notices .body" do
+          message = I18n.t("gws/memo/message.export.notify_message", link: "", locale: I18n.default_locale).split("\n").first
+          expect(page).to have_content(message)
+          expect(page).to have_link(href: /\.zip$/)
+          first("a").click
+        end
       end
-      wait_for_js_ready
-
-      wait_for_download
 
       exported = {}
-      Zip::File.open(downloads.first) do |zip_file|
+      Zip::File.open(downloaded_path) do |zip_file|
         zip_file.each do |entry|
           name = NKF.nkf("-w", entry.name)
           mail = ::Mail.read_from_string(entry.get_input_stream.read)
@@ -477,18 +472,17 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
       end
 
-      within ".gws-memo-notices .body" do
-        message = I18n.t("gws/memo/message.export.notify_message", link: "", locale: I18n.default_locale).split("\n").first
-        expect(page).to have_content(message)
-        expect(page).to have_link(href: /\.zip$/)
-        first("a").click
+      wait_for_download("gws-memo-messages", extname: ".zip") do
+        within ".gws-memo-notices .body" do
+          message = I18n.t("gws/memo/message.export.notify_message", link: "", locale: I18n.default_locale).split("\n").first
+          expect(page).to have_content(message)
+          expect(page).to have_link(href: /\.zip$/)
+          first("a").click
+        end
       end
-      wait_for_js_ready
-
-      wait_for_download
 
       exported = {}
-      Zip::File.open(downloads.first) do |zip_file|
+      Zip::File.open(downloaded_path) do |zip_file|
         zip_file.each do |entry|
           name = NKF.nkf("-w", entry.name)
           mail = ::Mail.read_from_string(entry.get_input_stream.read)

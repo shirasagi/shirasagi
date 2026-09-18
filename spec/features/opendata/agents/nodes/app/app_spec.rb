@@ -71,26 +71,18 @@ describe "opendata_agents_nodes_app", type: :feature, dbscope: :example, js: tru
   end
 
   context "#download" do
-    before do
-      clear_downloads
-    end
-
-    after do
-      clear_downloads
-    end
-
     it do
       visit index_path
       within "article.tab-released" do
         click_on app.name
       end
       expect(page).to have_css("#executed", text: "1 #{I18n.t("opendata.labels.time")}")
-      click_on I18n.t("opendata.search_datasets.bluk_download")
-
-      wait_for_download
+      wait_for_download(app.name, extname: ".zip") do
+        click_on I18n.t("opendata.search_datasets.bluk_download")
+      end
 
       entry_count = 0
-      Zip::File.open(downloads.first) do |archive|
+      Zip::File.open(downloaded_path) do |archive|
         archive.each do |_entry|
           entry_count += 1
         end
@@ -117,12 +109,12 @@ describe "opendata_agents_nodes_app", type: :feature, dbscope: :example, js: tru
     layout.save!
 
     visit index_path
-    within ".list-footer" do
-      click_on "RSS"
+    wait_for_download("rss", extname: ".xml") do
+      within ".list-footer" do
+        click_on "RSS"
+      end
     end
-
-    wait_for_download
-    ::File.read(downloads.first).tap do |xml|
+    ::File.read(downloaded_path).tap do |xml|
       xmldoc = REXML::Document.new(xml)
       items = REXML::XPath.match(xmldoc, "/rss/channel/item")
       expect(items).to have(1).items

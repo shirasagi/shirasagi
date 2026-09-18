@@ -67,10 +67,11 @@ describe Cms::Form::DocsController, type: :feature, dbscope: :example, js: true 
       expect(current_path).not_to eq sns_login_path
 
       # choose 'item[encoding]', option: 'UTF-8'
-      click_on I18n.t("ss.links.download")
-      wait_for_download
+      wait_for_download("pages", extname: ".csv") do
+        click_on I18n.t("ss.links.download")
+      end
 
-      csv = ::CSV.read(downloads.first, headers: true)
+      csv = ::CSV.read(downloaded_path, headers: true)
       expect(csv.length).to eq 2
       expect(csv.to_s).to eq ::File.read(file)
     end
@@ -112,10 +113,11 @@ describe Cms::Form::DocsController, type: :feature, dbscope: :example, js: true 
       expect(current_path).not_to eq sns_login_path
 
       # choose 'item[encoding]', option: 'UTF-8'
-      click_on I18n.t("ss.links.download")
-      wait_for_download
+      wait_for_download("pages", extname: ".csv") do
+        click_on I18n.t("ss.links.download")
+      end
 
-      csv = ::CSV.read(downloads.first, headers: true)
+      csv = ::CSV.read(downloaded_path, headers: true)
       expect(csv.length).to eq 2
       expect(csv.to_s).to eq ::File.read(file)
     end

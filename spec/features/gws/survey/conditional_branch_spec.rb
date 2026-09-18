@@ -8,14 +8,6 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
   let!(:user4) { create(:gws_user, uid: "u04", group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
   let!(:due_date) { I18n.l(Time.zone.today + 14.days, format: :picker) }
 
-  before do
-    clear_downloads
-  end
-
-  after do
-    clear_downloads
-  end
-
   context "conditional branch" do
     let(:form_name) { "form-#{unique_id}" }
     let(:radio_name) { "column-#{unique_id}" }
@@ -361,13 +353,14 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       end
 
       click_on I18n.t("ss.buttons.csv")
-      within "form#item-form" do
-        click_on I18n.t("ss.buttons.download")
+      wait_for_download("survey", extname: ".csv") do
+        within "form#item-form" do
+          click_on I18n.t("ss.buttons.download")
+        end
       end
-      wait_for_download
 
       I18n.with_locale(I18n.default_locale) do
-        SS::Csv.open(downloads.first) do |csv|
+        SS::Csv.open(downloaded_path) do |csv|
           csv_table = csv.read
           expect(csv_table.length).to eq 4
           expect(csv_table.headers.length).to eq 6

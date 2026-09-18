@@ -7,7 +7,7 @@ module SS
     def path
       @path ||= begin
         path = Rails.root.join('tmp/spec/downloads')
-        ::FileUtils.mkdir_p(path) if !::Dir.exist?(path)
+        ::FileUtils.mkdir_p(path)
         path.to_s
       end
     end
@@ -16,18 +16,39 @@ module SS
       ::Dir["#{path}/*"]
     end
 
-    def wait_for_download
-      ::Timeout.timeout(TIMEOUT) do
-        sleep 0.1 while downloading?
+    def downloaded_path
+      @downloaded_path
+    end
+
+    def wait_for_download(pattern, extname: nil)
+      if pattern.is_a?(Regexp)
+        regexp_pattern = pattern
+      elsif pattern.is_a?(String) && pattern.present?
+        regexp_pattern = /#{Regexp.escape(pattern)}/
+      else
+        raise "wait_for_download invalid pattern"
       end
-    end
 
-    def downloaded?
-      !downloading?
-    end
+      clear_downloads
+      @downloaded_path = nil
 
-    def downloading?
-      downloads.grep(/\.crdownload$/).any? || downloads.blank?
+      yield
+
+      ::Timeout.timeout(TIMEOUT) do
+        loop do
+          @downloaded_path = downloads.find do |file|
+            if extname
+              ::File.basename(file) =~ regexp_pattern && ::File.extname(file) == extname
+            else
+              ::File.basename(file) =~ regexp_pattern
+            end
+          end
+          return @downloaded_path if @downloaded_path
+          sleep 0.1
+        end
+      end
+    rescue ::Timeout::Error
+      raise ::Timeout::Error, "wait_for_download timeout(#{TIMEOUT}): #{[pattern, extname].join(", ")}"
     end
 
     def clear_downloads
@@ -64,6 +85,7 @@ module SS
 
         obj.class_eval do
           delegate :downloads, to: SS::DownloadHelpers
+          delegate :downloaded_path, to: SS::DownloadHelpers
           delegate :wait_for_download, to: SS::DownloadHelpers
           delegate :clear_downloads, to: SS::DownloadHelpers
         end

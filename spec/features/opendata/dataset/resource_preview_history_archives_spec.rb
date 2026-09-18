@@ -20,10 +20,11 @@ describe Opendata::Dataset::ResourcePreviewHistoryArchivesController, type: :fea
     it do
       visit opendata_dataset_history_preview_archives_path(site: site, cid: node)
       click_on archive1.humanized_name
-      click_on I18n.t("ss.buttons.download")
 
-      wait_for_download
-      expect(::File.binread(downloads.first)).to eq ::File.binread(zip_path)
+      wait_for_download(archive1_name, extname: ".zip") do
+        click_on I18n.t("ss.buttons.download")
+      end
+      expect(::File.binread(downloaded_path)).to eq ::File.binread(zip_path)
 
       click_on I18n.t("ss.links.delete")
       within "form" do

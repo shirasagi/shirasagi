@@ -83,14 +83,15 @@ describe "gws_custom_groups", type: :feature, dbscope: :example, js: true do
       within ".nav-menu" do
         click_on I18n.t("ss.links.download")
       end
-      within "form#item-form" do
-        click_on I18n.t("ss.buttons.download")
+
+      wait_for_download("gws_custom_groups", extname: ".csv") do
+        within "form#item-form" do
+          click_on I18n.t("ss.buttons.download")
+        end
       end
 
-      wait_for_download
-
       I18n.with_locale(I18n.default_locale) do
-        SS::Csv.open(downloads.first) do |csv|
+        SS::Csv.open(downloaded_path) do |csv|
           csv_table = csv.read
           expect(csv_table.length).to eq 1
           expect(csv_table[0][Gws::CustomGroup.t(:name)]).to be_present

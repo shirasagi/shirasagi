@@ -74,23 +74,21 @@ describe "gws_job_user_logs", type: :feature, dbscope: :example, js: true do
   end
 
   describe "download" do
-    before { clear_downloads }
-    after { clear_downloads }
-
     it do
       login_user user1, to: gws_job_user_logs_path(site: site)
       within ".nav-menu" do
         click_on I18n.t("ss.links.download")
       end
 
-      within "form#item-form" do
-        select I18n.t("ss.options.duration.1_year"), from: "item[save_term]"
-        click_on I18n.t("ss.buttons.download")
+      wait_for_download("job_logs", extname: ".csv") do
+        within "form#item-form" do
+          select I18n.t("ss.options.duration.1_year"), from: "item[save_term]"
+          click_on I18n.t("ss.buttons.download")
+        end
       end
-      wait_for_download
 
       I18n.with_locale(I18n.default_locale) do
-        SS::Csv.open(downloads.first) do |csv|
+        SS::Csv.open(downloaded_path) do |csv|
           csv_table = csv.read
           expect(csv_table.length).to eq 2
           expect(csv_table.headers).to include(*%w(ClassName Started Closed State Args Logs))
