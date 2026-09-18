@@ -5,6 +5,7 @@ git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 gem 'rails', '~> 8.1.0'
 gem 'propshaft'
 gem 'jsbundling-rails'
+gem 'cssbundling-rails'
 gem 'jbuilder'
 gem 'sdoc', group: :doc
 # rdoc 6.4 以降にアップデートすると依存関係に 'psych' と 'stringio' が組み込まれる。

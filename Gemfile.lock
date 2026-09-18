@@ -126,6 +126,8 @@ GEM
       bigdecimal
       rexml
     crass (1.0.7)
+    cssbundling-rails (1.4.3)
+      railties (>= 6.0.0)
     csv (3.3.5)
     date (3.5.1)
     debug (1.11.1)
@@ -798,6 +800,7 @@ DEPENDENCIES
   browser
   capybara
   clam_scan
+  cssbundling-rails
   csv
   debug
   diff-lcs
