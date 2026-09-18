@@ -403,8 +403,6 @@ GEM
     nokogiri (1.19.4)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    non-stupid-digest-assets (1.0.11)
-      sprockets (>= 2.0)
     notiffany (0.1.3)
       nenv (~> 0.1)
       shellany (~> 0.0)
@@ -721,10 +719,6 @@ GEM
     sparql-client (3.3.0)
       net-http-persistent (~> 4.0, >= 4.0.2)
       rdf (~> 3.3)
-    sprockets (4.2.2)
-      concurrent-ruby (~> 1.0)
-      logger
-      rack (>= 2.2.4, < 4)
     strscan (3.1.8)
     sxp (2.0.0)
       matrix (~> 0.4)
@@ -848,7 +842,6 @@ DEPENDENCIES
   net-ldap
   net-pop
   net-smtp
-  non-stupid-digest-assets
   oauth2
   oj
   omniauth
