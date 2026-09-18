@@ -127,12 +127,6 @@ GEM
       rexml
     crass (1.0.7)
     csv (3.3.5)
-    dartsass-sprockets (3.2.1)
-      railties (>= 4.0.0)
-      sassc-embedded (~> 1.80.1)
-      sprockets (> 3.0)
-      sprockets-rails
-      tilt
     date (3.5.1)
     debug (1.11.1)
       irb (~> 1.10)
@@ -168,7 +162,6 @@ GEM
     erubi (1.13.1)
     excon (1.5.0)
       logger
-    execjs (2.10.1)
     factory_bot (6.6.0)
       activesupport (>= 6.1.0)
     factory_bot_rails (6.5.1)
@@ -238,9 +231,6 @@ GEM
       base64 (~> 0.2)
       faraday (>= 1.0, < 3.a)
     google-logging-utils (0.2.0)
-    google-protobuf (4.35.1)
-      bigdecimal
-      rake (~> 13.3)
     googleauth (1.17.1)
       faraday (>= 1.0, < 3.a)
       google-cloud-env (~> 2.2)
@@ -689,11 +679,6 @@ GEM
       rexml
     ruby2_keywords (0.0.5)
     rubyzip (2.4.1)
-    sass-embedded (1.101.0)
-      google-protobuf (~> 4.31)
-      rake (>= 13)
-    sassc-embedded (1.80.9)
-      sass-embedded (~> 1.80)
     scanf (1.0.0)
     sdoc (2.6.5)
       rdoc (>= 5.0)
@@ -734,10 +719,6 @@ GEM
       concurrent-ruby (~> 1.0)
       logger
       rack (>= 2.2.4, < 4)
-    sprockets-rails (3.5.2)
-      actionpack (>= 6.1)
-      activesupport (>= 6.1)
-      sprockets (>= 3.0.0)
     strscan (3.1.8)
     sxp (2.0.0)
       matrix (~> 0.4)
@@ -752,7 +733,6 @@ GEM
       prawn-disable_word_break (>= 2.3.1)
       rexml
     thor (1.5.0)
-    tilt (2.8.0)
     timecop (0.9.11)
     timeout (0.6.1)
     trailblazer-option (0.1.2)
@@ -762,8 +742,6 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uber (0.1.0)
-    uglifier (4.2.1)
-      execjs (>= 0.3.0, < 3)
     unf (0.2.0)
     ungarbled (0.0.11)
       activesupport
@@ -817,7 +795,6 @@ DEPENDENCIES
   capybara
   clam_scan
   csv
-  dartsass-sprockets
   debug
   diff-lcs
   diffy
@@ -915,13 +892,10 @@ DEPENDENCIES
   simplecov-lcov
   sparql
   sparql-client
-  sprockets
-  sprockets-rails
   terminal-notifier-guard
   test-queue
   thinreports
   timecop
-  uglifier
   unf
   ungarbled
   unicorn
