@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 gem 'rails', '~> 8.1.0'
+gem 'propshaft'
 gem 'jsbundling-rails'
 gem 'jbuilder'
 gem 'sdoc', group: :doc
