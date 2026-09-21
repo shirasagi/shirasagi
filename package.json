@@ -47,6 +47,7 @@
   },
   "scripts": {
     "build": "webpack --config webpack.config.js",
+    "build:css": "bin/build_css",
     "lint": "stylelint 'app/**/*.{css,scss,sass}'",
     "lint:fix": "stylelint 'app/**/*.{css,scss,sass}' --fix",
     "format": "prettier --write 'app/**/*.{css,scss,sass}'"
