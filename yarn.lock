@@ -964,6 +964,11 @@ detect-libc@^2.0.3:
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-2.1.2.tgz#689c5dcdc1900ef5583a4cb9f6d7b473742074ad"
   integrity sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==
 
+dsmorse-gridster@0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/dsmorse-gridster/-/dsmorse-gridster-0.7.2.tgz#c3339eccd4f927078d176d080b3ef3fc3eaeb011"
+  integrity sha512-14fEUNwy0OG4fJ+LrZgrdFDhWrA17OTFcTbs+3ObG4kYFx7kdNp9WYMgPhJZvX9tf6O7pkUxv/9izUGYnNKnwg==
+
 ejs@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-6.0.1.tgz#88ea8ce00335c3575d7c3602dd76e84b0bd60f43"
