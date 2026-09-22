@@ -29,7 +29,6 @@
 //= link board/script.js
 //= link cms/compat.js
 //= link cms/form_db.js
-//= link cms/preview/datatables.js
 //= link cms/preview/datetimepicker.js
 //= link cms/preview/jquery-ui.js
 //= link cms/preview/jquery.js
@@ -77,7 +76,6 @@
 //= link cms/form_db.css
 //= link cms/mobile.css
 //= link cms/preview/ajax_in_iframe.css
-//= link cms/preview/datatables.css
 //= link cms/preview/datetimepicker.css
 //= link cms/preview/jquery-ui.css
 //= link cms/preview/jquery.css
