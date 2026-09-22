@@ -2,42 +2,42 @@ import 'jquery';
 import 'jquery-migrate/src/migratemute.js';
 import 'jquery-migrate/dist/jquery-migrate.js';
 import 'jquery-ujs';
-import 'js-cookie/dist/js.cookie.js';
+import 'js-cookie';
 import 'jquery-form/src/jquery.form.js';
 import 'jquery-datetimepicker/build/jquery.datetimepicker.full.js';
 import 'crypto-js/crypto-js.js';
 import 'gmaps-marker-clusterer/src/markerclusterer.js';
-import 'ss/lib/base';
-import 'ss/lib/font';
-import 'ss/lib/module';
-import 'ss/lib/mobile';
-import 'ss/lib/clipboard';
-import 'ss/lib/file_view';
-import 'ss/lib/date_time_picker';
-import 'cms/lib/site_search';
-import 'cms/lib/site_search_history';
-import 'cms/lib/line';
-import 'cms/lib/history';
-import 'ss/lib/search_ui';
-import 'ss/lib/ajax_file';
-import 'chat/lib/bot';
-import 'cms/lib/editor';
-import 'ads/lib/banner';
-import 'event/lib/monthly';
-import 'event/lib/calendar';
-import 'event/lib/search';
-import 'inquiry/lib/form';
-import 'inquiry/lib/column';
-import 'key_visual/lib/slide';
-import 'map/googlemaps/map';
-import 'map/googlemaps/facility/search';
-import 'map/googlemaps/member/photo/form';
-import 'map/openlayers/map';
-import 'map/openlayers/facility/search';
-import 'map/openlayers/member/photo/form';
-import 'map/openlayers/opendata/dataset_map';
-import 'opendata/graph';
-import 'opendata/dataset_graph';
+import '../ss/lib/base';
+import '../ss/lib/font';
+import '../ss/lib/module';
+import '../ss/lib/mobile';
+import '../ss/lib/clipboard';
+import '../ss/lib/file_view';
+import '../ss/lib/date_time_picker';
+import './lib/site_search';
+import './lib/site_search_history';
+import './lib/line';
+import './lib/history';
+import '../ss/lib/search_ui';
+import '../ss/lib/ajax_file';
+import '../chat/lib/bot';
+import './lib/editor';
+import '../ads/lib/banner';
+import '../event/lib/monthly';
+import '../event/lib/calendar';
+import '../event/lib/search';
+import '../inquiry/lib/form';
+import '../inquiry/lib/column';
+import '../key_visual/lib/slide';
+import '../map/googlemaps/map';
+import '../map/googlemaps/facility/search';
+import '../map/googlemaps/member/photo/form';
+import '../map/openlayers/map';
+import '../map/openlayers/facility/search';
+import '../map/openlayers/member/photo/form';
+import '../map/openlayers/opendata/dataset_map';
+import '../opendata/graph';
+import '../opendata/dataset_graph';
 
 SS.ready(function () {
   SS_Kana.render();
@@ -72,11 +72,11 @@ this.SS_Kana = (function () {
   function SS_Kana() {
   }
 
-  SS_Kana.dir = <%= SS.config.kana.location.to_json %>;
+  SS_Kana.dir = KANA_CONFIG_EXPORTS.location;
 
   SS_Kana.siteUrl = "/";
 
-  SS_Kana.kanaUrl = <%= SS.config.kana.location.to_json %> + "/";
+  SS_Kana.kanaUrl = KANA_CONFIG_EXPORTS.location + "/";
 
   SS_Kana.render = function () {
     if (SS.config["site_url"] && SS.config["kana_url"]) {
@@ -187,11 +187,11 @@ this.SS_Translate = (function () {
   function SS_Translate() {
   }
 
-  SS_Translate.dir = <%= SS.config.translate.location.to_json %>;
+  SS_Translate.dir = TRANSLATE_CONFIG_EXPORTS.location;
 
   SS_Translate.siteUrl = "/";
 
-  SS_Translate.translateUrl = <%= SS.config.translate.location.to_json %> + "/";
+  SS_Translate.translateUrl = TRANSLATE_CONFIG_EXPORTS.location + "/";
 
   SS_Translate.url = function (url, target) {
     if (target) {
@@ -355,7 +355,19 @@ this.SS_AdobeReader = (function () {
   SS_AdobeReader.render = function () {
     if ($("a[href$='.pdf']").length) {
       return $("#ss-adobe-reader, .ss-adobe-reader").each(function () {
-        return $(this).html(<%= Array(I18n.t("cms.adobe_reader.remark")).join.to_json %>).show();
+        var html;
+        if ("i18next" in window) {
+          html = i18next.t("cms.adobe_reader.remark", { returnObjects: true });
+        } else {
+          html = [
+            "<div>",
+            "PDFファイルをご覧いただくためには、Adobe Readerのプラグイン（無償）が必要となります。",
+            "お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。",
+            "</div>",
+            "<a href=\"https://get.adobe.com/jp/reader/\">Adobe Readerをダウンロードする</a>"
+          ];
+        }
+        return $(this).html(html.join("\n")).show();
       });
     }
   };
@@ -432,10 +444,10 @@ this.SS_Tabs = (function () {
 })();
 function SS_Voice() {
   this.voiceConfig = {
-    'location': <%= SS.config.voice.controller['location'].to_json %>,
-    'loading-resource': <%= SS.config.voice.resource['loading'].to_json %>,
-    'disabled-resource': <%= SS.config.voice.resource['disabled'].to_json %>,
-    'overload-resource': <%= SS.config.voice.resource['overload'].to_json %>
+    'location': VOICE_CONFIG_EXPORTS.controller['location'],
+    'loading-resource': VOICE_CONFIG_EXPORTS.resource['loading'],
+    'disabled-resource': VOICE_CONFIG_EXPORTS.resource['disabled'],
+    'overload-resource': VOICE_CONFIG_EXPORTS.resource['overload']
   };
 
   this.url = null;
@@ -659,7 +671,7 @@ this.SS_VoiceController = (function () {
         remainingDuration: true,
         smoothPlayBar: true,
         supplied: "mp3",
-        swfPath: <%= SS.config.voice.resource['jplayer_path'].to_json %>,
+        swfPath: VOICE_CONFIG_EXPORTS.resource['jplayer_path'],
         toggleDuration: true,
         useStateClassSkin: true
       });
