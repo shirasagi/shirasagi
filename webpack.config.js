@@ -114,7 +114,7 @@ module.exports = {
       maxChunks: 1
     }),
     new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: [ "**/*.js", "**/*.css" ]
+      cleanOnceBeforeBuildPatterns: [ "**/*.js", "application.css", "choices.css", "colorbox.css", "swiper.css", "jplayer.css" ]
     }),
     new RemoveEmptyScriptsPlugin(),
     new MiniCssExtractPlugin({
