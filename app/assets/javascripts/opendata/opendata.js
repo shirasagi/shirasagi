@@ -1,9 +1,3 @@
-////= #require jquery.turbolinks
-////= #require turbolinks
-
-//#
-//  $(".js-date").datetimepicker { lang: "ja", timepicker: false, format: "Y/m/d" }
-//#
 $(function () {
   var link, menu, path;
   // $.ajaxSetup

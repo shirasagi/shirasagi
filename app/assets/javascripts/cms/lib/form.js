@@ -1,12 +1,11 @@
-//= require cms/lib/form
-//= require cms/lib/form_alert
-//= require cms/lib/form_preview
-//= require cms/lib/inplace_form
-//= require cms/lib/syntax_checker
-//= require cms/lib/form_checker
-//= require cms/lib/mobile_size_checker
-//= require cms/lib/link_checker
-//= require cms/lib/backlink_checker
+import './form_alert';
+import './form_preview';
+import './inplace_form';
+import './syntax_checker';
+import './form_checker';
+import './mobile_size_checker';
+import './link_checker';
+import './backlink_checker';
 
 this.Cms_Form = (function () {
   function Cms_Form() {};

@@ -1,6 +1,6 @@
-//= require chart.js/dist/chart.umd.js
-//= require chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js
-//= require ss/chartjs-colorschemes
+import 'chart.js';
+import 'chartjs-plugin-datalabels';
+import '../ss/chartjs-colorschemes';
 
 Opendata_Graph = function (canvas, controller) {
   this.$canvas = $(canvas);

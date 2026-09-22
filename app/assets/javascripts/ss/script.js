@@ -1,111 +1,32 @@
-//= require jquery
-//= require jquery-migrate/src/migratemute.js
-//= require jquery-migrate/dist/jquery-migrate.js
-//= require jquery-ujs
-//= require jquery-ui/dist/jquery-ui.js
-//= require js-cookie/dist/js.cookie.js
-//= require jquery-form/src/jquery.form.js
-//= require jquery-datetimepicker/build/jquery.datetimepicker.full.js
-//= require jquery.multi-select
-//= require @claviska/jquery-minicolors/jquery.minicolors.js
-//= require mdn-polyfills/Array.from.js
-//= require mdn-polyfills/Array.prototype.find.js
-//= require mdn-polyfills/Array.prototype.findIndex.js
-//= require mdn-polyfills/Array.prototype.forEach.js
-//= require mdn-polyfills/Array.prototype.includes.js
-//= require mdn-polyfills/Number.isInteger.js
-//= require mdn-polyfills/Number.isNaN.js
-//= require mdn-polyfills/Object.assign.js
-//= require mdn-polyfills/String.prototype.endsWith.js
-//= require mdn-polyfills/String.prototype.includes.js
-//= require mdn-polyfills/String.prototype.padEnd.js
-//= require mdn-polyfills/String.prototype.padStart.js
-//= require mdn-polyfills/String.prototype.repeat.js
-//= require mdn-polyfills/String.prototype.startsWith.js
-//= require mdn-polyfills/String.prototype.trim.js
-//= require @popperjs/core/dist/umd/popper.js
-//= require tippy.js/dist/tippy-bundle.umd.js
-//= require crypto-js/crypto-js.js
-//= require ejs/ejs.min.js
-//= require ss/lib/base
-//= require_self
-//= require ss/chart
-//= require ss/lib/form
-//= require ss/lib/font
-//= require ss/lib/module
-//= require ss/lib/login
-//= require ss/lib/addon_tabs
-//= require ss/lib/addon/markdown
-//= require ss/lib/addon/temp_file
-//= require ss/lib/edit_lock
-//= require ss/lib/image_editor
-//= require ss/lib/list_ui
-//= require ss/lib/tree_ui
-//= require ss/lib/tree_navi
-//= require ss/lib/mobile
-//= require ss/lib/search_ui
-//= require ss/lib/popup
-//= require ss/lib/dropdown
-//= require ss/lib/dropdown_toggle
-//= require ss/lib/clipboard
-//= require ss/lib/workflow
-//= require ss/lib/sortable_form
-//= require ss/lib/start_end_synchronizer
-//= require ss/lib/text_zoom
-//= require ss/lib/popup_notice
-//= require ss/lib/cascade_menu
-//= require ss/lib/html_message
-//= require ss/lib/file_view
-//= require ss/lib/validation
-//= require ss/lib/ajax_file
-//= require ss/lib/replace_file
-//= require ss/lib/button_to
-//= require ss/lib/open_in_new_window
-//= require ss/lib/emoji
-//= require ss/lib/date_time_picker
-//= require ss/lib/pdfjs
-//= require chat/lib/chart
-//= require cms/lib/base
-//= require cms/lib/editor
-//= require cms/lib/loop_snippet
-//= require cms/lib/form
-//= require cms/lib/source_cleaner
-//= require cms/lib/template_form
-//= require cms/lib/column_file_upload
-//= require cms/lib/column_multiple_files_upload
-//= require cms/lib/column_free
-//= require cms/lib/column_list
-//= require cms/lib/column_table
-//= require cms/lib/column_radio_button
-//= require cms/lib/column_select
-//= require cms/lib/column_select_page
-//= require cms/lib/file_highlighter
-//= require cms/lib/move
-//= require cms/lib/line
-//= require cms/lib/upload_file_order
-//= require cms/lib/image_map
-//= require event/lib/form
-//= require guide/lib/diagnostic
-//= require map/googlemaps/map
-//= require map/googlemaps/form
-//= require map/googlemaps/facility/search
-//= require map/googlemaps/member/photo/form
-//= require map/openlayers/map
-//= require map/openlayers/form
-//= require map/openlayers/facility/search
-//= require map/openlayers/member/photo/form
-//= require map/lgwan/form
-//= require map/reference
-//= require webmail/lib/mail
-//= require webmail/lib/address
-//= require cropperjs/dist/cropper.js
-//= require service/lib/quota.js
-//= require flexibility/flexibility.js
-//= require cms/lib/readable_setting
-//= require cms/lib/michecker
-//= require cms/lib/condition_forms
-//= require ss/lib/usage
-//= require datatables.net/js/dataTables.js
+import 'jquery';
+import 'jquery-migrate/src/migratemute.js';
+import 'jquery-migrate/dist/jquery-migrate.js';
+import 'jquery-ujs';
+import 'jquery-ui/dist/jquery-ui.js';
+import 'js-cookie';
+import 'jquery-form/src/jquery.form.js';
+import 'jquery-datetimepicker/build/jquery.datetimepicker.full.js';
+import 'multiselect';
+import '@claviska/jquery-minicolors/jquery.minicolors.js';
+import 'mdn-polyfills/Array.from.js';
+import 'mdn-polyfills/Array.prototype.find.js';
+import 'mdn-polyfills/Array.prototype.findIndex.js';
+import 'mdn-polyfills/Array.prototype.forEach.js';
+import 'mdn-polyfills/Array.prototype.includes.js';
+import 'mdn-polyfills/Number.isInteger.js';
+import 'mdn-polyfills/Number.isNaN.js';
+import 'mdn-polyfills/Object.assign.js';
+import 'mdn-polyfills/String.prototype.endsWith.js';
+import 'mdn-polyfills/String.prototype.includes.js';
+import 'mdn-polyfills/String.prototype.padEnd.js';
+import 'mdn-polyfills/String.prototype.padStart.js';
+import 'mdn-polyfills/String.prototype.repeat.js';
+import 'mdn-polyfills/String.prototype.startsWith.js';
+import 'mdn-polyfills/String.prototype.trim.js';
+import '@popperjs/core/dist/umd/popper.js';
+import 'tippy.js/dist/tippy-bundle.umd.js';
+import 'crypto-js/crypto-js.js';
+import './lib/base';
 
 //#
 //  $(".js-date").datetimepicker { lang: "ja", timepicker: false, format: "Y/m/d" }
@@ -222,3 +143,81 @@ SS.ready(function () {
   SS_Emoji.render();
   Cms.render();
 });
+
+import './chart';
+import './lib/form';
+import './lib/font';
+import './lib/module';
+import './lib/login';
+import './lib/addon_tabs';
+import './lib/addon/markdown';
+import './lib/addon/temp_file';
+import './lib/edit_lock';
+import './lib/image_editor';
+import './lib/list_ui';
+import './lib/tree_ui';
+import './lib/tree_navi';
+import './lib/mobile';
+import './lib/search_ui';
+import './lib/popup';
+import './lib/dropdown';
+import './lib/dropdown_toggle';
+import './lib/clipboard';
+import './lib/workflow';
+import './lib/sortable_form';
+import './lib/start_end_synchronizer';
+import './lib/text_zoom';
+import './lib/popup_notice';
+import './lib/cascade_menu';
+import './lib/html_message';
+import './lib/file_view';
+import './lib/validation';
+import './lib/ajax_file';
+import './lib/replace_file';
+import './lib/button_to';
+import './lib/open_in_new_window';
+import './lib/emoji';
+import './lib/date_time_picker';
+import './lib/pdfjs';
+import '../chat/lib/chart';
+import '../cms/lib/base';
+import '../cms/lib/editor';
+import '../cms/lib/loop_snippet';
+import '../cms/lib/form';
+import '../cms/lib/source_cleaner';
+import '../cms/lib/template_form';
+import '../cms/lib/column_file_upload';
+import '../cms/lib/column_multiple_files_upload';
+import '../cms/lib/column_free';
+import '../cms/lib/column_list';
+import '../cms/lib/column_table';
+import '../cms/lib/column_radio_button';
+import '../cms/lib/column_select';
+import '../cms/lib/column_select_page';
+import '../cms/lib/file_highlighter';
+import '../cms/lib/move';
+import '../cms/lib/line';
+import '../cms/lib/upload_file_order';
+import '../cms/lib/image_map';
+import '../event/lib/form';
+import '../guide/lib/diagnostic';
+import '../map/googlemaps/map';
+import '../map/googlemaps/form';
+import '../map/googlemaps/facility/search';
+import '../map/googlemaps/member/photo/form';
+import '../map/openlayers/map';
+import '../map/openlayers/form';
+import '../map/openlayers/facility/search';
+import '../map/openlayers/member/photo/form';
+import '../map/lgwan/form';
+import '../map/reference';
+import '../webmail/lib/mail';
+import '../webmail/lib/address';
+import 'cropperjs/dist/cropper.js';
+import '../service/lib/quota.js';
+import 'flexibility/flexibility.js';
+import '../cms/lib/readable_setting';
+import '../cms/lib/michecker';
+import '../cms/lib/condition_forms';
+import './lib/usage';
+import 'datatables.net/js/dataTables.js';

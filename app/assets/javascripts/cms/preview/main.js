@@ -1,24 +1,21 @@
-//= require cms/lib/form
-//= require cms/lib/template_form
+import '../lib/form';
+import '../lib/template_form';
 
-//= require ss/lib/workflow
-//= require ss/lib/addon/temp_file
-//= require ss/lib/search_ui
-//= require ss/lib/list_ui
-//= require ss/lib/tree_ui
-//= require ss/lib/dropdown
+import '../../ss/lib/workflow';
+import '../../ss/lib/addon/temp_file';
+import '../../ss/lib/search_ui';
+import '../../ss/lib/list_ui';
+import '../../ss/lib/tree_ui';
+import '../../ss/lib/dropdown';
 
 // here are polyfills for IE11
-//= require mdn-polyfills/String.prototype.endsWith.js
-//= require mdn-polyfills/String.prototype.includes.js
-//= require mdn-polyfills/String.prototype.padEnd.js
-//= require mdn-polyfills/String.prototype.padStart.js
-//= require mdn-polyfills/String.prototype.repeat.js
-//= require mdn-polyfills/String.prototype.startsWith.js
-//= require mdn-polyfills/String.prototype.trim.js
-
-// for 承認ユーザー選択
-//= require ejs/ejs.min.js
+import 'mdn-polyfills/String.prototype.endsWith.js';
+import 'mdn-polyfills/String.prototype.includes.js';
+import 'mdn-polyfills/String.prototype.padEnd.js';
+import 'mdn-polyfills/String.prototype.padStart.js';
+import 'mdn-polyfills/String.prototype.repeat.js';
+import 'mdn-polyfills/String.prototype.startsWith.js';
+import 'mdn-polyfills/String.prototype.trim.js';
 
 SS_Preview = (function () {
   function SS_Preview(el) {

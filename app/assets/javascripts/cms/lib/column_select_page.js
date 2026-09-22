@@ -1,3 +1,5 @@
+import ejs from "ejs";
+
 Cms_Column_Select_Page = function(el) {
   this.$el = $(el);
 };

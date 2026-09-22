@@ -1,5 +1,5 @@
-//= require chart.js/dist/chart.umd.js
-//= require chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js
+import 'chart.js';
+import 'chartjs-plugin-datalabels';
 
 this.Inquiry_Chart = (function() {
   function Inquiry_Chart() {}

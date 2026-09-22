@@ -1,4 +1,4 @@
-//= require exif-js/exif.js
+import 'exif-js/exif.js';
 
 this.Member_Photo_Form = (function () {
   function Member_Photo_Form() {

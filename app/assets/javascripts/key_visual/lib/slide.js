@@ -1,5 +1,4 @@
-//= require bxslider/dist/jquery.bxslider
-//= require_self
+import 'bxslider/dist/jquery.bxslider';
 
 this.KeyVisual_Image = (function () {
   function KeyVisual_Image() {

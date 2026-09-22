@@ -1,2 +1,1 @@
-//= require 'openlayers/ol'
-//= require 'board/lib/map'
+import './lib/map';

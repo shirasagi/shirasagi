@@ -1,3 +1,5 @@
+import ejs from "ejs";
+
 SS.ready(function() {
   function Gws_Schedule_Calendar() {
   }

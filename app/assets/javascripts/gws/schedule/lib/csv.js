@@ -1,3 +1,5 @@
+import ejs from "ejs";
+
 function Gws_Schedule_Csv(el) {
   this.$el = $(el);
   this.$importMode = this.$el.find('#import_mode');

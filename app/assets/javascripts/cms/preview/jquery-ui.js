@@ -1,1 +1,1 @@
-//= require jquery-ui/dist/jquery-ui.js
+import 'jquery-ui/dist/jquery-ui.js';
