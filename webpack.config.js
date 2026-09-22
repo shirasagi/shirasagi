@@ -39,12 +39,6 @@ module.exports = {
     "ss/debug": "./app/assets/javascripts/ss/debug.js",
     "ss/script": "./app/assets/javascripts/ss/script.js",
   },
-  externals: [
-    {
-      $: "jquery",
-      jquery: 'jQuery',
-    }
-  ],
   module: {
     rules: [
       {
