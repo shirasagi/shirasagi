@@ -1,4 +1,4 @@
-this.SS_Mobile = (function () {
+globalThis.SS_Mobile = (function () {
   function SS_Mobile() {
   }
 
@@ -38,4 +38,3 @@ this.SS_Mobile = (function () {
   return SS_Mobile;
 
 })();
-

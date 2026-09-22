@@ -1,4 +1,4 @@
-this.Map_Form = (function () {
+globalThis.Map_Form = (function () {
   function Map_Form() {
   }
 

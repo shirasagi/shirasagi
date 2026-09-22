@@ -1,4 +1,4 @@
-this.Cms_Michecker = (function () {
+globalThis.Cms_Michecker = (function () {
   function Cms_Michecker(el) {
     this.$el = $(el);
     this.$btnStart = this.$el.find(".btn-michecker-start");

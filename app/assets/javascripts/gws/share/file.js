@@ -1,4 +1,4 @@
-this.Gws_Share_File = (function () {
+globalThis.Gws_Share_File = (function () {
   function Gws_Share_File() {}
 
   // チェックされたファイルの ids[] を載せた一括操作用フォームを生成する。

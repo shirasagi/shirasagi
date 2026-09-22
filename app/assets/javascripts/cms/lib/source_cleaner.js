@@ -14,7 +14,7 @@ var extend = function (child, parent) {
   },
   hasProp = {}.hasOwnProperty;
 
-this.Cms_Source_Cleaner = (function (superClass) {
+globalThis.Cms_Source_Cleaner = (function (superClass) {
   extend(Cms_Source_Cleaner, superClass);
 
   function Cms_Source_Cleaner() {
@@ -255,4 +255,3 @@ this.Cms_Source_Cleaner = (function (superClass) {
   return Cms_Source_Cleaner;
 
 })(SS_Module);
-

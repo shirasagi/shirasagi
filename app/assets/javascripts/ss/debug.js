@@ -1,4 +1,4 @@
-this.SS_Debug = (function () {
+globalThis.SS_Debug = (function () {
   function SS_Debug() {
   }
 

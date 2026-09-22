@@ -29,7 +29,7 @@ $(function () {
   return Opendata_HieraricalCheckbox.render();
 });
 
-this.Opendata = (function () {
+globalThis.Opendata = (function () {
   function Opendata() {
   }
 
@@ -146,7 +146,7 @@ this.Opendata = (function () {
 
 })();
 
-this.Opendata_Tooltips = (function () {
+globalThis.Opendata_Tooltips = (function () {
   function Opendata_Tooltips() {
   }
 
@@ -185,7 +185,7 @@ this.Opendata_Tooltips = (function () {
 
 })();
 
-this.Opendata_ListUI = (function () {
+globalThis.Opendata_ListUI = (function () {
   function Opendata_ListUI() {
   }
 
@@ -287,7 +287,7 @@ this.Opendata_ListUI = (function () {
 
 })();
 
-this.Opendata_SearchUI = (function () {
+globalThis.Opendata_SearchUI = (function () {
   function Opendata_SearchUI() {
   }
 
@@ -469,7 +469,7 @@ this.Opendata_SearchUI = (function () {
 
 })();
 
-this.Opendata_HieraricalCheckbox = (function () {
+globalThis.Opendata_HieraricalCheckbox = (function () {
   function Opendata_HieraricalCheckbox() {
   }
 

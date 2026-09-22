@@ -1,4 +1,4 @@
-this.Backlink_Checker = (function () {
+globalThis.Backlink_Checker = (function () {
   function Backlink_Checker() {
   }
 

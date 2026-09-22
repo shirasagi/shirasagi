@@ -1,4 +1,4 @@
-this.Cms_Loop_Snippet = (function () {
+globalThis.Cms_Loop_Snippet = (function () {
   function Cms_Loop_Snippet() {
   }
 

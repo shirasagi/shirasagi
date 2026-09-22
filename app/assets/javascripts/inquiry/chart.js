@@ -1,7 +1,7 @@
 import 'chart.js';
 import 'chartjs-plugin-datalabels';
 
-this.Inquiry_Chart = (function() {
+globalThis.Inquiry_Chart = (function() {
   function Inquiry_Chart() {}
 
   Inquiry_Chart.drawBar = function(selector) {

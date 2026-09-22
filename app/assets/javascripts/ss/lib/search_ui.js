@@ -1,6 +1,6 @@
 import ejs from "ejs";
 
-this.SS_SearchUI = (function () {
+globalThis.SS_SearchUI = (function () {
   function SS_SearchUI() {
   }
 

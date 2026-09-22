@@ -1,4 +1,4 @@
-this.Opendata_Point = (function () {
+globalThis.Opendata_Point = (function () {
   function Opendata_Point() {
   }
 

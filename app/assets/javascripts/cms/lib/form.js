@@ -1,14 +1,5 @@
-import './form_alert';
-import './form_preview';
-import './inplace_form';
-import './syntax_checker';
-import './form_checker';
-import './mobile_size_checker';
-import './link_checker';
-import './backlink_checker';
-
-this.Cms_Form = (function () {
-  function Cms_Form() {};
+globalThis.Cms_Form = (function () {
+  function Cms_Form() {}
 
   Cms_Form.options = { check: { syntax: true } };
   Cms_Form.addonSelector = ".mod-cms-body";

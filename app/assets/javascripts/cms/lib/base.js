@@ -1,4 +1,4 @@
-this.Cms = (function () {
+globalThis.Cms = (function () {
   function Cms() {
   }
 

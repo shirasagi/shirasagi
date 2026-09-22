@@ -1,4 +1,4 @@
-this.Mobile_Size_Checker = (function () {
+globalThis.Mobile_Size_Checker = (function () {
   function ResultBox() {
     this.$el = null;
     this.$elBody = null;

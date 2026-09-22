@@ -1,6 +1,10 @@
-function Gws_Memo_Filter() {
-}
+globalThis.Gws_Memo_Filter = (function () {
+  function Gws_Memo_Filter() {
+  }
 
-Gws_Memo_Filter.render = function () {
-  return $("#addon-gws-agents-addons-group_permission").hide();
-};
+  Gws_Memo_Filter.render = function () {
+    return $("#addon-gws-agents-addons-group_permission").hide();
+  };
+
+  return Gws_Memo_Filter;
+})();

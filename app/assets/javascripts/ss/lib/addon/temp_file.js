@@ -1,4 +1,4 @@
-this.SS_Addon_TempFile = (function () {
+globalThis.SS_Addon_TempFile = (function () {
   function SS_Addon_TempFile(selector, userId, options) {
     this.$selector = $(selector.selector || selector);
     this.userId = userId;

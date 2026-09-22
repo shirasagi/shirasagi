@@ -1,4 +1,4 @@
-this.Chat_Chart = (function() {
+globalThis.Chat_Chart = (function() {
   function Chat_Chart() {}
 
   Chat_Chart.drawBar = function(selector) {

@@ -1,4 +1,4 @@
-this.SS_Dropdown = (function () {
+globalThis.SS_Dropdown = (function () {
   // private methods
   var cancelEvent = function (event) {
     event.preventDefault();

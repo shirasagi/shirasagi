@@ -1,4 +1,4 @@
-this.Cms_History = (function () {
+globalThis.Cms_History = (function () {
   function Cms_History(selector, listIdentity, opts) {
     if (!opts) {
       opts = {};

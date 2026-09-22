@@ -6,7 +6,7 @@ $(function () {
   return Opendata_ResourceForm.toggleTsv();
 });
 
-this.Opendata_ResourceForm = (function () {
+globalThis.Opendata_ResourceForm = (function () {
   function Opendata_ResourceForm() {
   }
 

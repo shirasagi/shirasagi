@@ -1,3 +1,5 @@
+import tippy from 'tippy.js';
+
 SS.ready(function() {
   function Gws_Notice_Calendar() {
   }

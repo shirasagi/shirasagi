@@ -1,4 +1,4 @@
-this.SS_Clipboard = (function () {
+globalThis.SS_Clipboard = (function () {
   function SS_Clipboard() {
   }
 
@@ -70,4 +70,3 @@ this.SS_Clipboard = (function () {
   return SS_Clipboard;
 
 })();
-

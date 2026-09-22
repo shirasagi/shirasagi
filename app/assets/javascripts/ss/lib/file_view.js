@@ -1,552 +1,573 @@
-function SS_FileView(el, options) {
-  this.$el = $(el);
-  this.options = options;
+globalThis.SS_FileView = (function () {
+  function SS_FileView(el, options) {
+    this.$el = $(el);
+    this.options = options;
 
-  this.$canvasContainer = this.$el.find(".canvas-container");
-  this.$canvasContainer.html(SS.loading);
+    this.$canvasContainer = this.$el.find(".canvas-container");
+    this.$canvasContainer.html(SS.loading);
 
-  this.canvas = document.createElement("canvas");
-  this.ctx = this.canvas.getContext("2d");
+    this.canvas = document.createElement("canvas");
+    this.ctx = this.canvas.getContext("2d");
 
-  this.scale = 1;
-  this.$slider = this.$el.find("#zoom-slider");
-  this.$slider.prop({ value: this.scale * 100, min: SS_FileView.MIN_SCALE * 100, max: SS_FileView.MAX_SCALE * 100, step: "any" });
-  this.$slider.on("input", this.zooming.bind(this)).on("change", this.zoomChanged.bind(this));
+    this.scale = 1;
+    this.$slider = this.$el.find("#zoom-slider");
+    this.$slider.prop({
+      value: this.scale * 100,
+      min: SS_FileView.MIN_SCALE * 100,
+      max: SS_FileView.MAX_SCALE * 100,
+      step: "any"
+    });
+    this.$slider.on("input", this.zooming.bind(this)).on("change", this.zoomChanged.bind(this));
 
-  this.dragInfo = {
-    isDragging: false,
-    start: { x: 0, y: 0 },
-    diff: { x: 0, y: 0 },
-    canvas: { x: 0, y: 0 }
-  };
+    this.dragInfo = {
+      isDragging: false,
+      start: {x: 0, y: 0},
+      diff: {x: 0, y: 0},
+      canvas: {x: 0, y: 0}
+    };
 
-  var self = this;
+    var self = this;
 
-  // ダイアログが完全に開かないと、キャンバスサイズを計算できないので、完全に開くまで待つ
-  var d1 = $.Deferred();
-  this.$el.one("ss:cboxCompleted", function() { d1.resolve(); });
-  // // 3 秒以内にダイアログが開かなければ失敗。
-  // setTimeout(function() { d1.rejectWith(self, [ "failed to open dialog" ]); }, 3000);
-  // 3 秒以内にダイアログが開かなければダイアログが開いたとみなす。
-  setTimeout(function() { d1.resolve(); }, 3000);
+    // ダイアログが完全に開かないと、キャンバスサイズを計算できないので、完全に開くまで待つ
+    var d1 = $.Deferred();
+    this.$el.one("ss:cboxCompleted", function () {
+      d1.resolve();
+    });
+    // // 3 秒以内にダイアログが開かなければ失敗。
+    // setTimeout(function() { d1.rejectWith(self, [ "failed to open dialog" ]); }, 3000);
+    // 3 秒以内にダイアログが開かなければダイアログが開いたとみなす。
+    setTimeout(function () {
+      d1.resolve();
+    }, 3000);
 
-  // 仕様で画像は非同期で読み込まれるので、画像読み込み完了まで待つ
-  var d2 = $.Deferred();
-  this.image = new Image();
-  this.image.src = this.options.itemUrl;
-  this.image.onload = function() { d2.resolve(); };
-  this.image.onerror = function() { d2.rejectWith(self, [ "failed to load image" ]); };
+    // 仕様で画像は非同期で読み込まれるので、画像読み込み完了まで待つ
+    var d2 = $.Deferred();
+    this.image = new Image();
+    this.image.src = this.options.itemUrl;
+    this.image.onload = function () {
+      d2.resolve();
+    };
+    this.image.onerror = function () {
+      d2.rejectWith(self, [ "failed to load image" ]);
+    };
 
-  // ダイアログが完全に開いて、かつ、画像の読み込みが完了したら、残りの初期化が可能となる。
-  $.when(d1.promise(), d2.promise())
-    .done(this.initializationComplete.bind(this))
-    .fail(function(msg) { self.$canvasContainer.html(msg); });
-}
-
-SS_FileView.HEX_DECIMAL = "0123456789abcdef";
-SS_FileView.CANVAS_SAFE_MARGIN = 10;
-SS_FileView.MIN_SCALE = 0.1;
-SS_FileView.MAX_SCALE = 2;
-SS_FileView.SCALE_STEPS = [ 0.1, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2.0 ];
-
-SS_FileView.listenTo = function(el, options) {
-  $(el).on("click", function(ev) {
-    SS_FileView.open(ev, options);
-  });
-};
-
-SS_FileView.renderFileView = function($el, options) {
-  $el.on("click", ".file-view a.thumb", function(ev) {
-    SS_FileView.open(ev, options);
-  });
-  $el.on("click", ".file-view .action-attach", function(ev) {
-    // 添付貼付
-    SS_FileView.pasteFile(ev, options);
-  });
-  $el.on("click", ".file-view .action-paste", function(ev) {
-    // 画像貼付
-    SS_FileView.pasteImage(ev, options);
-  });
-  $el.on("click", ".file-view .action-thumb", function(ev) {
-    // サムネイル貼付
-    SS_FileView.pasteThumbnail(ev, options);
-  });
-  $el.on("click", ".file-view .action-delete", function(ev) {
-    // 削除
-    SS_FileView.deleteFile(ev, options);
-  });
-};
-
-SS_FileView.open = function(ev, options) {
-  var $this = $(ev.currentTarget);
-  if ($this.find("img").length === 0) {
-    return true;
+    // ダイアログが完全に開いて、かつ、画像の読み込みが完了したら、残りの初期化が可能となる。
+    $.when(d1.promise(), d2.promise())
+      .done(this.initializationComplete.bind(this))
+      .fail(function (msg) {
+        self.$canvasContainer.html(msg);
+      });
   }
 
-  var path = $this.attr("href");
-  if (path.startsWith("/fs/")) {
-    if (options && options.viewPath) {
-      var $fileView = $this.closest(".file-view");
-      if ($fileView.length > 0) {
-        var fileId = $fileView.data("file-id");
-        if (fileId) {
-          path = options.viewPath.replace(":id", fileId);
+  SS_FileView.HEX_DECIMAL = "0123456789abcdef";
+  SS_FileView.CANVAS_SAFE_MARGIN = 10;
+  SS_FileView.MIN_SCALE = 0.1;
+  SS_FileView.MAX_SCALE = 2;
+  SS_FileView.SCALE_STEPS = [ 0.1, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2.0 ];
+
+  SS_FileView.listenTo = function (el, options) {
+    $(el).on("click", function (ev) {
+      SS_FileView.open(ev, options);
+    });
+  };
+
+  SS_FileView.renderFileView = function ($el, options) {
+    $el.on("click", ".file-view a.thumb", function (ev) {
+      SS_FileView.open(ev, options);
+    });
+    $el.on("click", ".file-view .action-attach", function (ev) {
+      // 添付貼付
+      SS_FileView.pasteFile(ev, options);
+    });
+    $el.on("click", ".file-view .action-paste", function (ev) {
+      // 画像貼付
+      SS_FileView.pasteImage(ev, options);
+    });
+    $el.on("click", ".file-view .action-thumb", function (ev) {
+      // サムネイル貼付
+      SS_FileView.pasteThumbnail(ev, options);
+    });
+    $el.on("click", ".file-view .action-delete", function (ev) {
+      // 削除
+      SS_FileView.deleteFile(ev, options);
+    });
+  };
+
+  SS_FileView.open = function (ev, options) {
+    var $this = $(ev.currentTarget);
+    if ($this.find("img").length === 0) {
+      return true;
+    }
+
+    var path = $this.attr("href");
+    if (path.startsWith("/fs/")) {
+      if (options && options.viewPath) {
+        var $fileView = $this.closest(".file-view");
+        if ($fileView.length > 0) {
+          var fileId = $fileView.data("file-id");
+          if (fileId) {
+            path = options.viewPath.replace(":id", fileId);
+          }
         }
       }
     }
-  }
-  if (path.startsWith("/fs/")) {
-    return true;
-  }
-
-  $.colorbox({
-    href: path,
-    width: "90%",
-    height: "90%",
-    fixed: true,
-    open: true,
-    onComplete: function() { $("#ss-file-view").trigger("ss:cboxCompleted"); }
-  });
-
-  ev.preventDefault();
-  return false;
-};
-
-SS_FileView.getContent = function() {
-  var editor = null;
-
-  if ((typeof tinymce) != "undefined") {
-    editor = tinymce.get(Cms_Form.editorId);
-    if (editor) {
-      return editor.getContent();
+    if (path.startsWith("/fs/")) {
+      return true;
     }
-  } else if ((typeof CKEDITOR) != "undefined") {
-    if (Cms_Form.editorId) {
-      editor = CKEDITOR.instances[Cms_Form.editorId];
+
+    $.colorbox({
+      href: path,
+      width: "90%",
+      height: "90%",
+      fixed: true,
+      open: true,
+      onComplete: function () {
+        $("#ss-file-view").trigger("ss:cboxCompleted");
+      }
+    });
+
+    ev.preventDefault();
+    return false;
+  };
+
+  SS_FileView.getContent = function () {
+    var editor = null;
+
+    if ((typeof tinymce) != "undefined") {
+      editor = tinymce.get(Cms_Form.editorId);
       if (editor) {
-        return editor.getData();
+        return editor.getContent();
+      }
+    } else if ((typeof CKEDITOR) != "undefined") {
+      if (Cms_Form.editorId) {
+        editor = CKEDITOR.instances[Cms_Form.editorId];
+        if (editor) {
+          return editor.getData();
+        }
       }
     }
+
+    return null;
   }
 
-  return null;
-}
-
-SS_FileView.insertContent = function(content) {
-  if ((typeof tinymce) != "undefined") {
-    tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, content);
-  } else if (typeof CKEDITOR != "undefined") {
-    CKEDITOR.instances[Cms_Form.editorId].insertHtml(content);
-  }
-};
-
-SS_FileView.pasteFile = function(ev, options) {
-  var $fileView = $(ev.currentTarget).closest(".file-view");
-  if (!$fileView[0]) {
-    return;
-  }
-
-  // link_to file.humanized_name, file.url, class: "icon-#{file.extname}"
-  var $content = $("<a/>", { href: $fileView.data("url"), class: "icon-" + $fileView.data("extname") })
-    .html($fileView.data("humanizedName"));
-
-  var insertContent;
-  if (options && options.insertContent) {
-    insertContent = options.insertContent;
-  } else {
-    insertContent = SS_FileView.insertContent;
-  }
-
-  insertContent($content.prop("outerHTML"));
-
-  ev.preventDefault();
-  return false;
-};
-
-SS_FileView.pasteImage = function(ev, options) {
-  var $fileView = $(ev.currentTarget).closest(".file-view");
-  if (!$fileView[0]) {
-    return;
-  }
-
-  // image_tag file.url, alt: file.name
-  var $content = $("<img/>", { src: $fileView.data("url"), alt: $fileView.data("name") });
-
-  var insertContent;
-  if (options && options.insertContent) {
-    insertContent = options.insertContent;
-  } else {
-    insertContent = SS_FileView.insertContent;
-  }
-
-  insertContent($content.prop("outerHTML"));
-
-  ev.preventDefault();
-  return false;
-};
-
-SS_FileView.pasteThumbnail = function(ev, options) {
-  var $fileView = $(ev.currentTarget).closest(".file-view");
-  if (!$fileView[0]) {
-    return;
-  }
-
-  // link_to(file.url, alt: file.name, class: "ajax-box") { image_tag(file.thumb_url, alt: file.name) }
-  var $img = $("<img/>", { src: $fileView.data("thumbUrl"), alt: $fileView.data("name") });
-  var $content = $("<a/>", { href: $fileView.data("url"), alt: $fileView.data("name"), class: "ajax-box" }).html($img);
-
-  var insertContent;
-  if (options && options.insertContent) {
-    insertContent = options.insertContent;
-  } else {
-    insertContent = SS_FileView.insertContent;
-  }
-
-  insertContent($content.prop("outerHTML"));
-
-  ev.preventDefault();
-  return false;
-};
-
-SS_FileView.deleteFile = function(ev, options) {
-  var $fileView = $(ev.currentTarget).closest(".file-view");
-  if (!$fileView[0]) {
-    return;
-  }
-
-  var path = $fileView.data("url").replace(/\/[^/]*$/, "/");
-
-  var getContent;
-  if (options && options.getContent) {
-    getContent = options.getContent;
-  } else {
-    getContent = SS_FileView.getContent
-  }
-
-  var data = getContent();
-  var inUse = false;
-  if (data && data.indexOf(path) > 0) {
-    inUse = true;
-  }
-  var messge;
-  if (inUse && options && options.inUseConfirmation) {
-    messge = options.inUseConfirmation;
-  } else if (options && options.confirmationOnDelete) {
-    messge = options.confirmationOnDelete;
-  }
-  if (messge) {
-    if (!confirm(messge)) {
-      ev.preventDefault();
-      return false;
+  SS_FileView.insertContent = function (content) {
+    if ((typeof tinymce) != "undefined") {
+      tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, content);
+    } else if (typeof CKEDITOR != "undefined") {
+      CKEDITOR.instances[Cms_Form.editorId].insertHtml(content);
     }
-  }
+  };
 
-  $fileView.remove();
-
-  ev.preventDefault();
-  return false;
-};
-
-SS_FileView.toHex = function(n) {
-  if (isNaN(n)) {
-    return "00";
-  }
-
-  n = Math.max(0, Math.min(n, 255));
-  return SS_FileView.HEX_DECIMAL.charAt((n - n % 16) / 16) + SS_FileView.HEX_DECIMAL.charAt(n % 16);
-};
-
-SS_FileView.calcPositionAndScale = function(image, canvas) {
-  var position = 0;
-  var scale = 1;
-
-  if (image > canvas) {
-    position = 0;
-    scale = canvas / image;
-    if (scale < SS_FileView.MIN_SCALE) {
-      scale = SS_FileView.MIN_SCALE;
+  SS_FileView.pasteFile = function (ev, options) {
+    var $fileView = $(ev.currentTarget).closest(".file-view");
+    if (!$fileView[0]) {
+      return;
     }
-  } else {
-    position = (canvas - image) / 2;
-    scale = 1;
-  }
 
-  return { position: position, scale: scale };
-};
+    // link_to file.humanized_name, file.url, class: "icon-#{file.extname}"
+    var $content = $("<a/>", {href: $fileView.data("url"), class: "icon-" + $fileView.data("extname")})
+      .html($fileView.data("humanizedName"));
 
-SS_FileView.findScaleStepIndex = function(scale) {
-  var found = -1;
-  if (scale < SS_FileView.SCALE_STEPS[0]) {
-    found = 0;
-  } else if (scale > SS_FileView.SCALE_STEPS[SS_FileView.SCALE_STEPS.length - 1]) {
-    found = SS_FileView.SCALE_STEPS.length - 1;
-  } else {
-    for (var i = 0; i < SS_FileView.SCALE_STEPS.length - 1; i += 1) {
-      if (SS_FileView.SCALE_STEPS[i] <= scale && scale < SS_FileView.SCALE_STEPS[i + 1]) {
-        found = i;
-        break;
-      }
-      if (found === -1) {
-        found = SS_FileView.SCALE_STEPS.length - 1;
+    var insertContent;
+    if (options && options.insertContent) {
+      insertContent = options.insertContent;
+    } else {
+      insertContent = SS_FileView.insertContent;
+    }
+
+    insertContent($content.prop("outerHTML"));
+
+    ev.preventDefault();
+    return false;
+  };
+
+  SS_FileView.pasteImage = function (ev, options) {
+    var $fileView = $(ev.currentTarget).closest(".file-view");
+    if (!$fileView[0]) {
+      return;
+    }
+
+    // image_tag file.url, alt: file.name
+    var $content = $("<img/>", {src: $fileView.data("url"), alt: $fileView.data("name")});
+
+    var insertContent;
+    if (options && options.insertContent) {
+      insertContent = options.insertContent;
+    } else {
+      insertContent = SS_FileView.insertContent;
+    }
+
+    insertContent($content.prop("outerHTML"));
+
+    ev.preventDefault();
+    return false;
+  };
+
+  SS_FileView.pasteThumbnail = function (ev, options) {
+    var $fileView = $(ev.currentTarget).closest(".file-view");
+    if (!$fileView[0]) {
+      return;
+    }
+
+    // link_to(file.url, alt: file.name, class: "ajax-box") { image_tag(file.thumb_url, alt: file.name) }
+    var $img = $("<img/>", {src: $fileView.data("thumbUrl"), alt: $fileView.data("name")});
+    var $content = $("<a/>", {href: $fileView.data("url"), alt: $fileView.data("name"), class: "ajax-box"}).html($img);
+
+    var insertContent;
+    if (options && options.insertContent) {
+      insertContent = options.insertContent;
+    } else {
+      insertContent = SS_FileView.insertContent;
+    }
+
+    insertContent($content.prop("outerHTML"));
+
+    ev.preventDefault();
+    return false;
+  };
+
+  SS_FileView.deleteFile = function (ev, options) {
+    var $fileView = $(ev.currentTarget).closest(".file-view");
+    if (!$fileView[0]) {
+      return;
+    }
+
+    var path = $fileView.data("url").replace(/\/[^/]*$/, "/");
+
+    var getContent;
+    if (options && options.getContent) {
+      getContent = options.getContent;
+    } else {
+      getContent = SS_FileView.getContent
+    }
+
+    var data = getContent();
+    var inUse = false;
+    if (data && data.indexOf(path) > 0) {
+      inUse = true;
+    }
+    var messge;
+    if (inUse && options && options.inUseConfirmation) {
+      messge = options.inUseConfirmation;
+    } else if (options && options.confirmationOnDelete) {
+      messge = options.confirmationOnDelete;
+    }
+    if (messge) {
+      if (!confirm(messge)) {
+        ev.preventDefault();
+        return false;
       }
     }
-  }
 
-  return found;
-};
+    $fileView.remove();
 
-SS_FileView.prototype.initializationComplete = function() {
-  var self = this;
-  var canvasWidth = self.$el.width();
+    ev.preventDefault();
+    return false;
+  };
 
-  var $ajaxBox = $("#ajax-box");
-  var canvasHeight = $("#cboxLoadedContent").height();
-  // minus padding
-  canvasHeight -= $ajaxBox.outerHeight(true) - $ajaxBox.height();
-  // minus toolbar height
-  canvasHeight -= Math.ceil(self.$canvasContainer.offset().top) - Math.floor(self.$el.offset().top);
-  canvasHeight -= SS_FileView.CANVAS_SAFE_MARGIN;
-
-  self.canvas.width = canvasWidth;
-  self.canvas.height = canvasHeight;
-
-  var x = SS_FileView.calcPositionAndScale(self.image.width, canvasWidth);
-  var y = SS_FileView.calcPositionAndScale(self.image.height, canvasHeight);
-
-  if (y.scale > x.scale) {
-    self.scale = x.scale;
-    self.dragInfo.diff.x = x.position;
-    self.dragInfo.diff.y = ((canvasHeight - self.image.height * self.scale) / 2) / self.scale;
-    if (self.dragInfo.diff.y < 0) {
-      self.dragInfo.diff.y = 0;
+  SS_FileView.toHex = function (n) {
+    if (isNaN(n)) {
+      return "00";
     }
-  } else {
-    self.scale = y.scale;
-    self.dragInfo.diff.x = ((canvasWidth - self.image.width * self.scale) / 2) / self.scale;
-    if (self.dragInfo.diff.x < 0) {
-      self.dragInfo.diff.x = 0;
+
+    n = Math.max(0, Math.min(n, 255));
+    return SS_FileView.HEX_DECIMAL.charAt((n - n % 16) / 16) + SS_FileView.HEX_DECIMAL.charAt(n % 16);
+  };
+
+  SS_FileView.calcPositionAndScale = function (image, canvas) {
+    var position = 0;
+    var scale = 1;
+
+    if (image > canvas) {
+      position = 0;
+      scale = canvas / image;
+      if (scale < SS_FileView.MIN_SCALE) {
+        scale = SS_FileView.MIN_SCALE;
+      }
+    } else {
+      position = (canvas - image) / 2;
+      scale = 1;
     }
-    self.dragInfo.diff.y = y.position;
-  }
-  self.dragInfo.canvas.x = self.dragInfo.diff.x;
-  self.dragInfo.canvas.y = self.dragInfo.diff.y;
-  self.redrawImage();
 
-  self.$slider.prop({ value: self.scale * 100 });
+    return {position: position, scale: scale};
+  };
 
-  self.$el.find(".btn-zoom-out").on("click", self.prevScale.bind(self));
-  self.$el.find(".btn-zoom-in").on("click", self.nextScale.bind(self));
+  SS_FileView.findScaleStepIndex = function (scale) {
+    var found = -1;
+    if (scale < SS_FileView.SCALE_STEPS[0]) {
+      found = 0;
+    } else if (scale > SS_FileView.SCALE_STEPS[SS_FileView.SCALE_STEPS.length - 1]) {
+      found = SS_FileView.SCALE_STEPS.length - 1;
+    } else {
+      for (var i = 0; i < SS_FileView.SCALE_STEPS.length - 1; i += 1) {
+        if (SS_FileView.SCALE_STEPS[i] <= scale && scale < SS_FileView.SCALE_STEPS[i + 1]) {
+          found = i;
+          break;
+        }
+        if (found === -1) {
+          found = SS_FileView.SCALE_STEPS.length - 1;
+        }
+      }
+    }
 
-  var $foregroundColorEl = self.$el.find("[name='foreground-color']");
-  if ($foregroundColorEl.attr("aria-busy")) {
-    $foregroundColorEl.one("ss:colorPickerReady", function() {
+    return found;
+  };
+
+  SS_FileView.prototype.initializationComplete = function () {
+    var self = this;
+    var canvasWidth = self.$el.width();
+
+    var $ajaxBox = $("#ajax-box");
+    var canvasHeight = $("#cboxLoadedContent").height();
+    // minus padding
+    canvasHeight -= $ajaxBox.outerHeight(true) - $ajaxBox.height();
+    // minus toolbar height
+    canvasHeight -= Math.ceil(self.$canvasContainer.offset().top) - Math.floor(self.$el.offset().top);
+    canvasHeight -= SS_FileView.CANVAS_SAFE_MARGIN;
+
+    self.canvas.width = canvasWidth;
+    self.canvas.height = canvasHeight;
+
+    var x = SS_FileView.calcPositionAndScale(self.image.width, canvasWidth);
+    var y = SS_FileView.calcPositionAndScale(self.image.height, canvasHeight);
+
+    if (y.scale > x.scale) {
+      self.scale = x.scale;
+      self.dragInfo.diff.x = x.position;
+      self.dragInfo.diff.y = ((canvasHeight - self.image.height * self.scale) / 2) / self.scale;
+      if (self.dragInfo.diff.y < 0) {
+        self.dragInfo.diff.y = 0;
+      }
+    } else {
+      self.scale = y.scale;
+      self.dragInfo.diff.x = ((canvasWidth - self.image.width * self.scale) / 2) / self.scale;
+      if (self.dragInfo.diff.x < 0) {
+        self.dragInfo.diff.x = 0;
+      }
+      self.dragInfo.diff.y = y.position;
+    }
+    self.dragInfo.canvas.x = self.dragInfo.diff.x;
+    self.dragInfo.canvas.y = self.dragInfo.diff.y;
+    self.redrawImage();
+
+    self.$slider.prop({value: self.scale * 100});
+
+    self.$el.find(".btn-zoom-out").on("click", self.prevScale.bind(self));
+    self.$el.find(".btn-zoom-in").on("click", self.nextScale.bind(self));
+
+    var $foregroundColorEl = self.$el.find("[name='foreground-color']");
+    if ($foregroundColorEl.attr("aria-busy")) {
+      $foregroundColorEl.one("ss:colorPickerReady", function () {
+        $foregroundColorEl.minicolors("value", self.rgbAt(canvasWidth / 2, canvasHeight / 2));
+      });
+    } else {
       $foregroundColorEl.minicolors("value", self.rgbAt(canvasWidth / 2, canvasHeight / 2));
-    });
-  } else {
-    $foregroundColorEl.minicolors("value", self.rgbAt(canvasWidth / 2, canvasHeight / 2));
-  }
+    }
 
-  var $backgroundColorEl = self.$el.find("[name='background-color']");
-  if ($backgroundColorEl.attr("aria-busy")) {
-    $backgroundColorEl.one("ss:colorPickerReady", function() {
+    var $backgroundColorEl = self.$el.find("[name='background-color']");
+    if ($backgroundColorEl.attr("aria-busy")) {
+      $backgroundColorEl.one("ss:colorPickerReady", function () {
+        $backgroundColorEl.minicolors("value", "#ffffff");
+      });
+    } else {
       $backgroundColorEl.minicolors("value", "#ffffff");
+    }
+    self.calculateContrastRatio();
+
+    self.$el.find(".btn-contrast-ratio").on("click", self.calculateContrastRatio.bind(self));
+
+    self.canvas.addEventListener("click", self.pickUpColor.bind(self));
+    self.canvas.addEventListener("mousedown", self.dragStart.bind(self));
+    self.canvas.addEventListener("mousemove", self.dragging.bind(self));
+    self.canvas.addEventListener("mouseup", self.dragEnd.bind(self));
+
+    self.$el.find(".btn-color-picker").on("click", self.pickUpColorStart.bind(self));
+
+    self.$el.find(".canvas-container").html(self.canvas);
+  };
+
+  SS_FileView.prototype.calculateContrastRatio = function () {
+    var foregroundColor = this.$el.find("#foreground-color").minicolors("value");
+    var backgroundColor = this.$el.find("#background-color").minicolors("value");
+    if (!foregroundColor || !backgroundColor) {
+      return;
+    }
+
+    this.$el.find(".contrast-ratio").html(SS.loading);
+    $.ajax({
+      url: this.options.contrastRatioPath,
+      type: 'GET',
+      data: {f: foregroundColor, b: backgroundColor, _: Date.now()}
+    }).done(function (data) {
+      $(".contrast-ratio").html(data.contrast_ratio_human);
+    }).fail(function (xhr, status, error) {
+      $(".contrast-ratio").html(error);
     });
-  } else {
-    $backgroundColorEl.minicolors("value", "#ffffff");
-  }
-  self.calculateContrastRatio();
+  };
 
-  self.$el.find(".btn-contrast-ratio").on("click", self.calculateContrastRatio.bind(self));
+  SS_FileView.prototype.redrawImage = function () {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.scale(this.scale, this.scale);
+    this.ctx.drawImage(this.image, this.dragInfo.diff.x, this.dragInfo.diff.y);
+    // reset scale
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+  };
 
-  self.canvas.addEventListener("click", self.pickUpColor.bind(self));
-  self.canvas.addEventListener("mousedown", self.dragStart.bind(self));
-  self.canvas.addEventListener("mousemove", self.dragging.bind(self));
-  self.canvas.addEventListener("mouseup", self.dragEnd.bind(self));
+  SS_FileView.prototype.zooming = function (ev) {
+    this.scale = ev.target.value / 100.0;
 
-  self.$el.find(".btn-color-picker").on("click", self.pickUpColorStart.bind(self));
+    if (this.$sliderTimeoutId) {
+      clearTimeout(this.$sliderTimeoutId);
+    }
 
-  self.$el.find(".canvas-container").html(self.canvas);
-};
+    this.$sliderTimeoutId = setTimeout(this.zoomCommitted.bind(this), 10);
+  };
 
-SS_FileView.prototype.calculateContrastRatio = function() {
-  var foregroundColor = this.$el.find("#foreground-color").minicolors("value");
-  var backgroundColor = this.$el.find("#background-color").minicolors("value");
-  if (!foregroundColor || !backgroundColor) {
-    return;
-  }
+  SS_FileView.prototype.zoomChanged = function (ev) {
+    this.scale = ev.target.value / 100.0;
+    if (this.$sliderTimeoutId) {
+      clearTimeout(this.$sliderTimeoutId);
+    }
+    this.zoomCommitted();
+  };
 
-  this.$el.find(".contrast-ratio").html(SS.loading);
-  $.ajax({
-    url: this.options.contrastRatioPath,
-    type: 'GET',
-    data: { f: foregroundColor, b: backgroundColor, _: Date.now() }
-  }).done(function(data) {
-    $(".contrast-ratio").html(data.contrast_ratio_human);
-  }).fail(function(xhr, status, error) {
-    $(".contrast-ratio").html(error);
-  });
-};
+  SS_FileView.prototype.zoomCommitted = function () {
+    this.$sliderTimeoutId = null;
+    this.redrawImage();
+  };
 
-SS_FileView.prototype.redrawImage = function() {
-  this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  this.ctx.scale(this.scale, this.scale);
-  this.ctx.drawImage(this.image, this.dragInfo.diff.x, this.dragInfo.diff.y);
-  // reset scale
-  this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-};
+  SS_FileView.prototype.nextScale = function (_ev) {
+    var current = SS_FileView.findScaleStepIndex(this.scale);
+    var next = current + 1;
+    if (next >= SS_FileView.SCALE_STEPS.length) {
+      next = SS_FileView.SCALE_STEPS.length - 1;
+    }
 
-SS_FileView.prototype.zooming = function(ev) {
-  this.scale = ev.target.value / 100.0;
+    this.scale = SS_FileView.SCALE_STEPS[next];
+    this.$slider.prop({value: this.scale * 100});
 
-  if (this.$sliderTimeoutId) {
-    clearTimeout(this.$sliderTimeoutId);
-  }
+    this.redrawImage();
+  };
 
-  this.$sliderTimeoutId = setTimeout(this.zoomCommitted.bind(this), 10);
-};
+  SS_FileView.prototype.prevScale = function (_ev) {
+    var prev = SS_FileView.findScaleStepIndex(this.scale);
+    if (SS_FileView.SCALE_STEPS[prev] === this.scale) {
+      prev -= 1;
+    }
+    if (prev < 0) {
+      prev = 0;
+    }
 
-SS_FileView.prototype.zoomChanged = function(ev) {
-  this.scale = ev.target.value / 100.0;
-  if (this.$sliderTimeoutId) {
-    clearTimeout(this.$sliderTimeoutId);
-  }
-  this.zoomCommitted();
-};
+    this.scale = SS_FileView.SCALE_STEPS[prev];
+    this.$slider.prop({value: this.scale * 100});
 
-SS_FileView.prototype.zoomCommitted = function() {
-  this.$sliderTimeoutId = null;
-  this.redrawImage();
-};
+    this.redrawImage();
+  };
 
-SS_FileView.prototype.nextScale = function(_ev) {
-  var current = SS_FileView.findScaleStepIndex(this.scale);
-  var next = current + 1;
-  if (next >= SS_FileView.SCALE_STEPS.length) {
-    next = SS_FileView.SCALE_STEPS.length - 1;
-  }
+  SS_FileView.prototype.dragStart = function (ev) {
+    if (this.isPickingUpColor) {
+      return;
+    }
 
-  this.scale = SS_FileView.SCALE_STEPS[next];
-  this.$slider.prop({ value: this.scale * 100 });
+    this.dragInfo.isDragging = true;
+    this.dragInfo.start.x = ev.clientX;
+    this.dragInfo.start.y = ev.clientY;
 
-  this.redrawImage();
-};
+    this.canvas.style.cursor = "move";
+  };
 
-SS_FileView.prototype.prevScale = function(_ev) {
-  var prev = SS_FileView.findScaleStepIndex(this.scale);
-  if (SS_FileView.SCALE_STEPS[prev] === this.scale) {
-    prev -= 1;
-  }
-  if (prev < 0) {
-    prev = 0;
-  }
+  SS_FileView.prototype.dragging = function (ev) {
+    if (!this.dragInfo.isDragging) {
+      return;
+    }
 
-  this.scale = SS_FileView.SCALE_STEPS[prev];
-  this.$slider.prop({ value: this.scale * 100 });
+    this.dragInfo.diff.x = this.dragInfo.canvas.x + (ev.clientX - this.dragInfo.start.x) / this.scale;
+    this.dragInfo.diff.y = this.dragInfo.canvas.y + (ev.clientY - this.dragInfo.start.y) / this.scale;
+    this.redrawImage();
+  };
 
-  this.redrawImage();
-};
+  SS_FileView.prototype.dragEnd = function (_ev) {
+    if (!this.dragInfo.isDragging) {
+      return;
+    }
 
-SS_FileView.prototype.dragStart = function(ev) {
-  if (this.isPickingUpColor) {
-    return;
-  }
-
-  this.dragInfo.isDragging = true;
-  this.dragInfo.start.x = ev.clientX;
-  this.dragInfo.start.y = ev.clientY;
-
-  this.canvas.style.cursor = "move";
-};
-
-SS_FileView.prototype.dragging = function(ev) {
-  if (!this.dragInfo.isDragging) {
-    return;
-  }
-
-  this.dragInfo.diff.x = this.dragInfo.canvas.x + (ev.clientX - this.dragInfo.start.x) / this.scale;
-  this.dragInfo.diff.y = this.dragInfo.canvas.y + (ev.clientY - this.dragInfo.start.y) / this.scale;
-  this.redrawImage();
-};
-
-SS_FileView.prototype.dragEnd = function(_ev) {
-  if (!this.dragInfo.isDragging) {
-    return;
-  }
-
-  this.canvas.style.cursor = "auto";
-
-  this.dragInfo.isDragging = false;
-  this.dragInfo.canvas.x = this.dragInfo.diff.x;
-  this.dragInfo.canvas.y = this.dragInfo.diff.y;
-};
-
-SS_FileView.prototype.pickUpColorStart = function(ev) {
-  var $target = $(ev.currentTarget);
-  if ($target.hasClass("btn-active")) {
-    // cancel picking
-    $target.removeClass("btn-active");
-    this.isPickingUpColor = false;
     this.canvas.style.cursor = "auto";
-  } else {
-    this.$el.find(".btn-color-picker.btn-active").removeClass("btn-active");
 
-    this.isPickingUpColor = true;
-    $target.addClass("btn-active");
-    this.canvas.style.cursor = "crosshair";
-  }
-};
+    this.dragInfo.isDragging = false;
+    this.dragInfo.canvas.x = this.dragInfo.diff.x;
+    this.dragInfo.canvas.y = this.dragInfo.diff.y;
+  };
 
-SS_FileView.prototype.pickUpColor = function(ev) {
-  if (!this.isPickingUpColor) {
-    return;
-  }
+  SS_FileView.prototype.pickUpColorStart = function (ev) {
+    var $target = $(ev.currentTarget);
+    if ($target.hasClass("btn-active")) {
+      // cancel picking
+      $target.removeClass("btn-active");
+      this.isPickingUpColor = false;
+      this.canvas.style.cursor = "auto";
+    } else {
+      this.$el.find(".btn-color-picker.btn-active").removeClass("btn-active");
 
-  var $jsColor = this.$el.find(".btn-color-picker.btn-active").closest(".btn-group").find(".js-color");
-  if ($jsColor[0]) {
-    var x = ev.offsetX;
-    var y = ev.offsetY;
-    if (x < 0) {
-      x = 0;
+      this.isPickingUpColor = true;
+      $target.addClass("btn-active");
+      this.canvas.style.cursor = "crosshair";
     }
-    if (x >= this.canvas.width) {
-      x = this.canvas.width - 1;
-    }
-    if (y < 0) {
-      y = 0;
-    }
-    if (y >= this.canvas.height) {
-      y = this.canvas.height - 1;
+  };
+
+  SS_FileView.prototype.pickUpColor = function (ev) {
+    if (!this.isPickingUpColor) {
+      return;
     }
 
-    var rgb = this.rgbAt(x, y);
-    var event = new CustomEvent("ss:colorchange", { detail: { rgb } });
-    $jsColor[0].dispatchEvent(event);
-  }
+    var $jsColor = this.$el.find(".btn-color-picker.btn-active").closest(".btn-group").find(".js-color");
+    if ($jsColor[0]) {
+      var x = ev.offsetX;
+      var y = ev.offsetY;
+      if (x < 0) {
+        x = 0;
+      }
+      if (x >= this.canvas.width) {
+        x = this.canvas.width - 1;
+      }
+      if (y < 0) {
+        y = 0;
+      }
+      if (y >= this.canvas.height) {
+        y = this.canvas.height - 1;
+      }
 
-  this.canvas.style.cursor = "auto";
-  this.$el.find(".btn-color-picker").removeClass("btn-active");
-  this.isPickingUpColor = false;
+      var rgb = this.rgbAt(x, y);
+      var event = new CustomEvent("ss:colorchange", {detail: {rgb}});
+      $jsColor[0].dispatchEvent(event);
+    }
 
-  this.calculateContrastRatio();
-};
+    this.canvas.style.cursor = "auto";
+    this.$el.find(".btn-color-picker").removeClass("btn-active");
+    this.isPickingUpColor = false;
 
-SS_FileView.prototype.rgbAt = function(x, y) {
-  this.ctx.scale(this.scale, this.scale);
-  var pixels = this.ctx.getImageData(x, y, 1, 1).data;
-  // reset scale
-  this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    this.calculateContrastRatio();
+  };
 
-  var red = pixels[0];
-  var green = pixels[1];
-  var blue = pixels[2];
-  var alpha = pixels[3];
+  SS_FileView.prototype.rgbAt = function (x, y) {
+    this.ctx.scale(this.scale, this.scale);
+    var pixels = this.ctx.getImageData(x, y, 1, 1).data;
+    // reset scale
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-  if (alpha === 0) {
-    return "#ffffff";
-  }
+    var red = pixels[0];
+    var green = pixels[1];
+    var blue = pixels[2];
+    var alpha = pixels[3];
 
-  red = SS_FileView.toHex(red);
-  green = SS_FileView.toHex(green);
-  blue = SS_FileView.toHex(blue);
-  return "#" + red + green + blue;
-};
+    if (alpha === 0) {
+      return "#ffffff";
+    }
+
+    red = SS_FileView.toHex(red);
+    green = SS_FileView.toHex(green);
+    blue = SS_FileView.toHex(blue);
+    return "#" + red + green + blue;
+  };
+
+  return SS_FileView;
+})();

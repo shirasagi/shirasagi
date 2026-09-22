@@ -1,4 +1,4 @@
-this.Event_Form = (function () {
+globalThis.Event_Form = (function () {
   function Event_Form(el, options) {
     this.$el = $(el);
     this.options = options;

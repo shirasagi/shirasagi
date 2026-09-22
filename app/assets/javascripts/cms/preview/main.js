@@ -17,7 +17,7 @@ import 'mdn-polyfills/String.prototype.repeat.js';
 import 'mdn-polyfills/String.prototype.startsWith.js';
 import 'mdn-polyfills/String.prototype.trim.js';
 
-SS_Preview = (function () {
+globalThis.SS_Preview = (function () {
   function SS_Preview(el) {
     this.el = el;
     this.inplaceMode = false;

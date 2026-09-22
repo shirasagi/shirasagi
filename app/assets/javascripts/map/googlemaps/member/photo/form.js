@@ -1,6 +1,6 @@
 import 'exif-js/exif.js';
 
-this.Member_Photo_Form = (function () {
+globalThis.Member_Photo_Form = (function () {
   function Member_Photo_Form() {
   }
 

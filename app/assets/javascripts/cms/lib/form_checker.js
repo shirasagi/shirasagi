@@ -1,4 +1,4 @@
-this.Form_Checker = (function () {
+globalThis.Form_Checker = (function () {
   function ResultBox(form) {
     this.$el = null;
     this.$elBody = null;

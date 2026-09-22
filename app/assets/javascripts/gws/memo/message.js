@@ -1,4 +1,4 @@
-this.Gws_Memo_Message = (function () {
+globalThis.Gws_Memo_Message = (function () {
   function Gws_Memo_Message() {
   }
 
