@@ -21,12 +21,18 @@ module SS
     end
 
     def wait_for_download(pattern, extname: nil)
+      matchers = []
+
       if pattern.is_a?(Regexp)
-        regexp_pattern = pattern
-      elsif pattern.is_a?(String) && pattern.present?
-        regexp_pattern = /#{Regexp.escape(pattern)}/
+        matchers << proc { |file| ::File.basename(file) =~ pattern }
+      elsif pattern.is_a?(String)
+        matchers << proc { |file| ::File.basename(file).include?(pattern) }
       else
-        raise "wait_for_download invalid pattern"
+        raise "wait_for_download : invalid pattern"
+      end
+
+      if extname.present?
+        matchers << proc { |file| ::File.extname(file) == extname }
       end
 
       clear_downloads
@@ -37,18 +43,14 @@ module SS
       ::Timeout.timeout(TIMEOUT) do
         loop do
           @downloaded_path = downloads.find do |file|
-            if extname
-              ::File.basename(file) =~ regexp_pattern && ::File.extname(file) == extname
-            else
-              ::File.basename(file) =~ regexp_pattern
-            end
+            matchers.all? { |proc| proc.call(file) }
           end
           return @downloaded_path if @downloaded_path
           sleep 0.1
         end
       end
     rescue ::Timeout::Error
-      raise ::Timeout::Error, "wait_for_download timeout(#{TIMEOUT}): #{[pattern, extname].join(", ")}"
+      raise ::Timeout::Error, "wait_for_download : timeout(#{TIMEOUT}) with #{[pattern, extname].join(", ")}"
     end
 
     def clear_downloads
