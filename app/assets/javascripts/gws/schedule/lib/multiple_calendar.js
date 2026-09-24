@@ -1,3 +1,5 @@
+import { Calendar } from 'fullcalendar'
+
 SS.ready(function() {
   function Gws_Schedule_Multiple_Calendar() {
   }
@@ -27,7 +29,7 @@ SS.ready(function() {
     delete params.tapMenu
 
     var calendarEl = document.querySelector(selector);
-    var calendar = new FullCalendar.Calendar(calendarEl, params);
+    var calendar = new Calendar(calendarEl, params);
     calendar.render();
     calendarEl.calendar = calendar;
     Gws_Schedule_Multiple_Calendar.controller = calendar;
@@ -97,7 +99,7 @@ SS.ready(function() {
     // And a calendar is individually rendered from top to bottom.
     setTimeout(function () {
       var calendarEl = document.querySelector(selector);
-      var calendar = new FullCalendar.Calendar(calendarEl, params);
+      var calendar = new Calendar(calendarEl, params);
       calendar.render();
       calendarEl.calendar = calendar;
 

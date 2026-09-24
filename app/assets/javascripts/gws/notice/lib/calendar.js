@@ -1,14 +1,11 @@
 import tippy from 'tippy.js';
+import { Calendar } from 'fullcalendar'
 
-SS.ready(function() {
+(function() {
   function Gws_Notice_Calendar() {
   }
 
   Gws_Notice_Calendar.calendar = null;
-
-  Gws_Notice_Calendar.messages = {
-    noPlan: i18next.t("gws/schedule.no_plan")
-  };
 
   Gws_Notice_Calendar.render = function (selector, opts, init) {
     var params;
@@ -42,7 +39,7 @@ SS.ready(function() {
     delete params.useWorkload;
 
     var calendarEl = document.querySelector(selector);
-    var calendar = new FullCalendar.Calendar(calendarEl, params);
+    var calendar = new Calendar(calendarEl, params);
     calendar.render();
     calendarEl.calendar = calendar;
 
@@ -296,4 +293,4 @@ SS.ready(function() {
   };
 
   window.Gws_Notice_Calendar = Gws_Notice_Calendar;
-});
+})();
