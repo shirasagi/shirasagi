@@ -1,4 +1,5 @@
 import './lib/jquery';
+import 'jquery-migrate/src/migratemute.js'
 import 'jquery-migrate';
 import 'jquery-ujs';
 import 'jquery-ui';
