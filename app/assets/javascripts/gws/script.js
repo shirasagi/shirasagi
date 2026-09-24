@@ -1,5 +1,4 @@
 import 'sprintf-js/dist/sprintf.min.js';
-import 'dsmorse-gridster';
 import './lib/category';
 import './lib/tab';
 import './lib/popup';

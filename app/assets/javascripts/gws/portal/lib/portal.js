@@ -1,3 +1,5 @@
+import Gridster from 'dsmorse-gridster';
+
 globalThis.Gws_Portal = (function () {
   function Gws_Portal(selector, settings) {
     var options = {
@@ -21,7 +23,7 @@ globalThis.Gws_Portal = (function () {
     }
 
     this.el = $(selector);
-    this.gs = this.el.find("ul.portlets").gridster(options).data('gridster');
+    this.gs = new Gridster(this.el.find("ul.portlets"), options);
   }
 
   Gws_Portal.prototype.addItems = function (items) {
