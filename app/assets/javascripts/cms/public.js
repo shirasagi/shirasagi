@@ -2,7 +2,7 @@ import 'jquery';
 import 'jquery-migrate/src/migratemute.js';
 import 'jquery-migrate/dist/jquery-migrate.js';
 import 'jquery-ujs';
-import 'js-cookie';
+import Cookies from 'js-cookie';
 import 'jquery-form/src/jquery.form.js';
 import 'jquery-datetimepicker/build/jquery.datetimepicker.full.js';
 import 'crypto-js/crypto-js.js';

@@ -1,3 +1,5 @@
+import Cookies from 'js-cookie';
+
 globalThis.Gws_SearchForm = (function () {
   function Gws_SearchForm(el) {
     this.$el = $(el);

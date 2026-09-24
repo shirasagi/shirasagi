@@ -1,3 +1,5 @@
+import Cookies from 'js-cookie';
+
 globalThis.SS_Mobile = (function () {
   function SS_Mobile() {
   }

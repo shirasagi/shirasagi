@@ -2,7 +2,7 @@ import './lib/jquery';
 import 'jquery-migrate';
 import 'jquery-ujs';
 import 'jquery-ui';
-import 'js-cookie';
+import Cookies from 'js-cookie';
 import 'jquery-form';
 import 'jquery-datetimepicker/build/jquery.datetimepicker.full.js';
 import 'multiselect';

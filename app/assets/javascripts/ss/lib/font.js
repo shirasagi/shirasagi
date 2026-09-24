@@ -1,3 +1,5 @@
+import Cookies from 'js-cookie';
+
 globalThis.SS_Font = (function () {
   function SS_Font() {
   }
