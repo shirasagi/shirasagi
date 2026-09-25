@@ -185,16 +185,20 @@ SS.ready(function() {
           requestAnimationFrame(function() {
             var attendance, todo;
             todo = $('.fc .fc-withTodo-button')[0];
-            if (todo.classList.contains('fc-state-active')) {
-              $('.fc .fc-event-todo').show();
-            } else {
-              $('.fc .fc-event-todo').hide();
+            if (todo) {
+              if (todo.classList.contains('fc-state-active')) {
+                $('.fc .fc-event-todo').show();
+              } else {
+                $('.fc .fc-event-todo').hide();
+              }
             }
             attendance = $('.fc .fc-withAbsence-button')[0];
-            if (attendance.classList.contains('fc-state-active')) {
-              $('.fc .fc-event-user-attendance-absence').removeClass('hide');
-            } else {
-              $('.fc .fc-event-user-attendance-absence').addClass('hide');
+            if (attendance) {
+              if (attendance.classList.contains('fc-state-active')) {
+                $('.fc .fc-event-user-attendance-absence').removeClass('hide');
+              } else {
+                $('.fc .fc-event-user-attendance-absence').addClass('hide');
+              }
             }
             $(window).trigger('resize');
           });
