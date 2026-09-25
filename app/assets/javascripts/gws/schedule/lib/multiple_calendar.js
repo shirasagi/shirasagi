@@ -85,6 +85,7 @@ SS.ready(function() {
       params["initialView"] = init["view"];
     }
     if (Gws_Schedule_Multiple_Calendar.controller) {
+      params["initialDate"] = Gws_Schedule_Multiple_Calendar.controller.getDate();
       params["initialView"] = Gws_Schedule_Multiple_Calendar.controller.view.type;
     }
 
@@ -183,17 +184,17 @@ SS.ready(function() {
         if (!isLoading) {
           requestAnimationFrame(function() {
             var attendance, todo;
-            todo = $('.fc .fc-withTodo-button');
-            if (todo.length) {
-              if (todo.hasClass('fc-state-active')) {
+            todo = $('.fc .fc-withTodo-button')[0];
+            if (todo) {
+              if (todo.classList.contains('fc-state-active')) {
                 $('.fc .fc-event-todo').show();
               } else {
                 $('.fc .fc-event-todo').hide();
               }
             }
-            attendance = $('.fc .fc-withAbsence-button');
-            if (attendance.length) {
-              if (attendance.hasClass('fc-state-active')) {
+            attendance = $('.fc .fc-withAbsence-button')[0];
+            if (attendance) {
+              if (attendance.classList.contains('fc-state-active')) {
                 $('.fc .fc-event-user-attendance-absence').removeClass('hide');
               } else {
                 $('.fc .fc-event-user-attendance-absence').addClass('hide');
