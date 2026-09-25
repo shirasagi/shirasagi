@@ -106,7 +106,7 @@ globalThis.SS_Kana = (function () {
           return;
         }
 
-        // legacy：htmlにbuttonが含まれていない　→ a タグを生成
+        // legacy: htmlにbuttonが含まれていない => aタグを生成
         if (kanaElement.dataset.toolType === "button") {
           const buttonId = 'kana_button_' + index;
           const content = kanaElement.innerHTML;
@@ -157,9 +157,9 @@ globalThis.SS_Kana = (function () {
       bool = $("body").data("kana");
     }
     if (bool) {
-      url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + this.siteUrl), "$1" + this.kanaUrl);
+      url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + RegExp.escape(this.siteUrl)), "$1" + this.kanaUrl);
     } else {
-      url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + this.kanaUrl), "$1" + this.siteUrl);
+      url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + RegExp.escape(this.kanaUrl)), "$1" + this.siteUrl);
     }
     return url;
   };
@@ -195,10 +195,10 @@ globalThis.SS_Translate = (function () {
 
   SS_Translate.url = function (url, target) {
     if (target) {
-      var targetUrl = this.translateUrl + target + "/";
-      url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + this.siteUrl), "$1" + targetUrl);
+      let targetUrl = this.translateUrl + target + "/";
+      url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + RegExp.escape(this.siteUrl)), "$1" + targetUrl);
     } else {
-      var targetUrl = this.translateUrl + $("body").data("translate") + "/";
+      let targetUrl = RegExp.escape(this.translateUrl + $("body").data("translate") + "/");
       url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + targetUrl), "$1" + this.siteUrl);
     }
     return url;
@@ -540,7 +540,7 @@ globalThis.SS_Voice = (function () {
           return self.timerId = setTimeout(self.load.bind(self), retry_after * 1000);
         }
       },
-      error: function (xhr, status, error) {
+      error: function (xhr, _status, _error) {
         return self.renderError(xhr.status);
       }
     });
@@ -619,7 +619,10 @@ globalThis.SS_Voice = (function () {
     if (kana_dir == null) {
       kana_dir = SS_Kana.dir;
     }
-    return path.replace(new RegExp('^' + kana_dir.replace('/', '\/') + '\/'), '/');
+
+    let pattern = `^${RegExp.escape(kana_dir)}/`
+    pattern = new RegExp(pattern)
+    return path.replace(pattern, '/');
   };
 
   SS_Voice.prototype.normalizeProtocol = function (protocol) {
@@ -759,7 +762,7 @@ globalThis.SS_Recommend = (function () {
       cache: false,
       dataType: 'json',
       data: params,
-      error: function (req, status, error) {
+      error: function () {
       }
     });
   };
@@ -781,7 +784,7 @@ globalThis.SS_Print = (function () {
       try {
         window.print();
         return false;
-      } catch (ex) {
+      } catch (_ex) {
         console.info("print is unsupported")
       }
     })

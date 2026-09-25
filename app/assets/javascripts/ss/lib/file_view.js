@@ -131,16 +131,14 @@ globalThis.SS_FileView = (function () {
   };
 
   SS_FileView.getContent = function () {
-    var editor = null;
-
     if ((typeof tinymce) != "undefined") {
-      editor = tinymce.get(Cms_Form.editorId);
+      let editor = tinymce.get(Cms_Form.editorId);
       if (editor) {
         return editor.getContent();
       }
     } else if ((typeof CKEDITOR) != "undefined") {
       if (Cms_Form.editorId) {
-        editor = CKEDITOR.instances[Cms_Form.editorId];
+        let editor = CKEDITOR.instances[Cms_Form.editorId];
         if (editor) {
           return editor.getData();
         }
@@ -275,8 +273,8 @@ globalThis.SS_FileView = (function () {
   };
 
   SS_FileView.calcPositionAndScale = function (image, canvas) {
-    var position = 0;
-    var scale = 1;
+    let position;
+    let scale;
 
     if (image > canvas) {
       position = 0;

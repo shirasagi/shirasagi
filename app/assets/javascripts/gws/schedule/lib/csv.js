@@ -110,7 +110,7 @@ globalThis.Gws_Schedule_Csv = (function () {
       var errors = xhr.responseJSON;
       var msg = errors.join("\n");
       this.$importLog.html(msg);
-    } catch (ex) {
+    } catch (_ex) {
       this.$importLog.html("Error: " + error);
     }
   };

@@ -85,10 +85,9 @@ globalThis.Cms_Column_Table = (function () {
     var caption = $("<caption></caption>")
     var thead = $("<thead></thead>")
     var tbody = $("<tbody></tbody>")
-    var tr = "";
-    for (var i = 0; i < height; i++) {
-      tr = "<tr>";
-      for (var j = 0; j < width; j++) {
+    for (let i = 0; i < height; i++) {
+      let tr = "<tr>";
+      for (let j = 0; j < width; j++) {
         if (header == "top") {
           if (i == 0) {
             tr = tr + "<th scope='col'></th>";
@@ -195,11 +194,11 @@ globalThis.Cms_Column_Table = (function () {
     var cellIndex = this.tableDom[0].cellIndex;
     var thead = this.tableDom.parents('table').find('thead');
     var tbody = this.tableDom.parents('table').find('tbody');
-    for (var i = 0; i < tbody[0].rows.length; i++) {
+    for (let i = 0; i < tbody[0].rows.length; i++) {
       $(tbody[0].rows[i].cells[cellIndex]).remove();
     }
     if (thead.length > 0) {
-      for (var i = 0; i < thead[0].rows.length; i++) {
+      for (let i = 0; i < thead[0].rows.length; i++) {
         $(thead[0].rows[i].cells[cellIndex]).remove();
       }
     }
@@ -212,12 +211,12 @@ globalThis.Cms_Column_Table = (function () {
     var parent = this.tableDom.parent();
     this.removeControlTable();
     var newTr = "<tr>";
-    for (var i = 0; i < columnNum - 1; i++) {
+    for (let i = 0; i < columnNum - 1; i++) {
       if (parent[0].cells[i].tagName == "TH") {
         if (!parent[0].cells[i + 1]) {
           alert(i18next.t("cms.column_table.cant_append_top"));
           this.addControlTable();
-          var tableMenu = $('.table-menu');
+          let tableMenu = $('.table-menu');
           if (tableMenu.hasClass('show')) {
             tableMenu.removeClass('show');
           }
@@ -226,7 +225,7 @@ globalThis.Cms_Column_Table = (function () {
         if (parent[0].cells[i + 1].tagName == "TH") {
           alert(i18next.t("cms.column_table.cant_append_top"));
           this.addControlTable();
-          var tableMenu = $('.table-menu');
+          let tableMenu = $('.table-menu');
           if (tableMenu.hasClass('show')) {
             tableMenu.removeClass('show');
           }
@@ -251,7 +250,7 @@ globalThis.Cms_Column_Table = (function () {
     this.removeControlTable();
     var newTr = "<tr>";
     if (parent.parent()[0].tagName == 'THEAD') {
-      for (var i = 0; i < columnNum - 1; i++) {
+      for (let i = 0; i < columnNum - 1; i++) {
         if (parent[0].cells[i].tagName == "TH") {
           if (!parent[0].cells[i + 1]) {
             newTr = newTr + "<td></td>";
@@ -271,7 +270,7 @@ globalThis.Cms_Column_Table = (function () {
         }
       }
     } else {
-      for (var i = 0; i < columnNum - 1; i++) {
+      for (let i = 0; i < columnNum - 1; i++) {
         if (parent[0].cells[i].tagName == "TH") {
           if (!parent[0].cells[i + 1]) {
             newTr = newTr + "<td></td>";
@@ -306,7 +305,7 @@ globalThis.Cms_Column_Table = (function () {
     var thead = this.tableDom.parents('table').find('thead');
     var tbody = this.tableDom.parents('table').find('tbody');
     this.removeControlTable();
-    for (var i = 1 - thead.length; i < tbody[0].rows.length; i++) {
+    for (let i = 1 - thead.length; i < tbody[0].rows.length; i++) {
       if (tbody[0].rows[i].cells[cellIndex].tagName == "TH") {
         if (!tbody[0].rows[i + 1]) {
           $(tbody[0].rows[i].cells[cellIndex]).after("<td></td>");
@@ -326,7 +325,7 @@ globalThis.Cms_Column_Table = (function () {
       }
     }
     if (thead.length > 0) {
-      for (var i = 0; i < thead[0].rows.length; i++) {
+      for (let i = 0; i < thead[0].rows.length; i++) {
         if (!thead[0].rows[i].cells[cellIndex + 1]) {
           $(thead[0].rows[i].cells[cellIndex]).after("<th scope='" + thead[0].rows[i].cells[cellIndex].scope + "'></th>");
         } else if (thead[0].rows[i].cells[cellIndex + 1].tagName == "TH") {
@@ -345,12 +344,12 @@ globalThis.Cms_Column_Table = (function () {
     var thead = this.tableDom.parents('table').find('thead');
     var tbody = this.tableDom.parents('table').find('tbody');
     this.removeControlTable();
-    for (var i = 1 - thead.length; i < tbody[0].rows.length; i++) {
+    for (let i = 1 - thead.length; i < tbody[0].rows.length; i++) {
       if (tbody[0].rows[i].cells[cellIndex].tagName == "TH") {
         if (!tbody[0].rows[i + 1]) {
           alert(i18next.t("cms.column_table.cant_append_left"));
           this.addControlTable();
-          var tableMenu = $('.table-menu');
+          let tableMenu = $('.table-menu');
           if (tableMenu.hasClass('show')) {
             tableMenu.removeClass('show');
           }
@@ -359,7 +358,7 @@ globalThis.Cms_Column_Table = (function () {
         if (tbody[0].rows[i + 1].cells[cellIndex].tagName == "TH") {
           alert(i18next.t("cms.column_table.cant_append_left"));
           this.addControlTable();
-          var tableMenu = $('.table-menu');
+          let tableMenu = $('.table-menu');
           if (tableMenu.hasClass('show')) {
             tableMenu.removeClass('show');
           }
@@ -371,12 +370,12 @@ globalThis.Cms_Column_Table = (function () {
       }
     }
     if (thead.length > 0) {
-      for (var i = 0; i < thead[0].rows.length; i++) {
+      for (let i = 0; i < thead[0].rows.length; i++) {
         if (thead[0].rows[i].cells[cellIndex].tagName == "TH") {
           if (!tbody[0].rows[i + 1]) {
             alert(i18next.t("cms.column_table.cant_append_left"));
             this.addControlTable();
-            var tableMenu = $('.table-menu');
+            let tableMenu = $('.table-menu');
             if (tableMenu.hasClass('show')) {
               tableMenu.removeClass('show');
             }
@@ -385,7 +384,7 @@ globalThis.Cms_Column_Table = (function () {
           if (tbody[0].rows[i + 1].cells[cellIndex].tagName == "TH") {
             alert(i18next.t("cms.column_table.cant_append_left"));
             this.addControlTable();
-            var tableMenu = $('.table-menu');
+            let tableMenu = $('.table-menu');
             if (tableMenu.hasClass('show')) {
               tableMenu.removeClass('show');
             }
@@ -463,10 +462,10 @@ globalThis.Cms_Column_Table = (function () {
     this.$el.find(".table-editor table tr:empty").remove();
 
     var tr = $('<tr></tr>')
-    for (var i = 0; i < table[0].rows.length; i++) {
+    for (let i = 0; i < table[0].rows.length; i++) {
       $(table[0].rows[i].cells[0]).before("<th class='control control-left'></th>");
     }
-    for (var j = 0; j < table[0].rows[0].cells.length; j++) {
+    for (let j = 0; j < table[0].rows[0].cells.length; j++) {
       if (j == 0) {
         tr.append("<th class='control'></th>");
       } else {

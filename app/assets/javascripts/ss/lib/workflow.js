@@ -246,7 +246,7 @@ globalThis.SS_Workflow = (function () {
           try {
             var errors = $.parseJSON(xhr.responseText);
             alert([ "== Error(Workflow) ==" ].concat(errors).join("\n"));
-          } catch (ex) {
+          } catch (_ex) {
             alert([ "== Error(Workflow) ==" ].concat(xhr["statusText"]).join("\n"));
           }
           $this.prop("disabled", false);
@@ -293,7 +293,7 @@ globalThis.SS_Workflow = (function () {
           try {
             var errors = $.parseJSON(xhr.responseText);
             msg = [ "== Error(Workflow) ==" ].concat(errors).join("\n");
-          } catch (ex) {
+          } catch (_ex) {
             msg = [ "== Error(Workflow) ==" ].concat(xhr["statusText"]).join("\n");
           }
           alert(msg);
@@ -319,7 +319,7 @@ globalThis.SS_Workflow = (function () {
           try {
             var errors = $.parseJSON(xhr.responseText);
             msg = [ "== Error(Workflow) ==" ].concat(errors).join("\n");
-          } catch (ex) {
+          } catch (_ex) {
             msg = [ "== Error(Workflow) ==" ].concat(xhr["statusText"]).join("\n");
           }
           pThis.$el.find(".workflow-partial-section").html('<div class="error">' + msg + '</div>');
@@ -347,7 +347,7 @@ globalThis.SS_Workflow = (function () {
           try {
             var errors = $.parseJSON(xhr.responseText);
             msg = errors.join("\n");
-          } catch (ex) {
+          } catch (_ex) {
             msg = [ "== Error(Workflow) ==" ].concat(xhr["statusText"]).join("\n");
           }
           pThis.$el.find(".workflow-partial-section").html(msg);
@@ -392,7 +392,7 @@ globalThis.SS_Workflow = (function () {
               try {
                 var errors = $.parseJSON(xhr.responseText);
                 alert(errors.join("\n"));
-              } catch (ex) {
+              } catch (_ex) {
                 alert([ "== Error(Workflow) ==" ].concat(xhr["statusText"]).join("\n"));
               }
             }
