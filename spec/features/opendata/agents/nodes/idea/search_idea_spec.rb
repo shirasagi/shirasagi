@@ -271,12 +271,12 @@ describe "opendata_search_ideas", type: :feature, dbscope: :example, js: true do
       layout.save!
 
       visit index_path
-      within ".list-footer" do
-        click_on "RSS"
+      wait_for_download("rss", extname: ".xml") do
+        within ".list-footer" do
+          click_on "RSS"
+        end
       end
-
-      wait_for_download
-      ::File.read(downloads.first).tap do |xml|
+      ::File.read(downloaded_path).tap do |xml|
         xmldoc = REXML::Document.new(xml)
         items = REXML::XPath.match(xmldoc, "/rss/channel/item")
         expect(items).to have(10).items

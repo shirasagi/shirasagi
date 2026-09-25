@@ -20,10 +20,11 @@ describe "gws_affair_leave_settings", type: :feature, dbscope: :example, js: tru
 
       it do
         visit download_path
-        click_on I18n.t("ss.links.download")
-        wait_for_download
+        wait_for_download("leave_settings", extname: ".csv") do
+          click_on I18n.t("ss.links.download")
+        end
 
-        SS::Csv.open(downloads.first) do |csv|
+        SS::Csv.open(downloaded_path) do |csv|
           csv_table = csv.read
           expect(csv_table.length).to eq 2
         end

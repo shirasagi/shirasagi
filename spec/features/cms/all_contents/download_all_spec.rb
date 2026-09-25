@@ -19,17 +19,17 @@ describe "cms_all_contents", type: :feature, dbscope: :example, js: true do
 
     it do
       login_user user, to: cms_all_contents_path(site: site)
-      perform_enqueued_jobs do
-        wait_for_cbox_opened do
-          wait_for_event_fired "turbo:frame-load" do
-            within "form#item-form" do
-              click_on I18n.t("ss.buttons.download")
+      wait_for_download("all_contents", extname: ".csv") do
+        perform_enqueued_jobs do
+          wait_for_cbox_opened do
+            wait_for_event_fired "turbo:frame-load" do
+              within "form#item-form" do
+                click_on I18n.t("ss.buttons.download")
+              end
             end
           end
         end
       end
-
-      wait_for_download
 
       expect(Job::Log.all.count).to eq 1
       Job::Log.all.each do |log|
@@ -63,7 +63,7 @@ describe "cms_all_contents", type: :feature, dbscope: :example, js: true do
       expect(notification.reply_model).to be_blank
       expect(notification.reply_item_id).to be_blank
 
-      SS::Csv.open(downloads.first) do |csv|
+      SS::Csv.open(downloaded_path) do |csv|
         table = csv.read
 
         expect(table.length).to eq 3

@@ -29,12 +29,12 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
   context "when csv templae is downloaded" do
     it do
       visit gws_schedule_csv_path(site: site)
-      click_on I18n.t('ss.links.download_template')
-
-      wait_for_download
+      wait_for_download("gws_schedule_plans_template", extname: ".csv") do
+        click_on I18n.t('ss.links.download_template')
+      end
 
       I18n.with_locale(I18n.default_locale) do
-        csv = ::CSV.open(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+        csv = ::CSV.open(downloaded_path, headers: true, encoding: 'SJIS:UTF-8')
         csv_table = csv.read
         expect(csv_table.headers.length).to be > 10
         expect(csv_table.headers).to include(*expected_basic_headers)

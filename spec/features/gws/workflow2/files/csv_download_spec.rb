@@ -50,12 +50,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
     item.class.find(item.id)
   end
 
-  before do
-    clear_downloads
-    login_gws_user
-  end
-
-  after { clear_downloads }
+  before { login_gws_user }
 
   context "csv download" do
     context "custom form file download" do
@@ -63,14 +58,15 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         visit gws_workflow2_files_path(site: site, state: "all")
         click_on item1.name
         wait_for_turbo_frame "#workflow-approver-frame"
-        accept_confirm(I18n.t("ss.confirm.download")) do
-          click_on I18n.t("gws/workflow.links.download_comment")
+
+        wait_for_download("workflow", extname: ".csv") do
+          accept_confirm(I18n.t("ss.confirm.download")) do
+            click_on I18n.t("gws/workflow.links.download_comment")
+          end
         end
 
-        wait_for_download
-
         I18n.with_locale(I18n.default_locale) do
-          SS::Csv.open(downloads.first) do |csv|
+          SS::Csv.open(downloaded_path) do |csv|
             csv_table = csv.read
             expect(csv_table.length).to eq 3
             expect(csv_table.headers[0]).to eq I18n.t("gws/workflow2.table.gws/workflow2/file.user_id")
@@ -142,14 +138,14 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         visit gws_workflow2_files_path(site: site, state: "all")
         wait_for_event_fired("ss:checked-all-list-items") { find(".gws-workflow .list-head input[type=checkbox]").click }
 
-        accept_confirm(I18n.t("ss.confirm.download")) do
-          click_on I18n.t("ss.buttons.csv")
+        wait_for_download("workflow", extname: ".csv") do
+          accept_confirm(I18n.t("ss.confirm.download")) do
+            click_on I18n.t("ss.buttons.csv")
+          end
         end
 
-        wait_for_download
-
         I18n.with_locale(I18n.default_locale) do
-          SS::Csv.open(downloads.first) do |csv|
+          SS::Csv.open(downloaded_path) do |csv|
             csv_table = csv.read
             expect(csv_table.length).to eq 3
           end
@@ -164,13 +160,14 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         visit gws_workflow2_files_path(site: site, state: "all")
         click_on item1.name
         wait_for_turbo_frame "#workflow-approver-frame"
-        accept_confirm(I18n.t("ss.confirm.download")) do
-          click_on I18n.t("gws/workflow.links.download_attachment")
+
+        wait_for_download("workflow", extname: ".zip") do
+          accept_confirm(I18n.t("ss.confirm.download")) do
+            click_on I18n.t("gws/workflow.links.download_attachment")
+          end
         end
 
-        wait_for_download
-
-        entry_names = ::Zip::File.open(downloads.first) do |entries|
+        entry_names = ::Zip::File.open(downloaded_path) do |entries|
           entries.map { |entry| entry.name }
         end
         expect(entry_names).to have(2).items
@@ -243,13 +240,13 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         visit gws_workflow2_files_path(site: site, state: "all")
         wait_for_event_fired("ss:checked-all-list-items") { find(".gws-workflow .list-head input[type=checkbox]").click }
 
-        accept_confirm(I18n.t("ss.confirm.download")) do
-          click_on I18n.t("gws/survey.buttons.zip_all_files")
+        wait_for_download("workflow", extname: ".zip") do
+          accept_confirm(I18n.t("ss.confirm.download")) do
+            click_on I18n.t("gws/survey.buttons.zip_all_files")
+          end
         end
 
-        wait_for_download
-
-        entry_names = ::Zip::File.open(downloads.first) do |entries|
+        entry_names = ::Zip::File.open(downloaded_path) do |entries|
           entries.map { |entry| entry.name }
         end
         expect(entry_names).to have(2).items

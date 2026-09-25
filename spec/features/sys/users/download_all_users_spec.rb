@@ -10,31 +10,31 @@ describe "sys_users_download_all", type: :feature, dbscope: :example, js: true d
   let(:download_path) { download_all_sys_users_path }
   let(:user) do
     create(:sys_user_sample_2,
-           name: "John Doe",
-           kana: "ジョン・ドウ",
-           uid: "johndoe",
-           organization_uid: "org-001",
-           email: "johndoe@example.com",
-           tel: "123-456-7890",
-           tel_ext: "1234",
-           # download_all の既定条件(state未指定)は enabled(active) のため、
-           # 固定日付にするとテスト実行日によって期限切れになり CSV から除外される。
-           account_start_date: now - 1.day,
-           account_expiration_date: now + 1.year,
-           initial_password_warning: 1,
-           session_lifetime: 3600,
-           restriction: "api_only",
-           lock_state: "locked",
-           deletion_lock_state: "unlocked",
-           type: SS::Model::User::TYPE_SSO,
-           remark: "Test Remark",
-           lang: "ja",
-           timezone: "Asia/Tokyo",
-           in_password: nil,
-           group_ids: [group.id],
-           sys_role_ids: [role.id],
-           organization_id: organization.id,
-           ldap_dn: "uid=johndoe,ou=users,dc=example,dc=com")
+      name: "John Doe",
+      kana: "ジョン・ドウ",
+      uid: "johndoe",
+      organization_uid: "org-001",
+      email: "johndoe@example.com",
+      tel: "123-456-7890",
+      tel_ext: "1234",
+      # download_all の既定条件(state未指定)は enabled(active) のため、
+      # 固定日付にするとテスト実行日によって期限切れになり CSV から除外される。
+      account_start_date: now - 1.day,
+      account_expiration_date: now + 1.year,
+      initial_password_warning: 1,
+      session_lifetime: 3600,
+      restriction: "api_only",
+      lock_state: "locked",
+      deletion_lock_state: "unlocked",
+      type: SS::Model::User::TYPE_SSO,
+      remark: "Test Remark",
+      lang: "ja",
+      timezone: "Asia/Tokyo",
+      in_password: nil,
+      group_ids: [group.id],
+      sys_role_ids: [role.id],
+      organization_id: organization.id,
+      ldap_dn: "uid=johndoe,ou=users,dc=example,dc=com")
   end
 
   before do
@@ -52,23 +52,23 @@ describe "sys_users_download_all", type: :feature, dbscope: :example, js: true d
         end
       end
 
-      within "#item-form" do
-        within "footer" do
-          click_on I18n.t("ss.links.download")
+      wait_for_download("sys_users", extname: ".csv") do
+        within "#item-form" do
+          within "footer" do
+            click_on I18n.t("ss.links.download")
+          end
         end
       end
 
-      wait_for_download
-
       I18n.with_locale(I18n.default_locale) do
-        csv_data = CSV.read(downloads.first, headers: true, encoding: 'BOM|UTF-8')
+        csv_data = CSV.read(downloaded_path, headers: true, encoding: 'BOM|UTF-8')
 
         expect(csv_data.length).to eq 3
 
         expected_headers = %w[id] + %w(
-         name kana uid organization_uid email password tel tel_ext type account_start_date account_expiration_date
+          name kana uid organization_uid email password tel tel_ext type account_start_date account_expiration_date
 
-         initial_password_warning session_lifetime restriction lock_state deletion_lock_state organization_id groups remark
+          initial_password_warning session_lifetime restriction lock_state deletion_lock_state organization_id groups remark
         ).map { |header| I18n.t("mongoid.attributes.ss/model/user.#{header}") }
 
         expected_headers += [

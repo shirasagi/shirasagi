@@ -68,9 +68,9 @@ describe "postal_codes", type: :feature, dbscope: :example, js: true do
     context "#download" do
       it do
         visit index_path
-        click_on I18n.t("ss.links.download")
-
-        wait_for_download
+        wait_for_download("postal_code", extname: ".csv") do
+          click_on I18n.t("ss.links.download")
+        end
 
         expect(History::Log.all.count).to be > 1
         History::Log.all.reorder(created: -1).first.tap do |history|

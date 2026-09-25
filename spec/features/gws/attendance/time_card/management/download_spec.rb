@@ -79,14 +79,15 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         within_cbox do
           wait_for_cbox_closed { click_on user1.long_name }
         end
-        within "form#item-form" do
-          click_on I18n.t("ss.buttons.download")
+
+        wait_for_download("time_cards", extname: ".csv") do
+          within "form#item-form" do
+            click_on I18n.t("ss.buttons.download")
+          end
         end
 
-        wait_for_download
-
         I18n.with_locale(I18n.default_locale) do
-          csv = ::CSV.read(downloads.first, headers: true)
+          csv = ::CSV.read(downloaded_path, headers: true)
           expect(csv.length).to eq this_month.end_of_month.day
           expect(csv[0][0]).to eq user1.uid
           expect(csv[0][1]).to eq user1.name
@@ -118,16 +119,17 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         within_cbox do
           wait_for_cbox_closed { click_on user1.long_name }
         end
-        within "form#item-form" do
-          fill_in_date "item[from_date]", with: from_time
-          fill_in_date "item[to_date]", with: to_time
-          click_on I18n.t("ss.buttons.download")
+
+        wait_for_download("time_cards", extname: ".csv") do
+          within "form#item-form" do
+            fill_in_date "item[from_date]", with: from_time
+            fill_in_date "item[to_date]", with: to_time
+            click_on I18n.t("ss.buttons.download")
+          end
         end
 
-        wait_for_download
-
         I18n.with_locale(I18n.default_locale) do
-          csv = ::CSV.read(downloads.first, headers: true)
+          csv = ::CSV.read(downloaded_path, headers: true)
           expect(csv.length).to eq prev_month.end_of_month.day
           expect(csv[0][0]).to eq user1.uid
           expect(csv[0][1]).to eq user1.name
@@ -156,15 +158,15 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         within_cbox do
           wait_for_cbox_closed { click_on user2.long_name }
         end
-        within "form#item-form" do
-          first("input[value='UTF-8']").click
-          click_on I18n.t("ss.buttons.download")
+        wait_for_download("time_cards", extname: ".csv") do
+          within "form#item-form" do
+            first("input[value='UTF-8']").click
+            click_on I18n.t("ss.buttons.download")
+          end
         end
 
-        wait_for_download
-
         I18n.with_locale(I18n.default_locale) do
-          csv = ::CSV.read(downloads.first, headers: true)
+          csv = ::CSV.read(downloaded_path, headers: true)
           expect(csv.length).to eq this_month.end_of_month.day
           expect(csv[0][0]).to eq user2.uid
           expect(csv[0][1]).to eq user2.name
@@ -203,14 +205,15 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         within_cbox do
           wait_for_cbox_closed { click_on user1.long_name }
         end
-        within "form#item-form" do
-          click_on I18n.t("ss.buttons.download")
+
+        wait_for_download("time_cards", extname: ".csv") do
+          within "form#item-form" do
+            click_on I18n.t("ss.buttons.download")
+          end
         end
 
-        wait_for_download
-
         I18n.with_locale(I18n.default_locale) do
-          csv = ::CSV.read(downloads.first, headers: true)
+          csv = ::CSV.read(downloaded_path, headers: true)
           expect(csv.length).to eq this_month.end_of_month.day
           expect(csv[0][0]).to eq user1.uid
           expect(csv[0][1]).to eq user1.name

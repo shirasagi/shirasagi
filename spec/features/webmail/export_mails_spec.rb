@@ -288,15 +288,15 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
         end
       end
 
-      within ".ss-notification" do
-        expect(page).to have_content(I18n.t("webmail.export.notify_message").split("\n").first)
-        expect(page).to have_link(href: /\.zip$/)
-        first("a").click
+      wait_for_download("webmail-mails", extname: ".zip") do
+        within ".ss-notification" do
+          expect(page).to have_content(I18n.t("webmail.export.notify_message").split("\n").first)
+          expect(page).to have_link(href: /\.zip$/)
+          first("a").click
+        end
       end
-
-      wait_for_download
       names = []
-      Zip::File.open(downloads.first) do |zip_file|
+      Zip::File.open(downloaded_path) do |zip_file|
         zip_file.each do |entry|
           names << NKF.nkf("-w", entry.name)
         end

@@ -67,22 +67,22 @@ describe "gws_workload_cycles", type: :feature, dbscope: :example, js: true do
         item
 
         login_gws_user to: download_path
-        click_on I18n.t("ss.links.download")
-        wait_for_download
+        wait_for_download("gws_workload_cycles", extname: ".csv") do
+          click_on I18n.t("ss.links.download")
+        end
 
-        csv = ::CSV.read(downloads.first, headers: true)
+        csv = ::CSV.read(downloaded_path, headers: true)
         expect(csv.length).to eq 1
         expect(csv[0][0]).not_to be_nil
       end
 
-      clear_downloads
-
       Timecop.travel(site.fiscal_first_date(year2)) do
         login_gws_user to: download_path
-        click_on I18n.t("ss.links.download")
-        wait_for_download
+        wait_for_download("gws_workload_cycles", extname: ".csv") do
+          click_on I18n.t("ss.links.download")
+        end
 
-        csv = ::CSV.read(downloads.first, headers: true)
+        csv = ::CSV.read(downloaded_path, headers: true)
         expect(csv.length).to eq 0
       end
     end

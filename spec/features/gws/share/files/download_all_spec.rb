@@ -7,10 +7,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
   let!(:item) { create :gws_share_file, folder_id: folder.id, category_ids: [category.id], memo: "test" }
   let(:index_path) { gws_share_folder_files_path site, folder }
 
-  before do
-    clear_downloads
-    login_gws_user
-  end
+  before { login_gws_user }
 
   describe "download all" do
     context "when zip file is created on the fly" do
@@ -20,14 +17,13 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".item-name", text: folder.name)
         end
         wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').click }
-        page.accept_confirm do
-          find('.download-all').click
+        wait_for_download("share", extname: ".zip") do
+          page.accept_confirm do
+            find('.download-all').click
+          end
         end
-
         expect(page).to have_content(folder.name)
-        wait_for_download
-
-        entry_names = ::Zip::File.open(downloads.first) do |entries|
+        entry_names = ::Zip::File.open(downloaded_path) do |entries|
           entries.map { |entry| entry.name }
         end
         expect(entry_names).to include(item.name)

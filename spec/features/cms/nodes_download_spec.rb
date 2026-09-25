@@ -51,11 +51,12 @@ describe "cms_nodes", type: :feature, dbscope: :example do
       expect(item.filename).to eq "ad"
       expect(item.parent).to eq false
 
-      within "#task-form" do
-        click_on I18n.t("job.download_log")
+      wait_for_download("1.log", extname: ".log") do
+        within "#task-form" do
+          click_on I18n.t("job.download_log")
+        end
       end
-      wait_for_download
-      log = ::File.read(downloads.first)
+      log = ::File.read(downloaded_path)
       expect(log).to include("update")
     end
   end

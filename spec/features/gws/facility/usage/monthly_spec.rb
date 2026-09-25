@@ -76,11 +76,14 @@ describe "gws_facility_usage", type: :feature, dbscope: :example, js: true do
       end
 
       # download
-      click_on I18n.t("ss.links.download")
-      wait_for_download
+      wait_for_download("facility", extname: ".csv") do
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.download")
+        end
+      end
 
       I18n.with_locale(I18n.default_locale) do
-        csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+        csv = ::CSV.read(downloaded_path, headers: true, encoding: 'SJIS:UTF-8')
         expect(csv.length).to eq 4
         expect(csv[0][Gws::Facility::Item.t(:name)]).to eq facility1.name
         expect(csv[0][I18n.t('gws/facility.usage.type')]).to eq I18n.t('gws/facility.usage.hours')

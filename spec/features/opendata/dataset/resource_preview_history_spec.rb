@@ -80,13 +80,14 @@ describe Opendata::Dataset::ResourcePreviewHistoriesController, type: :feature, 
   describe "csv preview" do
     it do
       visit opendata_dataset_history_previews_main_path(site: site, cid: node)
-      within ".list-head-action" do
-        click_on "CSV"
+
+      wait_for_download("dataset_preview_history", extname: ".csv") do
+        within ".list-head-action" do
+          click_on "CSV"
+        end
       end
 
-      wait_for_download
-
-      table = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+      table = ::CSV.read(downloaded_path, headers: true, encoding: 'SJIS:UTF-8')
       expect(table.length).to eq 1
 
       expected_headers = Opendata::ResourcePreviewHistory::HistoryCsv.csv_headers.map do |k|

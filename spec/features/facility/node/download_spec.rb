@@ -18,10 +18,11 @@ describe "facility_pages", type: :feature, dbscope: :example, js: true do
       visit index_path
 
       click_on I18n.t("ss.links.download")
-      click_on I18n.t("ss.links.download")
-      wait_for_download
+      wait_for_download("facility_node_pages", extname: ".csv") do
+        click_on I18n.t("ss.links.download")
+      end
 
-      csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+      csv = ::CSV.read(downloaded_path, headers: true, encoding: 'SJIS:UTF-8')
       expect(csv.length).to eq 2
       expect(csv[0][0]).not_to be_nil
     end

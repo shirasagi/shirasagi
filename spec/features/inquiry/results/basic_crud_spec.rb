@@ -104,9 +104,10 @@ describe "inquiry_results", type: :feature, dbscope: :example, js: true do
           expect(page).to have_no_content(email2)
         end
 
-        click_on I18n.t("ss.links.download")
-        wait_for_download
-        SS::Csv.open(downloads.first, headers: false) do |csv|
+        wait_for_download("inquiry_results", extname: ".csv") do
+          click_on I18n.t("ss.links.download")
+        end
+        SS::Csv.open(downloaded_path, headers: false) do |csv|
           csv_table = csv.read
           expect(csv_table.length).to be >= 10
           csv_table[0].tap do |csv_row_summary|
