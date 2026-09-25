@@ -2,7 +2,7 @@ import './lib/jquery';
 import 'jquery-migrate/src/migratemute.js'
 import 'jquery-migrate';
 import 'jquery-ujs';
-import 'jquery-ui';
+import 'jquery-ui/dist/jquery-ui.js'; // 全 widget を読み込むには 'jquery-ui/dist/jquery-ui.js' をインポートすること
 import Cookies from 'js-cookie';
 import 'jquery-form';
 import 'jquery-datetimepicker/build/jquery.datetimepicker.full.js';
