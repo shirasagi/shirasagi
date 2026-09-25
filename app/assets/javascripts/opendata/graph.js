@@ -1,8 +1,7 @@
 import { Chart, registerables } from 'chart.js';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
 import ChartColorSchemes from 'chartjs-plugin-colorschemes-v3';
 
-Chart.register(...registerables, ChartDataLabels, ChartColorSchemes);
+Chart.register(...registerables);
 
 globalThis.Opendata_Graph = (function () {
   function Opendata_Graph(canvas, controller) {
@@ -62,7 +61,7 @@ globalThis.Opendata_Graph = (function () {
     this.resizeContainer(this.datasetsMinWidth());
     this.chart = new Chart(this.$canvas, {
       type: 'bar',
-      plugins: [ ChartDataLabels, ChartColorSchemes ],
+      plugins: [ ChartColorSchemes ],
       responsive: true,
       maintainAspectRatio: false,
       data: {
@@ -117,7 +116,7 @@ globalThis.Opendata_Graph = (function () {
     this.resizeContainer(this.datasetsMinWidth());
     this.chart = new Chart(this.$canvas, {
       type: 'line',
-      plugins: [ ChartDataLabels, ChartColorSchemes ],
+      plugins: [ ChartColorSchemes ],
       responsive: true,
       maintainAspectRatio: false,
       data: {
@@ -172,7 +171,7 @@ globalThis.Opendata_Graph = (function () {
     this.resizeContainer(0);
     this.chart = new Chart(this.$canvas, {
       type: 'pie',
-      plugins: [ ChartDataLabels, ChartColorSchemes ],
+      plugins: [ ChartColorSchemes ],
       responsive: true,
       maintainAspectRatio: false,
       data: {

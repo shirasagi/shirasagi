@@ -771,11 +771,6 @@ chartjs-plugin-colorschemes-v3@^0.5.4:
   resolved "https://registry.yarnpkg.com/chartjs-plugin-colorschemes-v3/-/chartjs-plugin-colorschemes-v3-0.5.4.tgz#b420ebbea09003171d04f6095ffceda754e986b2"
   integrity sha512-2YsZT7rkApsJBh1V2JrvtxWRCo6ouuIJqgok97ihYNjVEf5iVFfXYiD6sumaRWQ3elxF8yIywbvOjmpobp0dYg==
 
-chartjs-plugin-datalabels@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/chartjs-plugin-datalabels/-/chartjs-plugin-datalabels-2.2.0.tgz#369578e131d743c2e34b5fbe2d3f9335f6639b8f"
-  integrity sha512-14ZU30lH7n89oq+A4bWaJPnAG8a7ZTk7dKf48YAzMvJjQtjrgg5Dpk9f+LbjCF6bpx3RAGTeL13IXpKQYyRvlw==
-
 choices.js@^11.1.0:
   version "11.2.3"
   resolved "https://registry.yarnpkg.com/choices.js/-/choices.js-11.2.3.tgz#4b100c5354d44bce0045b5818ce672b8349cd7c5"
