@@ -5,4 +5,10 @@
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
   <%= select_tag("#{f.object_name}[][in_wrap][head]", options_for_select(column.headline_list.invert, value.try(:head)), column.form_options(:head).merge(id: nil, style: "width: 10%;")) %>
   <%= text_field_tag(name, value.try(:text), column.form_options(:text).merge(id: nil, style: "width: 70%;", data: { syntax_check: "value", syntax_check_name: column.name })) %>
+  <% if column.try(:anchor_enabled?) %>
+    <div class="column-value-anchor">
+      <label><%= Cms::Column::Value::Headline.t(:anchor) %></label>
+      <%= text_field_tag("#{f.object_name}[][in_wrap][anchor]", value.try(:anchor), id: nil, class: "column-value-anchor-input", placeholder: Cms::Column::Value::Headline.t(:anchor)) %>
+    </div>
+  <% end %>
 <% end %>
