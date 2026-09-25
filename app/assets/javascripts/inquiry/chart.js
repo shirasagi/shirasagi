@@ -1,5 +1,7 @@
-import 'chart.js';
-import 'chartjs-plugin-datalabels';
+import { Chart, registerables } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
+Chart.register(...registerables, ChartDataLabels);
 
 globalThis.Inquiry_Chart = (function() {
   function Inquiry_Chart() {}
@@ -21,6 +23,7 @@ globalThis.Inquiry_Chart = (function() {
 
       new Chart(this, {
         type: 'bar',
+        plugins: [ ChartDataLabels ],
         data: {
           labels: labels,
           datasets: [{

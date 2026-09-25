@@ -1,3 +1,7 @@
+import { Chart, registerables } from 'chart.js';
+
+Chart.register(...registerables);
+
 globalThis.Chat_Chart = (function() {
   function Chat_Chart() {}
 

@@ -1,2 +1,6 @@
-import 'chart.js';
-import 'chartjs-plugin-datalabels';
+import { Chart, registerables } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
+Chart.register(...registerables, ChartDataLabels);
+
+globalThis.Chart = Chart;
