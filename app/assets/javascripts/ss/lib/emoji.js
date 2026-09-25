@@ -1,4 +1,4 @@
-this.SS_Emoji = (function () {
+globalThis.SS_Emoji = (function () {
   function SS_Emoji() {
   }
 
@@ -99,4 +99,3 @@ this.SS_Emoji = (function () {
   return SS_Emoji;
 
 })();
-

@@ -1,7 +1,7 @@
 // Used Openlayers 3
 // Document: http://openlayers.org/en/v3.12.1/apidoc/
 // Sample: http://maps.gsi.go.jp/development/sample.html
-this.Board_Map = (function () {
+globalThis.Board_Map = (function () {
   function Board_Map(canvas, opts) {
     if (opts == null) {
       opts = {};

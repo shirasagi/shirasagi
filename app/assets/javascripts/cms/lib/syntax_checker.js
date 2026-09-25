@@ -1,4 +1,4 @@
-this.Syntax_Checker = (function () {
+globalThis.Syntax_Checker = (function () {
   function ResultBox(form) {
     this.$el = null;
     this.$elBody = null;

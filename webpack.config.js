@@ -19,14 +19,26 @@ module.exports = {
     colorbox: "./app/javascript/colorbox.js",
     swiper: "./app/javascript/swiper.js",
     jplayer: "./app/javascript/jplayer.js",
-    "opendata/form": "./app/javascript/legacy/opendata/form.js",
+    // legacy scripts
+    "board/script": "./app/assets/javascripts/board/script.js",
+    "cms/compat": "./app/assets/javascripts/cms/compat.js",
+    "cms/form_db": "./app/assets/javascripts/cms/form_db.js",
+    "cms/preview/datetimepicker": "./app/assets/javascripts/cms/preview/datetimepicker.js",
+    "cms/preview/jquery-ui": "./app/assets/javascripts/cms/preview/jquery-ui.js",
+    "cms/preview/jquery": "./app/assets/javascripts/cms/preview/jquery.js",
+    "cms/preview/main": "./app/assets/javascripts/cms/preview/main.js",
+    "cms/public": "./app/assets/javascripts/cms/public.js",
+    "gws/calendar": "./app/assets/javascripts/gws/calendar.js",
+    "gws/script": "./app/assets/javascripts/gws/script.js",
+    "inquiry/chart": "./app/assets/javascripts/inquiry/chart.js",
+    "member/public": "./app/assets/javascripts/member/public.js",
+    "opendata/form": "./app/assets/javascripts/opendata/form.js",
+    "opendata/opendata": "./app/assets/javascripts/opendata/opendata.js",
+    "opendata/public": "./app/assets/javascripts/opendata/public.js",
+    "ss/chart": "./app/assets/javascripts/ss/chart.js",
+    "ss/debug": "./app/assets/javascripts/ss/debug.js",
+    "ss/script": "./app/assets/javascripts/ss/script.js",
   },
-  externals: [
-    {
-      $: "jquery",
-      jquery: 'jQuery',
-    }
-  ],
   module: {
     rules: [
       {
@@ -73,13 +85,30 @@ module.exports = {
       SS_CONFIG_EXPORTS: JSON.stringify({
         dc_guard_timeout_millis: Config.ss[RAILS_ENV]?.dc_guard_timeout_millis,
         notice: { timeout_delay: Config.ss[RAILS_ENV]?.notice?.timeout_delay }
+      }),
+      KANA_CONFIG_EXPORTS: JSON.stringify({
+        location: Config.kana[RAILS_ENV]?.location
+      }),
+      TRANSLATE_CONFIG_EXPORTS: JSON.stringify({
+        location: Config.translate[RAILS_ENV]?.location
+      }),
+      VOICE_CONFIG_EXPORTS: JSON.stringify({
+        controller: {
+          location: Config.voice[RAILS_ENV]?.controller?.location
+        },
+        resource: {
+          loading: Config.voice[RAILS_ENV]?.resource?.loading,
+          disabled: Config.voice[RAILS_ENV]?.resource?.disabled,
+          overload: Config.voice[RAILS_ENV]?.resource?.overload,
+          jplayer_path: Config.voice[RAILS_ENV]?.resource?.jplayer_path
+        }
       })
     }),
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1
     }),
     new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: [ "**/*.js", "**/*.css" ]
+      cleanOnceBeforeBuildPatterns: [ "**/*.js", "application.css", "choices.css", "colorbox.css", "swiper.css", "jplayer.css" ]
     }),
     new RemoveEmptyScriptsPlugin(),
     new MiniCssExtractPlugin({

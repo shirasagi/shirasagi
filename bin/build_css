@@ -1,0 +1,47 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'fileutils'
+
+class CSSBuilder
+  LOAD_PATHS = %w(node_modules app/assets/stylesheets vendor/assets/stylesheets).freeze
+
+  attr_writer :sources
+
+  def call
+    sources.each do |source|
+      if source.start_with?("app/assets/stylesheets/")
+        destination = source[23..-1].gsub(".scss", ".css")
+        destination = "app/assets/builds/#{destination}"
+      else
+        warn "#{source}: not supported path"
+        next
+      end
+      FileUtils.mkdir_p(File.dirname(destination))
+      puts "#{source} => #{destination}"
+      result = system(
+        "yarn", "sass", "--style=compressed", "--source-map-urls=relative", "--embed-source-map",
+        "#{source}:#{destination}",
+        *LOAD_PATHS.map { "--load-path=#{_1}" })
+      unless result
+        warn "sass command failed"
+      end
+    end
+  end
+
+  private
+
+  def sources
+    @sources ||= begin
+      sources = Dir.glob("app/assets/stylesheets/**/*.scss")
+      sources = sources.reject do |path|
+        File.basename(path).start_with?("_")
+      end
+      sources.sort
+    end
+  end
+end
+
+builder = CSSBuilder.new
+builder.sources = ARGV unless ARGV.empty?
+builder.call

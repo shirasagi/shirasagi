@@ -1,4 +1,4 @@
-this.Openlayers_Map_Form = (function () {
+globalThis.Openlayers_Map_Form = (function () {
   var bind = function (fn, me) {
     return function () {
       return fn.apply(me, arguments);

@@ -1,4 +1,4 @@
-this.SS_Validation = (function () {
+globalThis.SS_Validation = (function () {
   function SS_Validation() {
   }
 

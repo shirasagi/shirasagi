@@ -1,3 +1,3 @@
-//= require jquery
-//= require jquery-migrate/src/migratemute.js
-//= require jquery-migrate/dist/jquery-migrate.js
+import '../../ss/lib/jquery';
+import 'jquery-migrate/src/migratemute.js';
+import 'jquery-migrate/dist/jquery-migrate.js';

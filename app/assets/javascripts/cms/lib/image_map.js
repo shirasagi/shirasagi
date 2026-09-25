@@ -1,4 +1,4 @@
-this.Cms_Image_Map_Area_Cropper = (function () {
+globalThis.Cms_Image_Map_Area_Cropper = (function () {
   function Cms_Image_Map_Area_Cropper(el, opts) {
     if (!opts) {
       opts = {};

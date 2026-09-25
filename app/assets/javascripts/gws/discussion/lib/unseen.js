@@ -1,4 +1,4 @@
-this.Gws_Discussion_Unseen = (function () {
+globalThis.Gws_Discussion_Unseen = (function () {
   function Gws_Discussion_Unseen() {
   }
 

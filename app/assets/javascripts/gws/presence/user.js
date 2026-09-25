@@ -1,4 +1,4 @@
-this.Gws_Presence_User = (function () {
+globalThis.Gws_Presence_User = (function () {
   function Gws_Presence_User() {}
 
   Gws_Presence_User.render = function () {

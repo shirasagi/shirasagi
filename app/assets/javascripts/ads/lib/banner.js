@@ -1,4 +1,4 @@
-this.Ads_Banner = (function () {
+globalThis.Ads_Banner = (function () {
   function Ads_Banner() {
     //landomize banners
   }

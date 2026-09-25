@@ -1,4 +1,4 @@
-this.Googlemaps_Map = (function () {
+globalThis.Googlemaps_Map = (function () {
   function Googlemaps_Map() {
   }
 

@@ -1,4 +1,4 @@
-this.Cms_Line_Message_Repeat_Plan = (function () {
+globalThis.Cms_Line_Message_Repeat_Plan = (function () {
   function Cms_Line_Message_Repeat_Plan() {
   }
 

@@ -1,4 +1,4 @@
-this.Chat_Bot = (function () {
+globalThis.Chat_Bot = (function () {
   function Chat_Bot(el, url) {
     this.$el = $(el);
     this.url = url;

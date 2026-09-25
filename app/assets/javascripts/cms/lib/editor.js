@@ -1,4 +1,4 @@
-this.Cms_Editor_Module = (function () {
+globalThis.Cms_Editor_Module = (function () {
   function Cms_Editor_Module() {
   }
 
@@ -42,7 +42,7 @@ this.Cms_Editor_Module = (function () {
 
 })();
 
-this.Cms_Editor_CodeMirror = (function () {
+globalThis.Cms_Editor_CodeMirror = (function () {
   function Cms_Editor_CodeMirror() {
     //Render codeMirror
   }
@@ -90,7 +90,7 @@ this.Cms_Editor_CodeMirror = (function () {
 
 })();
 
-this.Cms_Editor_CKEditor = (function () {
+globalThis.Cms_Editor_CKEditor = (function () {
   function Cms_Editor_CKEditor() {
   }
 
@@ -190,7 +190,7 @@ this.Cms_Editor_CKEditor = (function () {
 
 })();
 
-this.Cms_Editor_TinyMCE = (function () {
+globalThis.Cms_Editor_TinyMCE = (function () {
   function Cms_Editor_TinyMCE() {
   }
 

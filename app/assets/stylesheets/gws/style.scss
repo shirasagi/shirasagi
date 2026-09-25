@@ -1,6 +1,4 @@
-/**
- *= require gridster/jquery.gridster.min.css
- */
+@use "dsmorse-gridster/dist/jquery.gridster.min.css";
 @use "ss/init";
 @use "board/gws" as gws_board;
 @use "bookmark/gws" as gws_bookmark;

@@ -1,4 +1,4 @@
-this.SS_HtmlMessage = (function () {
+globalThis.SS_HtmlMessage = (function () {
   function SS_HtmlMessage(el) {
     this.$el = $(el);
     this.render();

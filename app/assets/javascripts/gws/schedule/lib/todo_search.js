@@ -1,4 +1,4 @@
-this.Gws_Schedule_Todo_Search = (function () {
+globalThis.Gws_Schedule_Todo_Search = (function () {
   function Gws_Schedule_Todo_Search(el) {
     this.$el = $(el);
     this.templateHtml = this.$el.find("#schedule-todo-selected-member-template").html();

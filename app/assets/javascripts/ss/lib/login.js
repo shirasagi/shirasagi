@@ -1,4 +1,4 @@
-this.SS_Login = (function () {
+globalThis.SS_Login = (function () {
   function SS_Login() {
   }
 

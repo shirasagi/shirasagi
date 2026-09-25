@@ -1,15 +1,5 @@
-//= require cms/lib/form
-//= require cms/lib/form_alert
-//= require cms/lib/form_preview
-//= require cms/lib/inplace_form
-//= require cms/lib/syntax_checker
-//= require cms/lib/form_checker
-//= require cms/lib/mobile_size_checker
-//= require cms/lib/link_checker
-//= require cms/lib/backlink_checker
-
-this.Cms_Form = (function () {
-  function Cms_Form() {};
+globalThis.Cms_Form = (function () {
+  function Cms_Form() {}
 
   Cms_Form.options = { check: { syntax: true } };
   Cms_Form.addonSelector = ".mod-cms-body";

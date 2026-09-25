@@ -1,37 +1,36 @@
-//= require sprintf-js/dist/sprintf.min.js
-//= require gridster/jquery.gridster.min.js
-//= require gws/lib/category
-//= require gws/lib/tab
-//= require gws/lib/popup
-//= require gws/lib/member
-//= require gws/lib/reminder
-//= require gws/lib/bookmark
-//= require gws/lib/readable_setting
-//= require gws/lib/workload
-//= require gws/lib/search_form
-//= require gws/schedule/lib/plan
-//= require gws/schedule/lib/repeat_plan
-//= require gws/schedule/lib/integration
-//= require gws/schedule/lib/todo_search
-//= require gws/schedule/lib/todo_index
-//= require gws/schedule/lib/csv
-//= require gws/schedule/lib/facility_reservation
-//= require gws/memo/message
-//= require gws/memo/folder
-//= require gws/memo/filter
-//= require gws/monitor/lib/monitor
-//= require gws/portal/lib/portal
-//= require gws/elasticsearch/highlighter
-//= require gws/discussion/thread
-//= require gws/discussion/lib/unseen
-//= require gws/attendance/attendance
-//= require gws/attendance/portlet
-//= require gws/presence/user
-//= require gws/share/folder_toolbar
-//= require gws/share/file
-//= require gws/affair/menu
-//= require gws/affair/overtime_file
-//= require gws/affair/shift_records
+import 'sprintf-js/dist/sprintf.min.js';
+import './lib/category';
+import './lib/tab';
+import './lib/popup';
+import './lib/member';
+import './lib/reminder';
+import './lib/bookmark';
+import './lib/readable_setting';
+import './lib/workload';
+import './lib/search_form';
+import './schedule/lib/plan';
+import './schedule/lib/repeat_plan';
+import './schedule/lib/integration';
+import './schedule/lib/todo_search';
+import './schedule/lib/todo_index';
+import './schedule/lib/csv';
+import './schedule/lib/facility_reservation';
+import './memo/message';
+import './memo/folder';
+import './memo/filter';
+import './monitor/lib/monitor';
+import './portal/lib/portal';
+import './elasticsearch/highlighter';
+import './discussion/thread';
+import './discussion/lib/unseen';
+import './attendance/attendance';
+import './attendance/portlet';
+import './presence/user';
+import './share/folder_toolbar';
+import './share/file';
+import './affair/menu';
+import './affair/overtime_file';
+import './affair/shift_records';
 
 SS.ready(function () {
   var renderExternalLinks = function($box) {

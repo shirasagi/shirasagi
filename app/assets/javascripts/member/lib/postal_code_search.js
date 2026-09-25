@@ -102,3 +102,5 @@ $.fn.extend({
     });
   }
 });
+
+globalThis.PostalCodeSearch = PostalCodeSearch;

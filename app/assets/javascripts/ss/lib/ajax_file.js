@@ -1,4 +1,4 @@
-this.SS_AjaxFile = (function () {
+globalThis.SS_AjaxFile = (function () {
   function SS_AjaxFile(el, options) {
     this.$el = $(el || "#ajax-file-box");
     this.options = options || {};

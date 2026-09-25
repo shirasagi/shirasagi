@@ -1,44 +1,43 @@
-//= require jquery
-//= require jquery-migrate/src/migratemute.js
-//= require jquery-migrate/dist/jquery-migrate.js
-//= require jquery-ujs
-//= require js-cookie/dist/js.cookie.js
-//= require jquery-form/src/jquery.form.js
-//= require jquery-datetimepicker/build/jquery.datetimepicker.full.js
-//= require crypto-js/crypto-js.js
-//= require gmaps-marker-clusterer/src/markerclusterer.js
-//= require ss/lib/base
-//= require_self
-//= require ss/lib/font
-//= require ss/lib/module
-//= require ss/lib/mobile
-//= require ss/lib/clipboard
-//= require ss/lib/file_view
-//= require ss/lib/date_time_picker
-//= require cms/lib/site_search
-//= require cms/lib/site_search_history
-//= require cms/lib/line
-//= require cms/lib/history
-//= require ss/lib/search_ui
-//= require ss/lib/ajax_file
-//= require chat/lib/bot
-//= require cms/lib/editor
-//= require ads/lib/banner
-//= require event/lib/monthly
-//= require event/lib/calendar
-//= require event/lib/search
-//= require inquiry/lib/form
-//= require inquiry/lib/column
-//= require key_visual/lib/slide
-//= require map/googlemaps/map
-//= require map/googlemaps/facility/search
-//= require map/googlemaps/member/photo/form
-//= require map/openlayers/map
-//= require map/openlayers/facility/search
-//= require map/openlayers/member/photo/form
-//= require map/openlayers/opendata/dataset_map
-//= require opendata/graph
-//= require opendata/dataset_graph
+import '../ss/lib/jquery';
+import 'jquery-migrate/src/migratemute.js';
+import 'jquery-migrate/dist/jquery-migrate.js';
+import 'jquery-ujs';
+import Cookies from 'js-cookie';
+import 'jquery-form/src/jquery.form.js';
+import 'jquery-datetimepicker/build/jquery.datetimepicker.full.js';
+import 'crypto-js/crypto-js.js';
+import 'gmaps-marker-clusterer/src/markerclusterer.js';
+import '../ss/lib/base';
+import '../ss/lib/font';
+import '../ss/lib/module';
+import '../ss/lib/mobile';
+import '../ss/lib/clipboard';
+import '../ss/lib/file_view';
+import '../ss/lib/date_time_picker';
+import './lib/site_search';
+import './lib/site_search_history';
+import './lib/line';
+import './lib/history';
+import '../ss/lib/search_ui';
+import '../ss/lib/ajax_file';
+import '../chat/lib/bot';
+import './lib/editor';
+import '../ads/lib/banner';
+import '../event/lib/monthly';
+import '../event/lib/calendar';
+import '../event/lib/search';
+import '../inquiry/lib/form';
+import '../inquiry/lib/column';
+import '../key_visual/lib/slide';
+import '../map/googlemaps/map';
+import '../map/googlemaps/facility/search';
+import '../map/googlemaps/member/photo/form';
+import '../map/openlayers/map';
+import '../map/openlayers/facility/search';
+import '../map/openlayers/member/photo/form';
+import '../map/openlayers/opendata/dataset_map';
+import '../opendata/graph';
+import '../opendata/dataset_graph';
 
 SS.ready(function () {
   SS_Kana.render();
@@ -69,15 +68,15 @@ SS.ready(function () {
   SS_ClipboardCopy.render();
 });
 
-this.SS_Kana = (function () {
+globalThis.SS_Kana = (function () {
   function SS_Kana() {
   }
 
-  SS_Kana.dir = <%= SS.config.kana.location.to_json %>;
+  SS_Kana.dir = KANA_CONFIG_EXPORTS.location;
 
   SS_Kana.siteUrl = "/";
 
-  SS_Kana.kanaUrl = <%= SS.config.kana.location.to_json %> + "/";
+  SS_Kana.kanaUrl = KANA_CONFIG_EXPORTS.location + "/";
 
   SS_Kana.render = function () {
     if (SS.config["site_url"] && SS.config["kana_url"]) {
@@ -107,7 +106,7 @@ this.SS_Kana = (function () {
           return;
         }
 
-        // legacy：htmlにbuttonが含まれていない　→ a タグを生成
+        // legacy: htmlにbuttonが含まれていない => aタグを生成
         if (kanaElement.dataset.toolType === "button") {
           const buttonId = 'kana_button_' + index;
           const content = kanaElement.innerHTML;
@@ -158,9 +157,9 @@ this.SS_Kana = (function () {
       bool = $("body").data("kana");
     }
     if (bool) {
-      url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + this.siteUrl), "$1" + this.kanaUrl);
+      url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + RegExp.escape(this.siteUrl)), "$1" + this.kanaUrl);
     } else {
-      url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + this.kanaUrl), "$1" + this.siteUrl);
+      url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + RegExp.escape(this.kanaUrl)), "$1" + this.siteUrl);
     }
     return url;
   };
@@ -184,22 +183,22 @@ this.SS_Kana = (function () {
 
 })();
 
-this.SS_Translate = (function () {
+globalThis.SS_Translate = (function () {
   function SS_Translate() {
   }
 
-  SS_Translate.dir = <%= SS.config.translate.location.to_json %>;
+  SS_Translate.dir = TRANSLATE_CONFIG_EXPORTS.location;
 
   SS_Translate.siteUrl = "/";
 
-  SS_Translate.translateUrl = <%= SS.config.translate.location.to_json %> + "/";
+  SS_Translate.translateUrl = TRANSLATE_CONFIG_EXPORTS.location + "/";
 
   SS_Translate.url = function (url, target) {
     if (target) {
-      var targetUrl = this.translateUrl + target + "/";
-      url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + this.siteUrl), "$1" + targetUrl);
+      let targetUrl = this.translateUrl + target + "/";
+      url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + RegExp.escape(this.siteUrl)), "$1" + targetUrl);
     } else {
-      var targetUrl = this.translateUrl + $("body").data("translate") + "/";
+      let targetUrl = RegExp.escape(this.translateUrl + $("body").data("translate") + "/");
       url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + targetUrl), "$1" + this.siteUrl);
     }
     return url;
@@ -217,7 +216,7 @@ this.SS_Translate = (function () {
 })();
 
 //背景色
-this.SS_Theme = (function () {
+globalThis.SS_Theme = (function () {
   function SS_Theme() {
   }
 
@@ -349,14 +348,26 @@ this.SS_Theme = (function () {
 
 })();
 
-this.SS_AdobeReader = (function () {
+globalThis.SS_AdobeReader = (function () {
   function SS_AdobeReader() {
   }
 
   SS_AdobeReader.render = function () {
     if ($("a[href$='.pdf']").length) {
       return $("#ss-adobe-reader, .ss-adobe-reader").each(function () {
-        return $(this).html(<%= Array(I18n.t("cms.adobe_reader.remark")).join.to_json %>).show();
+        var html;
+        if ("i18next" in window) {
+          html = i18next.t("cms.adobe_reader.remark", { returnObjects: true });
+        } else {
+          html = [
+            "<div>",
+            "PDFファイルをご覧いただくためには、Adobe Readerのプラグイン（無償）が必要となります。",
+            "お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。",
+            "</div>",
+            "<a href=\"https://get.adobe.com/jp/reader/\">Adobe Readerをダウンロードする</a>"
+          ];
+        }
+        return $(this).html(html.join("\n")).show();
       });
     }
   };
@@ -365,7 +376,7 @@ this.SS_AdobeReader = (function () {
 
 })();
 
-this.SS_Tabs = (function () {
+globalThis.SS_Tabs = (function () {
   function SS_Tabs() {
   }
 
@@ -431,194 +442,201 @@ this.SS_Tabs = (function () {
   return SS_Tabs;
 
 })();
-function SS_Voice() {
-  this.voiceConfig = {
-    'location': <%= SS.config.voice.controller['location'].to_json %>,
-    'loading-resource': <%= SS.config.voice.resource['loading'].to_json %>,
-    'disabled-resource': <%= SS.config.voice.resource['disabled'].to_json %>,
-    'overload-resource': <%= SS.config.voice.resource['overload'].to_json %>
-  };
 
-  this.url = null;
+globalThis.SS_Voice = (function () {
+  function SS_Voice() {
+    this.voiceConfig = {
+      'location': VOICE_CONFIG_EXPORTS.controller['location'],
+      'loading-resource': VOICE_CONFIG_EXPORTS.resource['loading'],
+      'disabled-resource': VOICE_CONFIG_EXPORTS.resource['disabled'],
+      'overload-resource': VOICE_CONFIG_EXPORTS.resource['overload']
+    };
 
-  this.$voiceTag = null;
+    this.url = null;
 
-  this.voiceController = null;
+    this.$voiceTag = null;
 
-  this.state = null;
+    this.voiceController = null;
 
-  this.cancelLoading = null;
+    this.state = null;
 
-  this.timerId = null;
-}
+    this.cancelLoading = null;
 
-SS_Voice.prototype.render = function ($voiceTag, index_1)  {
-  const self = this;
-  const index = index_1;
-  self.url = self.requestUrl();
-
-  if ($voiceTag.is('[data-tool-type="button"]')) {
-    const button = $('<button/>', {
-      type: "button",
-      name: "voice",
-      "aria-expanded": "false",
-      "aria-haspopup": "dialog"
-    }).html($voiceTag.html());
-    $voiceTag.html('');
-    button.appendTo($voiceTag);
-    self.$voiceTag = button;
-  } else {
-    const anchor = $('<a rel="nofollow"/>').attr('href', "#/voice/").html($voiceTag.html());
-    $voiceTag.html('');
-    anchor.appendTo($voiceTag);
-    self.$voiceTag = anchor;
+    this.timerId = null;
   }
 
-  const controllerId = 'ss-voice-controller-' + index;
-  const voice_controller = $('<div id="' + controllerId + '" class="ss-voice-controller" style="display: none;"/>');
-  self.$voiceTag.attr("aria-controls", controllerId);
-  self.$voiceTag.after(voice_controller);
-  self.voiceController = new SS_VoiceController(voice_controller[0], index);
-  self.state = null;
-  self.cancelLoading = false;
-  self.timerId = null;
-  self.init();
-  voice_controller.find('.ss-jp-close').on('click', self.cancel.bind(self));
-};
+  SS_Voice.prototype.render = function ($voiceTag, index_1) {
+    const self = this;
+    const index = index_1;
+    self.url = self.requestUrl();
 
-SS_Voice.prototype.init = function () {
-  this.state = 'init';
-  this.voiceController.stop();
-  this.setAction(this.load.bind(this));
-  this.cancelLoading = false;
-  return false;
-};
+    if ($voiceTag.is('[data-tool-type="button"]')) {
+      const button = $('<button/>', {
+        type: "button",
+        name: "voice",
+        "aria-expanded": "false",
+        "aria-haspopup": "dialog"
+      }).html($voiceTag.html());
+      $voiceTag.html('');
+      button.appendTo($voiceTag);
+      self.$voiceTag = button;
+    } else {
+      const anchor = $('<a rel="nofollow"/>').attr('href', "#/voice/").html($voiceTag.html());
+      $voiceTag.html('');
+      anchor.appendTo($voiceTag);
+      self.$voiceTag = anchor;
+    }
 
-SS_Voice.prototype.setAction = function (action) {
-  this.$voiceTag.off('click');
-  this.$voiceTag.on('click', action);
-};
+    const controllerId = 'ss-voice-controller-' + index;
+    const voice_controller = $('<div id="' + controllerId + '" class="ss-voice-controller" style="display: none;"/>');
+    self.$voiceTag.attr("aria-controls", controllerId);
+    self.$voiceTag.after(voice_controller);
+    self.voiceController = new SS_VoiceController(voice_controller[0], index);
+    self.state = null;
+    self.cancelLoading = false;
+    self.timerId = null;
+    self.init();
+    voice_controller.find('.ss-jp-close').on('click', self.cancel.bind(self));
+  };
 
-SS_Voice.prototype.load = function (ev) {
-  const self = this;
-  this.$voiceTag.attr("aria-expanded", "true");
-  if (this.cancelLoading) {
+  SS_Voice.prototype.init = function () {
+    this.state = 'init';
+    this.voiceController.stop();
+    this.setAction(this.load.bind(this));
+    this.cancelLoading = false;
+    return false;
+  };
+
+  SS_Voice.prototype.setAction = function (action) {
+    this.$voiceTag.off('click');
+    this.$voiceTag.on('click', action);
+  };
+
+  SS_Voice.prototype.load = function (ev) {
+    const self = this;
+    this.$voiceTag.attr("aria-expanded", "true");
+    if (this.cancelLoading) {
+      if (ev) {
+        ev.preventDefault();
+      }
+      return false;
+    }
+
+    $.ajax({
+      type: 'HEAD',
+      url: this.url,
+      cache: false,
+      statusCode: {
+        200: function () {
+          return self.playAudio();
+        },
+        202: function (data, status, xhr) {
+          let retry_after;
+          self.renderLoading();
+          retry_after = xhr.getResponseHeader('Retry-After');
+          if (!retry_after) {
+            retry_after = 5;
+          }
+          return self.timerId = setTimeout(self.load.bind(self), retry_after * 1000);
+        }
+      },
+      error: function (xhr, _status, _error) {
+        return self.renderError(xhr.status);
+      }
+    });
+
     if (ev) {
       ev.preventDefault();
     }
     return false;
-  }
+  };
 
-  $.ajax({
-    type: 'HEAD',
-    url: this.url,
-    cache: false,
-    statusCode: {
-      200: function () {
-        return self.playAudio();
-      },
-      202: function (data, status, xhr) {
-        let retry_after;
-        self.renderLoading();
-        retry_after = xhr.getResponseHeader('Retry-After');
-        if (!retry_after) {
-          retry_after = 5;
-        }
-        return self.timerId = setTimeout(self.load.bind(self), retry_after * 1000);
-      }
-    },
-    error: function (xhr, status, error) {
-      return self.renderError(xhr.status);
+  SS_Voice.prototype.renderLoading = function () {
+    let url;
+    if (this.state === 'loading') {
+      return false;
     }
-  });
-
-  if (ev) {
-    ev.preventDefault();
-  }
-  return false;
-};
-
-SS_Voice.prototype.renderLoading = function () {
-  let url;
-  if (this.state === 'loading') {
+    url = this.voiceConfig['loading-resource'];
+    this.state = 'loading';
+    this.setAction(this.cancel.bind(this));
+    this.voiceController.play(url);
     return false;
-  }
-  url = this.voiceConfig['loading-resource'];
-  this.state = 'loading';
-  this.setAction(this.cancel.bind(this));
-  this.voiceController.play(url);
-  return false;
-};
+  };
 
-SS_Voice.prototype.renderError = function (status) {
-  let url;
-  if (this.state === 'error') {
+  SS_Voice.prototype.renderError = function (status) {
+    let url;
+    if (this.state === 'error') {
+      return false;
+    }
+    if (this.timerId >= 0) {
+      clearTimeout(this.timerId);
+    }
+    this.timerId = -1;
+    if (status === 429) {
+      url = this.voiceConfig['overload-resource'];
+    } else {
+      url = this.voiceConfig['disabled-resource'];
+    }
+    this.state = 'error';
+    this.setAction(this.cancel.bind(this));
+    this.voiceController.play(url);
     return false;
-  }
-  if (this.timerId >= 0) {
-    clearTimeout(this.timerId);
-  }
-  this.timerId = -1;
-  if (status === 429) {
-    url = this.voiceConfig['overload-resource'];
-  } else {
-    url = this.voiceConfig['disabled-resource'];
-  }
-  this.state = 'error';
-  this.setAction(this.cancel.bind(this));
-  this.voiceController.play(url);
-  return false;
-};
+  };
 
-SS_Voice.prototype.cancel = function (ev) {
-  this.cancelLoading = true;
-  if (this.timerId !== null) {
-    clearTimeout(this.timerId);
-  }
-  this.timerId = null;
-  this.init();
-  this.$voiceTag.attr("aria-expanded", "false");
-  if (ev) {
-    ev.preventDefault();
-  }
-  return false;
-};
+  SS_Voice.prototype.cancel = function (ev) {
+    this.cancelLoading = true;
+    if (this.timerId !== null) {
+      clearTimeout(this.timerId);
+    }
+    this.timerId = null;
+    this.init();
+    this.$voiceTag.attr("aria-expanded", "false");
+    if (ev) {
+      ev.preventDefault();
+    }
+    return false;
+  };
 
-SS_Voice.prototype.playAudio = function () {
-  this.state = 'playing';
-  this.voiceController.play(this.url);
-  this.setAction(this.cancel.bind(this));
-  return false;
-};
+  SS_Voice.prototype.playAudio = function () {
+    this.state = 'playing';
+    this.voiceController.play(this.url);
+    this.setAction(this.cancel.bind(this));
+    return false;
+  };
 
-SS_Voice.prototype.requestUrl = function () {
-  let path, url;
-  path = this.trimKanaDir(location.pathname);
-  if (path === "/") {
-    path = "/index.html";
-  }
-  url = encodeURIComponent(this.normalizeProtocol(location.protocol) + '://' + location.host + path);
-  url = this.normalizeLocation(this.voiceConfig['location']) + '/' + url;
-  return url;
-};
+  SS_Voice.prototype.requestUrl = function () {
+    let path, url;
+    path = this.trimKanaDir(location.pathname);
+    if (path === "/") {
+      path = "/index.html";
+    }
+    url = encodeURIComponent(this.normalizeProtocol(location.protocol) + '://' + location.host + path);
+    url = this.normalizeLocation(this.voiceConfig['location']) + '/' + url;
+    return url;
+  };
 
-SS_Voice.prototype.trimKanaDir = function (path, kana_dir) {
-  if (kana_dir == null) {
-    kana_dir = SS_Kana.dir;
-  }
-  return path.replace(new RegExp('^' + kana_dir.replace('/', '\/') + '\/'), '/');
-};
+  SS_Voice.prototype.trimKanaDir = function (path, kana_dir) {
+    if (kana_dir == null) {
+      kana_dir = SS_Kana.dir;
+    }
 
-SS_Voice.prototype.normalizeProtocol = function (protocol) {
-  return protocol.replace(new RegExp(':$'), '');
-};
+    let pattern = `^${RegExp.escape(kana_dir)}/`
+    pattern = new RegExp(pattern)
+    return path.replace(pattern, '/');
+  };
 
-SS_Voice.prototype.normalizeLocation = function (location) {
-  return location.replace(new RegExp('/$'), '');
-};
+  SS_Voice.prototype.normalizeProtocol = function (protocol) {
+    return protocol.replace(new RegExp(':$'), '');
+  };
 
+  SS_Voice.prototype.normalizeLocation = function (location) {
+    return location.replace(new RegExp('/$'), '');
+  };
 
-this.SS_VoiceController = (function () {
+  return SS_Voice;
+})();
+
+globalThis.SS_VoiceController = (function () {
   function SS_VoiceController(container, index) {
     this.status = 'stopped';
     this.index = index || 0;
@@ -660,7 +678,7 @@ this.SS_VoiceController = (function () {
         remainingDuration: true,
         smoothPlayBar: true,
         supplied: "mp3",
-        swfPath: <%= SS.config.voice.resource['jplayer_path'].to_json %>,
+        swfPath: VOICE_CONFIG_EXPORTS.resource['jplayer_path'],
         toggleDuration: true,
         useStateClassSkin: true
       });
@@ -722,7 +740,7 @@ this.SS_VoiceController = (function () {
 
 })();
 
-this.SS_Recommend = (function () {
+globalThis.SS_Recommend = (function () {
   function SS_Recommend() {
   }
 
@@ -744,7 +762,7 @@ this.SS_Recommend = (function () {
       cache: false,
       dataType: 'json',
       data: params,
-      error: function (req, status, error) {
+      error: function () {
       }
     });
   };
@@ -753,7 +771,7 @@ this.SS_Recommend = (function () {
 
 })();
 
-this.SS_Print = (function () {
+globalThis.SS_Print = (function () {
   function SS_Print() {
   }
 
@@ -766,7 +784,7 @@ this.SS_Print = (function () {
       try {
         window.print();
         return false;
-      } catch (ex) {
+      } catch (_ex) {
         console.info("print is unsupported")
       }
     })
@@ -776,7 +794,7 @@ this.SS_Print = (function () {
 
 })();
 
-this.SS_ClipboardCopy = (function () {
+globalThis.SS_ClipboardCopy = (function () {
   function SS_ClipboardCopy() {
   }
 

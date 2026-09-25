@@ -1,4 +1,4 @@
-this.Map_Lgwan_Form = (function () {
+globalThis.Map_Lgwan_Form = (function () {
   function Map_Lgwan_Form() {
   }
 

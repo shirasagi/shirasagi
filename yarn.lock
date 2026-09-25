@@ -771,11 +771,6 @@ chartjs-plugin-colorschemes-v3@^0.5.4:
   resolved "https://registry.yarnpkg.com/chartjs-plugin-colorschemes-v3/-/chartjs-plugin-colorschemes-v3-0.5.4.tgz#b420ebbea09003171d04f6095ffceda754e986b2"
   integrity sha512-2YsZT7rkApsJBh1V2JrvtxWRCo6ouuIJqgok97ihYNjVEf5iVFfXYiD6sumaRWQ3elxF8yIywbvOjmpobp0dYg==
 
-chartjs-plugin-datalabels@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/chartjs-plugin-datalabels/-/chartjs-plugin-datalabels-2.2.0.tgz#369578e131d743c2e34b5fbe2d3f9335f6639b8f"
-  integrity sha512-14ZU30lH7n89oq+A4bWaJPnAG8a7ZTk7dKf48YAzMvJjQtjrgg5Dpk9f+LbjCF6bpx3RAGTeL13IXpKQYyRvlw==
-
 choices.js@^11.1.0:
   version "11.2.3"
   resolved "https://registry.yarnpkg.com/choices.js/-/choices.js-11.2.3.tgz#4b100c5354d44bce0045b5818ce672b8349cd7c5"
@@ -963,6 +958,11 @@ detect-libc@^2.0.3:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-2.1.2.tgz#689c5dcdc1900ef5583a4cb9f6d7b473742074ad"
   integrity sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==
+
+dsmorse-gridster@0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/dsmorse-gridster/-/dsmorse-gridster-0.7.2.tgz#c3339eccd4f927078d176d080b3ef3fc3eaeb011"
+  integrity sha512-14fEUNwy0OG4fJ+LrZgrdFDhWrA17OTFcTbs+3ObG4kYFx7kdNp9WYMgPhJZvX9tf6O7pkUxv/9izUGYnNKnwg==
 
 ejs@^6.0.1:
   version "6.0.1"
@@ -1667,12 +1667,7 @@ jquery-ujs@^1.2.3:
   resolved "https://registry.yarnpkg.com/jquery-ujs/-/jquery-ujs-1.2.3.tgz#dcac6026ab7268e5ee41faf9d31c997cd4ddd603"
   integrity sha512-59wvfx5vcCTHMeQT1/OwFiAj+UffLIwjRIoXdpO7Z7BCFGepzq9T9oLVeoItjTqjoXfUrHJvV7QU6pUR+UzOoA==
 
-jquery@>1.7.0, "jquery@>= 1.7.2", "jquery@>=1.12.0 <5.0.0", jquery@>=1.2.6, jquery@>=1.3.2, jquery@>=1.7, jquery@>=1.7.2:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-4.0.0.tgz#95c33ac29005ff72ec444c5ba1cf457e61404fbb"
-  integrity sha512-TXCHVR3Lb6TZdtw1l3RTLf8RBWVGexdxL6AC8/e0xZKEpBflBsjh9/8LXw+dkNFuOyW9B7iB3O1sP7hS0Kiacg==
-
-jquery@^3.7.1:
+jquery@>1.7.0, "jquery@>= 1.7.1", "jquery@>= 1.7.2", "jquery@>=1.12.0 <5.0.0", jquery@>=1.2.6, jquery@>=1.3.2, jquery@>=1.7, jquery@>=1.7.2, jquery@^3.7.1:
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.7.1.tgz#083ef98927c9a6a74d05a6af02806566d16274de"
   integrity sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==
@@ -1871,6 +1866,13 @@ ms@^2.1.3:
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
+
+multiselect@^0.9.12:
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/multiselect/-/multiselect-0.9.12.tgz#d15536e986dd6a0029b160d6613bcedf81e4c7ed"
+  integrity sha512-JCuFC288lp9m5xNlxsgX10dhZZv+5lIQQt4kM4H8uLysbiMJTYQBi0LuYguRunCvlXlGjFvH8O/YpL8x2lu9EA==
+  dependencies:
+    jquery ">= 1.7.1"
 
 nanoid@^3.3.16:
   version "3.3.16"

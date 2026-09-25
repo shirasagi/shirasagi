@@ -1,4 +1,4 @@
-this.Form_Preview = (function () {
+globalThis.Form_Preview = (function () {
   function Form_Preview() {
   }
 

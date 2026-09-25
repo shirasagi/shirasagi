@@ -1,4 +1,4 @@
-this.Facility_Search = (function () {
+globalThis.Facility_Search = (function () {
   function Facility_Search() {
   }
 
