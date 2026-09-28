@@ -1,8 +1,8 @@
 globalThis.SS_Usage = (function () {
-  SS_Usage = function (el) {
+  function SS_Usage(el) {
     this.$el = $(el);
     this.render();
-  };
+  }
 
   SS_Usage.selectors = [
     '.usage-node-count',
@@ -65,4 +65,6 @@ globalThis.SS_Usage = (function () {
       }
     });
   };
+
+  return SS_Usage;
 })();
