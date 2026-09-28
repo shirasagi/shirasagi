@@ -4,7 +4,7 @@
 require 'fileutils'
 
 class CSSBuilder
-  LOAD_PATHS = %w(node_modules app/assets/stylesheets vendor/assets/stylesheets).freeze
+  LOAD_PATHS = %w(node_modules app/assets/stylesheets).freeze
 
   attr_writer :sources
 
