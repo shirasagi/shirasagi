@@ -1,4 +1,5 @@
 import '../lib/form';
+import '../lib/form_preview';
 import '../lib/template_form';
 
 import '../../ss/lib/workflow';
@@ -435,7 +436,7 @@ globalThis.SS_Preview = (function () {
 
     // sets relative on the wrapper
     $('body').children().each(function() {
-      $el = $(this);
+      var $el = $(this);
       if ($el.css('position') === 'static') {
         $el.css('position', 'relative');
       }
@@ -1328,7 +1329,7 @@ globalThis.SS_Preview = (function () {
     }
     if (this.inplaceMode) {
       // already in inplace mode
-      return;
+      return $.Deferred().resolve().promise();
     }
 
     var self = this;
@@ -1367,7 +1368,7 @@ globalThis.SS_Preview = (function () {
   SS_Preview.prototype.stopInplaceMode = function(dontCareLock) {
     if (!this.inplaceMode) {
       // already exited from inplace mode
-      return
+      return $.Deferred().resolve().promise();
     }
 
     var self = this;
@@ -1401,11 +1402,12 @@ globalThis.SS_Preview = (function () {
 
     if (dontCareLock) {
       afterReleased();
-      return;
+      return $.Deferred().resolve().promise();
     }
 
     this.editLock.release();
     afterReleased();
+    return $.Deferred().resolve().promise();
   };
 
   //

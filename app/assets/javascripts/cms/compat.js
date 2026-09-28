@@ -1,5 +1,7 @@
 // CMS 公開画面では application.js に変えて compat.js が読み込まれる。
-import 'moment/moment.js';
+import moment from "moment/moment"
+
+window.moment = moment;
 
 (function () {
   var isDocumentReady = function() {
