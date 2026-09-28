@@ -158,7 +158,7 @@ globalThis.Gws_Presence_User = (function () {
   return Gws_Presence_User;
 })();
 
-this.Gws_Presence_User_Reload = (function () {
+globalThis.Gws_Presence_User_Reload = (function () {
   function Gws_Presence_User_Reload() {}
 
   Gws_Presence_User_Reload.render = function (opts) {
