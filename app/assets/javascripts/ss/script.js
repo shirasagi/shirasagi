@@ -23,7 +23,6 @@ import 'mdn-polyfills/String.prototype.padStart.js';
 import 'mdn-polyfills/String.prototype.repeat.js';
 import 'mdn-polyfills/String.prototype.startsWith.js';
 import 'mdn-polyfills/String.prototype.trim.js';
-import 'crypto-js/crypto-js.js';
 import './lib/base';
 import './chart';
 import './lib/form';

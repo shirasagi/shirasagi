@@ -5,7 +5,6 @@ import 'jquery-ujs';
 import Cookies from 'js-cookie';
 import 'jquery-form/src/jquery.form.js';
 import 'jquery-datetimepicker/build/jquery.datetimepicker.full.js';
-import 'crypto-js/crypto-js.js';
 import 'gmaps-marker-clusterer/src/markerclusterer.js';
 import '../ss/lib/base';
 import '../ss/lib/font';
