@@ -1,3 +1,5 @@
+import Cropper from 'cropperjs/dist/cropper.js';
+
 globalThis.Cms_Line_Message_Repeat_Plan = (function () {
   function Cms_Line_Message_Repeat_Plan() {
   }
@@ -25,7 +27,7 @@ globalThis.Cms_Line_Message_Repeat_Plan = (function () {
 
 })();
 
-this.Cms_Line_Area_Cropper = (function () {
+globalThis.Cms_Line_Area_Cropper = (function () {
   function Cms_Line_Area_Cropper(el, opts) {
     if (!opts) {
       opts = {};
@@ -136,7 +138,7 @@ this.Cms_Line_Area_Cropper = (function () {
 })();
 
 
-this.Cms_Line_Deliver_Condition =  (function () {
+globalThis.Cms_Line_Deliver_Condition =  (function () {
   function Cms_Line_Deliver_Condition() {
     this.render();
   }

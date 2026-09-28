@@ -102,7 +102,6 @@ import '../map/lgwan/form';
 import '../map/reference';
 import '../webmail/lib/mail';
 import '../webmail/lib/address';
-import 'cropperjs/dist/cropper.js';
 import '../service/lib/quota.js';
 import 'flexibility/flexibility.js';
 import '../cms/lib/readable_setting';

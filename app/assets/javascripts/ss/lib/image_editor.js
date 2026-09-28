@@ -1,3 +1,5 @@
+import Cropper from 'cropperjs/dist/cropper.js';
+
 globalThis.SS_ImageEditor = (function () {
   function SS_ImageEditor(el) {
     var self = this;
