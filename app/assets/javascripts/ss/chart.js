@@ -1,2 +1,5 @@
-//= require chart.js/dist/chart.umd.js
-//= require chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js
+import { Chart, registerables } from 'chart.js';
+
+Chart.register(...registerables);
+
+globalThis.Chart = Chart;

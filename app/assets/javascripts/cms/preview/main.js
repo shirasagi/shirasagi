@@ -1,26 +1,24 @@
-//= require cms/lib/form
-//= require cms/lib/template_form
+import '../lib/form';
+import '../lib/form_preview';
+import '../lib/template_form';
 
-//= require ss/lib/workflow
-//= require ss/lib/addon/temp_file
-//= require ss/lib/search_ui
-//= require ss/lib/list_ui
-//= require ss/lib/tree_ui
-//= require ss/lib/dropdown
+import '../../ss/lib/workflow';
+import '../../ss/lib/addon/temp_file';
+import '../../ss/lib/search_ui';
+import '../../ss/lib/list_ui';
+import '../../ss/lib/tree_ui';
+import '../../ss/lib/dropdown';
 
 // here are polyfills for IE11
-//= require mdn-polyfills/String.prototype.endsWith.js
-//= require mdn-polyfills/String.prototype.includes.js
-//= require mdn-polyfills/String.prototype.padEnd.js
-//= require mdn-polyfills/String.prototype.padStart.js
-//= require mdn-polyfills/String.prototype.repeat.js
-//= require mdn-polyfills/String.prototype.startsWith.js
-//= require mdn-polyfills/String.prototype.trim.js
+import 'mdn-polyfills/String.prototype.endsWith.js';
+import 'mdn-polyfills/String.prototype.includes.js';
+import 'mdn-polyfills/String.prototype.padEnd.js';
+import 'mdn-polyfills/String.prototype.padStart.js';
+import 'mdn-polyfills/String.prototype.repeat.js';
+import 'mdn-polyfills/String.prototype.startsWith.js';
+import 'mdn-polyfills/String.prototype.trim.js';
 
-// for 承認ユーザー選択
-//= require ejs/ejs.min.js
-
-SS_Preview = (function () {
+globalThis.SS_Preview = (function () {
   function SS_Preview(el) {
     this.el = el;
     this.inplaceMode = false;
@@ -438,7 +436,7 @@ SS_Preview = (function () {
 
     // sets relative on the wrapper
     $('body').children().each(function() {
-      $el = $(this);
+      var $el = $(this);
       if ($el.css('position') === 'static') {
         $el.css('position', 'relative');
       }
@@ -1331,7 +1329,7 @@ SS_Preview = (function () {
     }
     if (this.inplaceMode) {
       // already in inplace mode
-      return;
+      return $.Deferred().resolve().promise();
     }
 
     var self = this;
@@ -1370,7 +1368,7 @@ SS_Preview = (function () {
   SS_Preview.prototype.stopInplaceMode = function(dontCareLock) {
     if (!this.inplaceMode) {
       // already exited from inplace mode
-      return
+      return $.Deferred().resolve().promise();
     }
 
     var self = this;
@@ -1404,11 +1402,12 @@ SS_Preview = (function () {
 
     if (dontCareLock) {
       afterReleased();
-      return;
+      return $.Deferred().resolve().promise();
     }
 
     this.editLock.release();
     afterReleased();
+    return $.Deferred().resolve().promise();
   };
 
   //

@@ -1,4 +1,4 @@
-this.Cms_Site_Search = (function () {
+globalThis.Cms_Site_Search = (function () {
   function Cms_Site_Search() {
   }
 

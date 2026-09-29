@@ -1,4 +1,4 @@
-this.Gws_Reminder = (function () {
+globalThis.Gws_Reminder = (function () {
   function Gws_Reminder() {
   }
 

@@ -1,4 +1,4 @@
-this.Gws_Schedule_Todo_Index = (function () {
+globalThis.Gws_Schedule_Todo_Index = (function () {
   function Gws_Schedule_Todo_Index(el) {
     this.$el = $(el);
     this.render();

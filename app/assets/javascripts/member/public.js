@@ -1,1 +1,1 @@
-//= require member/lib/postal_code_search
+import './lib/postal_code_search';

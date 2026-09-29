@@ -1,4 +1,4 @@
-this.SS_Pdfjs = (function () {
+globalThis.SS_Pdfjs = (function () {
   function SS_Pdfjs(el) {
     this.$pdfViewerWarp = $(el);
     this.viewerPath = "/assets/js/pdfjs-legacy-dist/web/ss-viewer.html";

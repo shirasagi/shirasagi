@@ -1,4 +1,4 @@
-this.SS_ReplaceFile = (function () {
+globalThis.SS_ReplaceFile = (function () {
   function SS_ReplaceFile(el) {
     this.$el = $(el);
   }

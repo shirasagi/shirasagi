@@ -89,8 +89,6 @@ Rails.application.configure do
   # other assets configurations
   config.assets.compress = true
   config.assets.prefix = "/assets-dev"
-  config.sass.debug_info = false
-  config.sass.inline_source_maps = true
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true

@@ -1,43 +1,47 @@
-function SS_CascadeMenu() {
-}
+globalThis.SS_CascadeMenu = (function () {
+  function SS_CascadeMenu() {
+  }
 
-SS_CascadeMenu.render = function() {
-  $('.cascade-menu').on('click', function(ev) {
-    var $this = $(this);
-    var ref = $this.data('ref');
-    if (! ref) {
-      return;
-    }
+  SS_CascadeMenu.render = function () {
+    $('.cascade-menu').on('click', function (ev) {
+      var $this = $(this);
+      var ref = $this.data('ref');
+      if (!ref) {
+        return;
+      }
 
-    var $currDropdown = $this.closest('.dropdown-menu');
-    var $nextDropdown = $(ref);
+      var $currDropdown = $this.closest('.dropdown-menu');
+      var $nextDropdown = $(ref);
 
-    // if ($currDropdown.height() > $nextDropdown.height()) {
-    //   $nextDropdown.height($currDropdown.height());
-    // }
+      // if ($currDropdown.height() > $nextDropdown.height()) {
+      //   $nextDropdown.height($currDropdown.height());
+      // }
 
-    $nextDropdown.addClass('active');
-    $currDropdown.removeClass('active');
+      $nextDropdown.addClass('active');
+      $currDropdown.removeClass('active');
 
-    if ($nextDropdown.data('load')) {
-      $nextDropdown.data('load')();
-    }
+      if ($nextDropdown.data('load')) {
+        $nextDropdown.data('load')();
+      }
 
-    ev.preventDefault();
-    ev.stopPropagation();
-  });
+      ev.preventDefault();
+      ev.stopPropagation();
+    });
 
-  $('.cascade-back').on('click', function(ev) {
-    var $this = $(this);
-    var ref = $this.attr('href');
+    $('.cascade-back').on('click', function (ev) {
+      var $this = $(this);
+      var ref = $this.attr('href');
 
-    var $currDropdown = $this.closest('.dropdown-menu');
-    var $nextDropdown = $(ref);
+      var $currDropdown = $this.closest('.dropdown-menu');
+      var $nextDropdown = $(ref);
 
-    $nextDropdown.addClass('active');
-    $currDropdown.removeClass('active');
+      $nextDropdown.addClass('active');
+      $currDropdown.removeClass('active');
 
-    ev.preventDefault();
-    ev.stopPropagation();
-  });
-};
+      ev.preventDefault();
+      ev.stopPropagation();
+    });
+  };
+
+  return SS_CascadeMenu;
+})();

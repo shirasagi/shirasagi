@@ -1,4 +1,4 @@
-this.Webmail_Mail_Navi = (function () {
+globalThis.Webmail_Mail_Navi = (function () {
   function Webmail_Mail_Navi() {
   }
 
@@ -89,7 +89,7 @@ this.Webmail_Mail_Navi = (function () {
 
 })();
 
-this.Webmail_Mail_List = (function () {
+globalThis.Webmail_Mail_List = (function () {
   function Webmail_Mail_List() {
   }
 
@@ -451,7 +451,7 @@ this.Webmail_Mail_List = (function () {
 
 })();
 
-this.Webmail_Mail_Detail = (function () {
+globalThis.Webmail_Mail_Detail = (function () {
   function Webmail_Mail_Detail() {
   }
 
@@ -518,7 +518,7 @@ this.Webmail_Mail_Detail = (function () {
 
 })();
 
-this.Webmail_Mail_Address = (function () {
+globalThis.Webmail_Mail_Address = (function () {
   function Webmail_Mail_Address() {
   }
 
@@ -573,7 +573,7 @@ this.Webmail_Mail_Address = (function () {
 
 })();
 
-this.Webmail_Mail_Form = (function () {
+globalThis.Webmail_Mail_Form = (function () {
   function Webmail_Mail_Form() {
   }
 
@@ -636,7 +636,7 @@ this.Webmail_Mail_Form = (function () {
 
 })();
 
-this.Webmail_Mail_Form_Address = (function () {
+globalThis.Webmail_Mail_Form_Address = (function () {
   function Webmail_Mail_Form_Address() {
   }
 

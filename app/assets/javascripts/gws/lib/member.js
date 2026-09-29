@@ -1,4 +1,4 @@
-this.Gws_Member = (function () {
+globalThis.Gws_Member = (function () {
   function Gws_Member() {
   }
 

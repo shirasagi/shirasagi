@@ -1,4 +1,4 @@
-this.Guide_Diagnostic = (function() {
+globalThis.Guide_Diagnostic = (function() {
   function Guide_Diagnostic(el) {
     this.$el = $(el);
     this.loadData();

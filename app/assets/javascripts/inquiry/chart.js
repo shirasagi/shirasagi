@@ -1,7 +1,8 @@
-//= require chart.js/dist/chart.umd.js
-//= require chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js
+import { Chart, registerables } from 'chart.js';
 
-this.Inquiry_Chart = (function() {
+Chart.register(...registerables);
+
+globalThis.Inquiry_Chart = (function() {
   function Inquiry_Chart() {}
 
   Inquiry_Chart.drawBar = function(selector) {

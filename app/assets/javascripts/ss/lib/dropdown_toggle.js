@@ -1,4 +1,4 @@
-SS_DropdownToggle = (function () {
+globalThis.SS_DropdownToggle = (function () {
   function SS_DropdownToggle() {}
 
   function renderOnce() {

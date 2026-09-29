@@ -1,4 +1,4 @@
-this.Gws_Monitor_Topic = (function () {
+globalThis.Gws_Monitor_Topic = (function () {
   function Gws_Monitor_Topic() {
   }
 

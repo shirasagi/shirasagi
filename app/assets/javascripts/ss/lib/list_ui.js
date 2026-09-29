@@ -1,4 +1,4 @@
-this.SS_ListUI = (function () {
+globalThis.SS_ListUI = (function () {
   function SS_ListUI() { }
 
   SS_ListUI.render = function (el) {

@@ -1,5 +1,5 @@
-this.Form_Alert = (function () {
-  function Form_Alert() {};
+globalThis.Form_Alert = (function () {
+  function Form_Alert() {}
 
   Cms_Form.alert = Form_Alert;
 

@@ -1,4 +1,4 @@
-this.SS_PopupNotice = (function () {
+globalThis.SS_PopupNotice = (function () {
   SS_PopupNotice.ajaxTriggered = false;
 
   SS_PopupNotice.render = function () {
@@ -65,4 +65,3 @@ this.SS_PopupNotice = (function () {
   return SS_PopupNotice;
 
 })();
-

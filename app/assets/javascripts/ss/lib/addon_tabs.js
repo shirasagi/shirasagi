@@ -1,4 +1,4 @@
-this.SS_AddonTabs = (function () {
+globalThis.SS_AddonTabs = (function () {
   function SS_AddonTabs() {
   }
 
@@ -95,4 +95,3 @@ this.SS_AddonTabs = (function () {
   return SS_AddonTabs;
 
 })();
-

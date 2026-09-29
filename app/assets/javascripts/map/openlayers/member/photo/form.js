@@ -1,6 +1,6 @@
-//= require exif-js/exif.js
+import 'exif-js/exif.js';
 
-this.Openlayers_Member_Photo_Form = (function () {
+globalThis.Openlayers_Member_Photo_Form = (function () {
   function Openlayers_Member_Photo_Form(canvas, opts) {
     if (opts == null) {
       opts = {};

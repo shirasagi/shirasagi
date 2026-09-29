@@ -1,4 +1,6 @@
-this.Cms_Site_Search_History = (function () {
+import CryptoJS from 'crypto-js';
+
+globalThis.Cms_Site_Search_History = (function () {
   function Cms_Site_Search_History(selector, url) {
     this.form = $(selector);
     this.url = url;

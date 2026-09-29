@@ -1,4 +1,4 @@
-this.Openlayers_Facility_Search = (function () {
+globalThis.Openlayers_Facility_Search = (function () {
   function Openlayers_Facility_Search() {
   }
 

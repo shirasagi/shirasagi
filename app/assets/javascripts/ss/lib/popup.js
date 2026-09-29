@@ -1,4 +1,6 @@
-this.SS_Popup = (function () {
+import tippy from 'tippy.js';
+
+globalThis.SS_Popup = (function () {
   function SS_Popup(el, options) {
     this.el = el;
     this.options = options || {};

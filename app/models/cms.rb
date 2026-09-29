@@ -153,6 +153,8 @@ module Cms
     ::Cms::User
   )).freeze
 
+  CSS_LOAD_PATHS = %w(node_modules app/assets/stylesheets).freeze
+
   def self.cms_db_used(site_criteria, opts = {})
     site_ids = site_criteria.pluck(:id)
     site_group_ids = site_criteria.pluck(:group_ids).flatten.uniq
@@ -339,7 +341,10 @@ module Cms
     end
 
     commands << "--load-path=#{basedir}"
-    Rails.application.config.assets.paths.each { commands << "--load-path=#{_1}" }
+    CSS_LOAD_PATHS.each do |path|
+      path = ::File.expand_path(path, Rails.root)
+      commands << "--load-path=#{path}"
+    end
     commands << source_path
     # 注意: オプション --source-map-urls=relative を指定する場合、出力ファイルを指定しなければならない。
     # 注意: そうしないと sass コマンドがエラー終了する。

@@ -1,4 +1,4 @@
-this.Opendata_Dataset_Graph = (function () {
+globalThis.Opendata_Dataset_Graph = (function () {
   function Opendata_Dataset_Graph() {
   }
 

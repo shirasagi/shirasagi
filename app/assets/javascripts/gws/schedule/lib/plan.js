@@ -1,4 +1,4 @@
-this.Gws_Schedule_Plan = (function () {
+globalThis.Gws_Schedule_Plan = (function () {
   var convertToTime = function(date, templateTime) {
     if (templateTime) {
       return date.millisecond(templateTime.millisecond())

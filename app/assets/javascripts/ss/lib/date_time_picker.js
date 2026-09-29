@@ -1,4 +1,4 @@
-this.SS_DateTimePicker = (function () {
+globalThis.SS_DateTimePicker = (function () {
   // 注意:
   // datetimepicker にはバグがある。
   // このコントールの次の要素が disabled の場合、コントロール内で Enter キーを押しても、入力した日時が確定しない。

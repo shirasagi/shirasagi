@@ -1,4 +1,6 @@
-this.Cms_Image_Map_Area_Cropper = (function () {
+import Cropper from 'cropperjs/dist/cropper.js';
+
+globalThis.Cms_Image_Map_Area_Cropper = (function () {
   function Cms_Image_Map_Area_Cropper(el, opts) {
     if (!opts) {
       opts = {};

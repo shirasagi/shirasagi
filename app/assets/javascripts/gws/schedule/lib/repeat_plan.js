@@ -1,4 +1,4 @@
-this.Gws_Schedule_Repeat_Plan = (function () {
+globalThis.Gws_Schedule_Repeat_Plan = (function () {
   function Gws_Schedule_Repeat_Plan() {
   }
 

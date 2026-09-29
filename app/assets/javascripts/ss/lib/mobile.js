@@ -1,4 +1,6 @@
-this.SS_Mobile = (function () {
+import Cookies from 'js-cookie';
+
+globalThis.SS_Mobile = (function () {
   function SS_Mobile() {
   }
 
@@ -38,4 +40,3 @@ this.SS_Mobile = (function () {
   return SS_Mobile;
 
 })();
-

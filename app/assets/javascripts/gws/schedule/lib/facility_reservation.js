@@ -1,4 +1,4 @@
-this.Gws_Schedule_FacilityReservation = (function () {
+globalThis.Gws_Schedule_FacilityReservation = (function () {
   var requiredParams = function() {
     var repeatType = $('select[name="item[repeat_type]"]').val();
     var allday = $('input[type=checkbox][name="item[allday]"]').prop('checked');

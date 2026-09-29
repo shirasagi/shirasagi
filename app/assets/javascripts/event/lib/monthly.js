@@ -1,4 +1,4 @@
-this.Event_Monthly = (function () {
+globalThis.Event_Monthly = (function () {
   function Event_Monthly() {
   }
 

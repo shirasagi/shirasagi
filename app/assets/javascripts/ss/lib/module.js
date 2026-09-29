@@ -1,16 +1,6 @@
-// ref: http://minghai.github.io/library/coffeescript/03_classes.html
+globalThis.SS_Module = (function () {
+  var moduleKeywords = ['extended', 'included'];
 
-  var moduleKeywords,
-  indexOf = [].indexOf || function (item) {
-    for (var i = 0, l = this.length; i < l; i++) {
-      if (i in this && this[i] === item) return i;
-    }
-    return -1;
-  };
-
-moduleKeywords = ['extended', 'included'];
-
-this.SS_Module = (function () {
   function SS_Module() {
   }
 
@@ -18,7 +8,7 @@ this.SS_Module = (function () {
     var key, ref, value;
     for (key in obj) {
       value = obj[key];
-      if (indexOf.call(moduleKeywords, key) < 0) {
+      if (moduleKeywords.indexOf(key) < 0) {
         this[key] = value;
       }
     }
@@ -32,7 +22,7 @@ this.SS_Module = (function () {
     var key, ref, value;
     for (key in obj) {
       value = obj[key];
-      if (indexOf.call(moduleKeywords, key) < 0) {
+      if (moduleKeywords.indexOf(key) < 0) {
         this.prototype[key] = value;
       }
     }
@@ -45,4 +35,3 @@ this.SS_Module = (function () {
   return SS_Module;
 
 })();
-

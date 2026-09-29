@@ -1,4 +1,4 @@
-this.SS_Addon_Markdown = (function () {
+globalThis.SS_Addon_Markdown = (function () {
   function SS_Addon_Markdown(el, options) {
     this.$el = $(el);
     this.options = options;

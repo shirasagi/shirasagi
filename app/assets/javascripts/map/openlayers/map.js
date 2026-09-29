@@ -1,4 +1,4 @@
-this.Openlayers_Map = (function () {
+globalThis.Openlayers_Map = (function () {
   function Openlayers_Map(canvas, opts) {
     if (opts == null) {
       opts = {};

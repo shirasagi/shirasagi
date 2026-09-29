@@ -126,13 +126,9 @@ GEM
       bigdecimal
       rexml
     crass (1.0.7)
+    cssbundling-rails (1.4.3)
+      railties (>= 6.0.0)
     csv (3.3.5)
-    dartsass-sprockets (3.2.1)
-      railties (>= 4.0.0)
-      sassc-embedded (~> 1.80.1)
-      sprockets (> 3.0)
-      sprockets-rails
-      tilt
     date (3.5.1)
     debug (1.11.1)
       irb (~> 1.10)
@@ -168,7 +164,6 @@ GEM
     erubi (1.13.1)
     excon (1.5.0)
       logger
-    execjs (2.10.1)
     factory_bot (6.6.0)
       activesupport (>= 6.1.0)
     factory_bot_rails (6.5.1)
@@ -238,9 +233,6 @@ GEM
       base64 (~> 0.2)
       faraday (>= 1.0, < 3.a)
     google-logging-utils (0.2.0)
-    google-protobuf (4.35.1)
-      bigdecimal
-      rake (~> 13.3)
     googleauth (1.17.1)
       faraday (>= 1.0, < 3.a)
       google-cloud-env (~> 2.2)
@@ -411,8 +403,6 @@ GEM
     nokogiri (1.19.4)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    non-stupid-digest-assets (1.0.11)
-      sprockets (>= 2.0)
     notiffany (0.1.3)
       nenv (~> 0.1)
       shellany (~> 0.0)
@@ -497,6 +487,10 @@ GEM
       prawn (>= 2.4.0)
     prettyprint (0.2.0)
     prism (1.9.0)
+    propshaft (1.3.2)
+      actionpack (>= 7.0.0)
+      activesupport (>= 7.0.0)
+      rack
     pry (0.16.0)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -689,11 +683,6 @@ GEM
       rexml
     ruby2_keywords (0.0.5)
     rubyzip (2.4.1)
-    sass-embedded (1.101.0)
-      google-protobuf (~> 4.31)
-      rake (>= 13)
-    sassc-embedded (1.80.9)
-      sass-embedded (~> 1.80)
     scanf (1.0.0)
     sdoc (2.6.5)
       rdoc (>= 5.0)
@@ -730,14 +719,6 @@ GEM
     sparql-client (3.3.0)
       net-http-persistent (~> 4.0, >= 4.0.2)
       rdf (~> 3.3)
-    sprockets (4.2.2)
-      concurrent-ruby (~> 1.0)
-      logger
-      rack (>= 2.2.4, < 4)
-    sprockets-rails (3.5.2)
-      actionpack (>= 6.1)
-      activesupport (>= 6.1)
-      sprockets (>= 3.0.0)
     strscan (3.1.8)
     sxp (2.0.0)
       matrix (~> 0.4)
@@ -752,7 +733,6 @@ GEM
       prawn-disable_word_break (>= 2.3.1)
       rexml
     thor (1.5.0)
-    tilt (2.8.0)
     timecop (0.9.11)
     timeout (0.6.1)
     trailblazer-option (0.1.2)
@@ -762,8 +742,6 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uber (0.1.0)
-    uglifier (4.2.1)
-      execjs (>= 0.3.0, < 3)
     unf (0.2.0)
     ungarbled (0.0.11)
       activesupport
@@ -816,8 +794,8 @@ DEPENDENCIES
   browser
   capybara
   clam_scan
+  cssbundling-rails
   csv
-  dartsass-sprockets
   debug
   diff-lcs
   diffy
@@ -864,7 +842,6 @@ DEPENDENCIES
   net-ldap
   net-pop
   net-smtp
-  non-stupid-digest-assets
   oauth2
   oj
   omniauth
@@ -876,6 +853,7 @@ DEPENDENCIES
   omniauth-twitter
   omniauth-twitter2
   omniauth-yahoojp
+  propshaft
   pry-byebug
   pry-doc
   pry-rails
@@ -915,13 +893,10 @@ DEPENDENCIES
   simplecov-lcov
   sparql
   sparql-client
-  sprockets
-  sprockets-rails
   terminal-notifier-guard
   test-queue
   thinreports
   timecop
-  uglifier
   unf
   ungarbled
   unicorn

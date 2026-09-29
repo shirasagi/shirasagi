@@ -1,14 +1,12 @@
-/**
- *= require jquery-datetimepicker/build/jquery.datetimepicker.min.css
- *= require jquery.multi-select
- *= require @claviska/jquery-minicolors/jquery.minicolors.css
- *= require jquery-ui/dist/themes/base/jquery-ui.css
- *= require cropperjs/dist/cropper.css
- *= require tippy.js/dist/tippy.css
- *= require tippy.js/themes/light.css
- *= require tippy.js/themes/light-border.css
- *= require datatables.net-dt/css/dataTables.dataTables.css
- */
+@use "jquery-datetimepicker/build/jquery.datetimepicker.min.css" as jq_datetimepicker;
+@use "multiselect/css/multi-select" as jq_multiselect;
+@use "@claviska/jquery-minicolors/jquery.minicolors.css" as jq_minicolors;
+@use "jquery-ui/dist/themes/base/jquery-ui.css" as jq_ui;
+@use "cropperjs/dist/cropper.css" as cropper;
+@use "tippy.js/dist/tippy.css" as tippy;
+@use "tippy.js/themes/light.css" as tippy_light;
+@use "tippy.js/themes/light-border.css" as tippy_light_border;
+@use "datatables.net-dt/css/dataTables.dataTables.css" as jq_dataTables;
 
 // base
 @use "init";

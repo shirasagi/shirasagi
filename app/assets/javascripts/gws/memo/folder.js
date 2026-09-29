@@ -1,6 +1,8 @@
-function Gws_Memo_Folder() {
-}
+globalThis.Gws_Memo_Folder = (function () {
+  function Gws_Memo_Folder() {
+  }
 
-Gws_Memo_Folder.render = function () {
-  return $("#addon-gws-agents-addons-group_permission").hide();
-};
+  Gws_Memo_Folder.render = function () {
+    return $("#addon-gws-agents-addons-group_permission").hide();
+  };
+})();

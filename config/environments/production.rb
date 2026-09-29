@@ -54,8 +54,6 @@ Rails.application.configure do
   config.assets.compress = true
   config.assets.digest = false
   config.assets.version = '1.0'
-  config.sass.debug_info = false # for cms
-  config.sass.line_numbers = false
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for Apache

@@ -1,38 +1,42 @@
-Cms_Column_List = function(el) {
-  this.$el = $(el);
-};
+globalThis.Cms_Column_List = (function () {
+  function Cms_Column_List(el) {
+    this.$el = $(el);
+  }
 
-Cms_Column_List.render = function(selector) {
-  document.querySelectorAll(selector).forEach(function(el) {
-    SS.justOnce(el, "cms-column-list", function() {
-      var instance = new Cms_Column_List(el);
-      instance.render();
-      return instance;
+  Cms_Column_List.render = function (selector) {
+    document.querySelectorAll(selector).forEach(function (el) {
+      SS.justOnce(el, "cms-column-list", function () {
+        var instance = new Cms_Column_List(el);
+        instance.render();
+        return instance;
+      });
     });
-  });
-};
+  };
 
-Cms_Column_List.prototype.render = function() {
-  var self = this;
+  Cms_Column_List.prototype.render = function () {
+    var self = this;
 
-  this.$el.on('click', '.btn-add-list', function() {
-    self.addList($(this));
-  });
+    this.$el.on('click', '.btn-add-list', function () {
+      self.addList($(this));
+    });
 
-  this.$el.on('click', '.btn-delete-list', function() {
-    self.removeList($(this));
-  });
-};
+    this.$el.on('click', '.btn-delete-list', function () {
+      self.removeList($(this));
+    });
+  };
 
-Cms_Column_List.prototype.addList = function($target) {
-  var $columnValue = $target.closest(".column-value");
-  var template = $columnValue.find(".template").html();
+  Cms_Column_List.prototype.addList = function ($target) {
+    var $columnValue = $target.closest(".column-value");
+    var template = $columnValue.find(".template").html();
 
-  var list = $columnValue.find(".list");
-  list.append(template);
-};
+    var list = $columnValue.find(".list");
+    list.append(template);
+  };
 
-Cms_Column_List.prototype.removeList = function($target) {
-  var $li = $target.closest("li");
-  $li.remove();
-};
+  Cms_Column_List.prototype.removeList = function ($target) {
+    var $li = $target.closest("li");
+    $li.remove();
+  };
+
+  return Cms_Column_List;
+})();

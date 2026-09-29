@@ -1,4 +1,4 @@
-this.Cms_Inplace_Form = (function () {
+globalThis.Cms_Inplace_Form = (function () {
   function Cms_Inplace_Form() {
   }
 

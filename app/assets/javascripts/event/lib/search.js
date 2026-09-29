@@ -1,4 +1,4 @@
-this.Event_Search = (function () {
+globalThis.Event_Search = (function () {
   function Event_Search() {
   }
 

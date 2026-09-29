@@ -1,4 +1,4 @@
-this.Link_Checker = (function () {
+globalThis.Link_Checker = (function () {
   function ResultBox(form) {
     this.$el = null;
     this.$elBody = null;

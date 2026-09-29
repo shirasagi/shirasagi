@@ -1,10 +1,9 @@
-SS.ready(function() {
+import ejs from "ejs";
+import { Calendar } from 'fullcalendar'
+
+(function() {
   function Gws_Schedule_Calendar() {
   }
-
-  Gws_Schedule_Calendar.messages = {
-    noPlan: i18next.t("gws/schedule.no_plan")
-  };
 
   Gws_Schedule_Calendar.dateToString = function (date) {
     if (!date) return;
@@ -49,7 +48,7 @@ SS.ready(function() {
     delete params.tapMenu;
 
     var calendarEl = document.querySelector(selector);
-    var calendar = new FullCalendar.Calendar(calendarEl, params);
+    var calendar = new Calendar(calendarEl, params);
     calendar.render();
     calendarEl.calendar = calendar;
 
@@ -528,4 +527,4 @@ SS.ready(function() {
   };
 
   window.Gws_Schedule_Calendar = Gws_Schedule_Calendar;
-});
+})();

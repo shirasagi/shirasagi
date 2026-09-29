@@ -1,4 +1,4 @@
-this.Gws_Popup = (function () {
+globalThis.Gws_Popup = (function () {
   function Gws_Popup() {
   }
 

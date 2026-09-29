@@ -1,4 +1,4 @@
-this.Event_Calendar = (function () {
+globalThis.Event_Calendar = (function () {
   function Event_Calendar() {
   }
 

@@ -1,4 +1,4 @@
-this.Gws_Discussion_Thread = (function () {
+globalThis.Gws_Discussion_Thread = (function () {
   function Gws_Discussion_Thread() {
   }
 

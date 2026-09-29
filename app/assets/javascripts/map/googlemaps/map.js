@@ -1,4 +1,6 @@
-this.Googlemaps_Map = (function () {
+import { MarkerClusterer } from "@googlemaps/markerclusterer";
+
+globalThis.Googlemaps_Map = (function () {
   function Googlemaps_Map() {
   }
 
@@ -183,11 +185,17 @@ this.Googlemaps_Map = (function () {
 
   Googlemaps_Map.renderMarkerCluster = function () {
     const clusterMarkers = Object.values(Googlemaps_Map.markers).map(data => data.marker);
-    Googlemaps_Map.markerClusterer = new MarkerClusterer(Googlemaps_Map.map, clusterMarkers, {
-      // averageCenter: true,
-      ignoreHiddenMarkers: true,
-      imagePath: '/assets/img/marker-clusterer/m',
-      // zoomOnClick: false,
+    Googlemaps_Map.markerClusterer = new MarkerClusterer({
+      map: Googlemaps_Map.map,
+      markers: clusterMarkers,
+      renderer: {
+        render: ({ count, position }) => {
+          return new google.maps.Marker({
+            icon: '/assets/img/marker-clusterer/m1',
+            position
+          });
+        }
+      }
     });
 
     google.maps.event.addListener(Googlemaps_Map.map, 'zoom_changed', () => {

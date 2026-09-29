@@ -1,4 +1,4 @@
-this.SS_EditLock = (function () {
+globalThis.SS_EditLock = (function () {
   var bind = function (fn, me) {
     return function () {
       return fn.apply(me, arguments);
@@ -74,4 +74,3 @@ this.SS_EditLock = (function () {
   return SS_EditLock;
 
 })();
-

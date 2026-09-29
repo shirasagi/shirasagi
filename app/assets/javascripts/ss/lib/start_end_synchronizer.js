@@ -1,4 +1,4 @@
-this.SS_StartEndSynchronizer = (function () {
+globalThis.SS_StartEndSynchronizer = (function () {
   var defaultStartEndDifferenceInMillis = 1000 * 60 * 60;
 
   var calcDifference = SS_StartEndSynchronizer.calcDifference = function (start, end) {

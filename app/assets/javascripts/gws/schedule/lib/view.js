@@ -1,4 +1,4 @@
-SS.ready(function() {
+(function() {
   function Gws_Schedule_View() {
   }
 
@@ -132,4 +132,4 @@ SS.ready(function() {
   };
 
   window.Gws_Schedule_View = Gws_Schedule_View;
-});
+})();

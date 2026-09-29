@@ -1,2 +1,1 @@
-//= require_self
-//= require opendata/lib/point
+import './lib/point'

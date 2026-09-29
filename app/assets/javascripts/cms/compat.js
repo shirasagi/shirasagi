@@ -1,7 +1,7 @@
 // CMS 公開画面では application.js に変えて compat.js が読み込まれる。
-//= require promise-polyfill/dist/polyfill.js
-//= require moment/moment.js
-//= require_self
+import moment from "moment/moment"
+
+window.moment = moment;
 
 (function () {
   var isDocumentReady = function() {

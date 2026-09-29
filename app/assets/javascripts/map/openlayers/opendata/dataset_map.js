@@ -1,4 +1,4 @@
-this.Openlayers_Dataset_Map = (function () {
+globalThis.Openlayers_Dataset_Map = (function () {
   function Openlayers_Dataset_Map() {
   }
 

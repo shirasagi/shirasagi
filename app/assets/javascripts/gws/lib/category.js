@@ -1,60 +1,64 @@
 /**
  * Category Navi
  */
-function Gws_Category_Navi(selector) {
-  this.el = $(selector);
-}
-
-Gws_Category_Navi.prototype.setBaseUrl = function(url) {
-  this.baseUrl = url;
-};
-
-Gws_Category_Navi.prototype.render = function(items, opts) {
-  if (opts == null) {
-    opts = {};
+globalThis.Gws_Category_Navi = (function () {
+  function Gws_Category_Navi(selector) {
+    this.el = $(selector);
   }
-  if (items.length == 0) {
-    this.el.hide();
-    return;
-  }
-  var _this = this;
-  var list = [];
-  var line = list[0];
-  var last_depth = -1;
-  var path = location.href.replace(/https?:\/\/.*?\//, '/');
-  var isCate = null;
-  var hideClose = opts["hideClose"];
 
-  $.each(items, function(idx, item) {
-    var depth = (item.name.match(/\//g) || []).length;
-    var url = _this.baseUrl.replace('ID', item._id);
+  Gws_Category_Navi.prototype.setBaseUrl = function (url) {
+    this.baseUrl = url;
+  };
 
-    if (depth == 0 || depth != last_depth) {
-      list.push({ depth: depth, items: []});
-      line = list[list.length - 1];
+  Gws_Category_Navi.prototype.render = function (items, opts) {
+    if (opts == null) {
+      opts = {};
     }
-    if (path.startsWith(url)) {
-      isCate = item._id;
+    if (items.length == 0) {
+      this.el.hide();
+      return;
     }
-    line.items.push('<a class="link-item" href="' + url + '">' + item.trailing_name + '</a>');
-    last_depth = depth;
-  });
+    var _this = this;
+    var list = [];
+    var line = list[0];
+    var last_depth = -1;
+    var path = location.href.replace(/https?:\/\/.*?\//, '/');
+    var isCate = null;
+    var hideClose = opts["hideClose"];
 
-  var html = [];
-  $.each(list, function(idx, data) {
-    html.push('<div class="depth depth-' + data.depth + '">');
-    html.push(data.items.join('<span class="separator"></span>'));
-    html.push('</div>');
-  });
-  this.el.find('.dropdown-menu').append(html.join(''));
+    $.each(items, function (idx, item) {
+      var depth = (item.name.match(/\//g) || []).length;
+      var url = _this.baseUrl.replace('ID', item._id);
 
-  var toggle = this.el.find('.dropdown-toggle');
-  if (!hideClose && isCate) {
-    var icon = $("<i/>", { class: "material-icons md-18 md-dark", "aria-hidden": true, role: 'img' }).text("clear");
-    var anchor = $('<a/>', { class: "ml-1", href: toggle.attr('href') }).append(icon);
-    toggle.after(anchor);
-  }
-  toggle.on("click", function() {
-    return false;
-  });
-};
+      if (depth == 0 || depth != last_depth) {
+        list.push({depth: depth, items: []});
+        line = list[list.length - 1];
+      }
+      if (path.startsWith(url)) {
+        isCate = item._id;
+      }
+      line.items.push('<a class="link-item" href="' + url + '">' + item.trailing_name + '</a>');
+      last_depth = depth;
+    });
+
+    var html = [];
+    $.each(list, function (idx, data) {
+      html.push('<div class="depth depth-' + data.depth + '">');
+      html.push(data.items.join('<span class="separator"></span>'));
+      html.push('</div>');
+    });
+    this.el.find('.dropdown-menu').append(html.join(''));
+
+    var toggle = this.el.find('.dropdown-toggle');
+    if (!hideClose && isCate) {
+      var icon = $("<i/>", {class: "material-icons md-18 md-dark", "aria-hidden": true, role: 'img'}).text("clear");
+      var anchor = $('<a/>', {class: "ml-1", href: toggle.attr('href')}).append(icon);
+      toggle.after(anchor);
+    }
+    toggle.on("click", function () {
+      return false;
+    });
+  };
+
+  return Gws_Category_Navi;
+})();
