@@ -1,0 +1,86 @@
+require 'spec_helper'
+
+describe "gws_schedule_todo_readables", type: :feature, dbscope: :example do
+  let(:site) { gws_site }
+  let(:role) { create :gws_role, :gws_role_schedule_todo_editor, cur_site: site }
+  let!(:group1) { create :gws_group, name: "#{site.name}/#{unique_id}" }
+  let!(:group2) { create :gws_group, name: "#{site.name}/#{unique_id}" }
+  # user1: 担当ユーザー（作成者）
+  let!(:user1) { create :gws_user, gws_role_ids: [ role.id ], group_ids: [ group1.id ] }
+  # user2: 閲覧ユーザー
+  let!(:user2) { create :gws_user, gws_role_ids: [ role.id ], group_ids: [ group2.id ] }
+  # user3: 担当・閲覧・管理のいずれでもない
+  let!(:user3) { create :gws_user, gws_role_ids: [ role.id ], group_ids: [ group2.id ] }
+  # user4: 管理ユーザー
+  let!(:user4) { create :gws_user, gws_role_ids: [ role.id ], group_ids: [ group2.id ] }
+  let!(:item) do
+    create(
+      :gws_schedule_todo, cur_site: site, cur_user: user1, member_ids: [ user1.id ], member_group_ids: [],
+      readable_setting_range: 'select', readable_member_ids: [ user2.id ], readable_group_ids: [],
+      group_ids: [], user_ids: [ user1.id, user4.id ]
+    )
+  end
+  let(:show_path) { gws_schedule_todo_readable_path(site: site, category: Gws::Schedule::TodoCategory::ALL.id, id: item) }
+
+  context "with member user" do
+    before { login_user user1 }
+
+    it do
+      visit show_path
+      expect(status_code).to eq 200
+      within "#addon-basic" do
+        expect(page).to have_content(item.name)
+      end
+    end
+  end
+
+  context "with readable user" do
+    before { login_user user2 }
+
+    it do
+      visit show_path
+      expect(status_code).to eq 200
+      within "#addon-basic" do
+        expect(page).to have_content(item.name)
+      end
+    end
+  end
+
+  context "with manageable user" do
+    before { login_user user4 }
+
+    it do
+      visit show_path
+      expect(status_code).to eq 200
+      within "#addon-basic" do
+        expect(page).to have_content(item.name)
+      end
+    end
+  end
+
+  context "with unrelated user" do
+    before { login_user user3 }
+
+    it do
+      visit show_path
+      expect(status_code).to eq 404
+    end
+  end
+
+  context "with readable user via user's calendar", js: true do
+    before { login_user user2 }
+
+    it do
+      visit gws_schedule_user_plans_path(site: site, user: user1)
+      wait_for_js_ready
+      within ".fc-daygrid-body" do
+        expect(page).to have_css(".fc-event.fc-event-todo .fc-event-title", text: item.name)
+        first(".fc-event.fc-event-todo").click
+      end
+
+      within "#addon-basic" do
+        expect(page).to have_content(item.name)
+      end
+    end
+  end
+end

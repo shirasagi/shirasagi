@@ -65,6 +65,27 @@ module Gws::Schedule::TodoFilter
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
+  def item_criteria
+    or_conds = @model.member_conditions(@cur_user)
+    or_conds += @model.readable_conditions(@cur_user, site: @cur_site)
+    or_conds << @model.allow_condition(:read, @cur_user, site: @cur_site)
+
+    @model.site(@cur_site).
+      where("$and" => [{ "$or" => or_conds }]).
+      without_deleted
+  end
+
+  def set_item
+    @item ||= begin
+      item = item_criteria.find(params[:id])
+      item.attributes = fix_params
+      item
+    end
+  rescue Mongoid::Errors::DocumentNotFound => e
+    return render_destroy(true) if params[:action] == 'destroy'
+    raise e
+  end
+
   def crud_redirect_url
     path = params.dig(:calendar, :path)
     if path.present? && trusted_url?(path)
