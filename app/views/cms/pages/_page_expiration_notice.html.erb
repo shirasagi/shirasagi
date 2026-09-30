@@ -1,5 +1,6 @@
 <%
   return unless @cur_site.page_expiration_enabled?
+  return unless @item.is_a?(Cms::PageExpirationSetting)
   return if @item.state != "public"
   return if @item.page_expiration_never?
   # be sure to match the condition defined at method "all_expired_pages" in app/jobs/cms/page/expiration_notice_job.rb
