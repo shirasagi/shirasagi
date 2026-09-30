@@ -59,11 +59,47 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example do
   end
 
   context "with unrelated user" do
+    let(:path_options) { { site: site, category: Gws::Schedule::TodoCategory::ALL.id, id: item } }
+
     before { login_user user3 }
 
     it do
       visit show_path
+      expect(status_code).to eq 200
+      within "#addon-basic" do
+        expect(page).to have_css("dd", text: I18n.t("gws/schedule.private_plan"))
+        expect(page).to have_no_content(item.name)
+      end
+      expect(page.title).not_to include(item.name)
+
+      visit popup_gws_schedule_todo_readable_path(path_options)
+      expect(status_code).to eq 200
+      expect(page).to have_css(".popup-title", text: I18n.t("gws/schedule.private_plan"))
+      expect(page).to have_no_content(item.name)
+
+      visit edit_gws_schedule_todo_readable_path(path_options)
       expect(status_code).to eq 404
+
+      visit copy_gws_schedule_todo_readable_path(path_options)
+      expect(status_code).to eq 404
+    end
+  end
+
+  context "with unrelated user via user's calendar", js: true do
+    before { login_user user3 }
+
+    it do
+      visit gws_schedule_user_plans_path(site: site, user: user1)
+      wait_for_js_ready
+      within ".fc-daygrid-body" do
+        expect(page).to have_css(".fc-event.fc-event-todo .fc-event-title", text: I18n.t("gws/schedule.private_plan"))
+        first(".fc-event.fc-event-todo").click
+      end
+
+      within "#addon-basic" do
+        expect(page).to have_css("dd", text: I18n.t("gws/schedule.private_plan"))
+      end
+      expect(page.title).not_to include(item.name)
     end
   end
 

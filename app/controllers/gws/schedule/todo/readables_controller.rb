@@ -18,6 +18,13 @@ class Gws::Schedule::Todo::ReadablesController < ApplicationController
     end
   end
 
+  def set_item
+    super
+  rescue Mongoid::Errors::DocumentNotFound
+    raise unless %w(show popup).include?(params[:action])
+    @item = @model.site(@cur_site).without_deleted.find(params[:id])
+  end
+
   public
 
   def index
