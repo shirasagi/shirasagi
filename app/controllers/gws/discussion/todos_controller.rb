@@ -82,6 +82,10 @@ class Gws::Discussion::TodosController < ApplicationController
     end
   end
 
+  def item_criteria
+    set_items
+  end
+
   public
 
   def index
