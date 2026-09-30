@@ -18,10 +18,10 @@ class Gws::Schedule::Todo::ManageablesController < ApplicationController
     end
   end
 
-  public
-
-  def index
-    super
-    @items = @items.not_member(@cur_user)
+  def set_items
+    @items ||= @model.site(@cur_site).
+      readable_or_manageable(@cur_user, site: @cur_site).
+      not_member(@cur_user).
+      without_deleted
   end
 end
