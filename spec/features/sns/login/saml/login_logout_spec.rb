@@ -206,23 +206,22 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
     let(:now) { Time.zone.now.beginning_of_minute }
 
     it do
-      Timecop.freeze(now) do
-        visit sns_mypage_path
-        click_on name
+      visit sns_mypage_path
+      click_on name
+
+      #
+      # blow form is outside of SHIRASAGI. it's sampling (https://capriza.github.io/samling/samling.html)
+      #
+      within "form#samlProps" do
+        fill_in "nameIdentifier", with: sys_user.email
+        click_on "Next"
       end
 
-      Timecop.freeze(now + 10.minutes + 1.second) do
-        #
-        # blow form is outside of SHIRASAGI. it's sampling (https://capriza.github.io/samling/samling.html)
-        #
-        within "form#samlProps" do
-          fill_in "nameIdentifier", with: sys_user.email
-          click_on "Next"
-        end
-
-        within "form#samlResponseForm" do
-          click_on "Post Response!"
-        end
+      within "form#samlResponseForm" do
+        expect(SS::SSOToken.count).to eq 1
+        token = SS::SSOToken.first
+        token.set(created: token.created - Sys::Auth::Base::READY_STATE_EXPIRES_IN - 1)
+        click_on "Post Response!"
       end
 
       #
