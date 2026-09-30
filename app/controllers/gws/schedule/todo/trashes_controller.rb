@@ -16,8 +16,4 @@ class Gws::Schedule::Todo::TrashesController < ApplicationController
       allow(:trash, @cur_user, site: @cur_site).
       only_deleted
   end
-
-  def item_criteria
-    set_items
-  end
 end

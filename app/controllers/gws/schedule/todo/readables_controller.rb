@@ -18,9 +18,10 @@ class Gws::Schedule::Todo::ReadablesController < ApplicationController
     end
   end
 
-  def set_items
-    @items ||= @model.site(@cur_site).
-      member(@cur_user).
-      without_deleted
+  public
+
+  def index
+    super
+    @items = @items.member(@cur_user)
   end
 end
