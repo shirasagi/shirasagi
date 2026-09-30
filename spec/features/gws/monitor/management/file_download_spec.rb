@@ -27,24 +27,16 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
     tmp_ss_file(contents: file_path, basename: "shirasagi-user1-file2.pdf", site: site, user: user1)
   end
 
-  before do
-    clear_downloads
-  end
-
-  after do
-    clear_downloads
-  end
-
   context "ss-4573" do
     it do
       # create cached file at
       login_user user0, to: gws_monitor_management_admin_path(site: site, id: topic1)
-      click_on I18n.t("gws/monitor.links.file_download")
-
-      wait_for_download
+      wait_for_download(topic1.name, extname: ".zip") do
+        click_on I18n.t("gws/monitor.links.file_download")
+      end
 
       exported = []
-      Zip::File.open(downloads.first) do |zip_file|
+      Zip::File.open(downloaded_path) do |zip_file|
         zip_file.each do |entry|
           exported << NKF.nkf("-w", entry.name)
         end
@@ -55,7 +47,6 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
       "#{Gws::Monitor::Topic.download_root_path}/#{topic1.id}/_/#{topic1.id}".tap do |zip_path|
         expect(::File.size(zip_path)).to be > 0
       end
-      clear_downloads
 
       expect(Gws::Task.all.count).to eq 1
       Gws::Task.all.first.tap do |task|
@@ -91,12 +82,12 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
       # 回答で追加されたファイルがダウンロードできるか（キャッシュが更新されるか）確認
       #
       login_user user0, to: gws_monitor_management_admin_path(site: site, id: topic1)
-      click_on I18n.t("gws/monitor.links.file_download")
-
-      wait_for_download
+      wait_for_download(topic1.name, extname: ".zip") do
+        click_on I18n.t("gws/monitor.links.file_download")
+      end
 
       exported = []
-      Zip::File.open(downloads.first) do |zip_file|
+      Zip::File.open(downloaded_path) do |zip_file|
         zip_file.each do |entry|
           exported << NKF.nkf("-w", entry.name)
         end
@@ -108,7 +99,6 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
       "#{Gws::Monitor::Topic.download_root_path}/#{topic1.id}/_/#{topic1.id}".tap do |zip_path|
         expect(::File.size(zip_path)).to be > 0
       end
-      clear_downloads
 
       #
       # 回答を編集する
@@ -127,12 +117,12 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
       # 回答の編集で追加されたファイルがダウンロードできるか（キャッシュが更新されるか）確認
       #
       login_user user0, to: gws_monitor_management_admin_path(site: site, id: topic1)
-      click_on I18n.t("gws/monitor.links.file_download")
-
-      wait_for_download
+      wait_for_download(topic1.name, extname: ".zip") do
+        click_on I18n.t("gws/monitor.links.file_download")
+      end
 
       exported = []
-      Zip::File.open(downloads.first) do |zip_file|
+      Zip::File.open(downloaded_path) do |zip_file|
         zip_file.each do |entry|
           exported << NKF.nkf("-w", entry.name)
         end
@@ -145,7 +135,6 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
       "#{Gws::Monitor::Topic.download_root_path}/#{topic1.id}/_/#{topic1.id}".tap do |zip_path|
         expect(::File.size(zip_path)).to be > 0
       end
-      clear_downloads
     end
   end
 

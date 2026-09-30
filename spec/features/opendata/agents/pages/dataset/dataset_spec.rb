@@ -158,13 +158,13 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
 
       now = Time.zone.now.beginning_of_minute
       Timecop.freeze(now) do
-        within ".resource[data-uuid='#{@rs1.uuid}']" do
-          click_on I18n.t("opendata.labels.downloaded")
+        wait_for_download("shift_jis", extname: ".csv") do
+          within ".resource[data-uuid='#{@rs1.uuid}']" do
+            click_on I18n.t("opendata.labels.downloaded")
+          end
         end
+        expect(::File.binread(downloaded_path)).to eq ::File.binread(csv_path)
       end
-
-      wait_for_download
-      expect(::File.binread(downloads.first)).to eq ::File.binread(csv_path)
 
       expect(Opendata::ResourceDownloadHistory.count).to eq 1
       Opendata::ResourceDownloadHistory.first.tap do |history|
@@ -224,7 +224,6 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
         end
       end
 
-      wait_for_download
       # no histories are created for copy
       expect(Opendata::ResourceDownloadHistory.count).to eq 2
 

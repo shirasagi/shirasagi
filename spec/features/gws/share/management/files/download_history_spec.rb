@@ -23,13 +23,13 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       click_on item.name
 
       ensure_addon_opened "#addon-gws-agents-addons-share-history"
-      within "#addon-gws-agents-addons-share-history" do
-        click_on I18n.t("ss.buttons.download")
+      wait_for_download(item.name, extname: ".png") do
+        within "#addon-gws-agents-addons-share-history" do
+          click_on I18n.t("ss.buttons.download")
+        end
       end
-
-      wait_for_download
-      expect(::File.size(downloads.first)).to eq item.size
-      expect(Fs.compare_file_head(downloads.first, item.path)).to be_truthy
+      expect(::File.size(downloaded_path)).to eq item.size
+      expect(Fs.compare_file_head(downloaded_path, item.path)).to be_truthy
     end
   end
 end

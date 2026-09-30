@@ -41,10 +41,11 @@ describe "cms_translate_access_logs", type: :feature, dbscope: :example, js: tru
 
     it "#download" do
       visit download_path
-      click_on I18n.t("ss.links.download")
-      wait_for_download
+      wait_for_download("translate_access_logs", extname: ".csv") do
+        click_on I18n.t("ss.links.download")
+      end
 
-      SS::Csv.open(downloads.first) do |csv|
+      SS::Csv.open(downloaded_path) do |csv|
         csv_table = csv.read
         expect(csv_table.length).to eq 1
         expect(csv_table[0]["#{Translate::AccessLog.t(:path)}"]).to eq item1.path
@@ -53,11 +54,12 @@ describe "cms_translate_access_logs", type: :feature, dbscope: :example, js: tru
 
     it "#download" do
       visit download_path
-      select I18n.t("ss.options.duration.1_day"), from: "item[save_term]"
-      click_on I18n.t("ss.links.download")
-      wait_for_download
+      wait_for_download("translate_access_logs", extname: ".csv") do
+        select I18n.t("ss.options.duration.1_day"), from: "item[save_term]"
+        click_on I18n.t("ss.links.download")
+      end
 
-      SS::Csv.open(downloads.first) do |csv|
+      SS::Csv.open(downloaded_path) do |csv|
         csv_table = csv.read
         expect(csv_table.length).to eq 1
         expect(csv_table[0]["#{Translate::AccessLog.t(:path)}"]).to eq item1.path
@@ -66,11 +68,12 @@ describe "cms_translate_access_logs", type: :feature, dbscope: :example, js: tru
 
     it "#download" do
       visit download_path
-      select I18n.t("ss.options.duration.1_month"), from: "item[save_term]"
-      click_on I18n.t("ss.links.download")
-      wait_for_download
+      wait_for_download("translate_access_logs", extname: ".csv") do
+        select I18n.t("ss.options.duration.1_month"), from: "item[save_term]"
+        click_on I18n.t("ss.links.download")
+      end
 
-      SS::Csv.open(downloads.first) do |csv|
+      SS::Csv.open(downloaded_path) do |csv|
         csv_table = csv.read
         expect(csv_table.length).to eq 2
         expect(csv_table[0]["#{Translate::AccessLog.t(:path)}"]).to eq item2.path
@@ -80,11 +83,12 @@ describe "cms_translate_access_logs", type: :feature, dbscope: :example, js: tru
 
     it "#download" do
       visit download_path
-      select I18n.t("ss.options.duration.1_year"), from: "item[save_term]"
-      click_on I18n.t("ss.links.download")
-      wait_for_download
+      wait_for_download("translate_access_logs", extname: ".csv") do
+        select I18n.t("ss.options.duration.1_year"), from: "item[save_term]"
+        click_on I18n.t("ss.links.download")
+      end
 
-      SS::Csv.open(downloads.first) do |csv|
+      SS::Csv.open(downloaded_path) do |csv|
         csv_table = csv.read
         expect(csv_table.length).to eq 3
         expect(csv_table[0]["#{Translate::AccessLog.t(:path)}"]).to eq item3.path

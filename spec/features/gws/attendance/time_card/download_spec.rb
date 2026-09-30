@@ -35,14 +35,14 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           click_on I18n.t("ss.buttons.download")
         end
 
-        within "form#item-form" do
-          click_on I18n.t("ss.buttons.download")
+        wait_for_download("time_cards", extname: ".csv") do
+          within "form#item-form" do
+            click_on I18n.t("ss.buttons.download")
+          end
         end
 
-        wait_for_download
-
         I18n.with_locale(I18n.default_locale) do
-          SS::Csv.open(downloads.first, headers: true) do |csv|
+          SS::Csv.open(downloaded_path, headers: true) do |csv|
             table = csv.read
             expect(table.length).to eq this_month.end_of_month.day
             expect(table[0][0]).to eq user.uid
@@ -61,16 +61,16 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           click_on I18n.t("ss.buttons.download")
         end
 
-        within "form#item-form" do
-          # choose
-          first("input[value='Shift_JIS']").click
-          click_on I18n.t("ss.buttons.download")
+        wait_for_download("time_cards", extname: ".csv") do
+          within "form#item-form" do
+            # choose
+            first("input[value='Shift_JIS']").click
+            click_on I18n.t("ss.buttons.download")
+          end
         end
 
-        wait_for_download
-
         I18n.with_locale(I18n.default_locale) do
-          SS::Csv.open(downloads.first, headers: true) do |csv|
+          SS::Csv.open(downloaded_path, headers: true) do |csv|
             table = csv.read
             expect(table.length).to eq this_month.end_of_month.day
             expect(table[0][0]).to eq user.uid
@@ -89,16 +89,16 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           click_on I18n.t("ss.buttons.download")
         end
 
-        within "form#item-form" do
-          # choose
-          first("input[value='UTF-8']").click
-          click_on I18n.t("ss.buttons.download")
+        wait_for_download("time_cards", extname: ".csv") do
+          within "form#item-form" do
+            # choose
+            first("input[value='UTF-8']").click
+            click_on I18n.t("ss.buttons.download")
+          end
         end
 
-        wait_for_download
-
         I18n.with_locale(I18n.default_locale) do
-          SS::Csv.open(downloads.first, headers: true) do |csv|
+          SS::Csv.open(downloaded_path, headers: true) do |csv|
             table = csv.read
             expect(table.length).to eq this_month.end_of_month.day
             expect(table[0][0]).to eq user.uid

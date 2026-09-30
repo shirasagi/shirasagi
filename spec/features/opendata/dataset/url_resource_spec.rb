@@ -96,10 +96,11 @@ describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("opendata.manage_url_resources")
       end
       click_on item.name
-      click_on ::File.basename(item.filename)
 
-      wait_for_download
-      expect(::File.binread(downloads.first)).to eq ::File.binread(csv_path)
+      wait_for_download("file", extname: ".csv") do
+        click_on ::File.basename(item.filename)
+      end
+      expect(::File.binread(downloaded_path)).to eq ::File.binread(csv_path)
 
       #
       # Update

@@ -30,20 +30,18 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       within_cbox do
         expect(page).to have_selector("td.thumb img")
 
-        find(".qr-png").all("a")[0].click
-        wait_for_download
-        find(".qr-png").all("a")[1].click
-        wait_for_download
-        find(".qr-png").all("a")[2].click
-        wait_for_download
-        find(".qr-svg").all("a")[0].click
-        wait_for_download
-        sleep(1)
-
-        expect(::File.basename(downloads[0])).to eq "QRCode.svg"
-        expect(::File.basename(downloads[1])).to eq "QRCode_160px.png"
-        expect(::File.basename(downloads[2])).to eq "QRCode_240px.png"
-        expect(::File.basename(downloads[3])).to eq "QRCode_480px.png"
+        wait_for_download("QRCode_160px.png", extname: ".png") do
+          find(".qr-png").all("a")[0].click
+        end
+        wait_for_download("QRCode_240px.png", extname: ".png") do
+          find(".qr-png").all("a")[1].click
+        end
+        wait_for_download("QRCode_480px.png", extname: ".png") do
+          find(".qr-png").all("a")[2].click
+        end
+        wait_for_download("QRCode.svg", extname: ".svg") do
+          find(".qr-svg").all("a")[0].click
+        end
         wait_for_cbox_closed { find('#cboxClose').click }
       end
     end

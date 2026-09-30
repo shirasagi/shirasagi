@@ -14,10 +14,10 @@ describe "webmail_groups", type: :feature, dbscope: :example, js: true do
       within ".nav-menu" do
         click_on I18n.t("ss.links.import")
       end
-      click_on I18n.t('ss.links.download_template')
-      wait_for_download
-
-      csv = ::CSV.read(downloads.first, headers: true, encoding: 'UTF8')
+      wait_for_download("webmail_groups", extname: ".csv") do
+        click_on I18n.t('ss.links.download_template')
+      end
+      csv = ::CSV.read(downloaded_path, headers: true, encoding: 'UTF8')
       expect(csv).to have_at_least(1).items
       expect(csv.headers.length).to be > 10
       expect(csv.headers).to include(Webmail::Group.t(:name))

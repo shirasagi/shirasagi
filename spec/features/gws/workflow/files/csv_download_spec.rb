@@ -30,14 +30,15 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         click_on item1.name
         wait_for_js_ready
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
-        accept_confirm(I18n.t("ss.confirm.download")) do
-          click_on I18n.t("gws/workflow.links.download_comment")
+
+        wait_for_download("workflow", extname: ".csv") do
+          accept_confirm(I18n.t("ss.confirm.download")) do
+            click_on I18n.t("gws/workflow.links.download_comment")
+          end
         end
 
-        wait_for_download
-
         I18n.with_locale(I18n.default_locale) do
-          csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+          csv = ::CSV.read(downloaded_path, headers: true, encoding: 'SJIS:UTF-8')
           expect(csv.length).to eq 1
           expect(csv[0][Gws::Workflow::File.t(:name)]).to eq item1.name
           expect(csv[0][Gws::Workflow::File.t(:html)]).to eq item1.html
@@ -54,14 +55,15 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         click_on item2.name
         wait_for_js_ready
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
-        accept_confirm(I18n.t("ss.confirm.download")) do
-          click_on I18n.t("gws/workflow.links.download_comment")
+
+        wait_for_download("workflow", extname: ".csv") do
+          accept_confirm(I18n.t("ss.confirm.download")) do
+            click_on I18n.t("gws/workflow.links.download_comment")
+          end
         end
 
-        wait_for_download
-
         I18n.with_locale(I18n.default_locale) do
-          csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+          csv = ::CSV.read(downloaded_path, headers: true, encoding: 'SJIS:UTF-8')
           expect(csv.length).to eq 1
           expect(csv[0][Gws::Workflow::File.t(:name)]).to eq item2.name
           expect(csv[0]["#{form.name}/#{column1.name}"]).to eq column1_value
@@ -78,14 +80,14 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         visit gws_workflow_files_path(site: site, state: "all")
         wait_for_event_fired("ss:checked-all-list-items") { find(".gws-workflow .list-head input[type=checkbox]").click }
 
-        accept_confirm do
-          click_on I18n.t("ss.buttons.csv")
+        wait_for_download("workflow", extname: ".csv") do
+          accept_confirm do
+            click_on I18n.t("ss.buttons.csv")
+          end
         end
 
-        wait_for_download
-
         I18n.with_locale(I18n.default_locale) do
-          csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+          csv = ::CSV.read(downloaded_path, headers: true, encoding: 'SJIS:UTF-8')
           expect(csv.length).to eq 2
           expect(csv[0][Gws::Workflow::File.t(:name)]).to eq item2.name
           expect(csv[0]["#{form.name}/#{column1.name}"]).to eq column1_value
@@ -104,13 +106,14 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         click_on item1.name
         wait_for_js_ready
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
-        accept_confirm(I18n.t("ss.confirm.download")) do
-          click_on I18n.t("gws/workflow.links.download_attachment")
+
+        wait_for_download("workflow", extname: ".zip") do
+          accept_confirm(I18n.t("ss.confirm.download")) do
+            click_on I18n.t("gws/workflow.links.download_attachment")
+          end
         end
 
-        wait_for_download
-
-        entry_names = ::Zip::File.open(downloads.first) do |entries|
+        entry_names = ::Zip::File.open(downloaded_path) do |entries|
           entries.map { |entry| entry.name }
         end
         expect(entry_names).to include(file1.download_filename)
@@ -126,13 +129,14 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         click_on item2.name
         wait_for_js_ready
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
-        accept_confirm(I18n.t("ss.confirm.download")) do
-          click_on I18n.t("gws/workflow.links.download_attachment")
+
+        wait_for_download("workflow", extname: ".zip") do
+          accept_confirm(I18n.t("ss.confirm.download")) do
+            click_on I18n.t("gws/workflow.links.download_attachment")
+          end
         end
 
-        wait_for_download
-
-        entry_names = ::Zip::File.open(downloads.first) do |entries|
+        entry_names = ::Zip::File.open(downloaded_path) do |entries|
           entries.map { |entry| entry.name }
         end
         expect(entry_names).to include(file2.download_filename)
@@ -147,13 +151,13 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         visit gws_workflow_files_path(site: site, state: "all")
         wait_for_event_fired("ss:checked-all-list-items") { find(".gws-workflow .list-head input[type=checkbox]").click }
 
-        accept_confirm do
-          click_on I18n.t("gws/survey.buttons.zip_all_files")
+        wait_for_download("workflow", extname: ".zip") do
+          accept_confirm do
+            click_on I18n.t("gws/survey.buttons.zip_all_files")
+          end
         end
 
-        wait_for_download
-
-        entry_names = ::Zip::File.open(downloads.first) do |entries|
+        entry_names = ::Zip::File.open(downloaded_path) do |entries|
           entries.map { |entry| entry.name }
         end
         expect(entry_names).to have(2).items

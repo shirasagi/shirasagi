@@ -234,15 +234,15 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       it do
         visit gws_share_folders_path(site: site)
         click_on folder.name
-        within "#addon-basic" do
-          page.accept_confirm do
-            click_on I18n.t("ss.buttons.download")
+        wait_for_download(folder.name, extname: ".zip") do
+          within "#addon-basic" do
+            page.accept_confirm do
+              click_on I18n.t("ss.buttons.download")
+            end
           end
         end
 
-        wait_for_download
-
-        entry_names = ::Zip::File.open(downloads.first) do |entries|
+        entry_names = ::Zip::File.open(downloaded_path) do |entries|
           entries.map { |entry| entry.name }
         end
         expect(entry_names).to include(file.name)

@@ -45,18 +45,18 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
       within ".gws-schedule-box" do
         click_on I18n.t("ss.buttons.csv")
       end
-      within "#item-form" do
-        choose I18n.t('ss.options.csv_encoding.UTF-8')
-        choose I18n.t('gws/schedule.options.period_specification.period')
-        fill_in_datetime "s[start_at]", with: now.beginning_of_day
-        fill_in_datetime "s[end_at]", with: now.since(3.days).end_of_day
-        click_on I18n.t("ss.buttons.download")
+      wait_for_download("gws_schedule_plans", extname: ".csv") do
+        within "#item-form" do
+          choose I18n.t('ss.options.csv_encoding.UTF-8')
+          choose I18n.t('gws/schedule.options.period_specification.period')
+          fill_in_datetime "s[start_at]", with: now.beginning_of_day
+          fill_in_datetime "s[end_at]", with: now.since(3.days).end_of_day
+          click_on I18n.t("ss.buttons.download")
+        end
       end
 
-      wait_for_download
-
       I18n.with_locale(I18n.default_locale) do
-        csv = ::CSV.open(downloads.first, headers: true, encoding: 'UTF-8')
+        csv = ::CSV.open(downloaded_path, headers: true, encoding: 'UTF-8')
         csv_table = csv.read
         expect(csv_table.headers.length).to be > 10
         expect(csv_table.headers).to include(*expected_basic_headers)

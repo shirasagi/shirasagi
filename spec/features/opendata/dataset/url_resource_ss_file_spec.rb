@@ -15,19 +15,17 @@ describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
   let(:now) { Time.zone.now.beginning_of_hour }
 
   def download_url_resource(path = nil)
-    clear_downloads
-
     visit opendata_dataset_path(site: site, cid: node, id: dataset)
     within "#addon-opendata-agents-addons-url_resource" do
       click_button I18n.t("opendata.manage_url_resources")
     end
-    click_on name
-    click_on ::File.basename(filename)
 
-    wait_for_download
+    wait_for_download("file", extname: ".csv") do
+      click_on name
+      click_on ::File.basename(filename)
+    end
 
-    path ||= csv_path
-    expect(::File.binread(downloads.first)).to eq ::File.binread(path)
+    expect(::File.binread(downloaded_path)).to eq ::File.binread(path || csv_path)
   end
 
   def visit_url_resource

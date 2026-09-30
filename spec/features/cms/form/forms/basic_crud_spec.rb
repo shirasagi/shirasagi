@@ -79,26 +79,28 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       # download 1 form
       visit cms_forms_path(site: site.id)
       wait_for_js_ready
-      within "#main .index" do
-        find("input[name='ids[]']", match: :first).set(true) #choose
-        find(".btn-list-head-action.download").click
+      wait_for_download("cms_forms", extname: ".json") do
+        within "#main .index" do
+          find("input[name='ids[]']", match: :first).set(true) #choose
+          find(".btn-list-head-action.download").click
+        end
       end
-      wait_for_download
 
-      json = JSON.parse(File.read(downloads.first))
+      json = JSON.parse(File.read(downloaded_path))
       expect(json.size).to eq 1
       expect(json.present?).to be_truthy
 
-      File.delete(downloads.first)
+      File.delete(downloaded_path)
 
       # download all forms
       visit cms_forms_path(site: site.id)
-      within ".nav-menu" do
-        click_on I18n.t("ss.links.download")
+      wait_for_download("cms_forms", extname: ".json") do
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.download")
+        end
       end
-      wait_for_download
 
-      json = JSON.parse(File.read(downloads.first))
+      json = JSON.parse(File.read(downloaded_path))
       expect(json.size).to eq 2
       expect(json.present?).to be_truthy
     end

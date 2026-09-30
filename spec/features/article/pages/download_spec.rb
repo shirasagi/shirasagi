@@ -27,15 +27,15 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_event_fired "turbo:frame-load" do
-        within_dialog do
-          within "form#item-form" do
-            click_on I18n.t("ss.links.download")
+      wait_for_download("article_pages", extname: ".csv") do
+        wait_for_event_fired "turbo:frame-load" do
+          within_dialog do
+            within "form#item-form" do
+              click_on I18n.t("ss.links.download")
+            end
           end
         end
       end
-
-      wait_for_download
 
       expect(Job::Log.count).to eq 1
       Job::Log.all.each do |log|
@@ -69,7 +69,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(notification.reply_item_id).to be_blank
 
       # チェックはダウンロードに影響しない
-      SS::Csv.open(downloads.first) do |csv|
+      SS::Csv.open(downloaded_path) do |csv|
         csv_table = csv.read
         expect(csv_table.length).to eq 2
         # updated_desc order
@@ -90,15 +90,15 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_event_fired "turbo:frame-load" do
-        within_dialog do
-          within "form#item-form" do
-            click_on I18n.t("ss.links.download")
+      wait_for_download("article_pages", extname: ".csv") do
+        wait_for_event_fired "turbo:frame-load" do
+          within_dialog do
+            within "form#item-form" do
+              click_on I18n.t("ss.links.download")
+            end
           end
         end
       end
-
-      wait_for_download
 
       expect(Job::Log.count).to eq 1
       Job::Log.all.each do |log|
@@ -131,7 +131,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(notification.reply_model).to be_blank
       expect(notification.reply_item_id).to be_blank
 
-      SS::Csv.open(downloads.first) do |csv|
+      SS::Csv.open(downloaded_path) do |csv|
         csv_table = csv.read
         expect(csv_table.length).to eq 2
         # updated_desc order
@@ -152,16 +152,16 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_event_fired "turbo:frame-load" do
-        within_dialog do
-          within "form#item-form" do
-            choose I18n.t("ss.options.csv_encoding.UTF-8")
-            click_on I18n.t("ss.links.download")
+      wait_for_download("article_pages", extname: ".csv") do
+        wait_for_event_fired "turbo:frame-load" do
+          within_dialog do
+            within "form#item-form" do
+              choose I18n.t("ss.options.csv_encoding.UTF-8")
+              click_on I18n.t("ss.links.download")
+            end
           end
         end
       end
-
-      wait_for_download
 
       expect(Job::Log.count).to eq 1
       Job::Log.all.each do |log|
@@ -194,8 +194,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(notification.reply_model).to be_blank
       expect(notification.reply_item_id).to be_blank
 
-      expect(SS::Csv.detect_encoding(downloads.first)).to eq Encoding::UTF_8
-      SS::Csv.open(downloads.first) do |csv|
+      expect(SS::Csv.detect_encoding(downloaded_path)).to eq Encoding::UTF_8
+      SS::Csv.open(downloaded_path) do |csv|
         csv_table = csv.read
         expect(csv_table.length).to eq 2
         # updated_desc order
@@ -216,16 +216,16 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_event_fired "turbo:frame-load" do
-        within_dialog do
-          within "form#item-form" do
-            choose I18n.t("ss.options.csv_encoding.Shift_JIS")
-            click_on I18n.t("ss.links.download")
+      wait_for_download("article_pages", extname: ".csv") do
+        wait_for_event_fired "turbo:frame-load" do
+          within_dialog do
+            within "form#item-form" do
+              choose I18n.t("ss.options.csv_encoding.Shift_JIS")
+              click_on I18n.t("ss.links.download")
+            end
           end
         end
       end
-
-      wait_for_download
 
       expect(Job::Log.count).to eq 1
       Job::Log.all.each do |log|
@@ -258,8 +258,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(notification.reply_model).to be_blank
       expect(notification.reply_item_id).to be_blank
 
-      expect(SS::Csv.detect_encoding(downloads.first)).to eq Encoding::CP932
-      SS::Csv.open(downloads.first) do |csv|
+      expect(SS::Csv.detect_encoding(downloaded_path)).to eq Encoding::CP932
+      SS::Csv.open(downloaded_path) do |csv|
         csv_table = csv.read
         expect(csv_table.length).to eq 2
         # updated_desc order
@@ -296,16 +296,16 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_event_fired "turbo:frame-load" do
-          within_dialog do
-            within "form#item-form" do
-              check I18n.t("ss.truncate_long_csv_value")
-              click_on I18n.t("ss.links.download")
+        wait_for_download("article_pages", extname: ".csv") do
+          wait_for_event_fired "turbo:frame-load" do
+            within_dialog do
+              within "form#item-form" do
+                check I18n.t("ss.truncate_long_csv_value")
+                click_on I18n.t("ss.links.download")
+              end
             end
           end
         end
-
-        wait_for_download
 
         expect(Job::Log.count).to eq 1
         Job::Log.all.each do |log|
@@ -338,7 +338,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(notification.reply_model).to be_blank
         expect(notification.reply_item_id).to be_blank
 
-        SS::Csv.open(downloads.first) do |csv|
+        SS::Csv.open(downloaded_path) do |csv|
           csv_table = csv.read
           expect(csv_table.length).to eq 2
           # updated_desc order
@@ -387,16 +387,16 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_event_fired "turbo:frame-load" do
-          within_dialog do
-            within "form#item-form" do
-              uncheck I18n.t("ss.truncate_long_csv_value")
-              click_on I18n.t("ss.links.download")
+        wait_for_download("article_pages", extname: ".csv") do
+          wait_for_event_fired "turbo:frame-load" do
+            within_dialog do
+              within "form#item-form" do
+                uncheck I18n.t("ss.truncate_long_csv_value")
+                click_on I18n.t("ss.links.download")
+              end
             end
           end
         end
-
-        wait_for_download
 
         expect(Job::Log.count).to eq 1
         Job::Log.all.each do |log|
@@ -429,7 +429,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(notification.reply_model).to be_blank
         expect(notification.reply_item_id).to be_blank
 
-        SS::Csv.open(downloads.first) do |csv|
+        SS::Csv.open(downloaded_path) do |csv|
           csv_table = csv.read
           expect(csv_table.length).to eq 2
           # updated_desc order

@@ -63,30 +63,28 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         end
         click_on name1
         ensure_addon_opened "#addon-gws-agents-addons-share-history"
-        within "#addon-gws-agents-addons-share-history" do
-          within "tr#history-#{history.id}" do
-            click_on I18n.t("ss.buttons.download")
+        wait_for_download("logo", extname: ".png") do
+          within "#addon-gws-agents-addons-share-history" do
+            within "tr#history-#{history.id}" do
+              click_on I18n.t("ss.buttons.download")
+            end
           end
         end
-
-        wait_for_download
-        expect(::File.size(downloads.first)).to eq history.uploadfile_size
+        expect(::File.size(downloaded_path)).to eq history.uploadfile_size
       end
-
-      clear_downloads
 
       item.histories.last.tap do |history|
         visit gws_share_files_path(site)
         click_on name1
         ensure_addon_opened "#addon-gws-agents-addons-share-history"
-        within "#addon-gws-agents-addons-share-history" do
-          within "tr#history-#{history.id}" do
-            click_on I18n.t("ss.buttons.download")
+        wait_for_download("logo", extname: ".png") do
+          within "#addon-gws-agents-addons-share-history" do
+            within "tr#history-#{history.id}" do
+              click_on I18n.t("ss.buttons.download")
+            end
           end
         end
-
-        wait_for_download
-        expect(::File.size(downloads.first)).to eq history.uploadfile_size
+        expect(::File.size(downloaded_path)).to eq history.uploadfile_size
       end
     end
   end

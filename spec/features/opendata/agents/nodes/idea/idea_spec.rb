@@ -71,12 +71,12 @@ describe "opendata_agents_nodes_idea", type: :feature, dbscope: :example, js: tr
       layout.save!
 
       visit index_path
-      within ".list-footer" do
-        click_on "RSS"
+      wait_for_download("rss", extname: ".xml") do
+        within ".list-footer" do
+          click_on "RSS"
+        end
       end
-
-      wait_for_download
-      ::File.read(downloads.first).tap do |xml|
+      ::File.read(downloaded_path).tap do |xml|
         xmldoc = REXML::Document.new(xml)
         items = REXML::XPath.match(xmldoc, "/rss/channel/item")
         expect(items).to have(1).items
@@ -163,12 +163,12 @@ describe "opendata_agents_nodes_idea", type: :feature, dbscope: :example, js: tr
       layout.save!
 
       visit index_path
-      within ".list-footer" do
-        click_on "RSS"
+      wait_for_download("rss", extname: ".xml") do
+        within ".list-footer" do
+          click_on "RSS"
+        end
       end
-
-      wait_for_download
-      ::File.read(downloads.first).tap do |xml|
+      ::File.read(downloaded_path).tap do |xml|
         xmldoc = REXML::Document.new(xml)
         items = REXML::XPath.match(xmldoc, "/rss/channel/item")
         expect(items).to have(1).items

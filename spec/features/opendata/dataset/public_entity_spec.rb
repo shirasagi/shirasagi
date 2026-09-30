@@ -67,10 +67,11 @@ describe "public_entity", type: :feature, dbscope: :example, js: true do
     describe "#download" do
       it do
         visit opendata_dataset_public_entity_path(site, node)
-        click_on I18n.t("ss.links.download")
-        wait_for_download
+        wait_for_download("datasets_list", extname: ".csv") do
+          click_on I18n.t("ss.links.download")
+        end
 
-        csv = ::CSV.read(downloads.first, headers: true, encoding: 'Shift_JIS')
+        csv = ::CSV.read(downloaded_path, headers: true, encoding: 'Shift_JIS')
         expect(csv.length).to eq 1
         csv.each do |row|
           expect(row[0]).to eq dataset.metadata_dataset_id

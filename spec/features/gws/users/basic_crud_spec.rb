@@ -74,13 +74,11 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       #download template
       visit index_path
       click_on I18n.t("ss.links.import")
-      click_on I18n.t("ss.links.download_template")
 
-      wait_for_download
-
-      expect(downloads.first).to be_present
-      expect(::File.file?(downloads.first)).to be_truthy
-      SS::Csv.open(downloads.first) do |csv|
+      wait_for_download("gws_users_templat", extname: ".csv") do
+        click_on I18n.t("ss.links.download_template")
+      end
+      SS::Csv.open(downloaded_path) do |csv|
         csv_table = csv.read
         expect(csv_table.length).to eq 0
         expect(csv_table.headers).to have_at_least(20).items
@@ -108,14 +106,14 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       visit index_path
       click_on I18n.t("ss.links.download")
       wait_for_js_ready
-      within "form#item-form" do
-        click_on I18n.t("ss.buttons.download")
+      wait_for_download("gws_users", extname: ".csv") do
+        within "form#item-form" do
+          click_on I18n.t("ss.buttons.download")
+        end
       end
 
-      wait_for_download
-
       I18n.with_locale(I18n.default_locale) do
-        SS::Csv.open(downloads.first) do |csv|
+        SS::Csv.open(downloaded_path) do |csv|
           csv_table = csv.read
           expect(csv_table.length).to be > 1
           expect(csv_table[0][Gws::User.t(:id)]).to be_present

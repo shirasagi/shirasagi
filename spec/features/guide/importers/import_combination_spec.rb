@@ -60,11 +60,10 @@ describe "guide_import_transitions", type: :feature, dbscope: :example, js: true
       end
 
       ## upload 1 file
-
-      clear_downloads
-      visit download_combinations_guide_importers_path(site, node)
-      wait_for_download
-      ::FileUtils.cp(downloads[0], download1_file)
+      wait_for_download("guide", extname: ".csv") do
+        visit download_combinations_guide_importers_path(site, node)
+      end
+      ::FileUtils.cp(downloaded_path, download1_file)
       download1_hash = Digest::SHA256.file(download1_file).hexdigest
 
       visit import_combinations_guide_importers_path(site, node)
@@ -76,10 +75,10 @@ describe "guide_import_transitions", type: :feature, dbscope: :example, js: true
       end
       wait_for_notice I18n.t("ss.notice.saved")
 
-      clear_downloads
-      visit download_combinations_guide_importers_path(site, node)
-      wait_for_download
-      ::FileUtils.cp(downloads[0], download2_file)
+      wait_for_download("guide", extname: ".csv") do
+        visit download_combinations_guide_importers_path(site, node)
+      end
+      ::FileUtils.cp(downloaded_path, download2_file)
       download2_hash = Digest::SHA256.file(download2_file).hexdigest
 
       ## upload 1 file
@@ -98,10 +97,10 @@ describe "guide_import_transitions", type: :feature, dbscope: :example, js: true
       end
       wait_for_notice I18n.t("ss.notice.saved")
 
-      clear_downloads
-      visit download_combinations_guide_importers_path(site, node)
-      wait_for_download
-      ::FileUtils.cp(downloads[0], download3_file)
+      wait_for_download("guide", extname: ".csv") do
+        visit download_combinations_guide_importers_path(site, node)
+      end
+      ::FileUtils.cp(downloaded_path, download3_file)
       download3_hash = Digest::SHA256.file(download3_file).hexdigest
 
       expect(download1_hash).to eq download2_hash
@@ -125,10 +124,10 @@ describe "guide_import_transitions", type: :feature, dbscope: :example, js: true
       end
       wait_for_notice I18n.t("ss.notice.saved")
 
-      clear_downloads
-      visit download_combinations_guide_importers_path(site, node)
-      wait_for_download
-      ::FileUtils.cp(downloads[0], download1_file)
+      wait_for_download("guide", extname: ".csv") do
+        visit download_combinations_guide_importers_path(site, node)
+      end
+      ::FileUtils.cp(downloaded_path, download1_file)
       download1_hash = Digest::SHA256.file(download1_file).hexdigest
 
       expect(Guide::Procedure.all.size).to eq 2
@@ -151,10 +150,10 @@ describe "guide_import_transitions", type: :feature, dbscope: :example, js: true
       end
       wait_for_notice I18n.t("ss.notice.saved")
 
-      clear_downloads
-      visit download_combinations_guide_importers_path(site, node)
-      wait_for_download
-      ::FileUtils.cp(downloads[0], download2_file)
+      wait_for_download("guide", extname: ".csv") do
+        visit download_combinations_guide_importers_path(site, node)
+      end
+      ::FileUtils.cp(downloaded_path, download2_file)
       download2_hash = Digest::SHA256.file(download2_file).hexdigest
 
       expect(download1_hash).to eq download2_hash
