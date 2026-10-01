@@ -82,6 +82,95 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example do
 
       visit copy_gws_schedule_todo_readable_path(path_options)
       expect(status_code).to eq 404
+
+      visit soft_delete_gws_schedule_todo_readable_path(path_options)
+      expect(status_code).to eq 404
+
+      visit finish_gws_schedule_todo_readable_path(path_options)
+      expect(status_code).to eq 404
+    end
+  end
+
+  context "with readable user operates todo" do
+    let(:path_options) { { site: site, category: Gws::Schedule::TodoCategory::ALL.id, id: item } }
+
+    before { login_user user2 }
+
+    it do
+      visit edit_gws_schedule_todo_readable_path(path_options)
+      expect(status_code).to eq 403
+
+      visit soft_delete_gws_schedule_todo_readable_path(path_options)
+      expect(status_code).to eq 403
+
+      visit finish_gws_schedule_todo_readable_path(path_options)
+      expect(status_code).to eq 403
+    end
+  end
+
+  context "with manageable user operates todo" do
+    let(:path_options) { { site: site, category: Gws::Schedule::TodoCategory::ALL.id, id: item } }
+
+    before { login_user user4 }
+
+    it do
+      visit edit_gws_schedule_todo_readable_path(path_options)
+      expect(status_code).to eq 200
+
+      visit soft_delete_gws_schedule_todo_readable_path(path_options)
+      expect(status_code).to eq 200
+
+      visit finish_gws_schedule_todo_readable_path(path_options)
+      expect(status_code).to eq 200
+    end
+  end
+
+  context "with readable user requests bulk operations" do
+    let(:path_options) { { site: site, category: Gws::Schedule::TodoCategory::ALL.id } }
+
+    before { login_user user2 }
+
+    it do
+      page.driver.post finish_all_gws_schedule_todo_readables_path(path_options), ids: [ item.id ]
+      page.driver.post soft_delete_all_gws_schedule_todo_readables_path(path_options), ids: [ item.id ]
+
+      item.reload
+      expect(item.todo_state).to eq "unfinished"
+      expect(item.deleted).to be_blank
+      expect(Gws::Schedule::TodoComment.where(todo_id: item.id).count).to eq 0
+    end
+
+    context "when todo is finished" do
+      before { item.set(achievement_rate: 100, todo_state: "finished") }
+
+      it do
+        page.driver.post revert_all_gws_schedule_todo_readables_path(path_options), ids: [ item.id ]
+
+        item.reload
+        expect(item.todo_state).to eq "finished"
+        expect(Gws::Schedule::TodoComment.where(todo_id: item.id).count).to eq 0
+      end
+    end
+  end
+
+  context "with manageable user requests bulk operations" do
+    let(:path_options) { { site: site, category: Gws::Schedule::TodoCategory::ALL.id } }
+
+    before { login_user user4 }
+
+    it do
+      page.driver.post finish_all_gws_schedule_todo_readables_path(path_options), ids: [ item.id ]
+      item.reload
+      expect(item.todo_state).to eq "finished"
+
+      page.driver.post revert_all_gws_schedule_todo_readables_path(path_options), ids: [ item.id ]
+      item.reload
+      expect(item.todo_state).to eq "unfinished"
+      expect(Gws::Schedule::TodoComment.where(todo_id: item.id).count).to eq 2
+
+      page.driver.post soft_delete_all_gws_schedule_todo_readables_path(path_options), ids: [ item.id ]
+      item.reload
+      expect(item.deleted).to be_present
     end
   end
 
