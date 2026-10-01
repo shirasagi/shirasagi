@@ -35,7 +35,7 @@
     "js-cookie": "^3.0.7",
     "material-icons": "^1.13.14",
     "mdn-polyfills": "^5.20.0",
-    "moment": "^2.30.1",
+    "moment": "^2.31.0",
     "promise-polyfill": "^8.3.0",
     "sass": "^1.89.2",
     "smooth-dnd": "^0.12.1",
