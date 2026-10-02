@@ -279,6 +279,8 @@ module Gws::Schedule::TodoFilter
 
   def copy
     set_item
+    raise "403" unless item_readable?
+
     @item = @item.new_clone
     if request.get? || request.head?
       render template: "copy"

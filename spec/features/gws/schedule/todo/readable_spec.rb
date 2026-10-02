@@ -154,6 +154,57 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example do
 
       visit finish_gws_schedule_todo_readable_path(path_options)
       expect(status_code).to eq 200
+
+      page.driver.post finish_gws_schedule_todo_readable_path(path_options)
+      item.reload
+      expect(item.todo_state).to eq "finished"
+      expect(Gws::Schedule::TodoComment.where(todo_id: item.id).count).to eq 1
+
+      page.driver.post soft_delete_gws_schedule_todo_readable_path(path_options)
+      item.reload
+      expect(item.deleted).to be_present
+    end
+  end
+
+  context "with user without todo read permission" do
+    let(:use_only_role) { create :gws_role, cur_site: site, permissions: %w(use_private_gws_schedule_todos) }
+    # user6: 閲覧ユーザーに指定されているが、ロールに ToDo の閲覧権限が無い
+    let!(:user6) { create :gws_user, gws_role_ids: [ use_only_role.id ], group_ids: [ group2.id ] }
+    let(:text) { "text-#{unique_id}" }
+    let!(:readable_item) do
+      create(
+        :gws_schedule_todo, cur_site: site, cur_user: user1, member_ids: [ user1.id ], member_group_ids: [],
+        readable_setting_range: 'select', readable_member_ids: [ user6.id ], readable_group_ids: [],
+        group_ids: [], user_ids: [ user1.id ], text: text
+      )
+    end
+    let!(:public_item) do
+      create(
+        :gws_schedule_todo, cur_site: site, cur_user: user1, member_ids: [ user1.id ], member_group_ids: [],
+        readable_setting_range: 'public', group_ids: [], user_ids: [ user1.id ], text: text
+      )
+    end
+
+    before { login_user user6 }
+
+    it do
+      [ readable_item, public_item ].each do |todo|
+        path_options = { site: site, category: Gws::Schedule::TodoCategory::ALL.id, id: todo }
+
+        visit gws_schedule_todo_readable_path(path_options)
+        expect(status_code).to eq 200
+        within "#addon-basic" do
+          expect(page).to have_css("dd", text: I18n.t("gws/schedule.private_plan"))
+        end
+
+        visit copy_gws_schedule_todo_readable_path(path_options)
+        expect(status_code).to eq 403
+        expect(page.html).not_to include(text)
+
+        visit copy_gws_schedule_todo_manageable_path(path_options)
+        expect(status_code).to eq 403
+        expect(page.html).not_to include(text)
+      end
     end
   end
 
