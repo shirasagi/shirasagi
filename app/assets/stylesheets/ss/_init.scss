@@ -152,6 +152,10 @@ $border-white: 1px solid $white;
     opacity: 0.9;
     text-decoration: none;
   }
+  &:focus {
+    outline-color: $black;
+    outline-offset: 4px;
+  }
   &:disabled,
   &.btn-disabled {
     @include btn-disabled;
@@ -171,6 +175,10 @@ $border-white: 1px solid $white;
   &:hover {
     opacity: 0.9;
     text-decoration: none;
+  }
+  &:focus {
+    outline-color: $black;
+    outline-offset: 4px;
   }
   &:disabled,
   &.btn-disabled {
@@ -193,6 +201,10 @@ $border-white: 1px solid $white;
     opacity: 0.9;
     text-decoration: none;
   }
+  &:focus {
+    outline-color: $black;
+    outline-offset: 4px;
+  }
   &:disabled,
   &.btn-disabled {
     @include btn-disabled;
@@ -210,6 +222,10 @@ $border-white: 1px solid $white;
   &:hover {
     background: #f2a950;
     text-decoration: none;
+  }
+  &:focus {
+    outline-color: #f2a950;
+    outline-offset: 4px;
   }
   &:disabled,
   &.btn-disabled {
@@ -241,6 +257,10 @@ $border-white: 1px solid $white;
     opacity: 0.9;
     text-decoration: none;
   }
+  &:focus {
+    outline-color: #256ab8;
+    outline-offset: 4px;
+  }
   &:disabled,
   &.btn-disabled {
     @include btn-disabled;
@@ -264,6 +284,10 @@ $border-white: 1px solid $white;
     opacity: 0.9;
     text-decoration: none;
   }
+  &:focus {
+    outline-color: #2f7e42;
+    outline-offset: 4px;
+  }
   &:disabled,
   &.btn-disabled {
     @include btn-disabled;
@@ -282,6 +306,10 @@ $border-white: 1px solid $white;
   &:hover {
     opacity: 0.9;
     text-decoration: none;
+  }
+  &:focus {
+    outline-color: #e13026;
+    outline-offset: 4px;
   }
   &:disabled,
   &.btn-disabled {
@@ -313,6 +341,10 @@ $border-white: 1px solid $white;
   border: 0;
   &:hover {
     cursor: pointer;
+  }
+  &:focus {
+    outline-color: $black;
+    outline-offset: 4px;
   }
   &:disabled,
   &.btn-disabled {
