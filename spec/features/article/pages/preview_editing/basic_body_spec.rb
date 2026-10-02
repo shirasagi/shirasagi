@@ -109,6 +109,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(item.branches.count).to eq 1
 
           branch = item.branches.first
+          expect(branch.released_type).to eq "fixed"
+          expect(branch.released).to eq item.released
           expect(branch.html).to include(text2)
           expect(branch.files.count).to eq 1
           branch.files.first.tap do |file|

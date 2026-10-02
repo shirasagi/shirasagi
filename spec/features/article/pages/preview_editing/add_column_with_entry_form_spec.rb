@@ -160,6 +160,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         if state == "public"
           expect(item.branches.count).to eq 1
           now_editing_item = item.branches.first
+          expect(now_editing_item.released_type).to eq "fixed"
+          expect(now_editing_item.released).to eq item.released
         else
           now_editing_item = item
         end
