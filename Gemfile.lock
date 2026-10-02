@@ -628,9 +628,12 @@ GEM
     romaji (0.3.0)
       nkf (>= 0.2.0)
       rake (>= 0.8.0)
-    roo (2.10.1)
+    roo (3.0.0)
+      base64 (~> 0.2)
+      csv (~> 3)
+      logger (~> 1)
       nokogiri (~> 1)
-      rubyzip (>= 1.3.0, < 3.0.0)
+      rubyzip (>= 3.0.0, < 4.0.0)
     rotp (6.3.0)
     rqrcode (3.2.0)
       chunky_png (~> 1.0)
@@ -699,7 +702,7 @@ GEM
       nokogiri (>= 1.13.10)
       rexml
     ruby2_keywords (0.0.5)
-    rubyzip (2.4.1)
+    rubyzip (3.4.0)
     sass-embedded (1.101.0)
       google-protobuf (~> 4.31)
       rake (>= 13)
@@ -919,7 +922,7 @@ DEPENDENCIES
   rubocop-rails (~> 2.26)
   rubocop-rspec
   ruby-saml
-  rubyzip (~> 2.4.0)
+  rubyzip (~> 3.4.0)
   sdoc
   selenium-webdriver
   shortuuid
