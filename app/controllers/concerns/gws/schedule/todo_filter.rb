@@ -65,6 +65,18 @@ module Gws::Schedule::TodoFilter
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
+  def set_items
+    @items ||= begin
+      or_conds = @model.member_conditions(@cur_user)
+      or_conds += @model.readable_conditions(@cur_user, site: @cur_site)
+      or_conds << @model.allow_condition(:read, @cur_user, site: @cur_site)
+
+      @model.site(@cur_site).
+        where("$and" => [{ "$or" => or_conds }]).
+        without_deleted
+    end
+  end
+
   def crud_redirect_url
     path = params.dig(:calendar, :path)
     if path.present? && trusted_url?(path)
@@ -267,6 +279,8 @@ module Gws::Schedule::TodoFilter
 
   def copy
     set_item
+    raise "403" unless item_readable?
+
     @item = @item.new_clone
     if request.get? || request.head?
       render template: "copy"
