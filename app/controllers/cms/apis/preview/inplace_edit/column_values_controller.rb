@@ -78,6 +78,9 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     @item.cur_user = @cur_user
     branch = @item.new_clone
     branch.master = @item
+    # 複製の際は公開日時はクリアされるのが望ましいかもしれないが、 差し替えページの場合は引き継がれるのが望ましい。
+    # 公開日時種別が「手動の」の場合は特に
+    branch.released = @item.released if @item.released_type == "fixed"
 
     @cur_column_value = branch.column_values.build(column_value_param)
     @cur_column = @cur_column_value.column
@@ -129,6 +132,10 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     @item.cur_user = @cur_user
     branch = @item.new_clone
     branch.master = @item
+    # 複製の際は公開日時はクリアされるのが望ましいかもしれないが、 差し替えページの場合は引き継がれるのが望ましい。
+    # 公開日時種別が「手動の」の場合は特に
+    branch.released = @item.released if @item.released_type == "fixed"
+
     result = branch.save
     if !result
       SS::Model.copy_errors(branch, @cur_column_value)
@@ -175,6 +182,9 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     @item.cur_user = @cur_user
     branch = @item.new_clone
     branch.master = @item
+    # 複製の際は公開日時はクリアされるのが望ましいかもしれないが、 差し替えページの場合は引き継がれるのが望ましい。
+    # 公開日時種別が「手動の」の場合は特に
+    branch.released = @item.released if @item.released_type == "fixed"
 
     id = params[:id].to_s
     @cur_column_value = branch.column_values.to_a.find { |item| item.origin_id.to_s == id }
@@ -237,6 +247,9 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     @item.cur_user = @cur_user
     branch = @item.new_clone
     branch.master = @item
+    # 複製の際は公開日時はクリアされるのが望ましいかもしれないが、 差し替えページの場合は引き継がれるのが望ましい。
+    # 公開日時種別が「手動の」の場合は特に
+    branch.released = @item.released if @item.released_type == "fixed"
 
     id = params[:id].to_s
     @cur_column_value = branch.column_values.to_a.find { |item| item.origin_id.to_s == id }
@@ -263,6 +276,9 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     @item.cur_user = @cur_user
     branch = @item.new_clone
     branch.master = @item
+    # 複製の際は公開日時はクリアされるのが望ましいかもしれないが、 差し替えページの場合は引き継がれるのが望ましい。
+    # 公開日時種別が「手動の」の場合は特に
+    branch.released = @item.released if @item.released_type == "fixed"
 
     id = params[:id].to_s
     @cur_column_value = branch.column_values.to_a.find { |item| item.origin_id.to_s == id }
@@ -291,6 +307,9 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     @item.cur_user = @cur_user
     branch = @item.new_clone
     branch.master = @item
+    # 複製の際は公開日時はクリアされるのが望ましいかもしれないが、 差し替えページの場合は引き継がれるのが望ましい。
+    # 公開日時種別が「手動の」の場合は特に
+    branch.released = @item.released if @item.released_type == "fixed"
 
     id = params[:id].to_s
     @cur_column_value = branch.column_values.to_a.find { |item| item.origin_id.to_s == id }

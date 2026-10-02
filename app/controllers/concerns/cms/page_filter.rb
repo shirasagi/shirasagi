@@ -160,6 +160,9 @@ module Cms::PageFilter
         @item.cur_user = @cur_user
         copy = @item.new_clone
         copy.master = @item
+        # 複製の際は公開日時はクリアされるのが望ましいかもしれないが、 差し替えページの場合は引き継がれるのが望ましい。
+        # 公開日時種別が「手動の」の場合は特に
+        copy.released = @item.released if @item.released_type == "fixed"
         result = copy.save
         if result
           task.log "created #{copy.filename}(#{copy.id})"
