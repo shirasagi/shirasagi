@@ -314,9 +314,18 @@ this.Googlemaps_Map = (function () {
     }
   };
 
+  Googlemaps_Map.mapsSearchLabel = function() {
+    // 公開画面には i18next が組み込まれていない
+    if ("i18next" in window) {
+      return i18next.t("map.links.google_maps_search");
+    } else {
+      return "Googleマップで確認する";
+    }
+  };
+
   Googlemaps_Map.getMapsSearchHtml = function(lat, lng) {
     const url = `${Googlemaps_Map.mapsSearchUrl()}${lat},${lng}`;
-    const $link = $("<a/>", { href: url, target: "_blank", rel: "noopener" }).text(i18next.t("map.links.google_maps_search"));
+    const $link = $("<a/>", { href: url, target: "_blank", rel: "noopener" }).text(Googlemaps_Map.mapsSearchLabel());
     const $html = $("<p/>", { class: "marker-link" }).append($link);
     return $html.prop("outerHTML");
   };
