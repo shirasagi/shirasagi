@@ -93,6 +93,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           if state == "public"
             expect(item.branches.count).to eq 1
             branch = item.branches.first
+            expect(branch.released_type).to eq "fixed"
+            expect(branch.released).to eq item.released
             expect(branch.column_values.count).to eq 2
             column_values = branch.column_values.order_by(order: 1, name: 1).to_a
           else
@@ -120,6 +122,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           if state == "public"
             expect(item.branches.count).to eq 1
             branch = item.branches.first
+            expect(branch.released_type).to eq "fixed"
+            expect(branch.released).to eq item.released
             expect(branch.column_values.count).to eq 2
             column_values = branch.column_values.order_by(order: 1, name: 1).to_a
           else
@@ -193,6 +197,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           if state == "public"
             expect(item.branches.count).to eq 1
             branch = item.branches.first
+            expect(branch.released_type).to eq "fixed"
+            expect(branch.released).to eq item.released
             expect(branch.column_values.count).to eq 2
             column_values = branch.column_values.order_by(order: 1, name: 1).to_a
           else
@@ -220,6 +226,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           if state == "public"
             expect(item.branches.count).to eq 1
             branch = item.branches.first
+            expect(branch.released_type).to eq "fixed"
+            expect(branch.released).to eq item.released
             expect(branch.column_values.count).to eq 2
             column_values = branch.column_values.order_by(order: 1, name: 1).to_a
           else
