@@ -91,6 +91,38 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example do
     end
   end
 
+  context "with user in the same group as member on private todo" do
+    # user5: 担当ユーザー（user1）と同じグループに所属するが、担当・閲覧・管理のいずれでもない
+    let!(:user5) { create :gws_user, gws_role_ids: [ role.id ], group_ids: [ group1.id ] }
+    let!(:private_item) do
+      create(
+        :gws_schedule_todo, cur_site: site, cur_user: user1, member_ids: [ user1.id ], member_group_ids: [],
+        readable_setting_range: 'private', group_ids: [], user_ids: [ user1.id ]
+      )
+    end
+    let(:path_options) { { site: site, category: Gws::Schedule::TodoCategory::ALL.id, id: private_item } }
+
+    before { login_user user5 }
+
+    it do
+      expect(private_item.readable_member_ids).to eq [ user1.id ]
+      expect(private_item.readable_group_ids).to be_blank
+
+      visit gws_schedule_todo_readable_path(path_options)
+      expect(status_code).to eq 200
+      within "#addon-basic" do
+        expect(page).to have_css("dd", text: I18n.t("gws/schedule.private_plan"))
+        expect(page).to have_no_content(private_item.name)
+      end
+      expect(page.title).not_to include(private_item.name)
+
+      visit popup_gws_schedule_todo_readable_path(path_options)
+      expect(status_code).to eq 200
+      expect(page).to have_css(".popup-title", text: I18n.t("gws/schedule.private_plan"))
+      expect(page).to have_no_content(private_item.name)
+    end
+  end
+
   context "with readable user operates todo" do
     let(:path_options) { { site: site, category: Gws::Schedule::TodoCategory::ALL.id, id: item } }
 
