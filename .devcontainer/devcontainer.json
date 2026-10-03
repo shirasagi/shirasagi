@@ -4,26 +4,22 @@
   "service": "shirasagi",
   "workspaceFolder": "/workspaces/shirasagi",
 
-  // Features to add to the dev container. More info: https://containers.dev/features.
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/rails/devcontainer/features/activestorage": {},
-    "ghcr.io/devcontainers/features/node:1": {},
-    "ghcr.io/rails/devcontainer/features/mysql-client": {}
+    "ghcr.io/rails/devcontainer/features/activestorage": {}
   },
 
   "containerEnv": {
+    "LANG": "ja_JP.UTF-8",
+    "LC_ALL": "ja_JP.UTF-8",
+    "TZ": "Asia/Tokyo"
   },
 
-  // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  "forwardPorts": [3000],
+  // ローカルPCからアクセスできるように、コンテナ内のポートを転送する
+  "forwardPorts": [3000, 9200, 10143, 10587],
 
-  // Configure tool-specific properties.
-  // "customizations": {},
-
-  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-  // "remoteUser": "root",
-
-  // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "bin/setup"
+  // コンテナ初回作成時に一度だけ実行するセットアップ
+  "postCreateCommand": "bin/setup --skip-server",
+  // コンテナ起動のたびに Web サーバーを立ち上げる
+  "postStartCommand": ".devcontainer/start-web-server.sh"
 }
