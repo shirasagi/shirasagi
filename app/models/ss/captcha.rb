@@ -20,11 +20,13 @@ class SS::Captcha
           convert.size SS.config.cms.captcha["image_size"]
           convert.background SS.config.cms.captcha["background"]
           convert.fill SS.config.cms.captcha["fill"]
-          convert.wave SS.config.cms.captcha["wave"]
           if SS.config.cms.captcha["font"].present?
             convert.font SS.config.cms.captcha["font"]
           end
-          convert.implode SS.config.cms.captcha["implode"]
+          if !MiniMagick.imagemagick7?
+            convert.wave SS.config.cms.captcha["wave"]
+            convert.implode SS.config.cms.captcha["implode"]
+          end
           convert.pointsize SS.config.cms.captcha["pointsize"]
           convert.gravity SS.config.cms.captcha["gravity"]
           convert << "label:#{captcha_text}"
