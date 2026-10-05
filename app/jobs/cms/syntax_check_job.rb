@@ -7,17 +7,24 @@ class Cms::SyntaxCheckJob < Cms::ApplicationJob
   self.task_name = "cms:syntax_check"
 
   def perform(*args)
-    options = args.extract_options!
-    @force = options.fetch(:force, false)
-    @error_count = 0
-    each_page do |page|
-      if syntax_check_result_old?(page)
-        update_syntax_check_result(page)
+    Rails.logger.tagged(site.name) do
+      unless site.syntax_check_enabled?
+        task.log "このサイトはアクセシビリティチェックが無効です。"
+        next
       end
-    end
 
-    if @error_count > 0
-      Rails.logger.error { "#{@error_count.to_fs(:delimited)}件のエラーがありました。" }
+      options = args.extract_options!
+      @force = options.fetch(:force, false)
+      @error_count = 0
+      each_page do |page|
+        if syntax_check_result_old?(page)
+          update_syntax_check_result(page)
+        end
+      end
+
+      if @error_count > 0
+        Rails.logger.error { "#{@error_count.to_fs(:delimited)}件のエラーがありました。" }
+      end
     end
   end
 

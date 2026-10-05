@@ -37,6 +37,43 @@ describe Cms::SyntaxCheckJob, dbscope: :example do
     end
   end
 
+  context "when a page has no syntax check result but site's syntax_check is 'disabled'" do
+    let!(:ss_file) { create :ss_file, site: site }
+    let!(:page1) do
+      Timecop.freeze(travel_to) do
+        create :cms_page, cur_site: site, html: "<img src=\"#{ss_file.url}\" />", file_ids: [ ss_file.id ]
+      end
+    end
+
+    before do
+      site.update!(syntax_check: "disabled")
+    end
+
+    it do
+      Cms::Page.find(page1.id).tap do |before_page|
+        expect(before_page.syntax_check_result_checked).to be_blank
+        expect(before_page.syntax_check_result_violation_count).to be_blank
+        expect(before_page.updated.in_time_zone).to eq travel_to
+      end
+
+      described_class.bind(site_id: site.id).perform_now
+
+      expect(Job::Log.count).to eq 1
+      Job::Log.all.each do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        expect(log.logs).to include(/INFO -- : .* このサイトはアクセシビリティチェックが無効です。/)
+      end
+
+      # fields' value remains same
+      Cms::Page.find(page1.id).tap do |after_page|
+        expect(after_page.syntax_check_result_checked).to be_blank
+        expect(after_page.syntax_check_result_violation_count).to be_blank
+        expect(after_page.updated.in_time_zone).to eq travel_to
+      end
+    end
+  end
+
   context "when a page has a syntax check result which is sufficient enough" do
     let!(:ss_file) { create :ss_file, site: site }
     let!(:page1) do
