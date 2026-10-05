@@ -23,12 +23,32 @@ describe "gws_elasticsearch_search_monitor", type: :feature, dbscope: :example, 
   let!(:group1) { create :gws_group, name: "#{site.name}/#{unique_id}" }
   let!(:group2) { create :gws_group, name: "#{site.name}/#{unique_id}" }
 
-  let(:item1) { create(:gws_monitor_topic, attend_group_ids: [group1.id], state: 'public') }
-  let(:item2) { create(:gws_monitor_topic, attend_group_ids: [group2.id], state: 'public') }
-  let(:item3) { create(:gws_monitor_topic, attend_group_ids: [group1.id], state: 'closed') }
-  let(:item4) { create(:gws_monitor_topic, attend_group_ids: [group2.id], state: 'closed') }
-  let(:item5) { create(:gws_monitor_topic, attend_group_ids: [group1.id], state: 'closed', group_ids: [group2.id]) }
-  let(:item6) { create(:gws_monitor_topic, attend_group_ids: [group1.id], state: 'closed', user_ids: [user2.id]) }
+  let!(:cate1) { create(:gws_monitor_category, cur_site: site) }
+  let!(:cate2) { create(:gws_monitor_category, cur_site: site) }
+  let!(:cate3) { create(:gws_monitor_category, cur_site: site) }
+
+  let(:item1) do
+    create(:gws_monitor_topic, category_ids: [ cate1.id, cate2.id ], state: 'public', attend_group_ids: [group1.id])
+  end
+  let(:item2) do
+    create(:gws_monitor_topic, category_ids: [ cate2.id, cate3.id ], state: 'public', attend_group_ids: [group2.id])
+  end
+  let(:item3) do
+    create(:gws_monitor_topic, category_ids: [ cate3.id, cate1.id ], state: 'closed', attend_group_ids: [group1.id])
+  end
+  let(:item4) do
+    create(:gws_monitor_topic, category_ids: [ cate1.id, cate2.id ], state: 'closed', attend_group_ids: [group2.id])
+  end
+  let(:item5) do
+    create(
+      :gws_monitor_topic, category_ids: [ cate2.id, cate3.id ], state: 'closed',
+      attend_group_ids: [group1.id], group_ids: [group2.id])
+  end
+  let(:item6) do
+    create(
+      :gws_monitor_topic, category_ids: [ cate3.id, cate1.id ], state: 'closed',
+      attend_group_ids: [group1.id], user_ids: [user2.id])
+  end
 
   before do
     # enable elastic search
@@ -68,17 +88,43 @@ describe "gws_elasticsearch_search_monitor", type: :feature, dbscope: :example, 
         fill_in 's[keyword]', with: "*:*"
         click_button I18n.t('ss.buttons.search')
       end
-      expect(page).to have_css('.list-item .title', text: item1.name)
-      expect(page).to have_css('.list-item .title', text: item2.name)
-      expect(page).to have_css('.list-item .title', text: item3.name)
-      expect(page).to have_css('.list-item .title', text: item4.name)
-      expect(page).to have_css('.list-item .title', text: item5.name)
-      expect(page).to have_css('.list-item .title', text: item6.name)
+      expect(page).to have_css('.list-item', count: 6)
+      within ".list-item[data-id='gws_monitor_posts-post-#{item1.id}']" do
+        expect(page).to have_css(".title", text: item1.name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate1.id}']", text: cate1.trailing_name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+      end
+      within ".list-item[data-id='gws_monitor_posts-post-#{item2.id}']" do
+        expect(page).to have_css(".title", text: item2.name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate3.id}']", text: cate3.trailing_name)
+      end
+      within ".list-item[data-id='gws_monitor_posts-post-#{item3.id}']" do
+        expect(page).to have_css(".title", text: item3.name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate3.id}']", text: cate3.trailing_name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate1.id}']", text: cate1.trailing_name)
+      end
+      within ".list-item[data-id='gws_monitor_posts-post-#{item4.id}']" do
+        expect(page).to have_css(".title", text: item4.name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate1.id}']", text: cate1.trailing_name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+      end
+      within ".list-item[data-id='gws_monitor_posts-post-#{item5.id}']" do
+        expect(page).to have_css(".title", text: item5.name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate3.id}']", text: cate3.trailing_name)
+      end
+      within ".list-item[data-id='gws_monitor_posts-post-#{item6.id}']" do
+        expect(page).to have_css(".title", text: item6.name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate3.id}']", text: cate3.trailing_name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate1.id}']", text: cate1.trailing_name)
+      end
 
       within '.index form' do
         fill_in 's[keyword]', with: item1.name
         click_button I18n.t('ss.buttons.search')
       end
+      expect(page).to have_css('.list-item', count: 1)
       expect(page).to have_css('.list-item .title', text: item1.name)
       expect(page).to have_no_css('.list-item .title', text: item2.name)
       expect(page).to have_no_css('.list-item .title', text: item3.name)
