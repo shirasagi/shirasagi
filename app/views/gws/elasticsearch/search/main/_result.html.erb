@@ -31,14 +31,17 @@
           <span class="categories">
             <% source['categories'].each do |es_category| %>
               <% category, category_path = @setting.translate_category(source['collection_name'], es_category, { mode: hit.dig("_source", "mode") }) %>
-              <% next unless category %>
-              <%= link_to(
-                    category.trailing_name,
-                    category_path,
-                    class: 'gws-category-label',
-                    style: category_label_css(category),
-                    "data-id" => category.id
-                  ) %>
+              <% if category %>
+                <%= link_to(
+                      category.trailing_name,
+                      category_path,
+                      class: 'gws-category-label',
+                      style: category_label_css(category),
+                      "data-id" => category.id
+                    ) %>
+              <% else %>
+                <span><%= es_category %></span>
+              <% end %>
             <% end %>
           </span>
           <% end %>
