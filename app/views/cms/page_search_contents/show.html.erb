@@ -53,7 +53,7 @@
               end
             %>
             <%= tag.span("( #{term.join(", ")} )") if term.present? %>
-            <%= syntax_check_violation_count(item) %>
+            <%= syntax_check_violation_count(@cur_site, item) %>
           </div>
         </div>
       </li>

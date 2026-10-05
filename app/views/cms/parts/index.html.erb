@@ -49,7 +49,7 @@
   <% if respond_to?(:colored_state_label) %>
     <%= colored_state_label(item) %>
   <% end %>
-  <%= syntax_check_violation_count(item) %>
+  <%= syntax_check_violation_count(@cur_site, item) %>
 <% end %>
 
 <%= render template: "cms/crud/index" %>

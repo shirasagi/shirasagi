@@ -2,7 +2,9 @@ module Cms::SyntaxCheckableHelper
   extend ActiveSupport::Concern
   include SS::MaterialIconsHelper
 
-  def syntax_check_violation_count(item = nil)
+  def syntax_check_violation_count(site, item = nil)
+    return unless site.syntax_check_enabled?
+
     item ||= @item
     return if !item.is_a?(Cms::SyntaxCheckResult)
 
