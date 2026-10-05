@@ -20,11 +20,11 @@ class Gws::Elasticsearch::Setting::Circular
   end
 
   def translate_category(es_type, cate_name, opts = {})
-    # @categories ||= Gws::Board::Category.site(cur_site).to_a
-    # cate = @categories.find { |cate| cate.name == cate_name }
-    # return if cate.blank?
-    #
-    # [ cate, url_helpers.gws_circular_category_topics_path(site: cur_site, category: cate) ]
+    @categories ||= Gws::Circular::Category.site(cur_site).to_a
+    cate = @categories.find { |cate| cate.name == cate_name }
+    return if cate.blank?
+
+    [ cate, url_helpers.gws_circular_posts_path(site: cur_site, category: cate) ]
   end
 
   def readable_filter
