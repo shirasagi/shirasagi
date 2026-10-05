@@ -4,6 +4,6 @@ FactoryBot.define do
     cur_user { gws_user }
 
     name { "cate-#{unique_id}" }
-    color { "#aabbcc" }
+    color { unique_color }
   end
 end
