@@ -74,147 +74,155 @@ describe "gws_daily_report_forms", type: :feature, dbscope: :example, js: true d
       within ".gws-column-list-toolbar[data-placement='top'] [data-module='gws']" do
         wait_for_event_fired("gws:column:added") { click_on column_type[1] }
       end
-      within first(".gws-column-item") do
-        wait_for_event_fired("turbo:frame-load") { click_on "cancel" }
-      end
-      clear_notice
-      within first(".gws-column-item") do
-        open_dialog "open_in_new"
-      end
-      within_dialog do
-        within "form#item-form" do
-          if available_fields.include?(:name)
-            fill_in "item[name]", with: name
-          end
-          if available_fields.include?(:title)
-            fill_in "item[title]", with: title
-          end
-          if available_fields.include?(:order)
-            fill_in "item[order]", with: order
-          end
-          if available_fields.include?(:required)
-            select required_label, from: "item[required]"
-          end
-          if available_fields.include?(:tooltips)
-            fill_in "item[tooltips]", with: tooltips.join("\n")
-          end
-          if available_fields.include?(:label)
-            fill_in "item[prefix_label]", with: prefix_label
-            fill_in "item[postfix_label]", with: postfix_label
-          end
-          if available_fields.include?(:explanation)
-            fill_in "item[prefix_explanation]", with: prefix_explanation
-            fill_in "item[postfix_explanation]", with: postfix_explanation
-          end
-          if available_fields.include?(:title_explanation)
-            fill_in "item[explanation]", with: title_explanation.join("\n")
-          end
-          if available_fields.include?(:text_input_type)
-            select text_input_type_label, from: "item[input_type]"
-          end
-          if available_fields.include?(:date_input_type)
-            select date_input_type_label, from: "item[input_type]"
-          end
-          if available_fields.include?(:decimal)
-            fill_in "item[min_decimal]", with: min_decimal
-            fill_in "item[max_decimal]", with: max_decimal
-            fill_in "item[initial_decimal]", with: initial_decimal
-            fill_in "item[scale]", with: scale
-            select minus_type_label, from: "item[minus_type]"
-          end
-          if available_fields.include?(:max_length)
-            fill_in "item[max_length]", with: max_length
-          end
-          if available_fields.include?(:place_holder)
-            fill_in "item[place_holder]", with: place_holder
-          end
-          if available_fields.include?(:additional_attr)
-            fill_in "item[additional_attr]", with: additional_attr
-          end
-          if available_fields.include?(:upload_file_count)
-            select upload_file_count_label, from: "item[upload_file_count]"
-          end
-          if available_fields.include?(:select_options)
-            fill_in "item[select_options]", with: select_options.join("\n")
-          end
-          if available_fields.include?(:other_option)
-            select other_state_label, from: "item[other_state]"
-            select other_required_label, from: "item[other_required]"
-          end
-
-          click_on I18n.t("ss.buttons.save")
-        end
-      end
-      wait_for_notice I18n.t('ss.notice.saved')
-      clear_notice
 
       form.reload
       expect(form.columns.count).to eq 1
-
       column = form.columns.first
-      if available_fields.include?(:name)
-        expect(column.name).to eq name
+
+      within ".gws-column-item[data-id='#{column.id}']" do
+        wait_for_event_fired("turbo:frame-load") { click_on "cancel" }
       end
-      if available_fields.include?(:title)
-        expect(column.title).to eq title
-      end
-      if available_fields.include?(:order)
-        expect(column.order).to eq order
-      end
-      if available_fields.include?(:required)
-        expect(column.required).to eq required
-      end
-      if available_fields.include?(:tooltips)
-        expect(column.tooltips).to eq tooltips
-      end
-      if available_fields.include?(:label)
-        expect(column.prefix_label).to eq prefix_label
-        expect(column.postfix_label).to eq postfix_label
-      end
-      if available_fields.include?(:explanation)
-        expect(column.prefix_explanation).to eq prefix_explanation
-        expect(column.postfix_explanation).to eq postfix_explanation
-      end
-      if available_fields.include?(:title_explanation)
-        expect(column.explanation).to eq title_explanation.join("\r\n")
-      end
-      if available_fields.include?(:text_input_type)
-        expect(column.input_type).to eq text_input_type
-      end
-      if available_fields.include?(:date_input_type)
-        expect(column.input_type).to eq date_input_type
-      end
-      if available_fields.include?(:decimal)
-        expect(column.min_decimal).to eq min_decimal
-        expect(column.max_decimal).to eq max_decimal
-        expect(column.initial_decimal).to eq initial_decimal
-        expect(column.scale).to eq scale
-        expect(column.minus_type).to eq minus_type
-      end
-      if available_fields.include?(:max_length)
-        expect(column.max_length).to eq max_length
-      end
-      if available_fields.include?(:place_holder)
-        expect(column.place_holder).to eq place_holder
-      end
-      if available_fields.include?(:additional_attr)
-        expect(column.additional_attr).to eq additional_attr
-      end
-      if available_fields.include?(:upload_file_count)
-        expect(column.upload_file_count).to eq upload_file_count
-      end
-      if available_fields.include?(:select_options)
-        expect(column.select_options).to eq select_options
-      end
-      if available_fields.include?(:other_option)
-        expect(column.other_state).to eq other_state
-        expect(column.other_required).to eq other_required
+      clear_notice
+      unless %w(gws/column/title gws/column/section).include?(column_type[0])
+        # title と section は open_in_detail がないので除外する
+        within ".gws-column-item[data-id='#{column.id}']" do
+          open_dialog "open_in_new"
+        end
+        within_dialog do
+          within "form#item-form" do
+            if available_fields.include?(:name)
+              fill_in "item[name]", with: name
+            end
+            if available_fields.include?(:title)
+              fill_in "item[title]", with: title
+            end
+            if available_fields.include?(:order)
+              fill_in "item[order]", with: order
+            end
+            if available_fields.include?(:required)
+              select required_label, from: "item[required]"
+            end
+            if available_fields.include?(:tooltips)
+              fill_in "item[tooltips]", with: tooltips.join("\n")
+            end
+            if available_fields.include?(:label)
+              fill_in "item[prefix_label]", with: prefix_label
+              fill_in "item[postfix_label]", with: postfix_label
+            end
+            if available_fields.include?(:explanation)
+              fill_in "item[prefix_explanation]", with: prefix_explanation
+              fill_in "item[postfix_explanation]", with: postfix_explanation
+            end
+            if available_fields.include?(:title_explanation)
+              fill_in "item[explanation]", with: title_explanation.join("\n")
+            end
+            if available_fields.include?(:text_input_type)
+              select text_input_type_label, from: "item[input_type]"
+            end
+            if available_fields.include?(:date_input_type)
+              select date_input_type_label, from: "item[input_type]"
+            end
+            if available_fields.include?(:decimal)
+              fill_in "item[min_decimal]", with: min_decimal
+              fill_in "item[max_decimal]", with: max_decimal
+              fill_in "item[initial_decimal]", with: initial_decimal
+              fill_in "item[scale]", with: scale
+              select minus_type_label, from: "item[minus_type]"
+            end
+            if available_fields.include?(:max_length)
+              fill_in "item[max_length]", with: max_length
+            end
+            if available_fields.include?(:place_holder)
+              fill_in "item[place_holder]", with: place_holder
+            end
+            if available_fields.include?(:additional_attr)
+              fill_in "item[additional_attr]", with: additional_attr
+            end
+            if available_fields.include?(:upload_file_count)
+              select upload_file_count_label, from: "item[upload_file_count]"
+            end
+            if available_fields.include?(:select_options)
+              fill_in "item[select_options]", with: select_options.join("\n")
+            end
+            if available_fields.include?(:other_option)
+              select other_state_label, from: "item[other_state]"
+              select other_required_label, from: "item[other_required]"
+            end
+
+            click_on I18n.t("ss.buttons.save")
+          end
+        end
+        wait_for_notice I18n.t('ss.notice.saved')
+        clear_notice
+
+        form.reload
+        expect(form.columns.count).to eq 1
+
+        column = form.columns.first
+        if available_fields.include?(:name)
+          expect(column.name).to eq name
+        end
+        if available_fields.include?(:title)
+          expect(column.title).to eq title
+        end
+        if available_fields.include?(:order)
+          expect(column.order).to eq order
+        end
+        if available_fields.include?(:required)
+          expect(column.required).to eq required
+        end
+        if available_fields.include?(:tooltips)
+          expect(column.tooltips).to eq tooltips
+        end
+        if available_fields.include?(:label)
+          expect(column.prefix_label).to eq prefix_label
+          expect(column.postfix_label).to eq postfix_label
+        end
+        if available_fields.include?(:explanation)
+          expect(column.prefix_explanation).to eq prefix_explanation
+          expect(column.postfix_explanation).to eq postfix_explanation
+        end
+        if available_fields.include?(:title_explanation)
+          expect(column.explanation).to eq title_explanation.join("\r\n")
+        end
+        if available_fields.include?(:text_input_type)
+          expect(column.input_type).to eq text_input_type
+        end
+        if available_fields.include?(:date_input_type)
+          expect(column.input_type).to eq date_input_type
+        end
+        if available_fields.include?(:decimal)
+          expect(column.min_decimal).to eq min_decimal
+          expect(column.max_decimal).to eq max_decimal
+          expect(column.initial_decimal).to eq initial_decimal
+          expect(column.scale).to eq scale
+          expect(column.minus_type).to eq minus_type
+        end
+        if available_fields.include?(:max_length)
+          expect(column.max_length).to eq max_length
+        end
+        if available_fields.include?(:place_holder)
+          expect(column.place_holder).to eq place_holder
+        end
+        if available_fields.include?(:additional_attr)
+          expect(column.additional_attr).to eq additional_attr
+        end
+        if available_fields.include?(:upload_file_count)
+          expect(column.upload_file_count).to eq upload_file_count
+        end
+        if available_fields.include?(:select_options)
+          expect(column.select_options).to eq select_options
+        end
+        if available_fields.include?(:other_option)
+          expect(column.other_state).to eq other_state
+          expect(column.other_required).to eq other_required
+        end
       end
 
       #
       # Edit
       #
-      within first(".gws-column-item") do
+      within ".gws-column-item[data-id='#{column.id}']" do
         wait_for_event_fired("turbo:frame-load") { click_on "edit" }
       end
       within first(".gws-column-item") do
@@ -245,10 +253,12 @@ describe "gws_daily_report_forms", type: :feature, dbscope: :example, js: true d
       #
       # Delete
       #
-      within first(".gws-column-item") do
-        wait_for_event_fired("gws:column:removed") do
-          page.accept_confirm(I18n.t("ss.confirm.delete")) do
-            click_on "delete"
+      within ".gws-column-item[data-id='#{column.id}']" do
+        within ".gws-column-item-toolbar-list" do
+          wait_for_event_fired("gws:column:removed") do
+            page.accept_confirm(I18n.t("ss.confirm.delete")) do
+              click_on "delete"
+            end
           end
         end
       end

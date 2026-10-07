@@ -1,7 +1,7 @@
-//= require jquery3
+//= require jquery
 //= require jquery-migrate/src/migratemute.js
 //= require jquery-migrate/dist/jquery-migrate.js
-//= require jquery_ujs
+//= require jquery-ujs
 //= require jquery-ui/dist/jquery-ui.js
 //= require js-cookie/dist/js.cookie.js
 //= require jquery-form/src/jquery.form.js
