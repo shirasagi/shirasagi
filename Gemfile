@@ -9,7 +9,6 @@ gem 'sprockets-rails' # Rails 7.1 以降では明示的な組み込みが必要
 gem 'dartsass-sprockets'
 # gem 'sass' # app/models/fs/grid_fs/compass_importer.rb で require しているので必要
 gem 'uglifier'
-gem 'coffee-rails'
 gem 'jbuilder'
 gem 'sdoc', group: :doc
 # rdoc 6.4 以降にアップデートすると依存関係に 'psych' と 'stringio' が組み込まれる。
