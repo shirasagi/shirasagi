@@ -1,74 +1,34 @@
 class Cms::Apis::LargeFileUploadController < ApplicationController
   include Cms::ApiFilter
-  protect_from_forgery
-  skip_before_action :verify_authenticity_token
 
   def init_files
-    files = {}
-    excluded_files = []
     filenames = params.permit(filenames: [])[:filenames]
 
-    filenames.each do |filename|
-      filename = File.basename(filename)
-      extname = File.extname(filename)
-      unless SS::MaxFileSize.find_item(extname)
-        excluded_files << filename
-        next
-      end
+    set_task
+    @task.prepare!(filenames)
 
-      file = create_file(filename)
-      files[file.name] = file.id
-    end
-
-    respond_to do |format|
-      format.json { render json: { files: files, cur_site_id: @cur_site.id, excluded_files: excluded_files } }
-    end
+    render json: { files: @task.acceptable_files, excluded_files: @task.excluded_files }
   end
 
   def create
     set_task
     filename = params.permit(:filename)[:filename]
     filename = File.basename(filename)
-    tmp_file = ::File.expand_path(filename, tmp_file_path)
-    raise "400" unless tmp_file.start_with?(tmp_file_path)
 
-    binary = params.permit(:blob)[:blob].read
+    blob = params.permit(:blob)[:blob]
 
-    Retriable.retriable do
-      dirname = ::File.dirname(tmp_file)
-      ::FileUtils.mkdir_p(dirname) unless ::Dir.exist?(dirname)
-      ::File.open(tmp_file, "ab") do |f|
-        f.write binary
-      end
-    end
+    @task.append_blob!(filename, blob)
 
-    respond_to do |format|
-      format.json { render json: {} }
-    end
+    render json: {}
   end
 
   def finalize
     set_task
-    @task.execute(params.permit(:files)[:files], @cur_site.id)
-    respond_to do |format|
-      format.json { render json: {} }
-    end
+    @task.execute!(@cur_user)
+    render json: {}
   end
 
   private
-
-  def create_file(filename)
-    file = Cms::File.create(
-      site_id: @cur_site.id, name: filename, filename: filename,
-      model: Cms::File::FILE_MODEL, user_id: @cur_user.id, group_ids: @cur_user.group_ids
-    )
-
-    dirname = File.dirname(file.path)
-    ::FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
-    ::FileUtils.touch(file.path) unless File.exist?(file.path)
-
-    return file
-  end
 
   def set_task
     @task = Cms::LargeFileUploadTask.find_or_create_by(name: task_name, site_id: @cur_site.id)
@@ -76,9 +36,5 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
 
   def task_name
     "cms:large_file_task"
-  end
-
-  def tmp_file_path
-    "#{SS::File.root}/ss_tasks/#{@task.id.to_s.chars.join("/")}"
   end
 end

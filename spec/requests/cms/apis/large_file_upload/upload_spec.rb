@@ -27,24 +27,35 @@ describe Cms::Apis::LargeFileUploadController, type: :request, dbscope: :example
 
     it do
       expect(Cms::File.all.site(site).count).to eq 0
+      expect(Cms::LargeFileUploadTask.all.count).to eq 0
 
       initialize_params = {
+        authenticity_token: @auth_token,
         filenames: [ filename ]
       }
       post cms_apis_large_file_upload_initialize_path(site: site, format: :json), params: initialize_params
       expect(response.status).to eq 200
-      file_id = response.parsed_body.dig("files", filename)
-      expect(file_id).to be_numeric
+      files = response.parsed_body["files"]
+      expect(files).to have(1).items
+      expect(files).to include(filename)
+
+      expect(Cms::LargeFileUploadTask.all.count).to eq 1
+      task = Cms::LargeFileUploadTask.all.first
+      expect(task.site_id).to eq site.id
+      expect(task.name).to eq "cms:large_file_task"
+      expect(task.acceptable_files).to eq files
+      expect(task.excluded_files).to be_blank
 
       blob = fixture_file_upload("#{Rails.root}/spec/fixtures/ss/shirasagi.pdf", "application/octet-stream", true)
       upload_params = {
+        authenticity_token: @auth_token,
         filename: filename, blob: blob
       }
       post cms_apis_large_file_upload_upload_path(site: site, format: :json), params: upload_params
       expect(response.status).to eq 200
 
       finalize_params = {
-        files: { filename => file_id }.to_json
+        authenticity_token: @auth_token
       }
       put cms_apis_large_file_upload_finalize_path(site: site, format: :json), params: finalize_params
       expect(response.status).to eq 200
@@ -52,6 +63,7 @@ describe Cms::Apis::LargeFileUploadController, type: :request, dbscope: :example
       expect(Cms::File.all.site(site).count).to eq 1
       file = Cms::File.all.site(site).first
       expect(file.site_id).to eq site.id
+      expect(file.user_id).to eq user.id
       expect(file.name).to eq filename
       expect(file.filename).to eq filename
       expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/shirasagi.pdf")
@@ -67,12 +79,14 @@ describe Cms::Apis::LargeFileUploadController, type: :request, dbscope: :example
       expect(Cms::File.all.site(site).count).to eq 0
 
       initialize_params = {
+        authenticity_token: @auth_token,
         filenames: [ filename ]
       }
       post cms_apis_large_file_upload_initialize_path(site: site, format: :json), params: initialize_params
       expect(response.status).to eq 200
-      file_id = response.parsed_body.dig("files", filename)
-      expect(file_id).to be_numeric
+      files = response.parsed_body["files"]
+      expect(files).to have(1).items
+      expect(files).to include(filename)
 
       data = File.binread("#{Rails.root}/spec/fixtures/ss/shirasagi.pdf")
       index = 0
@@ -82,6 +96,7 @@ describe Cms::Apis::LargeFileUploadController, type: :request, dbscope: :example
         blob = Rack::Test::UploadedFile.new(
           StringIO.new(part), "application/octet-stream", true, original_filename: "part-#{index}")
         upload_params = {
+          authenticity_token: @auth_token,
           filename: filename, blob: blob
         }
         post cms_apis_large_file_upload_upload_path(site: site, format: :json), params: upload_params
@@ -91,7 +106,7 @@ describe Cms::Apis::LargeFileUploadController, type: :request, dbscope: :example
       end
 
       finalize_params = {
-        files: { filename => file_id }.to_json
+        authenticity_token: @auth_token
       }
       put cms_apis_large_file_upload_finalize_path(site: site, format: :json), params: finalize_params
       expect(response.status).to eq 200
@@ -99,47 +114,12 @@ describe Cms::Apis::LargeFileUploadController, type: :request, dbscope: :example
       expect(Cms::File.all.site(site).count).to eq 1
       file = Cms::File.all.site(site).first
       expect(file.site_id).to eq site.id
+      expect(file.user_id).to eq user.id
       expect(file.name).to eq filename
       expect(file.filename).to eq filename
       expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/shirasagi.pdf")
       expect(file.content_type).to eq "application/pdf"
       expect(file.group_ids).to eq user.group_ids
-    end
-  end
-
-  context "path traversal vulnerability" do
-    let(:filename) { "shirasagi_#{unique_id}.pdf" }
-
-    it do
-      expect(Cms::File.all.site(site).count).to eq 0
-
-      FileUtils.touch("#{Rails.root}/tmp/#{filename}")
-      expect(File.exist?("#{Rails.root}/tmp/#{filename}")).to be_truthy
-
-      initialize_params = {
-        filenames: [ filename ]
-      }
-      post cms_apis_large_file_upload_initialize_path(site: site, format: :json), params: initialize_params
-      expect(response.status).to eq 200
-      file_id = response.parsed_body.dig("files", filename)
-      expect(file_id).to be_numeric
-
-      blob = fixture_file_upload("#{Rails.root}/spec/fixtures/ss/shirasagi.pdf", "application/octet-stream", true)
-      upload_params = {
-        filename: filename, blob: blob
-      }
-      post cms_apis_large_file_upload_upload_path(site: site, format: :json), params: upload_params
-      expect(response.status).to eq 200
-
-      finalize_params = {
-        # "#{Rails.root}/tmp/#{filename}" を差すように ".." の数を調整する
-        files: { "../../../../#{filename}" => file_id }.to_json
-      }
-      put cms_apis_large_file_upload_finalize_path(site: site, format: :json), params: finalize_params
-      expect(response.status).to eq 200
-
-      expect(File.exist?("#{Rails.root}/tmp/#{filename}")).to be_truthy
-      FileUtils.rm_f("#{Rails.root}/tmp/#{filename}")
     end
   end
 end

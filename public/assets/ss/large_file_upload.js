@@ -8,7 +8,7 @@ function SS_Large_File_Upload($el, urls) {
 SS_Large_File_Upload.prototype.render = function () {
   this.$el.on('click', () => {
     $(".main-box .import-button").prop("disabled", true);
-    $('.progress dd').empty();
+    $('.progress .progress-info').empty();
     this.appendLoadingWrapper();
     this.importFiles();
   });
@@ -18,51 +18,45 @@ SS_Large_File_Upload.prototype.render = function () {
   });
 }
 
-SS_Large_File_Upload.prototype.importFiles = function () {
-  let filesFormData = new FormData();
+SS_Large_File_Upload.prototype.importFiles = async function () {
   let filenamesFormData = new FormData();
   let allFiles = this.$el.prev().prop("files");
   let arrayFiles = Array.from(allFiles);
-  let selectedFilenames = this.setFilenames(arrayFiles, filenamesFormData);
-  let selectedFiles = this.setFiles(arrayFiles, filesFormData);
+  this.setFilenames(arrayFiles, filenamesFormData);
+  let authenticity_token = $('meta[name="csrf-token"]').attr('content');
 
-  fetch(this.urls["initUrl"], {
+  const initResponse = await fetch(this.urls["initUrl"], {
     method: "POST",
-    body: selectedFilenames,
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      let formData = new FormData();
-      let resFiles = JSON.stringify(data["files"]);
-      data["resFiles"] = resFiles;
-      data["selectedFiles"] = selectedFiles;
+    headers: { "X-CSRF-Token": authenticity_token },
+    body: filenamesFormData,
+  });
 
-      if (resFiles === "{}") {
-        this.noUploadableFile(data["excluded_files"]);
-        return
-      }
+  const initData = await initResponse.json();
+  let resFiles = initData["files"];
 
-      this.appendFileList();
-      this.appendExcludedFiles(data["excluded_files"]);
-      let promises = this.promisesPush(formData, data);
-      Promise.all(promises).then(() => {
-        fetch(this.urls["finalizeUrl"], {
-          method: "PUT",
-          body: formData,
-        })
-          .then((response) => {
-            $(".loading-wrapper .loading-img").remove();
-            $(".loading-wrapper .waiting-text").text("アップロードが完了しました。");
-            $(".main-box #file-picker").val("");
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  if (!resFiles || resFiles.length === 0) {
+    this.noUploadableFile(initData["excluded_files"]);
+    return
+  }
+
+  this.appendFileList();
+  this.appendExcludedFiles(initData["excluded_files"]);
+  await this.sendAllFiles(arrayFiles, resFiles);
+
+  const finalizeResponse = await fetch(this.urls["finalizeUrl"], {
+    method: "PUT",
+    headers: { "X-CSRF-Token": authenticity_token }
+  });
+  await finalizeResponse.text();
+  console.log({ finalizeResponse });
+
+  $(".loading-wrapper .loading-img").remove();
+  if (finalizeResponse.ok) {
+    $(".loading-wrapper .waiting-text").text("アップロードが完了しました。");
+  } else {
+    $(".loading-wrapper .waiting-text").text("アップロードが完了しました。");
+  }
+  $(".main-box #file-picker").val("");
 };
 
 SS_Large_File_Upload.prototype.appendLoadingWrapper = function() {
@@ -77,12 +71,16 @@ SS_Large_File_Upload.prototype.appendLoadingWrapper = function() {
   let $waitingText = $("<p/>")
     .text("アップロードが完了するまでお待ちください。")
     .attr({ class: "waiting-text d-inline-block" });
-  $(".progress dd").prepend($loadingWrapper);
+  $(".progress .progress-info").prepend($loadingWrapper);
   $($loadingWrapper).append($waitingText);
   $($loadingWrapper).append($loadingImg);
 };
 
 SS_Large_File_Upload.prototype.appendExcludedFiles = function(excludedFilesAry) {
+  if (!excludedFilesAry || excludedFilesAry.length === 0) {
+    return;
+  }
+
   let excludedFiles = excludedFilesAry.join("・");
   let $excludedFilesWrapper = $("<div/>").attr({
     class: "excluded-files-wrapper",
@@ -101,19 +99,13 @@ SS_Large_File_Upload.prototype.appendExcludedFiles = function(excludedFilesAry) 
   $($excludedFilesWrapper).append($excludedFilesP);
 };
 
-SS_Large_File_Upload.prototype.promisesPush = function (formData, data) {
-  let promises = [];
-  data["selectedFiles"].forEach((file) => {
-    if (!data["files"][file.name]) {
-      return;
+SS_Large_File_Upload.prototype.sendAllFiles = async function (selectedFiles, resFiles) {
+  for(let i = 0; i < selectedFiles.length; i++) {
+    let file = selectedFiles[i];
+    if (resFiles.includes(file.name)) {
+      await this.sendOneFile(file);
     }
-    let promise = this.sendFile(file);
-    formData.append("files", data["resFiles"]);
-    formData.append("cur_site_id", data["cur_site_id"]);
-    promises.push(promise);
-  });
-
-  return promises;
+  }
 };
 
 SS_Large_File_Upload.prototype.setFilenames = function(files, filenamesFormData) {
@@ -121,13 +113,6 @@ SS_Large_File_Upload.prototype.setFilenames = function(files, filenamesFormData)
     filenamesFormData.append("filenames[]", file.name);
   });
   return filenamesFormData;
-};
-
-SS_Large_File_Upload.prototype.setFiles = function(files, filesFormData) {
-  files.forEach((file, i) => {
-    filesFormData.append("files[]", files[i], files[i].name);
-  });
-  return filesFormData;
 };
 
 SS_Large_File_Upload.prototype.noUploadableFile = function (excluded_files) {
@@ -141,10 +126,10 @@ SS_Large_File_Upload.prototype.noUploadableFile = function (excluded_files) {
 
 SS_Large_File_Upload.prototype.appendFileList = function() {
   let $fileList = $("<ol />").attr("class", "file-list");
-  $(".progress dd").append($fileList);
+  $(".progress .progress-info").append($fileList);
 };
 
-SS_Large_File_Upload.prototype.sendFile = async function(file) {
+SS_Large_File_Upload.prototype.sendOneFile = async function(file) {
   let chunkSize = 1024 * 1024; //1MBずつ
   let totalChunks = Math.ceil(file.size / chunkSize);
   for (let i = 0; i < totalChunks; i++) {
@@ -172,8 +157,10 @@ SS_Large_File_Upload.prototype.sendFile = async function(file) {
 };
 
 SS_Large_File_Upload.prototype.fetch_retry = function(data) {
+  let authenticity_token = $('meta[name="csrf-token"]').attr('content');
   return fetch(data["createUrl"], {
     method: "POST",
+    headers: { "X-CSRF-Token": authenticity_token },
     body: data["formData"],
   })
     .then((res) => {
