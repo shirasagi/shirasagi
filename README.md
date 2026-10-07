@@ -103,7 +103,7 @@ export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 ```
 # asdf plugin add ruby
 # asdf install ruby 3.4.10
-# asdf global ruby 3.4.10
+# asdf set ruby 3.4.10
 ```
 
 ### Nodejs のインストール
@@ -111,7 +111,7 @@ export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 ```
 # asdf plugin add nodejs
 # asdf install nodejs 24.17.0
-# asdf global nodejs 24.17.0
+# asdf set nodejs 24.17.0
 # npm install -g yarn
 ```
 
