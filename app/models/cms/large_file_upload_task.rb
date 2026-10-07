@@ -14,7 +14,10 @@ class Cms::LargeFileUploadTask
     cur_site = Cms::Site.find(cur_site_id)
 
     JSON.parse(files).each do |filename, id|
-      tmp_path = "#{tmp_file_path}/#{filename}"
+      filename = File.basename(filename)
+      tmp_path = ::File.expand_path(filename, tmp_file_path)
+      next unless tmp_path.start_with?(tmp_file_path)
+
       tmp_file = Cms::File.create_empty!(filename: filename, site_id: cur_site_id) do |file|
         ::FileUtils.copy(tmp_path, file.path)
       end

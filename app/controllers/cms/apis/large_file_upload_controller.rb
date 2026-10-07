@@ -9,6 +9,7 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
     filenames = params.permit(filenames: [])[:filenames]
 
     filenames.each do |filename|
+      filename = File.basename(filename)
       extname = File.extname(filename)
       unless SS::MaxFileSize.find_item(extname)
         excluded_files << filename
@@ -27,6 +28,7 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
   def create
     set_task
     filename = params.permit(:filename)[:filename]
+    filename = File.basename(filename)
     tmp_file = ::File.expand_path(filename, tmp_file_path)
     raise "400" unless tmp_file.start_with?(tmp_file_path)
 
