@@ -28,9 +28,18 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
         end
 
         expect(page).to have_css(".list-item", count: 3)
-        expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: page1.name)
-        expect(page).to have_css(".list-item[data-id='#{page2.id}']", text: page2.name)
-        expect(page).to have_css(".list-item[data-id='#{page3.id}']", text: page3.name)
+        within ".list-item[data-id='#{page1.id}']" do
+          expect(page).to have_css(".title", text: page1.name)
+          expect(page).to have_no_css(".cms-syntax-check-violation-count")
+        end
+        within ".list-item[data-id='#{page2.id}']" do
+          expect(page).to have_css(".title", text: page2.name)
+          expect(page).to have_css(".cms-syntax-check-violation-count", text: "accessibility")
+        end
+        within ".list-item[data-id='#{page3.id}']" do
+          expect(page).to have_css(".title", text: page3.name)
+          expect(page).to have_no_css(".cms-syntax-check-violation-count")
+        end
       end
     end
 
@@ -45,7 +54,10 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
         end
 
         expect(page).to have_css(".list-item", count: 1)
-        expect(page).to have_css(".list-item[data-id='#{page2.id}']", text: page2.name)
+        within ".list-item[data-id='#{page2.id}']" do
+          expect(page).to have_css(".title", text: page2.name)
+          expect(page).to have_css(".cms-syntax-check-violation-count", text: "accessibility")
+        end
       end
     end
 
@@ -60,8 +72,44 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
         end
 
         expect(page).to have_css(".list-item", count: 2)
-        expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: page1.name)
-        expect(page).to have_css(".list-item[data-id='#{page3.id}']", text: page3.name)
+        within ".list-item[data-id='#{page1.id}']" do
+          expect(page).to have_css(".title", text: page1.name)
+          expect(page).to have_no_css(".cms-syntax-check-violation-count")
+        end
+        within ".list-item[data-id='#{page3.id}']" do
+          expect(page).to have_css(".title", text: page3.name)
+          expect(page).to have_no_css(".cms-syntax-check-violation-count")
+        end
+      end
+    end
+
+    context "when site's syntax_check is 'disabled'" do
+      before do
+        site.update!(syntax_check: "disabled")
+      end
+
+      it do
+        login_cms_user to: cms_search_contents_pages_path(site: site)
+
+        within "form.search-pages" do
+          choose I18n.t("cms.options.search_syntax_check_violation.both")
+
+          click_on I18n.t("ss.buttons.search")
+        end
+
+        expect(page).to have_css(".list-item", count: 3)
+        within ".list-item[data-id='#{page1.id}']" do
+          expect(page).to have_css(".title", text: page1.name)
+          expect(page).to have_no_css(".cms-syntax-check-violation-count")
+        end
+        within ".list-item[data-id='#{page2.id}']" do
+          expect(page).to have_css(".title", text: page2.name)
+          expect(page).to have_no_css(".cms-syntax-check-violation-count")
+        end
+        within ".list-item[data-id='#{page3.id}']" do
+          expect(page).to have_css(".title", text: page3.name)
+          expect(page).to have_no_css(".cms-syntax-check-violation-count")
+        end
       end
     end
   end

@@ -1,4 +1,6 @@
 <%
+  return unless @cur_site.syntax_check_enabled?
+
   violation_count = @item.try(:syntax_check_result_violation_count)
   return if violation_count.blank? || violation_count == 0
 %>
