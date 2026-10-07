@@ -106,4 +106,40 @@ describe Cms::Apis::LargeFileUploadController, type: :request, dbscope: :example
       expect(file.group_ids).to eq user.group_ids
     end
   end
+
+  context "path traversal vulnerability" do
+    let(:filename) { "shirasagi_#{unique_id}.pdf" }
+
+    it do
+      expect(Cms::File.all.site(site).count).to eq 0
+
+      FileUtils.touch("#{Rails.root}/tmp/#{filename}")
+      expect(File.exist?("#{Rails.root}/tmp/#{filename}")).to be_truthy
+
+      initialize_params = {
+        filenames: [ filename ]
+      }
+      post cms_apis_large_file_upload_initialize_path(site: site, format: :json), params: initialize_params
+      expect(response.status).to eq 200
+      file_id = response.parsed_body.dig("files", filename)
+      expect(file_id).to be_numeric
+
+      blob = fixture_file_upload("#{Rails.root}/spec/fixtures/ss/shirasagi.pdf", "application/octet-stream", true)
+      upload_params = {
+        filename: filename, blob: blob
+      }
+      post cms_apis_large_file_upload_upload_path(site: site, format: :json), params: upload_params
+      expect(response.status).to eq 200
+
+      finalize_params = {
+        # "#{Rails.root}/tmp/#{filename}" を差すように ".." の数を調整する
+        files: { "../../../../#{filename}" => file_id }.to_json
+      }
+      put cms_apis_large_file_upload_finalize_path(site: site, format: :json), params: finalize_params
+      expect(response.status).to eq 200
+
+      expect(File.exist?("#{Rails.root}/tmp/#{filename}")).to be_truthy
+      FileUtils.rm_f("#{Rails.root}/tmp/#{filename}")
+    end
+  end
 end
