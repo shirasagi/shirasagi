@@ -365,23 +365,20 @@ module Cms::PublicFilter::Layout
   end
 
   def javascript_configs
-    if @javascript_config.nil?
-      @javascript_config = {}
-
-      @javascript_config["site_url"] = @cur_site.url
-      @javascript_config["kana_url"] = @cur_site.kana_url
-      @javascript_config["translate_url"] = @cur_site.translate_url
-
-      conf = Cms::ThemeTemplate.to_config(site: @cur_site, preview_path: preview_path?)
-      @javascript_config.merge!(conf)
-
-      conf = Recommend::History::Log.to_config(
-        site: @cur_site, item: (@cur_page || @cur_node || @cur_part), path: @cur_path,
-        preview_path: preview_path?
-      )
-      @javascript_config.merge!(conf)
+    @javascript_config ||= begin
+      config = {}
+      config["site_url"] = @cur_site.url
+      config["kana_url"] = @cur_site.kana_url
+      config["translate_url"] = @cur_site.translate_url
+      config.merge!(Map.to_config)
+      config.merge!(
+        Cms::ThemeTemplate.to_config(site: @cur_site, preview_path: preview_path?))
+      config.merge!(
+        Recommend::History::Log.to_config(
+          site: @cur_site, item: (@cur_page || @cur_node || @cur_part), path: @cur_path,
+          preview_path: preview_path?))
+      config
     end
-    @javascript_config
   end
 
   def javascript_config(conf)

@@ -29,4 +29,17 @@ module Map
 
     OpenStruct.new(lng: lng, lat: lat)
   end
+
+  # API KEY などが漏洩しないようにホワイトリスト方式でエクスポートする（webpack.config.js の MAP_CONFIG_EXPORTS と同じ項目）
+  def to_config
+    {
+      map: {
+        map_center: SS.config.map.map_center,
+        map_marker_images: SS.config.map.map_marker_images,
+        googlemaps_zoom_level: SS.config.map.googlemaps_zoom_level,
+        googlemaps_search_end_point: SS.config.map.googlemaps_search_end_point,
+        openlayers_zoom_level: SS.config.map.openlayers_zoom_level
+      }
+    }
+  end
 end
