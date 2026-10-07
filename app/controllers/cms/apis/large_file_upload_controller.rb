@@ -6,11 +6,11 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
   def init_files
     files = {}
     excluded_files = []
-    filenames = params[:filenames]
-    extensions = SS::MaxFileSize.all.map(&:extensions).flatten
+    filenames = params.permit(filenames: [])[:filenames]
 
     filenames.each do |filename|
-      if !extensions.include?(File.extname(filename).sub(/\./, ""))
+      extname = File.extname(filename)
+      unless SS::MaxFileSize.find_item(extname)
         excluded_files << filename
         next
       end
@@ -26,14 +26,11 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
 
   def create
     set_task
-    filename = params[:filename]
+    filename = params.permit(:filename)[:filename]
     tmp_file = ::File.expand_path(filename, tmp_file_path)
+    raise "400" unless tmp_file.start_with?(tmp_file_path)
 
-    if !tmp_file.start_with?(tmp_file_path)
-      raise "400"
-    end
-
-    binary = params[:blob].read
+    binary = params.permit(:blob)[:blob].read
 
     Retriable.retriable do
       dirname = ::File.dirname(tmp_file)
@@ -50,7 +47,7 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
 
   def finalize
     set_task
-    @task.execute(params[:files], params[:cur_site_id])
+    @task.execute(params.permit(:files)[:files], @cur_site.id)
     respond_to do |format|
       format.json { render json: {} }
     end
