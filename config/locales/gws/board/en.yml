@@ -23,7 +23,7 @@ en:
       confirm: Do you want to delete this?
       browsed_user_info:
         title: Number of readers
-        format: ! '{count}/%{total} people'
+        format: ! '%{count}/%{total} people'
         more: See details
       notice:
         create: The topic has been created.
