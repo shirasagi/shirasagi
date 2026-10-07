@@ -44,9 +44,9 @@ class Gws::Elasticsearch::Setting::All
 
   def translate_category(es_type, cate_name, opts = {})
     setting = find_setting(es_type)
-    if setting.present?
-      setting.translate_category(es_type, cate_name)
-    end
+    return if setting.blank?
+
+    setting.translate_category(es_type, cate_name)
   end
 
   private
@@ -62,7 +62,11 @@ class Gws::Elasticsearch::Setting::All
   end
 
   def find_setting(es_type)
-    es_type = es_type.to_sym
+    return unless es_type
+
+    es_type = es_type.to_s.to_sym
+
+    # find last setting
     found = nil
     all_settings.each do |setting|
       found = setting if setting.search_types.include?(es_type)

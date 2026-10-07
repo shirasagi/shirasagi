@@ -4,7 +4,7 @@ FactoryBot.define do
     cur_user { gws_user }
 
     name { "name-#{unique_id}" }
-    color { "#aabbcc" }
+    color { unique_color }
     readable_setting_range { "public" }
   end
 end

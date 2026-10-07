@@ -92,22 +92,33 @@ describe "gws_elasticsearch_search_survey", type: :feature, dbscope: :example, j
           fill_in 's[keyword]', with: "*:*"
           click_button I18n.t('ss.buttons.search')
         end
-        expect(page).to have_css('.list-item .title', text: form1.name)
-        expect(page).to have_css('.list-item .title', text: form2.name)
-        expect(page).to have_css('.list-item .title', text: form3.name)
-        expect(page).to have_css('.list-item .title', text: form4.name)
-        expect(page).to have_css('.list-item .title', text: form5.name)
-
-        expect(page).to have_css('.gws-category-label', text: cate1.name)
-        expect(page).to have_css('.gws-category-label', text: cate2.name)
-        expect(page).to have_css('.gws-category-label', text: cate3.name)
-        expect(page).to have_css('.gws-category-label', text: cate4.name)
-        expect(page).to have_css('.gws-category-label', text: cate5.name)
+        expect(page).to have_css('.list-item', count: 5)
+        within ".list-item[data-id='gws_survey_forms-survey-#{form1.id}']" do
+          expect(page).to have_css(".title", text: form1.name)
+          expect(page).to have_css('.gws-category-label', text: cate1.name)
+        end
+        within ".list-item[data-id='gws_survey_forms-survey-#{form2.id}']" do
+          expect(page).to have_css(".title", text: form2.name)
+          expect(page).to have_css('.gws-category-label', text: cate2.name)
+        end
+        within ".list-item[data-id='gws_survey_forms-survey-#{form3.id}']" do
+          expect(page).to have_css(".title", text: form3.name)
+          expect(page).to have_css('.gws-category-label', text: cate3.name)
+        end
+        within ".list-item[data-id='gws_survey_forms-survey-#{form4.id}']" do
+          expect(page).to have_css(".title", text: form4.name)
+          expect(page).to have_css('.gws-category-label', text: cate4.name)
+        end
+        within ".list-item[data-id='gws_survey_forms-survey-#{form5.id}']" do
+          expect(page).to have_css(".title", text: form5.name)
+          expect(page).to have_css('.gws-category-label', text: cate5.name)
+        end
 
         within '.index form' do
           fill_in 's[keyword]', with: form1.name
           click_button I18n.t('ss.buttons.search')
         end
+        expect(page).to have_css('.list-item', count: 1)
         expect(page).to have_css('.list-item .title', text: form1.name)
         expect(page).to have_no_css('.list-item .title', text: form2.name)
         expect(page).to have_no_css('.list-item .title', text: form3.name)

@@ -25,61 +25,64 @@ describe "gws_elasticsearch_search_notice", type: :feature, dbscope: :example, j
   let!(:group2) { create :gws_group, name: "#{site.name}/#{unique_id}" }
 
   let(:folder1) { create(:gws_notice_folder, cur_site: site) }
+  let(:cate1) { create(:gws_notice_category, cur_site: site) }
+  let(:cate2) { create(:gws_notice_category, cur_site: site) }
+  let(:cate3) { create(:gws_notice_category, cur_site: site) }
 
   let(:item1) do
     create(
-      :gws_notice_post, folder: folder1, state: "public",
+      :gws_notice_post, folder: folder1, state: "public", category_ids: [ cate1.id, cate2.id ],
       readable_setting_range: "select", readable_member_ids: [user1.id], readable_group_ids: [])
   end
   let(:item2) do
     create(
-      :gws_notice_post, folder: folder1, state: "public",
+      :gws_notice_post, folder: folder1, state: "public", category_ids: [ cate2.id, cate3.id ],
       readable_setting_range: "select", readable_member_ids: [user2.id], readable_group_ids: [])
   end
   let(:item3) do
     create(
-      :gws_notice_post, folder: folder1, state: "public",
+      :gws_notice_post, folder: folder1, state: "public", category_ids: [ cate3.id, cate1.id ],
       readable_setting_range: "select", readable_member_ids: [user3.id], readable_group_ids: [group1.id])
   end
   let(:item4) do
     create(
-      :gws_notice_post, folder: folder1, state: "public",
+      :gws_notice_post, folder: folder1, state: "public", category_ids: [ cate1.id, cate2.id ],
       readable_setting_range: "select", readable_member_ids: [user3.id], readable_group_ids: [group2.id])
   end
   let(:item5) do
     create(
-      :gws_notice_post, folder: folder1, state: "closed",
+      :gws_notice_post, folder: folder1, state: "closed", category_ids: [ cate2.id, cate3.id ],
       readable_setting_range: "select", readable_member_ids: [user1.id], readable_group_ids: [])
   end
   let(:item6) do
     create(
-      :gws_notice_post, folder: folder1, state: "closed",
+      :gws_notice_post, folder: folder1, state: "closed", category_ids: [ cate3.id, cate1.id ],
       readable_setting_range: "select", readable_member_ids: [user2.id], readable_group_ids: [])
   end
   let(:item7) do
     create(
-      :gws_notice_post, folder: folder1, state: "closed",
+      :gws_notice_post, folder: folder1, state: "closed", category_ids: [ cate1.id, cate2.id ],
       readable_setting_range: "select", readable_member_ids: [user3.id], readable_group_ids: [group1.id])
   end
   let(:item8) do
     create(
-      :gws_notice_post, folder: folder1, state: "closed",
+      :gws_notice_post, folder: folder1, state: "closed", category_ids: [ cate2.id, cate3.id ],
       readable_setting_range: "select", readable_member_ids: [user3.id], readable_group_ids: [group2.id])
   end
   let(:item9) do
     create(
-      :gws_notice_post, folder: folder1, state: "closed",
+      :gws_notice_post, folder: folder1, state: "closed", category_ids: [ cate3.id, cate1.id ],
       readable_setting_range: "select", readable_member_ids: [user3.id], group_ids: [group2.id])
   end
   let(:item10) do
     create(
-      :gws_notice_post, folder: folder1, state: "closed",
+      :gws_notice_post, folder: folder1, state: "closed", category_ids: [ cate1.id, cate2.id ],
       readable_setting_range: "select", readable_member_ids: [user3.id], user_ids: [user2.id])
   end
   let(:item11) do
     # back number
     create(
-      :gws_notice_post, folder: folder1, state: "public",
+      :gws_notice_post, folder: folder1, state: "public", category_ids: [ cate2.id, cate3.id ],
       readable_setting_range: "select", readable_member_ids: [user2.id], readable_group_ids: [],
       close_date: now - 1.day)
   end
@@ -136,17 +139,61 @@ describe "gws_elasticsearch_search_notice", type: :feature, dbscope: :example, j
           click_button I18n.t('ss.buttons.search')
         end
         expect(page).to have_css('.list-item', count: 11)
-        expect(page).to have_css('.list-item .title', text: item1.name)
-        expect(page).to have_css('.list-item .title', text: item2.name)
-        expect(page).to have_css('.list-item .title', text: item3.name)
-        expect(page).to have_css('.list-item .title', text: item4.name)
-        expect(page).to have_css('.list-item .title', text: item5.name)
-        expect(page).to have_css('.list-item .title', text: item6.name)
-        expect(page).to have_css('.list-item .title', text: item7.name)
-        expect(page).to have_css('.list-item .title', text: item8.name)
-        expect(page).to have_css('.list-item .title', text: item9.name)
-        expect(page).to have_css('.list-item .title', text: item10.name)
-        expect(page).to have_css('.list-item .title', text: item11.name)
+        within ".list-item[data-id='gws_notices-post-#{item1.id}']" do
+          expect(page).to have_css(".title", text: item1.name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate1.id}']", text: cate1.trailing_name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+        end
+        within ".list-item[data-id='gws_notices-post-#{item2.id}']" do
+          expect(page).to have_css(".title", text: item2.name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate3.id}']", text: cate3.trailing_name)
+        end
+        within ".list-item[data-id='gws_notices-post-#{item3.id}']" do
+          expect(page).to have_css(".title", text: item3.name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate3.id}']", text: cate3.trailing_name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate1.id}']", text: cate1.trailing_name)
+        end
+        within ".list-item[data-id='gws_notices-post-#{item4.id}']" do
+          expect(page).to have_css(".title", text: item4.name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate1.id}']", text: cate1.trailing_name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+        end
+        within ".list-item[data-id='gws_notices-post-#{item5.id}']" do
+          expect(page).to have_css(".title", text: item5.name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate3.id}']", text: cate3.trailing_name)
+        end
+        within ".list-item[data-id='gws_notices-post-#{item6.id}']" do
+          expect(page).to have_css(".title", text: item6.name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate3.id}']", text: cate3.trailing_name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate1.id}']", text: cate1.trailing_name)
+        end
+        within ".list-item[data-id='gws_notices-post-#{item7.id}']" do
+          expect(page).to have_css(".title", text: item7.name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate1.id}']", text: cate1.trailing_name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+        end
+        within ".list-item[data-id='gws_notices-post-#{item8.id}']" do
+          expect(page).to have_css(".title", text: item8.name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate3.id}']", text: cate3.trailing_name)
+        end
+        within ".list-item[data-id='gws_notices-post-#{item9.id}']" do
+          expect(page).to have_css(".title", text: item9.name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate3.id}']", text: cate3.trailing_name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate1.id}']", text: cate1.trailing_name)
+        end
+        within ".list-item[data-id='gws_notices-post-#{item10.id}']" do
+          expect(page).to have_css(".title", text: item10.name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate1.id}']", text: cate1.trailing_name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+        end
+        within ".list-item[data-id='gws_notices-post-#{item11.id}']" do
+          expect(page).to have_css(".title", text: item11.name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+          expect(page).to have_css(".gws-category-label[data-id='#{cate3.id}']", text: cate3.trailing_name)
+        end
       end
     end
 

@@ -24,35 +24,59 @@ describe "gws_elasticsearch_search_circular", type: :feature, dbscope: :example,
   let!(:group1) { create :gws_group, name: "#{site.name}/#{unique_id}" }
   let!(:group2) { create :gws_group, name: "#{site.name}/#{unique_id}" }
 
+  let!(:cate1) { create :gws_circular_category, cur_site: site }
+  let!(:cate2) { create :gws_circular_category, cur_site: site }
+  let!(:cate3) { create :gws_circular_category, cur_site: site }
+
   let(:item1) do
-    create :gws_circular_post, state: "public", due_date: now + 1.day, member_ids: [user1.id], member_group_ids: []
+    create(
+      :gws_circular_post, category_ids: [ cate1.id, cate2.id ], state: "public",
+      due_date: now + 1.day, member_ids: [user1.id], member_group_ids: [])
   end
   let(:item2) do
-    create :gws_circular_post, state: "public", due_date: now + 1.day, member_ids: [user2.id], member_group_ids: []
+    create(
+      :gws_circular_post, category_ids: [ cate2.id, cate3.id ], state: "public",
+      due_date: now + 1.day, member_ids: [user2.id], member_group_ids: [])
   end
   let(:item3) do
-    create :gws_circular_post, state: "public", due_date: now + 1.day, member_ids: [user3.id], member_group_ids: [group1.id]
+    create(
+      :gws_circular_post, category_ids: [ cate3.id, cate1.id ], state: "public",
+      due_date: now + 1.day, member_ids: [user3.id], member_group_ids: [group1.id])
   end
   let(:item4) do
-    create :gws_circular_post, state: "public", due_date: now + 1.day, member_ids: [user3.id], member_group_ids: [group2.id]
+    create(
+      :gws_circular_post, category_ids: [ cate1.id, cate2.id ], state: "public",
+      due_date: now + 1.day, member_ids: [user3.id], member_group_ids: [group2.id])
   end
   let(:item5) do
-    create :gws_circular_post, state: "draft", due_date: now + 1.day, member_ids: [user1.id], member_group_ids: []
+    create(
+      :gws_circular_post, category_ids: [ cate2.id, cate3.id ], state: "draft",
+      due_date: now + 1.day, member_ids: [user1.id], member_group_ids: [])
   end
   let(:item6) do
-    create :gws_circular_post, state: "draft", due_date: now + 1.day, member_ids: [user2.id], member_group_ids: []
+    create(
+      :gws_circular_post, category_ids: [ cate3.id, cate1.id ], state: "draft",
+      due_date: now + 1.day, member_ids: [user2.id], member_group_ids: [])
   end
   let(:item7) do
-    create :gws_circular_post, state: "draft", due_date: now + 1.day, member_ids: [user3.id], member_group_ids: [group1.id]
+    create(
+      :gws_circular_post, category_ids: [ cate1.id, cate2.id ], state: "draft",
+      due_date: now + 1.day, member_ids: [user3.id], member_group_ids: [group1.id])
   end
   let(:item8) do
-    create :gws_circular_post, state: "draft", due_date: now + 1.day, member_ids: [user3.id], member_group_ids: [group2.id]
+    create(
+      :gws_circular_post, category_ids: [ cate2.id, cate3.id ], state: "draft",
+      due_date: now + 1.day, member_ids: [user3.id], member_group_ids: [group2.id])
   end
   let(:item9) do
-    create :gws_circular_post, state: "draft", due_date: now + 1.day, member_ids: [user3.id], group_ids: [group2.id]
+    create(
+      :gws_circular_post, category_ids: [ cate3.id, cate1.id ], state: "draft",
+      due_date: now + 1.day, member_ids: [user3.id], group_ids: [group2.id])
   end
   let(:item10) do
-    create :gws_circular_post, state: "draft", due_date: now + 1.day, member_ids: [user3.id], user_ids: [user2.id]
+    create(
+      :gws_circular_post, category_ids: [ cate1.id, cate2.id ], state: "draft",
+      due_date: now + 1.day, member_ids: [user3.id], user_ids: [user2.id])
   end
 
   before do
@@ -97,21 +121,63 @@ describe "gws_elasticsearch_search_circular", type: :feature, dbscope: :example,
         fill_in 's[keyword]', with: "*:*"
         click_button I18n.t('ss.buttons.search')
       end
-      expect(page).to have_css('.list-item .title', text: item1.name)
-      expect(page).to have_css('.list-item .title', text: item2.name)
-      expect(page).to have_css('.list-item .title', text: item3.name)
-      expect(page).to have_css('.list-item .title', text: item4.name)
-      expect(page).to have_css('.list-item .title', text: item5.name)
-      expect(page).to have_css('.list-item .title', text: item6.name)
-      expect(page).to have_css('.list-item .title', text: item7.name)
-      expect(page).to have_css('.list-item .title', text: item8.name)
-      expect(page).to have_css('.list-item .title', text: item9.name)
-      expect(page).to have_css('.list-item .title', text: item10.name)
+      expect(page).to have_css('.list-item', count: 10)
+      within ".list-item[data-id='gws_circular_posts-post-#{item1.id}']" do
+        expect(page).to have_css(".title", text: item1.name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate1.id}']", text: cate1.trailing_name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+      end
+      within ".list-item[data-id='gws_circular_posts-post-#{item2.id}']" do
+        expect(page).to have_css(".title", text: item2.name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate3.id}']", text: cate3.trailing_name)
+      end
+      within ".list-item[data-id='gws_circular_posts-post-#{item3.id}']" do
+        expect(page).to have_css(".title", text: item3.name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate3.id}']", text: cate3.trailing_name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate1.id}']", text: cate1.trailing_name)
+      end
+      within ".list-item[data-id='gws_circular_posts-post-#{item4.id}']" do
+        expect(page).to have_css(".title", text: item4.name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate1.id}']", text: cate1.trailing_name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+      end
+      within ".list-item[data-id='gws_circular_posts-post-#{item5.id}']" do
+        expect(page).to have_css(".title", text: item5.name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate3.id}']", text: cate3.trailing_name)
+      end
+      within ".list-item[data-id='gws_circular_posts-post-#{item6.id}']" do
+        expect(page).to have_css(".title", text: item6.name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate3.id}']", text: cate3.trailing_name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate1.id}']", text: cate1.trailing_name)
+      end
+      within ".list-item[data-id='gws_circular_posts-post-#{item7.id}']" do
+        expect(page).to have_css(".title", text: item7.name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate1.id}']", text: cate1.trailing_name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+      end
+      within ".list-item[data-id='gws_circular_posts-post-#{item8.id}']" do
+        expect(page).to have_css(".title", text: item8.name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate3.id}']", text: cate3.trailing_name)
+      end
+      within ".list-item[data-id='gws_circular_posts-post-#{item9.id}']" do
+        expect(page).to have_css(".title", text: item9.name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate3.id}']", text: cate3.trailing_name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate1.id}']", text: cate1.trailing_name)
+      end
+      within ".list-item[data-id='gws_circular_posts-post-#{item10.id}']" do
+        expect(page).to have_css(".title", text: item10.name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate1.id}']", text: cate1.trailing_name)
+        expect(page).to have_css(".gws-category-label[data-id='#{cate2.id}']", text: cate2.trailing_name)
+      end
 
       within '.index form' do
         fill_in 's[keyword]', with: item1.name
         click_button I18n.t('ss.buttons.search')
       end
+      expect(page).to have_css('.list-item', count: 1)
       expect(page).to have_css('.list-item .title', text: item1.name)
       expect(page).to have_no_css('.list-item .title', text: item2.name)
       expect(page).to have_no_css('.list-item .title', text: item3.name)
