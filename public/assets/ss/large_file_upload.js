@@ -138,10 +138,8 @@ SS_Large_File_Upload.prototype.sendOneFile = async function(file) {
     let blob = file.slice(start, stop);
     let numChunk = i + 1;
     const formData = new FormData();
-    formData.append(
-      "blob",
-      new Blob([blob], { type: "application/octet-stream" })
-    );
+    formData.append("blob", new Blob([blob], { type: "application/octet-stream" }));
+    formData.append("part_no", i);
     formData.append("filename", file.name);
     await this.fetch_retry({
       createUrl: this.urls["createUrl"],
