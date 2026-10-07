@@ -22,7 +22,7 @@ SHIRASAGI is Contents Management System.
 - Ruby 3.3 or 3.4
 - Ruby on Rails 8.1
 - MongoDB 7.0 or 8.0
-- Unicorn / Puma
+- Puma / Unicorn
 - Node.js 24
 - Elasticsearch 8
 
@@ -55,27 +55,26 @@ $ su -
 # dnf config-manager --disable epel
 # dnf --enablerepo=epel -y update epel-release
 # dnf -y groupinstall "Development tools"
-# dnf -y --enablerepo=epel,powertools install ImageMagick ImageMagick-devel openssl3
+# dnf -y --enablerepo=epel,powertools install ImageMagick ImageMagick-devel openssl-devel libyaml-devel
 ```
 
 ### MongoDB のインストール
 
 ```
-$ su -
-# vi /etc/yum.repos.d/mongodb-org-7.0.repo
+# vi /etc/yum.repos.d/mongodb-org-8.0.repo
 ```
 
 ```
-[mongodb-org-7.0]
+[mongodb-org-8.0]
 name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/redhat/7/mongodb-org/7.0/x86_64/
+baseurl=https://repo.mongodb.org/yum/redhat/8/mongodb-org/8.0/x86_64/
 gpgcheck=1
 enabled=1
-gpgkey=https://pgp.mongodb.com/server-7.0.asc
+gpgkey=https://pgp.mongodb.com/server-8.0.asc
 ```
 
 ```
-# dnf install -y --enablerepo=mongodb-org-7.0 mongodb-org
+# dnf install -y --enablerepo=mongodb-org-8.0 mongodb-org
 # systemctl start mongod
 # systemctl enable mongod
 ```
@@ -83,32 +82,36 @@ gpgkey=https://pgp.mongodb.com/server-7.0.asc
 ### asdf のインストール
 
 ```
-$ su -
-# git clone https://github.com/asdf-vm/asdf.git ~/.asdf
+# wget https://github.com/asdf-vm/asdf/releases/download/v0.18.1/asdf-v0.18.1-linux-amd64.tar.gz
+# tar -xzf asdf-v0.18.1-linux-amd64.tar.gz
+# mv asdf /usr/local/bin/
 # vi ~/.bashrc
+```
+
+```
 ---(追記)
-. $HOME/.asdf/asdf.sh
-. $HOME/.asdf/completions/asdf.bash
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 ---
+```
+
+```
 # source ~/.bashrc
 ```
 
 ### Ruby のインストール
 
 ```
-$ su -
 # asdf plugin add ruby
-# asdf install ruby 3.2.5
-# asdf global ruby 3.2.5
+# asdf install ruby 3.4.10
+# asdf global ruby 3.4.10
 ```
 
 ### Nodejs のインストール
 
 ```
-$ su -
 # asdf plugin add nodejs
-# asdf install nodejs 20.17.0
-# asdf global nodejs 20.17.0
+# asdf install nodejs 24.17.0
+# asdf global nodejs 24.17.0
 # npm install -g yarn
 ```
 
@@ -117,25 +120,27 @@ $ su -
 SHIRASAGI のダウンロード (stable)
 
 ```
-$ su -
 # git clone -b stable https://github.com/shirasagi/shirasagi /var/www/shirasagi
 ```
 
 設定ファイルの設置と gem のインストール
 
 ```
-$ su -
 # cd /var/www/shirasagi
 # cp -n config/samples/*.{yml,rb} config/
 # bundle install --without development test
+$ bundle exec rails credentials:edit
 # ./bin/deploy
 ```
+
+> secret_key_base 関する警告が表示された場合は、[トラブルシューティング](https://shirasagi.github.io/trouble-shootings/secret_key_base.html)をご確認ください。
 
 Web サーバの起動
 
 ```
-$ su -
-# bundle exec rake unicorn:start
+# cp -n /var/www/shirasagi/bin/puma.service /etc/systemd/system/puma.service
+# systemctl daemon-reload
+# systemctl start puma
 ```
 
 ## サイトの作成
@@ -143,7 +148,6 @@ $ su -
 データベース（インデックス）の作成
 
 ```
-$ su -
 # bundle exec rake db:drop
 # bundle exec rake db:create_indexes
 ```
@@ -151,14 +155,12 @@ $ su -
 新規サイトの追加
 
 ```
-$ su -
 # bundle exec rake ss:create_site data='{ name: "サイト名", host: "www", domains: "localhost:3000" }'
 ```
 
 サンプルデータ (自治体サンプル) の投入
 
 ```
-$ su -
 # bundle exec rake db:seed name=demo site=www
 ```
 
