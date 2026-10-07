@@ -68,7 +68,7 @@
   <% end %>
   <%=
     # inquiry/answers や inquiry/feedbacks など cms/pages_filter を組み込んでいないコントローラーがある
-    try(:syntax_check_violation_count, item)
+    try(:syntax_check_violation_count, @cur_site, item)
   %>
 <% end %>
 

@@ -225,6 +225,54 @@ describe "cms_layouts", type: :feature, dbscope: :example, js: true do
     end
   end
 
+  context "with accessibility error and views" do
+    let(:now) { Time.zone.now.change(usec: 0) }
+    let(:travel_to) { now - 2.weeks }
+    let!(:item) do
+      Timecop.freeze(travel_to) do
+        layout = create(:cms_layout, cur_site: site, cur_user: admin)
+        layout.set(
+          syntax_check_result_checked: travel_to - Cms::SyntaxCheckJob::THRESHOLD,
+          syntax_check_result_violation_count: rand(1..10))
+        layout
+      end
+    end
+
+    context "when a site's syntax_check is blank / 'enabled'" do
+      before do
+        site.update!(syntax_check: [ nil, "", "enabled" ].sample)
+      end
+
+      it do
+        login_user admin, to: cms_layouts_path(site: site)
+        within ".list-item[data-id='#{item.id}']" do
+          expect(page).to have_css(".cms-syntax-check-violation-count", text: "accessibility")
+        end
+        click_on item.name
+        within ".syntax-check-violation" do
+          count = item.syntax_check_result_violation_count
+          message = I18n.t("cms.syntax_check_violation_count", count: count, total: count.to_fs(:delimited))
+          expect(page).to have_content(message)
+        end
+      end
+    end
+
+    context "when a site's syntax_check is blank / 'disabled'" do
+      before do
+        site.update!(syntax_check: "disabled")
+      end
+
+      it do
+        login_user admin, to: cms_layouts_path(site: site)
+        within ".list-item[data-id='#{item.id}']" do
+          expect(page).to have_no_css(".cms-syntax-check-violation-count")
+        end
+        click_on item.name
+        expect(page).to have_no_css(".syntax-check-violation")
+      end
+    end
+  end
+
   context "continuous correction" do
     let!(:dictionary) { create :cms_word_dictionary, cur_site: site }
     let(:html_with_error) { '<p>ﾃｽﾄ</p><p>①②③④⑤⑥⑦⑧⑨</p>' }

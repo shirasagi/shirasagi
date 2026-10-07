@@ -1226,4 +1226,53 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
       end
     end
   end
+
+  context "with accessibility errors and views" do
+    let(:user) { cms_user }
+    let(:now) { Time.zone.now.change(usec: 0) }
+    let(:travel_to) { now - 2.weeks }
+    let!(:item) do
+      Timecop.freeze(travel_to) do
+        page = create :article_page, cur_site: site, cur_user: user, cur_node: node
+        page.set(
+          syntax_check_result_checked: travel_to - Cms::SyntaxCheckJob::THRESHOLD,
+          syntax_check_result_violation_count: rand(1..10))
+        page
+      end
+    end
+
+    context "when a site's syntax_check is blank / 'enabled'" do
+      before do
+        site.update!(syntax_check: [ nil, "", "enabled" ].sample)
+      end
+
+      it do
+        login_user user, to: article_pages_path(site: site, cid: node)
+        within ".list-item[data-id='#{item.id}']" do
+          expect(page).to have_css(".cms-syntax-check-violation-count", text: "accessibility")
+        end
+        click_on item.name
+        within ".syntax-check-violation" do
+          count = item.syntax_check_result_violation_count
+          message = I18n.t("cms.syntax_check_violation_count", count: count, total: count.to_fs(:delimited))
+          expect(page).to have_content(message)
+        end
+      end
+    end
+
+    context "when a site's syntax_check is blank / 'disabled'" do
+      before do
+        site.update!(syntax_check: "disabled")
+      end
+
+      it do
+        login_user user, to: article_pages_path(site: site, cid: node)
+        within ".list-item[data-id='#{item.id}']" do
+          expect(page).to have_no_css(".cms-syntax-check-violation-count")
+        end
+        click_on item.name
+        expect(page).to have_no_css(".syntax-check-violation")
+      end
+    end
+  end
 end
