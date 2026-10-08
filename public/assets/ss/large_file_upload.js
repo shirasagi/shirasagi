@@ -9,19 +9,24 @@ globalThis.SS_Large_File_Upload = (function() {
   async function fetchWithRetry({ authenticityToken, url, formData, numRetry }) {
     for (let i = 0; i < numRetry; i++) {
       try {
-        const res = await fetch(url, {
+        return await fetch(url, {
           method: "POST",
           headers: { "X-CSRF-Token": authenticityToken },
           body: formData,
         })
-
-        return res;
       } catch (err) {
         if (i === numRetry - 1) throw err;
         await sleep(10_000);
       }
     }
   }
+
+  const partition = (array, predicator) =>
+    array.reduce(
+      ([left, right], value) =>
+        predicator(value) ? [[...left, value], right] : [left, [...right, value]],
+      [[], []]
+    )
 
   class SS_Large_File_Upload {
     constructor($el, { initUrl, finalizeUrl, createUrl }) {
@@ -57,11 +62,10 @@ globalThis.SS_Large_File_Upload = (function() {
 
     async #importFiles() {
       const initParams = new FormData();
-      const allFiles = this.$el.prev().prop("files");
-      const arrayFiles = Array.from(allFiles, (file) => {
+      const allFiles = Array.from(this.$el.prev().prop("files"), (file) => {
         return {"id": crypto.randomUUID(), "file": file}
       });
-      this.#setFilenames(arrayFiles, initParams);
+      this.#setInitParams(allFiles, initParams);
 
       const initResponse = await fetch(this.initUrl, {
         method: "POST",
@@ -70,17 +74,19 @@ globalThis.SS_Large_File_Upload = (function() {
       });
 
       const initResult = await initResponse.json();
-      const resFiles = initResult.files;
-      const excludedFiles = this.#selectExcludedFiles(arrayFiles, resFiles)
-
-      if (!resFiles || resFiles.length === 0) {
-        this.#noUploadableFile(excludedFiles);
+      const allowedFiles = initResult.files;
+      if (!allowedFiles || allowedFiles.length === 0) {
+        this.#noUploadableFile(allFiles);
         return
       }
 
       this.#appendFileList();
+
+      const [selectedFiles, excludedFiles] = partition(
+        allFiles,
+          (file) => allowedFiles.some((allowedFile) => file.id === allowedFile["file_id"]))
       this.#appendExcludedFiles(excludedFiles);
-      await this.#sendAllFiles(arrayFiles, resFiles);
+      await this.#sendAllFiles(selectedFiles);
 
       const finalizeParams = new FormData();
       finalizeParams.append("_method", "put");
@@ -140,27 +146,21 @@ globalThis.SS_Large_File_Upload = (function() {
       $($excludedFilesWrapper).append($excludedFilesP);
     }
 
-    async #sendAllFiles(selectedFiles, resFiles) {
-      for (let i = 0; i < selectedFiles.length; i++) {
-        const file = selectedFiles[i];
-        if (resFiles.some((resFile) => resFile["file_id"] === file.id)) {
-          await this.#sendOneFile(file.id, file.file);
-        }
+    async #sendAllFiles(files) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        await this.#sendOneFile(file.id, file.file);
       }
     }
 
-    #setFilenames(files, filenamesFormData) {
+    #setInitParams(files, formData) {
       files.forEach((file) => {
-        filenamesFormData.append("item[files][][file_id]", file.id);
-        filenamesFormData.append("item[files][][filename]", file.file.name);
-        filenamesFormData.append("item[files][][size]", file.file.size);
+        formData.append("item[files][][file_id]", file.id);
+        formData.append("item[files][][filename]", file.file.name);
+        formData.append("item[files][][size]", file.file.size);
       });
-      return filenamesFormData;
+      return formData;
     };
-
-    #selectExcludedFiles(arrayFiles, resFiles) {
-      return arrayFiles.filter((file) => !resFiles.some((resFile) => file.id === resFile["file_id"]));
-    }
 
     #noUploadableFile(excludedFiles) {
       $(".loading-wrapper .waiting-text").text(
