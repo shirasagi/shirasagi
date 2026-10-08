@@ -421,11 +421,11 @@ Rails.application.routes.draw do
       match "forms/:id/html" => "forms#html", as: :form_html, via: %i[post put]
       match "forms/:id/link_check" => "forms#link_check", as: :form_link_check, via: %i[post put]
       post "validation" => "validation#validate"
-      post "initialize" => "large_file_upload#init_files"
-      post "upload" => "large_file_upload#create"
-      put "finalize" => "large_file_upload#finalize"
-      post "run" => "large_file_upload#run"
-      delete "delete_init_files" => "large_file_upload#delete_init_files"
+      post "initialize" => "large_file_upload#init_files", as: :large_file_upload_initialize
+      post "upload" => "large_file_upload#create", as: :large_file_upload_upload
+      put "finalize" => "large_file_upload#finalize", as: :large_file_upload_finalize
+      post "run" => "large_file_upload#run", as: :large_file_upload_run
+      delete "delete_init_files" => "large_file_upload#delete_init_files", as: :large_file_upload_delete_init_files
       get "content_quota_navi" => "content_quota_navi#index"
 
       resources :columns, path: ":form_id/columns", only: %i[edit update]
