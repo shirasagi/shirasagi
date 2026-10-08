@@ -24,13 +24,13 @@ class Cms::LargeFileUploadTask
       if prepare_params.blank?
         update!(acceptable_files: SS::EMPTY_ARRAY)
         clear_parts
-        return
+        next
       end
 
       acceptable_files = []
       prepare_params.each do |prepare_param|
-        next if prepare_param.file_id.blank?
         file_id = prepare_param.file_id.to_s
+        next if file_id.blank?
 
         filename = prepare_param.filename.to_s
         next if filename.blank?
@@ -65,7 +65,7 @@ class Cms::LargeFileUploadTask
       file_id = file_id.to_s
       acceptable_file = acceptable_files.find { _1["file_id"] == file_id }
       raise unless acceptable_file
-      return if part_no != acceptable_file["last_part_no"]
+      next if part_no != acceptable_file["last_part_no"]
 
       part_filepath = "#{base_dir}/part_#{acceptable_file["_id"]}"
       part_size = ::File.exist?(part_filepath) ? ::File.size(part_filepath) : 0
