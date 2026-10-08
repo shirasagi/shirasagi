@@ -2,23 +2,25 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
   include Cms::ApiFilter
 
   def init_files
-    filenames = params.permit(filenames: [])[:filenames]
+    safe_params = params.require(:item).permit(files: [:file_id, :filename, :size])
+    prepare_params = safe_params[:files].map do |param|
+      Cms::LargeFileUploadTask::PrepareParam.new(**param)
+    end
 
     set_task
-    @task.prepare!(filenames)
+    @task.prepare!(prepare_params)
 
-    render json: { files: @task.acceptable_files.map { _1["filename"] }, excluded_files: @task.excluded_files }
+    render json: { files: @task.acceptable_files.try(:map) { _1.slice("file_id", "filename") } || SS::EMPTY_ARRAY }
   end
 
   def create
     set_task
-    safe_params = params.permit(:filename, :blob, :part_no)
-    filename = safe_params[:filename]
-    unless filename
+    safe_params = params.require(:item).permit(:file_id, :blob, :part_no)
+    file_id = safe_params[:file_id].to_s
+    if file_id.blank?
       head :bad_request
       return
     end
-    filename = filename.to_s
 
     blob = safe_params[:blob]
     unless blob
@@ -33,21 +35,21 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
     end
     part_no = part_no.to_i
 
-    @task.append_blob!(filename, blob, part_no)
+    @task.append_blob!(file_id, blob, part_no)
 
-    render json: {}
+    head :ok
   end
 
   def finalize
     set_task
     @task.execute!(@cur_user)
-    render json: {}
+    render json: { files: @task.acceptable_files.try(:map) { _1.slice("file_id", "filename") } || SS::EMPTY_ARRAY }
   end
 
   private
 
   def set_task
-    @task = Cms::LargeFileUploadTask.find_or_create_by(name: task_name, site_id: @cur_site.id, user_id: @cur_user.id)
+    @task ||= Cms::LargeFileUploadTask.find_or_create_by(name: task_name, site_id: @cur_site.id, user_id: @cur_user.id)
   end
 
   def task_name
