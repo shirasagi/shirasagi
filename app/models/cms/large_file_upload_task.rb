@@ -20,98 +20,108 @@ class Cms::LargeFileUploadTask
   PrepareParam = Data.define(:file_id, :filename, :size)
 
   def prepare!(prepare_params)
-    if prepare_params.blank?
-      update!(acceptable_files: SS::EMPTY_ARRAY)
+    synchronize! do
+      if prepare_params.blank?
+        update!(acceptable_files: SS::EMPTY_ARRAY)
+        clear_parts
+        return
+      end
+
+      acceptable_files = []
+      prepare_params.each do |prepare_param|
+        next if prepare_param.file_id.blank?
+        file_id = prepare_param.file_id.to_s
+
+        filename = prepare_param.filename.to_s
+        next if filename.blank?
+
+        basename = ::File.basename(filename)
+        next if basename.blank?
+
+        next unless prepare_param.size.numeric?
+
+        size = prepare_param.size.to_i
+        next if size <= 0
+        next if size > self.class.max_file_size
+
+        extname = ::File.extname(filename)
+        next unless SS::MaxFileSize.find_item(extname)
+
+        acceptable_files << {
+          "_id" => BSON::ObjectId.new, "file_id" => file_id, "filename" => filename,
+          "last_part_no" => 0, "expected_size" => size
+        }
+      end
+
+      update!(acceptable_files: acceptable_files)
       clear_parts
-      return
     end
-
-    acceptable_files = []
-    prepare_params.each do |prepare_param|
-      next if prepare_param.file_id.blank?
-      file_id = prepare_param.file_id.to_s
-
-      filename = prepare_param.filename.to_s
-      next if filename.blank?
-
-      basename = ::File.basename(filename)
-      next if basename.blank?
-
-      next unless prepare_param.size.numeric?
-
-      size = prepare_param.size.to_i
-      next if size <= 0
-      next if size > self.class.max_file_size
-
-      extname = ::File.extname(filename)
-      next unless SS::MaxFileSize.find_item(extname)
-
-      acceptable_files << {
-        "_id" => BSON::ObjectId.new, "file_id" => file_id, "filename" => filename,
-        "last_part_no" => 0, "expected_size" => size
-      }
-    end
-
-    update!(acceptable_files: acceptable_files)
-    clear_parts
   end
 
   def append_blob!(file_id, io, part_no)
-    raise if acceptable_files.blank?
+    synchronize! do
+      raise if acceptable_files.blank?
 
-    file_id = file_id.to_s
-    acceptable_file = acceptable_files.find { _1["file_id"] == file_id }
-    raise unless acceptable_file
-    return if part_no != acceptable_file["last_part_no"]
+      file_id = file_id.to_s
+      acceptable_file = acceptable_files.find { _1["file_id"] == file_id }
+      raise unless acceptable_file
+      return if part_no != acceptable_file["last_part_no"]
 
-    part_filepath = "#{base_dir}/part_#{acceptable_file["_id"]}"
-    part_size = ::File.exist?(part_filepath) ? ::File.size(part_filepath) : 0
-    raise if part_size + io.size > acceptable_file["expected_size"]
-
-    Retriable.retriable do
-      FileUtils.mkdir_p(base_dir)
-      ::File.open(part_filepath, "ab") do |f|
-        IO.copy_stream(io, f)
-      end
-    end
-
-    acceptable_file["last_part_no"] = acceptable_file["last_part_no"] + 1
-    self.acceptable_files = acceptable_files.dup
-    save!
-  end
-
-  def execute!(cur_user)
-    succeeded_ids = []
-    acceptable_files = self.acceptable_files.dup
-    acceptable_files.each do |acceptable_file|
       part_filepath = "#{base_dir}/part_#{acceptable_file["_id"]}"
-      next unless ::File.exist?(part_filepath)
+      part_size = ::File.exist?(part_filepath) ? ::File.size(part_filepath) : 0
+      raise if part_size + io.size > acceptable_file["expected_size"]
 
-      actual_size = ::File.size(part_filepath)
-      next if actual_size != acceptable_file["expected_size"]
-
-      filename = ::File.basename(acceptable_file["filename"])
       Retriable.retriable do
-        Cms::File.create_empty!(
-          filename: filename, site_id: site_id, user_id: cur_user.id, group_ids: cur_user.group_ids) do |file|
-          FileUtils.copy(part_filepath, file.path)
+        FileUtils.mkdir_p(base_dir)
+        ::File.open(part_filepath, "ab") do |f|
+          IO.copy_stream(io, f)
         end
       end
 
-      Retriable.retriable do
-        FileUtils.rm_f(part_filepath)
-      end
+      acceptable_file["last_part_no"] = acceptable_file["last_part_no"] + 1
+      self.acceptable_files = acceptable_files.dup
+      save!
+    end
+  end
 
-      succeeded_ids << acceptable_file["_id"]
+  def execute!(cur_user)
+    synchronize! do
+      succeeded_ids = []
+      acceptable_files = self.acceptable_files.dup
+      acceptable_files.each do |acceptable_file|
+        part_filepath = "#{base_dir}/part_#{acceptable_file["_id"]}"
+        next unless ::File.exist?(part_filepath)
+
+        actual_size = ::File.size(part_filepath)
+        next if actual_size != acceptable_file["expected_size"]
+
+        filename = ::File.basename(acceptable_file["filename"])
+        Retriable.retriable do
+          Cms::File.create_empty!(
+            filename: filename, site_id: site_id, user_id: cur_user.id, group_ids: cur_user.group_ids) do |file|
+            FileUtils.copy(part_filepath, file.path)
+          end
+        end
+
+        Retriable.retriable do
+          FileUtils.rm_f(part_filepath)
+        end
+
+        succeeded_ids << acceptable_file["_id"]
+      end
+    ensure
+      succeeded_ids.each do |id|
+        acceptable_files.delete_if { _1["_id"] == id }
+      end
+      update!(acceptable_files: acceptable_files)
     end
-  ensure
-    succeeded_ids.each do |id|
-      acceptable_files.delete_if { _1["_id"] == id }
-    end
-    update!(acceptable_files: acceptable_files)
   end
 
   private
+
+  def synchronize!(&block)
+    run_with(resolved: block, rejected: ->{ raise "unable to acquire lock" })
+  end
 
   def clear_parts
     Retriable.retriable do
