@@ -3,12 +3,14 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
 
   def init_files
     safe_params = params.require(:item).permit(files: [:file_id, :filename, :size])
-    prepare_params = safe_params[:files].map do |param|
-      Cms::LargeFileUploadTask::PrepareParam.new(**param)
+    if safe_params[:files]
+      prepare_params = safe_params[:files].map do |param|
+        Cms::LargeFileUploadTask::PrepareParam.new(**param)
+      end
     end
 
     set_task
-    @task.prepare!(prepare_params)
+    @task.prepare!(prepare_params || SS::EMPTY_ARRAY)
 
     render json: { files: @task.acceptable_files.try(:map) { _1.slice("file_id", "filename") } || SS::EMPTY_ARRAY }
   end

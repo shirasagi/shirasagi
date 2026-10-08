@@ -62,6 +62,9 @@ class Cms::LargeFileUploadTask
     return if part_no != acceptable_file["last_part_no"]
 
     part_filepath = "#{base_dir}/part_#{acceptable_file["_id"]}"
+    part_size = ::File.exist?(part_filepath) ? ::File.size(part_filepath) : 0
+    raise if part_size + io.size > acceptable_file["expected_size"]
+
     Retriable.retriable do
       FileUtils.mkdir_p(base_dir)
       ::File.open(part_filepath, "ab") do |f|
