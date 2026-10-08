@@ -9,9 +9,11 @@ class Cms::LargeFileUploadTask
     end
 
     if Rails.env.test?
+      # rubocop:disable Style/TrivialAccessors
       def max_file_size=(value)
         @max_file_size = value
       end
+      # rubocop:enable Style/TrivialAccessors
     end
   end
 
@@ -46,7 +48,8 @@ class Cms::LargeFileUploadTask
 
       acceptable_files << {
         "_id" => BSON::ObjectId.new, "file_id" => file_id, "filename" => filename,
-        "last_part_no" => 0, "expected_size" => size }
+        "last_part_no" => 0, "expected_size" => size
+      }
     end
 
     update!(acceptable_files: acceptable_files)

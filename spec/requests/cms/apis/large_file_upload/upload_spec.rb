@@ -242,8 +242,10 @@ describe Cms::Apis::LargeFileUploadController, type: :request, dbscope: :example
       expect(task.name).to eq "cms:large_file_task:#{user.id}"
       expect(task.acceptable_files).to have(2).items
       expect(task.acceptable_files).to include(
-        { "_id" => be_a(BSON::ObjectId), "file_id" => file_id1, "filename" => filename, "last_part_no" => 0, "expected_size" => file_size },
-        { "_id" => be_a(BSON::ObjectId), "file_id" => file_id2, "filename" => filename, "last_part_no" => 0, "expected_size" => file_size }
+        { "_id" => be_a(BSON::ObjectId), "file_id" => file_id1, "filename" => filename, "last_part_no" => 0,
+          "expected_size" => file_size },
+        { "_id" => be_a(BSON::ObjectId), "file_id" => file_id2, "filename" => filename, "last_part_no" => 0,
+          "expected_size" => file_size }
       )
 
       blob1 = fixture_file_upload(upload_file_path, "application/octet-stream", true)
