@@ -34,5 +34,9 @@ Rails.application.routes.draw do
       match :undo_delete, on: :member, via: [:get, :delete]
       post :undo_delete_all, on: :collection
     end
+
+    namespace :frames do
+      resources :backups, path: "backups/:setting", only: %i[index], setting: /-|([A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+)/
+    end
   end
 end

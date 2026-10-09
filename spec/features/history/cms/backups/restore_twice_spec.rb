@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "history_cms_backups restore", type: :feature, dbscope: :example do
+describe "history_cms_backups restore", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create :article_node_page, filename: "docs", name: "article" }
   let(:file) { create :ss_file, user_id: cms_user.id }
@@ -33,8 +33,6 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
   end
 
   context "duplicated restore protection" do
-    before { login_cms_user }
-
     context "task is already running" do
       let(:task) { SS::Task.create(site_id: site.id, name: "cms_pages:#{page_item.id}") }
 
@@ -43,10 +41,18 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
       end
 
       it do
-        visit page_path
-        within "[data-id='#{backup_item.id}']" do
-          expect(page).to have_content(I18n.l(backup_item.data[:updated].in_time_zone, format: :picker))
-          click_on I18n.t("ss.links.show")
+        login_cms_user to: page_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
+        page.scroll_to(find("#addon-history-agents-addons-backup"), align: :top)
+        ensure_addon_opened "#addon-history-agents-addons-backup"
+        within "#addon-history-agents-addons-backup" do
+          wait_for_turbo_frame "#addon-history-agents-addons-backup-frame"
+          within "[data-id='#{backup_item.id}']" do
+            expect(page).to have_content(I18n.l(backup_item.data[:updated].in_time_zone, format: :picker))
+            click_on I18n.t("ss.links.show")
+          end
         end
 
         click_on I18n.t("history.restore")

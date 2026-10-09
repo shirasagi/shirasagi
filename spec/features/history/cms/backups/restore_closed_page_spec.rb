@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "history_cms_backups able to restore only closed page", type: :feature, dbscope: :example do
+describe "history_cms_backups able to restore only closed page", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:user) { cms_user }
 
@@ -59,17 +59,22 @@ describe "history_cms_backups able to restore only closed page", type: :feature,
   end
 
   context "with auth" do
-    before { login_cms_user }
-
     it "#restore at public page" do
-      visit page1_path
+      login_cms_user to: page1_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       basic_values = page.all("#addon-basic dd").map(&:text)
       expect(basic_values.index("second update")).to be_truthy
 
-      within "[data-id='#{backup_item1.id}']" do
-        expect(page).to have_content(I18n.l(backup_item1.data[:updated].in_time_zone, format: :picker))
-        click_on I18n.t("ss.links.show")
+      page.scroll_to(find("#addon-history-agents-addons-backup"), align: :top)
+      ensure_addon_opened "#addon-history-agents-addons-backup"
+      within "#addon-history-agents-addons-backup" do
+        wait_for_turbo_frame "#addon-history-agents-addons-backup-frame"
+        within "[data-id='#{backup_item1.id}']" do
+          expect(page).to have_content(I18n.l(backup_item1.data[:updated].in_time_zone, format: :picker))
+          click_on I18n.t("ss.links.show")
+        end
       end
       expect(current_path).not_to eq sns_login_path
 
@@ -80,14 +85,21 @@ describe "history_cms_backups able to restore only closed page", type: :feature,
       expect(page_item2.state).to eq "closed"
       expect(page_item2.files.first.state).to eq "closed"
 
-      visit page2_path
+      login_cms_user to: page2_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       basic_values = page.all("#addon-basic dd").map(&:text)
       expect(basic_values.index("second update")).to be_truthy
 
-      within "[data-id='#{backup_item2.id}']" do
-        expect(page).to have_content(I18n.l(backup_item2.data[:updated].in_time_zone, format: :picker))
-        click_on I18n.t("ss.links.show")
+      page.scroll_to(find("#addon-history-agents-addons-backup"), align: :top)
+      ensure_addon_opened "#addon-history-agents-addons-backup"
+      within "#addon-history-agents-addons-backup" do
+        wait_for_turbo_frame "#addon-history-agents-addons-backup-frame"
+        within "[data-id='#{backup_item2.id}']" do
+          expect(page).to have_content(I18n.l(backup_item2.data[:updated].in_time_zone, format: :picker))
+          click_on I18n.t("ss.links.show")
+        end
       end
       expect(current_path).not_to eq sns_login_path
 
@@ -98,6 +110,8 @@ describe "history_cms_backups able to restore only closed page", type: :feature,
       expect(current_path).to eq show2_path
 
       click_link I18n.t('ss.links.back')
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       expect(current_path).to eq page2_path
 
       basic_values = page.all("#addon-basic dd").map(&:text)

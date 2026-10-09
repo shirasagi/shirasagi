@@ -9,8 +9,6 @@ describe "history_cms_backups", type: :feature, dbscope: :example, js: true do
   let!(:node) { create :article_node_page, site: site, st_form_ids: [ form.id ], st_form_default: form }
   let(:now) { Time.zone.now.change(sec: 0) }
 
-  before { login_cms_user }
-
   context "case 1: in private" do
     let(:name) { unique_id }
 
@@ -24,15 +22,17 @@ describe "history_cms_backups", type: :feature, dbscope: :example, js: true do
       # 　　　このようなケースを想定する。
       #
       Timecop.freeze(now) do
-        visit article_pages_path(site: site, cid: node)
+        login_cms_user to: article_pages_path(site: site, cid: node)
         click_on I18n.t("ss.links.new")
         wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within "form#item-form" do
           fill_in "item[name]", with: name
           click_on I18n.t("ss.buttons.draft_save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
-        wait_for_turbo_frame "#workflow-branch-frame"
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(Article::Page.all.count).to eq 1
@@ -53,10 +53,14 @@ describe "history_cms_backups", type: :feature, dbscope: :example, js: true do
       # step2: add text column and save in private
       #
       Timecop.freeze(now) do
-        visit article_pages_path(site: site, cid: node)
+        login_cms_user to: article_pages_path(site: site, cid: node)
         click_on name
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
         click_on I18n.t("ss.links.edit")
         wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within "form#item-form" do
           within ".column-value-palette" do
             wait_for_event_fired("ss:columnAdded") do
@@ -71,7 +75,8 @@ describe "history_cms_backups", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.draft_save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
-        wait_for_turbo_frame "#workflow-branch-frame"
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       end
 
@@ -99,10 +104,14 @@ describe "history_cms_backups", type: :feature, dbscope: :example, js: true do
       #
       visit article_pages_path(site: site, cid: node)
       click_on name
-      wait_for_turbo_frame "#workflow-branch-frame"
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+      page.scroll_to(find("#addon-history-agents-addons-backup"), align: :top)
       ensure_addon_opened "#addon-history-agents-addons-backup"
       within "#addon-history-agents-addons-backup" do
+        wait_for_turbo_frame "#addon-history-agents-addons-backup-frame"
         within "[data-id='#{backups[1].id}']" do
           click_on I18n.t("ss.links.show")
         end
