@@ -57,7 +57,7 @@ class Gws::Tabular::File::Generator
         puts "include Gws::Tabular::File::Search"
         puts
         columns.each do |column|
-          puts "add_column '#{column.id}' # #{column.name} (#{column.class.name})"
+          puts "add_column '#{column.id}' # #{column.name.to_json} (#{column.class.name})"
         end
       end
       puts "end"
