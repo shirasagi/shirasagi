@@ -88,6 +88,7 @@ describe "history_cms_backups able to restore only closed page", type: :feature,
       login_cms_user to: page2_path
       wait_for_all_ckeditors_ready
       wait_for_all_turbo_frames
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       basic_values = page.all("#addon-basic dd").map(&:text)
       expect(basic_values.index("second update")).to be_truthy
@@ -104,14 +105,17 @@ describe "history_cms_backups able to restore only closed page", type: :feature,
       expect(current_path).not_to eq sns_login_path
 
       click_link I18n.t("history.restore")
+      expect(page).to have_css('dd', text: I18n.l(page_item2.updated))
       expect(current_path).to eq restore2_path
 
       click_button I18n.t("history.buttons.restore")
+      wait_for_notice I18n.t("history.notice.restored")
       expect(current_path).to eq show2_path
 
       click_link I18n.t('ss.links.back')
       wait_for_all_ckeditors_ready
       wait_for_all_turbo_frames
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(current_path).to eq page2_path
 
       basic_values = page.all("#addon-basic dd").map(&:text)

@@ -38,6 +38,9 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example, js: t
       expect(current_path).not_to eq sns_login_path
 
       click_link I18n.t('ss.links.back')
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(current_path).to eq page_path
     end
 
@@ -45,6 +48,7 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example, js: t
       login_cms_user to: page_path
       wait_for_all_ckeditors_ready
       wait_for_all_turbo_frames
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       basic_values = page.all("#addon-basic dd").map(&:text)
       expect(basic_values.index("second update")).to be_truthy
@@ -60,16 +64,18 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example, js: t
           click_on I18n.t("ss.links.show")
         end
       end
+      expect(page).to have_content(I18n.l(backup_item.created, format: :picker))
       expect(current_path).not_to eq sns_login_path
 
       click_link I18n.t("history.restore")
-      expect(current_path).to eq restore_path
       expect(page).to have_css('dd', text: I18n.l(page_item.updated))
       expect(page).to have_css('dd', text: SS.version)
       expect(page).to have_css('dd', text: I18n.l(backup_item.updated))
       expect(page).to have_css('dd', text: backup_item.version)
+      expect(current_path).to eq restore_path
 
       click_button I18n.t("history.buttons.restore")
+      wait_for_notice I18n.t("history.notice.restored")
       expect(current_path).to eq show_path
 
       expect(Job::Log.count).to eq 1
@@ -89,6 +95,7 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example, js: t
       click_link I18n.t('ss.links.back')
       wait_for_all_ckeditors_ready
       wait_for_all_turbo_frames
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(current_path).to eq page_path
 
       basic_values = page.all("#addon-basic dd").map(&:text)

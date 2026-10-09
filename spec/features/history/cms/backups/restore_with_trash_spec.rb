@@ -45,6 +45,7 @@ describe "history_cms_backups restore with trash", type: :feature, dbscope: :exa
       click_link I18n.t("ss.links.back")
       wait_for_all_ckeditors_ready
       wait_for_all_turbo_frames
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(current_path).to eq page_path
     end
 
@@ -67,17 +68,21 @@ describe "history_cms_backups restore with trash", type: :feature, dbscope: :exa
           click_on I18n.t("ss.links.show")
         end
       end
+      expect(page).to have_content(I18n.l(backup_item.created, format: :picker))
       expect(current_path).not_to eq sns_login_path
 
       click_link I18n.t("history.restore")
+      expect(page).to have_css('dd', text: I18n.l(page_item.updated))
       expect(current_path).to eq restore_path
 
       click_button I18n.t("history.buttons.restore")
+      wait_for_notice I18n.t("history.notice.restored")
       expect(current_path).to eq show_path
 
       click_link I18n.t("ss.links.back")
       wait_for_all_ckeditors_ready
       wait_for_all_turbo_frames
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(current_path).to eq page_path
 
       basic_values = page.all("#addon-basic dd").map(&:text)

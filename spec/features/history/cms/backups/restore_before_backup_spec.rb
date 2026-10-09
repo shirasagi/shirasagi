@@ -75,6 +75,9 @@ describe "history_cms_backups", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('td', text: column2.name)
 
       click_link I18n.t("ss.links.back")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(current_path).to eq page_path
 
       page.scroll_to(find("#addon-history-agents-addons-backup"), align: :top)
@@ -95,13 +98,14 @@ describe "history_cms_backups", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('td', text: column2.name)
 
       click_link I18n.t('history.restore')
-      expect(current_path).to eq restore_path
       expect(page).to have_css('dd', text: I18n.l(page_item.updated))
       expect(page).to have_css('dd', text: SS.version)
       expect(page).to have_css('dd', text: I18n.l(backup_item.data['updated'].in_time_zone))
       expect(page).to have_css('dd', text: backup_item.version)
+      expect(current_path).to eq restore_path
 
       click_button I18n.t('history.buttons.restore')
+      wait_for_notice I18n.t("history.notice.restored")
       expect(current_path).to eq history_cms_backup_path(site: site, source: source, id: backup_item)
 
       expect(Job::Log.count).to eq 1
@@ -121,6 +125,7 @@ describe "history_cms_backups", type: :feature, dbscope: :example, js: true do
       click_link I18n.t('ss.links.back')
       wait_for_all_ckeditors_ready
       wait_for_all_turbo_frames
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(current_path).to eq page_path
 
       basic_values = page.all("#addon-basic dd").map(&:text)
