@@ -10,10 +10,15 @@ class History::Cms::Frames::BackupsController < ApplicationController
 
   def setting
     @setting ||= History::BackupFrameSetting.decode(params[:setting].to_s)
+  rescue JSON::JWT::Exception, JSON::ParserError, ArgumentError => e
+    Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+    raise SS::NotFoundError
   end
 
   def ref_item
     @ref_item ||= begin
+      raise SS::NotFoundError if setting.ref_class.blank? || setting.ref_id.blank?
+
       model = setting.ref_class.constantize
       criteria = model.all
       criteria = criteria.site(@cur_site) if criteria.respond_to?(:site)

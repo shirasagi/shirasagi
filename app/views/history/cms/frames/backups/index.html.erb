@@ -69,10 +69,10 @@
           %>
         </td>
         <td class="links">
-          <%= link_to t("ss.links.show"), history_cms_backup_path(source: ref_path, id: backup.id), class: "btn", data: { turbo: false } %>
+          <%= link_to t("ss.links.show"), history_cms_backup_path(source: ref_path, id: backup, compare_to: top_backups[index + 1]), class: "btn", data: { turbo: false } %>
           <%=
             if top_backups[index + 1]
-              link_to(t('history.compare_backup_to_previsous'), history_cms_change_path(source: ref_path, id: backup.id, compare_to: top_backups[index + 1].id), class: 'btn', data: { turbo: false })
+              link_to(t('history.compare_backup_to_previsous'), history_cms_change_path(source: ref_path, id: backup, compare_to: top_backups[index + 1]), class: 'btn', data: { turbo: false })
             end
           %>
         </td>
