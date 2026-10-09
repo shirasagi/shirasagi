@@ -321,5 +321,6 @@ en:
       gws/tabular/file/zip_export_job: GWS Tabular/Data Zip Archiving Job
       gws/tabular/file/zip_import_job: GWS Tabular/Zip Import Job
       gws/tabular/form_publish_job: GWS Tabular/Form Publishing Job
+      gws/tabular/form_refresh_purge_job: GWS Tabular/Form Refresh Job
       gws/tabular/form_trash_purge_job: GWS Tabular/Empty forms trash
       gws/tabular/space_trash_purge_job: GWS Tabular/Empty spaces trash
