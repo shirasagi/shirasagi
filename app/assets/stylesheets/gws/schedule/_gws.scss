@@ -294,6 +294,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 5px 10px;
+  &.fc-header-toolbar {
+    margin-top: -5px !important;
+    margin-bottom: 5px !important;
+  }
 }
 .fc-toolbar h2 {
   display: inline-block;
@@ -330,12 +334,12 @@
   min-height: 35em;
 }
 .calendar.multiple {
-  min-height: 7.5em;
+  min-height: 5em;
   .fc-dayGridWeek-view .fc-scrollgrid-section-header {
     display: none;
   }
   .fc-dayGridWeek-view .fc-scrollgrid-sync-table {
-    min-height: 7.5em;
+    min-height: 5em;
   }
 }
 .fc-col-header-cell {
