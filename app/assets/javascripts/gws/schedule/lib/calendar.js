@@ -105,7 +105,7 @@ SS.ready(function() {
       customButtons: {
         withTodo: {
           text: i18next.t('gws/schedule.calendar.buttonText.withTodo'),
-          click: function (_ev, el) {
+          click: function (_ev, _el) {
             // 複数カレンダーを含む
             flag = this.classList.contains("fc-state-active");
             document.querySelectorAll('.fc-event-todo').forEach((el) => {
@@ -118,7 +118,7 @@ SS.ready(function() {
         },
         withAbsence: {
           text: i18next.t('gws/schedule.calendar.buttonText.withAbsence'),
-          click: function (_ev, el) {
+          click: function (_ev, _el) {
             // 複数カレンダーを含む
             flag = this.classList.contains("fc-state-active");
             document.querySelectorAll('.fc-event-user-attendance-absence').forEach((el) => {
