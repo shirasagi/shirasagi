@@ -42,7 +42,7 @@ class Gws::Tabular::FormRefreshJob < Gws::ApplicationJob
       generator.call
 
       # finalize
-      if :File.exist?(generator.target_file_path)
+      if ::File.exist?(generator.target_file_path)
         ::File.utime(Time.zone.now.to_time, save_mtime, generator.target_file_path)
       end
     end
