@@ -36,7 +36,7 @@ Rails.application.routes.draw do
     end
 
     namespace :frames do
-      resources :backups, path: "backups/:setting", only: %i[index], setting: /-|([A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+)/
+      resources :backups, path: "backups/:setting", only: %i[index], setting: /[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/
     end
   end
 end
