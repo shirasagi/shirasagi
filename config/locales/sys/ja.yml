@@ -64,6 +64,7 @@ ja:
       authn_context:
         password_protected_transport: "ユーザー名とパスワード"
         windows: "統合Windows認証"
+        none: "指定しない"
     links:
       new_from_metadata: メタデータ インポート
       new_from_discovery: Discovery から作成
@@ -321,6 +322,7 @@ ja:
         - IdP側の認証方法を選択します。
         - "ユーザー名とパスワード: ユーザー名とパスワードとで認証します。既定の認証法です。"
         - "統合Windows認証: 統合Windows認証を用いて認証します。IdP側がこの認証方式に対応している必要があります。"
+        - "指定しない: 認証方法を指定しません（RequestedAuthnContext を送信しません）。IdP側で許可されている任意の認証方法（Windows Hello の PIN やパスキーなど）で認証できます。"
 
     sys/notice:
       name:

@@ -10,6 +10,7 @@ module Sys::Addon
     AUTHN_CONTEXT_MAP = {
       "password_protected_transport" => "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport",
       "windows" => "urn:federation:authentication:windows",
+      "none" => nil,
     }.freeze
     NAME_ID_FORMATS = %w(
       urn:oasis:names:tc:SAML:2.0:nameid-format:email

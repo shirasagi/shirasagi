@@ -26,11 +26,7 @@ class Sns::Login::SamlController < ApplicationController
       settings.idp_cert = SS::Crypto.decrypt(@item.x509_cert)
       settings.idp_cert_fingerprint = @item.fingerprint
       settings.force_authn = true if @item.force_authn?
-      if @item.authn_context
-        settings.authn_context = @model::AUTHN_CONTEXT_MAP[@item.authn_context] || @model::DEFAULT_AUTHN_CONTEXT
-      else
-        settings.authn_context = @model::DEFAULT_AUTHN_CONTEXT
-      end
+      settings.authn_context = @model::AUTHN_CONTEXT_MAP.fetch(@item.authn_context.to_s, @model::DEFAULT_AUTHN_CONTEXT)
     end
   end
 
