@@ -1,6 +1,8 @@
 class Cms::Apis::LargeFileUploadController < ApplicationController
   include Cms::ApiFilter
 
+  before_action :check_permissions
+
   def init_files
     safe_params = params.require(:item).permit(files: [:file_id, :filename, :size])
     if safe_params[:files]
@@ -56,5 +58,9 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
 
   def task_name
     "cms:large_file_task:#{@cur_user.id}"
+  end
+
+  def check_permissions
+    raise "403" unless Cms::File.allowed?(:use, @cur_user, site: @cur_site)
   end
 end

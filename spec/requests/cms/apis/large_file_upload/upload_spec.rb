@@ -286,4 +286,33 @@ describe Cms::Apis::LargeFileUploadController, type: :request, dbscope: :example
       end
     end
   end
+
+  context "auth" do
+    let!(:role) { create :cms_role, cur_site: site, site: site }
+    let!(:user) { create :cms_test_user, group_ids: cms_user.group_ids, cms_role_ids: [ role.id ] }
+
+    it do
+      initialize_params = {
+        authenticity_token: @auth_token
+      }
+      post cms_apis_large_file_upload_initialize_path(site: site, format: :json), params: initialize_params
+      expect(response.status).to eq 403
+    end
+
+    it do
+      upload_params = {
+        authenticity_token: @auth_token
+      }
+      post cms_apis_large_file_upload_upload_path(site: site, format: :json), params: upload_params
+      expect(response.status).to eq 403
+    end
+
+    it do
+      finalize_params = {
+        authenticity_token: @auth_token
+      }
+      put cms_apis_large_file_upload_finalize_path(site: site, format: :json), params: finalize_params
+      expect(response.status).to eq 403
+    end
+  end
 end
