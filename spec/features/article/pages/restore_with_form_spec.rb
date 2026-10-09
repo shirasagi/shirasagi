@@ -52,11 +52,9 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   end
 
   context 'restore with form' do
-    before { login_cms_user }
-
     it do
       # Create
-      visit new_article_page_path(site: site, cid: node)
+      login_cms_user to: new_article_page_path(site: site, cid: node)
       wait_for_all_ckeditors_ready
       wait_for_all_turbo_frames
 
@@ -163,7 +161,11 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       wait_for_all_ckeditors_ready
       wait_for_all_turbo_frames
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
-      within '#addon-history-agents-addons-backup' do
+
+      page.scroll_to(find("#addon-history-agents-addons-backup"), align: :top)
+      ensure_addon_opened "#addon-history-agents-addons-backup"
+      within "#addon-history-agents-addons-backup" do
+        wait_for_turbo_frame "#addon-history-agents-addons-backup-frame"
         # find('a:last').click
         all('a').last.click
       end
