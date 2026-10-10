@@ -199,7 +199,7 @@ SS.ready(function() {
   };
 
   Gws_Notice_Calendar.viewStateQuery = function (info) {
-    var format = $(info.el).closest(".fc").hasClass('fc-list-format') ? 'list' : 'default';
+    var format = 'list';
     return "calendar[path]=" + location.pathname + "&calendar[view]=" + info.view.type + "&calendar[viewFormat]=" + format;
   };
 

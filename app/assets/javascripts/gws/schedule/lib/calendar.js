@@ -120,7 +120,7 @@ SS.ready(function() {
           text: i18next.t('gws/schedule.calendar.buttonText.withAbsence'),
           click: function (_ev, _el) {
             // 複数カレンダーを含む
-            flag = this.classList.contains("fc-state-active");
+            var flag = this.classList.contains("fc-state-active");
             document.querySelectorAll('.fc-event-user-attendance-absence').forEach((el) => {
               el.classList.toggle('hide', flag);
             });
@@ -287,12 +287,11 @@ SS.ready(function() {
   };
 
   Gws_Schedule_Calendar.viewStateQuery = function (info) {
-    var format = info.el.closest(".fc").
-      classList.contains('fc-list-format') ? 'list' : 'default';
+    var format = 'default';
     var todo = document.querySelector('.fc .fc-withTodo-button')
-      .classList.contains("fc-state-active") ? 'active' : 'inactive';
+      ?.classList?.contains("fc-state-active") ? 'active' : 'inactive';
     var attendance = document.querySelector('.fc .fc-withAbsence-button')
-      .classList.contains("fc-state-active") ? 'active' : 'inactive';
+      ?.classList?.contains("fc-state-active") ? 'active' : 'inactive';
 
     path = "calendar[path]=" + location.pathname;
     path += "&calendar[view]=" + info.view.type;
