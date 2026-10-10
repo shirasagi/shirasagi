@@ -1,7 +1,7 @@
 <%
   calendar_options  = {
     tapMenu: @facility.reservable?(@cur_user),
-    headerToolbar: { left: 'today prev next title reload', right: 'dayGridMonth,dayGridWeek,timeGridDay' },
+    headerToolbar: { left: 'today prev next title reload', right: 'dayGridMonth,dayGridWeek,timeGridDay listMonth' },
     pageUrl: url_for(action: :index),
     eventSources: [{ url: "#{url_for(action: :events, format: :json)}?#{search_query}" }],
     firstDay: @cur_site.schedule_first_day,
