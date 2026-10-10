@@ -105,20 +105,27 @@ SS.ready(function() {
       customButtons: {
         withTodo: {
           text: i18next.t('gws/schedule.calendar.buttonText.withTodo'),
-          click: function (_ev) {
-            $('.fc-event-todo').toggle(!$(this).hasClass('fc-state-active'));
-            $(this).toggleClass("fc-state-active");
+          click: function (_ev, _el) {
+            // 複数カレンダーを含む
+            flag = this.classList.contains("fc-state-active");
+            document.querySelectorAll('.fc-event-todo').forEach((el) => {
+              el.classList.toggle('hide', flag);
+            });
+            this.classList.toggle("fc-state-active");
+            document.querySelectorAll('.calendar').forEach((el) => el.calendar?.updateSize());
             return Gws_Schedule_Calendar.updateNoPlanVisibility($(this).closest(".fc"));
           }
         },
         withAbsence: {
           text: i18next.t('gws/schedule.calendar.buttonText.withAbsence'),
-          click: function (_ev) {
-            $(".fc-event-user-attendance-absence").each(function() {
-              $(this).toggleClass("hide");
+          click: function (_ev, _el) {
+            // 複数カレンダーを含む
+            var flag = this.classList.contains("fc-state-active");
+            document.querySelectorAll('.fc-event-user-attendance-absence').forEach((el) => {
+              el.classList.toggle('hide', flag);
             });
-            $('.fc-event-user-attendance-absence').toggle(!$(this).hasClass('fc-state-active'));
-            $(this).toggleClass("fc-state-active");
+            this.classList.toggle("fc-state-active");
+            document.querySelectorAll('.calendar').forEach((el) => el.calendar?.updateSize());
             return Gws_Schedule_Calendar.updateNoPlanVisibility($(this).closest(".fc"));
           }
         },
@@ -201,26 +208,8 @@ SS.ready(function() {
           delete target.dataset.resourceError;
           return target.prepend($('<span />', { class: "fc-loading" }).text(i18next.t("gws/schedule.errors.resource_error"))[0]);
         }
-
         if (!isLoading) {
           requestAnimationFrame(function() {
-            var attendance, todo;
-            todo = $('.fc .fc-withTodo-button');
-            if (todo.length) {
-              if (todo.hasClass('fc-state-active')) {
-                $('.fc .fc-event-todo').show();
-              } else {
-                $('.fc .fc-event-todo').hide();
-              }
-            }
-            attendance = $('.fc .fc-withAbsence-button');
-            if (attendance.length) {
-              if (attendance.hasClass('fc-state-active')) {
-                $('.fc .fc-event-user-attendance-absence').removeClass('hide');
-              } else {
-                $('.fc .fc-event-user-attendance-absence').addClass('hide');
-              }
-            }
             Gws_Schedule_Calendar.updateNoPlanVisibility(calendar.el.closest(".fc"));
             return Gws_Schedule_Calendar.changePrintPreviewPortrait(calendar.view);
           });
@@ -279,15 +268,30 @@ SS.ready(function() {
           el.querySelector(".fc-resizer")?.remove();
           el.classList.remove("fc-resizable");
         }
+
+        // 複数カレンダーを含む
+        var todo = document.querySelector('.fc .fc-withTodo-button');
+        if (todo) {
+          if (el.classList.contains('fc-event-todo')) {
+            el.classList.toggle('hide', !todo.classList.contains('fc-state-active'))
+          }
+        }
+        var attendance = document.querySelector('.fc .fc-withAbsence-button');
+        if (attendance) {
+          if (el.classList.contains('fc-event-user-attendance-absence')) {
+            el.classList.toggle('hide', !attendance.classList.contains('fc-state-active'))
+          }
+        }
       }
     };
   };
 
   Gws_Schedule_Calendar.viewStateQuery = function (info) {
-    var attendance, format, todo, path;
-    format = $(info.el).closest(".fc").hasClass('fc-list-format') ? 'list' : 'default';
-    todo = $('.fc .fc-withTodo-button').hasClass("fc-state-active") ? 'active' : 'inactive';
-    attendance = $('.fc .fc-withAbsence-button').hasClass("fc-state-active") ? 'active' : 'inactive';
+    var format = 'default';
+    var todo = document.querySelector('.fc .fc-withTodo-button')
+      ?.classList?.contains("fc-state-active") ? 'active' : 'inactive';
+    var attendance = document.querySelector('.fc .fc-withAbsence-button')
+      ?.classList?.contains("fc-state-active") ? 'active' : 'inactive';
 
     path = "calendar[path]=" + location.pathname;
     path += "&calendar[view]=" + info.view.type;
