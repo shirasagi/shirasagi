@@ -199,7 +199,7 @@ SS.ready(function() {
   };
 
   Gws_Notice_Calendar.viewStateQuery = function (info) {
-    var format = 'list';
+    var format = 'default';
     return "calendar[path]=" + location.pathname + "&calendar[view]=" + info.view.type + "&calendar[viewFormat]=" + format;
   };
 
