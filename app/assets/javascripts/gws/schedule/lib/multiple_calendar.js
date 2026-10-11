@@ -154,14 +154,6 @@ SS.ready(function() {
         var container = document.querySelector('.calendar-multiple-container')
         container.dataset.viewType = info.view.type;
       },
-
-      // eventAfterAllRender
-      // datesSet: function(info) {
-      //   var view = info.view;
-      //   if (view.type === 'dayGridWeek') {
-      //     return $(info.el).find(".fc-body").hide();
-      //   }
-      // }
     };
   };
 
@@ -180,26 +172,8 @@ SS.ready(function() {
           delete target.dataset.resourceError;
           return target.prepend($('<span />', { class: "fc-loading" }).text(i18next.t("gws/schedule.errors.resource_error"))[0]);
         }
-
         if (!isLoading) {
           requestAnimationFrame(function() {
-            var attendance, todo;
-            todo = $('.fc .fc-withTodo-button')[0];
-            if (todo) {
-              if (todo.classList.contains('fc-state-active')) {
-                $('.fc .fc-event-todo').show();
-              } else {
-                $('.fc .fc-event-todo').hide();
-              }
-            }
-            attendance = $('.fc .fc-withAbsence-button')[0];
-            if (attendance) {
-              if (attendance.classList.contains('fc-state-active')) {
-                $('.fc .fc-event-user-attendance-absence').removeClass('hide');
-              } else {
-                $('.fc .fc-event-user-attendance-absence').addClass('hide');
-              }
-            }
             $(window).trigger('resize');
           });
         }
@@ -241,11 +215,23 @@ SS.ready(function() {
           el.querySelector('.fc-event-title').append(facilitySpan[0]);
           el.title += ` | ${event.extendedProps.facility}`;
         }
-
         if (el.className.includes('fc-event-work')) {
           el.querySelector(".fc-date")?.remove();
           el.querySelector(".fc-resizer")?.remove();
           el.classList.remove("fc-resizable");
+        }
+
+        var todo = document.querySelector('.fc .fc-withTodo-button');
+        if (todo) {
+          if (el.classList.contains('fc-event-todo')) {
+            el.classList.toggle('hide', !todo.classList.contains('fc-state-active'))
+          }
+        }
+        var attendance = document.querySelector('.fc .fc-withAbsence-button');
+        if (attendance) {
+          if (el.classList.contains('fc-event-user-attendance-absence')) {
+            el.classList.toggle('hide', !attendance.classList.contains('fc-state-active'))
+          }
         }
       }
     };
