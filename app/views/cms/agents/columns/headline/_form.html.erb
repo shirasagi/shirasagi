@@ -6,4 +6,8 @@
   <dt><%= @model.t :max_headline_level %><%= @model.tt :max_headline_level %></dt>
   <dd><%= f.select :max_headline_level, @item.max_headline_level_options,
                    { selected: @item.effective_max_headline_level } %></dd>
+
+  <dt><%= @model.t :enable_anchor %><%= @model.tt :enable_anchor %></dt>
+  <dd><%= f.select :enable_anchor, @item.enable_anchor_options,
+                   { selected: @item.enable_anchor.presence || "disabled" } %></dd>
 </dl>

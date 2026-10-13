@@ -1,3 +1,9 @@
 <%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do %>
   <%= [ value.head.presence, value.text.presence ].compact.flatten.join(', ') %>
+  <% if column.try(:anchor_enabled?) %>
+    <div class="column-value-anchor">
+      <label><%= Cms::Column::Value::Headline.t(:anchor) %></label>
+      <span>#<%= value.resolved_anchor %></span>
+    </div>
+  <% end %>
 <% end %>
