@@ -55,7 +55,7 @@ class Gws::Tabular::File::CsvExporter
 
   def draw_workflow(drawer)
     drawer.column :workflow_requested do
-      drawer.head { I18n.t("gws/workflow.table.gws/workflow/file.requested") }
+      drawer.head { I18n.t("gws/workflow2.table.gws/workflow2/file.requested") }
       drawer.body do |item|
         item.try(:requested) ? I18n.l(item.requested, format: :csv) : nil
       end
