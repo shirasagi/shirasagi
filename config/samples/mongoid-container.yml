@@ -2,7 +2,7 @@
 #
 # if you want to know about detail configuration,
 # see: https://docs.mongodb.org/ecosystem/tutorial/mongoid-installation/#mongoid-configuration
-production:
+production: &production
   clients:
     default:
       database: ss
