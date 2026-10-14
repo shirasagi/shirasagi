@@ -39,9 +39,6 @@ FileUtils.chdir APP_ROOT do
   puts "== Setup config/mongoid.yml =="
   system! "cp -np config/samples/mongoid-container.yml config/mongoid.yml"
 
-  puts "== Setup config/secrets.yml =="
-  system! "cp -np config/samples/secrets.yml config/secrets.yml"
-
   unless File.exist?("config/environment.yml")
     File.open("config/environment.yml", "wt") do |f|
       f.puts "RAILS_ENV: development"
