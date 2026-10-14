@@ -40,6 +40,8 @@ ja:
     models:
       ads/access_log: 広告アクセスログ
       ads/banner: 広告バナー
+      ads/node/banner: 広告バナー
+      ads/part/banner: 広告バナー
     attributes:
       ads/addon/category:
         ads_categories: カテゴリー

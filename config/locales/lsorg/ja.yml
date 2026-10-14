@@ -26,6 +26,9 @@ ja:
       lsorg/page: ページリスト
 
   mongoid:
+    models:
+      lsorg/node/node: 組織一覧
+      lsorg/node/page: ページリスト
     attributes:
       lsorg/addon/group:
         basename: ファイル名

@@ -58,8 +58,13 @@ ja:
   mongoid:
     models:
       article/page: 記事ページ
+      article/node/form_export: 定型エクスポート
+      article/node/map_search: 地図検索
       article/node/page: 記事リスト
-      article/part/node: 記事リスト
+      article/node/search: 記事検索
+      article/part/page: 記事リスト
+      article/part/page_navi: 記事ナビゲーション
+      article/part/search: 記事検索
     attributes:
       article/addon/form_export:
         form_id: 定型フォーム

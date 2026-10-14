@@ -85,6 +85,13 @@ ja:
     models:
       facility/image: 施設写真
       facility/map: 地図
+      facility/notice: お知らせ
+      facility/node/page: 施設情報
+      facility/node/node: 施設リスト
+      facility/node/category: 施設の種類
+      facility/node/service: 施設の用途
+      facility/node/location: 施設のある地域
+      facility/node/search: 施設検索
     attributes:
       facility/node/page:
         name: 施設名

@@ -49,6 +49,9 @@ ja:
   mongoid:
     models:
       key_visual/image: キービジュアル画像
+      key_visual/node/image: 画像管理
+      key_visual/part/slide: スライドショー（非推奨）
+      key_visual/part/swiper_slide: スライドショー（Swiper）
     attributes:
       key_visual/addon/page_list:
         link_action: リンク動作
