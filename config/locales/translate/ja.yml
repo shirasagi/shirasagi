@@ -42,10 +42,6 @@ ja:
   modules:
     translate: 自動翻訳
 
-  cms:
-    parts:
-      translate/tool: 翻訳ツール
-
   mongoid:
     models:
       translate/text_cache: 翻訳テキスト

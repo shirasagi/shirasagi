@@ -9,13 +9,6 @@ ja:
         page_only: ページのみ
         node_only: フォルダーのみ
 
-  cms:
-    nodes:
-      recommend/receiver: 閲覧履歴受信
-    parts:
-      recommend/history: 閲覧履歴
-      recommend/similarity: 関連ページ
-
   modules:
     recommend: レコメンド
     addons:

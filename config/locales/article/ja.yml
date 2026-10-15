@@ -21,17 +21,6 @@ ja:
       article/map_search_result: 検索結果
       article/search: 記事検索
 
-  cms:
-    nodes:
-      article/form_export: 定型エクスポート
-      article/map_search: 地図検索
-      article/page: 記事リスト
-      article/search: 記事検索
-    parts:
-      article/page: 記事リスト
-      article/page_navi: 記事ナビゲーション
-      article/search: 記事検索
-
   cms_role:
     read_other_article_pages: ページの閲覧（全て）
     read_private_article_pages: ページの閲覧（所有）

@@ -24,7 +24,7 @@ if (text.length) {
 }
 <% end %>
 
-<div><%=br t("cms.notices.content_quota_navi", routes: @routes.map { |route| t("cms.nodes.#{route}") }.join(", ")) %></div>
+<div><%=br t("cms.notices.content_quota_navi", routes: @routes.map { t(_1.sub("/", "/node/"), scope: "mongoid.models") }.join(", ")) %></div>
 
 <nav class="mod-navi">
   <% @items.each do |item| %>

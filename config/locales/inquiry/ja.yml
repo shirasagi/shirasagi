@@ -111,13 +111,6 @@ ja:
       inquiry/kintone_app/column: kintoneアプリ
       inquiry/kintone_app/answer: kintoneアプリ
 
-  cms:
-    nodes:
-      inquiry/form: フォーム
-      inquiry/node: フォーム一覧
-    parts:
-      inquiry/feedback: フィードバック
-
   cms_role:
     read_other_inquiry_columns: 質問項目の閲覧
     edit_other_inquiry_columns: 質問項目の編集

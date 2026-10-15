@@ -39,8 +39,12 @@ module SS::PluginBase
   end
   alias module_name i18n_module_name
 
+  def i18n_name_key
+    path.sub("/", "/#{plugin_type}/")
+  end
+
   def i18n_name_only
-    I18n.t("#{self.class.scope}.#{plugin_type.pluralize}.#{path}", default: path.split('/', 2).last.titleize)
+    I18n.t(i18n_name_key, scope: "mongoid.models", default: ->(*){ path.split('/', 2).last.titleize })
   end
   alias name_only i18n_name_only
 

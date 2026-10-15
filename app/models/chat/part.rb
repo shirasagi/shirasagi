@@ -1,11 +1,4 @@
-class Chat::Part
-  include Cms::Model::Part
-  include SS::PluginRepository
-
-  index({ site_id: 1, filename: 1 }, { unique: true })
-
-  plugin_type "part"
-
+module Chat::Part
   class Base
     include Cms::Model::Part
 

@@ -20,11 +20,6 @@ ja:
       lsorg/node_list: リスト表示
       lsorg/page_list: リスト表示
 
-  cms:
-    nodes:
-      lsorg/node: 組織一覧
-      lsorg/page: ページリスト
-
   mongoid:
     models:
       lsorg/node/node: 組織一覧

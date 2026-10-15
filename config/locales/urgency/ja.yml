@@ -21,10 +21,6 @@ ja:
       urgency/mail_page: 緊急災害レイアウト設定
       urgency/site_setting: 連携サイト設定
 
-  cms:
-    nodes:
-      urgency/layout: 緊急災害レイアウト
-
   mongoid:
     models:
       urgency/node/layout: 緊急災害レイアウト

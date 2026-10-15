@@ -834,33 +834,6 @@ ja:
       default_upper_text:
         - "次のページの公開期限が切れています。"
         - "確認の上、対応をお願いいたします。"
-  #cms:
-    nodes:
-      cms/node: フォルダーリスト
-      cms/page: ページリスト
-      cms/import_node: 取り込みページ
-      cms/archive: アーカイブ
-      cms/photo_album: 写真一覧
-      cms/group_page: グループ別ページリスト
-      cms/site_search: サイト内検索
-      cms/line_hub: "LINE HUB"
-      cms/form_search: 定型フォーム絞込
-    parts:
-      cms/free: HTML記述
-      cms/node: フォルダーリスト（旧）
-      cms/node2: フォルダーリスト
-      cms/page: ページリスト
-      cms/tabs: 新着タブ
-      cms/crumb: パンくずリスト
-      cms/sns_share: SNSシェアボタン
-      cms/calendar_nav: アーカイブナビ(カレンダー)
-      cms/monthly_nav: アーカイブナビ（月次）
-      cms/site_search_history: サイト内検索(検索履歴)
-      cms/history_list: 閲覧履歴
-      cms/site_search_keyword: サイト内検索(注目ワード)
-      cms/print: 印刷
-      cms/clipboard_copy: クリップボードへコピー
-      cms/form_search: 定型フォーム絞込検索
     columns:
       cms/text_field: 一行入力
       cms/date_field: 日付入力

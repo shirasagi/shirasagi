@@ -62,12 +62,6 @@ ja:
       chat/path: フォルダー
       chat/text: 文章
 
-  cms:
-    nodes:
-      chat/bot: チャットボット
-    parts:
-      chat/bot: チャットボット
-
   cms_role:
     delete_other_chat_bots: チャットボットの削除(全て)
     delete_private_chat_bots: チャットボットの削除(所有)

@@ -1,14 +1,4 @@
-class Chat::Node
-  include Cms::Model::Node
-  include SS::PluginRepository
-  include Cms::Addon::NodeSetting
-  include Cms::Addon::EditorSetting
-  include Cms::Addon::GroupPermission
-  include Cms::Addon::ForMemberNode
-  include Cms::Lgwan::Node
-
-  index({ site_id: 1, filename: 1 }, { unique: true })
-
+module Chat::Node
   class Base
     include Cms::Model::Node
 
