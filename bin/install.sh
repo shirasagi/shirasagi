@@ -369,8 +369,6 @@ else
   echo "config/secrets.yml does not exist, skipping removal."
 fi
 
-#sed -i "s/dbcae379.*$/$(bundle exec rake secret)/" config/secrets.yml
-
 # enable recommendation
 #sed -e "s/disable: true$/disable: false/" config/defaults/recommend.yml >config/recommend.yml
 
