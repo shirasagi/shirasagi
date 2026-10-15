@@ -395,8 +395,15 @@ SS.ready(function() {
         location.href = popup_url + "/" + event.id + "?" + state;
       },
       eventAllow: function(dropInfo, draggedEvent) {
+        // 終日の移動を無効化
         if (draggedEvent._context.viewSpec.type === 'timeGridDay') {
           if (dropInfo.allDay || draggedEvent.allDay) {
+            return false;
+          }
+        }
+        // DnDを無効化: params.eventStartEditable
+        if (draggedEvent._context.viewApi.calendar.getOption('eventStartEditable') === false) {
+          if (dropInfo.start.getTime() !== draggedEvent.start.getTime()) {
             return false;
           }
         }
