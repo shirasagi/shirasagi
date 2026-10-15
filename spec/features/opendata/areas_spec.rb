@@ -34,7 +34,7 @@ describe "opendata_areas", type: :feature, dbscope: :example, js: true do
       click_on I18n.t('ss.links.new')
       click_on I18n.t('ss.links.change')
       within 'article.mod-opendata' do
-        click_on I18n.t('cms.nodes.opendata/area')
+        click_on I18n.t('mongoid.models.opendata/node/area')
       end
       fill_in 'item[name]', with: name
       fill_in 'item[basename]', with: basename

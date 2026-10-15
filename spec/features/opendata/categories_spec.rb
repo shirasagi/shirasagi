@@ -38,7 +38,7 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
       end
       within_cbox do
         within 'article.mod-opendata' do
-          click_on I18n.t('cms.nodes.opendata/category')
+          click_on I18n.t('mongoid.models.opendata/node/category')
         end
       end
       within "form#item-form" do

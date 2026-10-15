@@ -14,7 +14,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       click_on I18n.t('cms.buttons.manage_columns')
 
       within '.gws-column-list-toolbar[data-placement="top"]' do
-        wait_for_event_fired("gws:column:added") { click_on I18n.t('cms.columns.cms/youtube') }
+        wait_for_event_fired("gws:column:added") { click_on I18n.t('mongoid.models.cms/column/youtube') }
       end
       wait_for_notice I18n.t('ss.notice.saved')
 
