@@ -88,7 +88,7 @@ class Gws::Compressor
 
     filenames = []
 
-    Zip::File.open(path, Zip::File::CREATE) do |zip|
+    Zip::File.open(path, create: true) do |zip|
       items.each do |item|
         filename = ::File.basename(item.download_filename)
         if filenames.include?(filename)

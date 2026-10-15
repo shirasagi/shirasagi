@@ -9,7 +9,7 @@ class Opendata::Dataset::Export::Zip
 
   def compress
     FileUtils.rm(@path) if File.exist?(@path)
-    Zip::File.open(@path, Zip::File::CREATE) do |zip|
+    Zip::File.open(@path, create: true) do |zip|
       add_csv(zip)
     end
   end

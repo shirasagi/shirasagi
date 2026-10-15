@@ -110,7 +110,7 @@ describe Cms::ImportFilesJob, dbscope: :example do
     context "zip slip" do
       let!(:zip_file) do
         file = tmpfile(extname: ".zip")
-        Zip::File.open(file, Zip::File::CREATE) do |zip|
+        Zip::File.open(file, create: true) do |zip|
           zip.mkdir("../../#{dir}")
           zip.get_output_stream("../../#{dir}/index.html") do |f|
             IO.copy_stream("#{Rails.root}/db/seeds/demo/pages/docs/tenkyo.html", f)

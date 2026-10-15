@@ -65,7 +65,7 @@ class Gws::Monitor::TopicZipCreator
       end
 
       ::FileUtils.rm_f zip_path
-      Zip::File.open(zip_path, Zip::File::CREATE) do |zip_file|
+      Zip::File.open(zip_path, create: true) do |zip_file|
         @zip_file = zip_file
         yield
       ensure

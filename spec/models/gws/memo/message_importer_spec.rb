@@ -12,7 +12,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
       end
 
       zip_file_path = tmpfile(extname: ".zip", binary: true) { |f| f.write '' }
-      Zip::File.open(zip_file_path, Zip::File::CREATE) do |zip|
+      Zip::File.open(zip_file_path, create: true) do |zip|
         zip.add(eml_entry_path, eml_file_path)
       end
 
@@ -801,7 +801,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
     let(:zip_file_path) do
       path = tmpfile(extname: ".zip", binary: true) { |f| f.write '' }
       Zip.unicode_names = true
-      Zip::File.open(path, Zip::File::CREATE) do |zip|
+      Zip::File.open(path, create: true) do |zip|
         zip.add(eml_entry_path, eml_file_path)
       end
       path
@@ -841,7 +841,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
     let(:zip_file_path) do
       path = tmpfile(extname: ".zip", binary: true) { |f| f.write '' }
       Zip.unicode_names = true
-      Zip::File.open(path, Zip::File::CREATE) do |zip|
+      Zip::File.open(path, create: true) do |zip|
         zip.add(eml_entry_path, eml_file_path)
       end
       path

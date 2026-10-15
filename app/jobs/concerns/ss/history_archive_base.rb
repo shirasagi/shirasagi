@@ -100,7 +100,7 @@ module SS::HistoryArchiveBase
   def create_archives
     ::Dir[@work_dir.join('year-*')].each do |year_dir|
       ::Dir["#{year_dir}/week-*"].each do |week_dir|
-        ::Zip::File.open("#{week_dir}.zip", ::Zip::File::CREATE) do |zip|
+        ::Zip::File.open("#{week_dir}.zip", create: true) do |zip|
           ::Dir["#{week_dir}/*.csv"].each do |file|
             name = ::File.basename(file)
             name = ::Fs.zip_safe_name(name)
