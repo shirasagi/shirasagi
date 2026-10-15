@@ -67,8 +67,8 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
       item_file.destination_treat_state = 'no_need_to_treat'
       # SS::Release
       item_file.state = 'public'
-      item_file.released = Time.zone.now
-      item_file.close_date = Time.zone.now + 2.weeks
+      item_file.released = now
+      item_file.close_date = now + 2.weeks
     end
     item_file.save!
   end
