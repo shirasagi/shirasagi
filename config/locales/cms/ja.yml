@@ -834,23 +834,6 @@ ja:
       default_upper_text:
         - "次のページの公開期限が切れています。"
         - "確認の上、対応をお願いいたします。"
-    columns:
-      cms/text_field: 一行入力
-      cms/date_field: 日付入力
-      cms/url_field: URL入力
-      cms/url_field2: URL入力
-      cms/text_area: 複数行入力
-      cms/select: ドロップダウン
-      cms/radio_button: ラジオボタン
-      cms/check_box: チェックボックス
-      cms/file_upload: ファイルアップロード
-      cms/multiple_files_upload: 複数ファイルアップロード
-      cms/headline: 見出し入力
-      cms/list: リスト入力
-      cms/youtube: YouTube埋め込み
-      cms/free: 自由入力
-      cms/table: 表
-      cms/select_page: ページ選択
     cms/michecker:
       start: miChecker を実行し結果を確認する
       loading: プレビューをロード中です
