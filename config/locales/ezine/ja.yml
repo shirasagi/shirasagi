@@ -65,8 +65,10 @@ ja:
       ezine/entry: メルマガ購読依頼
       ezine/member: メルマガ購読者
       ezine/page: メルマガ記事
+      ezine/node/page: 配信記事一覧
+      ezine/node/backnumber: バックナンバー
       ezine/node/member_page: 会員向けメール配信
-      ezine/node/category_node: メルマガカテゴリー
+      ezine/node/category_node: カテゴリ
     attributes:
       ezine/node/page:
         column_ids: カラム

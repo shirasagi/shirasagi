@@ -26,6 +26,8 @@ ja:
       urgency/layout: 緊急災害レイアウト
 
   mongoid:
+    models:
+      urgency/node/layout: 緊急災害レイアウト
     attributes:
       urgency/addon/layout:
         urgency_default_layout_id: 通常時レイアウト

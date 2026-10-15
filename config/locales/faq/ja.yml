@@ -25,6 +25,9 @@ ja:
   mongoid:
     models:
       faq/page: FAQ記事
+      faq/node/page: FAQ記事リスト
+      faq/node/search: FAQ記事検索
+      faq/part/search: FAQ記事検索
     attributes:
       cms/model/page:
         question: 質問

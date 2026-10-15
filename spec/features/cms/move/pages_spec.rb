@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "move_cms_pages", type: :feature, dbscope: :example do
+describe "move_cms_pages", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
 
   around do |example|
@@ -11,7 +11,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
     SS.config.replace_value_at(:cms, 'replace_urls_after_move', save_config)
   end
 
-  context "with auth", js: true do
+  context "with auth" do
     let!(:node_a) { create(:cms_node_page, site: site, filename: "A", name: "A") }
     let!(:node_b) { create(:cms_node_page, site: site, filename: "A/B", name: "B" ) }
     let!(:node_c) { create(:cms_node_page, site: site, filename: "A/B/C", name: "C" ) }
@@ -21,14 +21,14 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
     let(:layout_layout_html) { "<a href='#{site.full_url}page.html'>page.html</a><a href='#{site.full_url}A/B/C/'>/A/B/C/</a>" }
     let(:part_part_html) { '<a href="/page.html ">page.html</a><a href="/A/B/C/ ">/A/B/C/</a>' }
 
-    before { login_cms_user }
-    before(:each) do
+    before do
       create(:cms_page, filename: "page.html", name: "page", html: page_html)
       create(:cms_page, filename: "A/B/C/page2.html", name: "page2", html: page2_html)
       create(:cms_layout, filename: "layout.layout.html", name: "layout", html: layout_layout_html)
       create(:cms_part_free, filename: "part.part.html", name: "part", html: part_part_html)
     end
-    after(:each) do
+
+    after do
       Fs.rm_rf "#{site.path}/A"
       Fs.rm_rf "#{site.path}/D"
     end
@@ -37,7 +37,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
       Cms::Page.where(filename: "page.html").first.tap do |item|
         expect(Fs.exist?("#{site.path}/page.html")).to be_truthy
 
-        visit move_cms_page_path(site.id, item)
+        login_cms_user to: move_cms_page_path(site.id, item)
         within "form" do
           fill_in "destination", with: "A/page"
           click_button I18n.t('ss.buttons.move')
@@ -60,7 +60,11 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
         visit node_page_path(site.id, node_c, item)
         wait_for_turbo_frame "#workflow-branch-frame"
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+        page.scroll_to(find("#addon-history-agents-addons-backup"), align: :top)
+        ensure_addon_opened "#addon-history-agents-addons-backup"
         within "#addon-history-agents-addons-backup" do
+          wait_for_turbo_frame "#addon-history-agents-addons-backup-frame"
           expect(page).to have_css('.history-backup-table', text: I18n.t('history.options.action.replace_urls'), count: 1)
         end
       end
@@ -109,7 +113,11 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
         visit node_page_path(site.id, node_a, item)
         wait_for_turbo_frame "#workflow-branch-frame"
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+        page.scroll_to(find("#addon-history-agents-addons-backup"), align: :top)
+        ensure_addon_opened "#addon-history-agents-addons-backup"
         within "#addon-history-agents-addons-backup" do
+          wait_for_turbo_frame "#addon-history-agents-addons-backup-frame"
           expect(page).to have_css('.history-backup-table', text: I18n.t('history.options.action.replace_urls'), count: 1)
         end
 
@@ -135,7 +143,11 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
         visit node_page_path(site.id, node_c, item)
         wait_for_turbo_frame "#workflow-branch-frame"
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+        page.scroll_to(find("#addon-history-agents-addons-backup"), align: :top)
+        ensure_addon_opened "#addon-history-agents-addons-backup"
         within "#addon-history-agents-addons-backup" do
+          wait_for_turbo_frame "#addon-history-agents-addons-backup-frame"
           expect(page).to have_css('.history-backup-table', text: I18n.t('history.options.action.replace_urls'), count: 1)
         end
       end
@@ -184,7 +196,11 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
         visit node_page_path(site.id, node_c, item)
         wait_for_turbo_frame "#workflow-branch-frame"
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+        page.scroll_to(find("#addon-history-agents-addons-backup"), align: :top)
+        ensure_addon_opened "#addon-history-agents-addons-backup"
         within "#addon-history-agents-addons-backup" do
+          wait_for_turbo_frame "#addon-history-agents-addons-backup-frame"
           expect(page).to have_css('.history-backup-table', text: I18n.t('history.options.action.replace_urls'), count: 1)
         end
       end
@@ -193,7 +209,11 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
         visit node_page_path(site.id, node_c, item)
         wait_for_turbo_frame "#workflow-branch-frame"
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+        page.scroll_to(find("#addon-history-agents-addons-backup"), align: :top)
+        ensure_addon_opened "#addon-history-agents-addons-backup"
         within "#addon-history-agents-addons-backup" do
+          wait_for_turbo_frame "#addon-history-agents-addons-backup-frame"
           expect(page).to have_css('.history-backup-table', text: I18n.t('history.options.action.replace_urls'), count: 1)
         end
       end

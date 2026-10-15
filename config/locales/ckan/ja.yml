@@ -31,6 +31,11 @@ ja:
       ckan/reference: 参照（ハーベスト）
 
   mongoid:
+    models:
+      ckan/node/page: 新着
+      ckan/part/status: 件数
+      ckan/part/page: ページリスト
+      ckan/part/reference: 参照（ハーベスト）
     attributes:
       ckan/node/page:
         ckan_url: URL

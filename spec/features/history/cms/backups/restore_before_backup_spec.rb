@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe "history_cms_backups restore", type: :feature, dbscope: :example do
-  let(:site) { cms_site }
-  let(:node) { create :article_node_page, filename: "docs", name: "article" }
+describe "history_cms_backups", type: :feature, dbscope: :example, js: true do
+  let!(:site) { cms_site }
+  let!(:node) { create :article_node_page, filename: "docs", name: "article" }
   let(:file1) { create :ss_file, user_id: cms_user.id }
   let(:file2) { create :ss_file, user_id: cms_user.id }
   let(:file3) { create :ss_file, user_id: cms_user.id }
@@ -11,7 +11,7 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
     create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "optional", file_type: "video", order: 1)
   end
   let!(:column2) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 2) }
-  let(:page_item) do
+  let!(:page_item) do
     page_item = create(:article_page, cur_node: node, form: form)
     Timecop.travel(1.day.from_now) do
       page_item.name = "first update"
@@ -38,28 +38,17 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
   end
   let(:backup_item) { page_item.backups.find { |item| item.data["name"] == "first update" } }
   let(:page_path) { article_page_path site.id, node, page_item }
-  let(:show_path) do
-    source = ERB::Util.url_encode(page_path)
-    history_cms_backup_path site.id, source, backup_item._id
-  end
+  let(:source) { ERB::Util.url_encode(page_path) }
   let(:restore_path) do
     source = ERB::Util.url_encode(page_path)
     history_cms_restore_path site.id, source, backup_item._id
   end
 
-  context "with auth" do
-    before { login_cms_user }
-
-    it "#show" do
-      visit show_path
-      expect(current_path).not_to eq sns_login_path
-
-      click_link I18n.t("ss.links.back")
-      expect(current_path).to eq page_path
-    end
-
-    it "#restore" do
-      visit page_path
+  context "restore" do
+    it do
+      login_cms_user to: page_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       basic_values = page.all("#addon-basic dd").map(&:text)
       expect(basic_values.index("second update")).to be_truthy
@@ -68,8 +57,13 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
       expect(page).to have_no_css('div.file-view', text: file2.name)
       expect(page).to have_no_css('div.file-view', text: file3.name)
 
-      within "[data-id='#{backup_item.id}']" do
-        click_link I18n.t('history.compare_backup_to_previsous')
+      page.scroll_to(find("#addon-history-agents-addons-backup"), align: :top)
+      ensure_addon_opened "#addon-history-agents-addons-backup"
+      within "#addon-history-agents-addons-backup" do
+        wait_for_turbo_frame "#addon-history-agents-addons-backup-frame"
+        within "[data-id='#{backup_item.id}']" do
+          click_link I18n.t('history.compare_backup_to_previsous')
+        end
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_css('th', text: page_item.t(:name))
@@ -81,10 +75,18 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
       expect(page).to have_css('td', text: column2.name)
 
       click_link I18n.t("ss.links.back")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(current_path).to eq page_path
 
-      within "[data-id='#{backup_item.id}']" do
-        click_link I18n.t('ss.links.show')
+      page.scroll_to(find("#addon-history-agents-addons-backup"), align: :top)
+      ensure_addon_opened "#addon-history-agents-addons-backup"
+      within "#addon-history-agents-addons-backup" do
+        wait_for_turbo_frame "#addon-history-agents-addons-backup-frame"
+        within "[data-id='#{backup_item.id}']" do
+          click_link I18n.t('ss.links.show')
+        end
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_css('th', text: page_item.t(:name))
@@ -96,14 +98,15 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
       expect(page).to have_css('td', text: column2.name)
 
       click_link I18n.t('history.restore')
-      expect(current_path).to eq restore_path
       expect(page).to have_css('dd', text: I18n.l(page_item.updated))
       expect(page).to have_css('dd', text: SS.version)
       expect(page).to have_css('dd', text: I18n.l(backup_item.data['updated'].in_time_zone))
       expect(page).to have_css('dd', text: backup_item.version)
+      expect(current_path).to eq restore_path
 
       click_button I18n.t('history.buttons.restore')
-      expect(current_path).to eq show_path
+      wait_for_notice I18n.t("history.notice.restored")
+      expect(current_path).to eq history_cms_backup_path(site: site, source: source, id: backup_item)
 
       expect(Job::Log.count).to eq 1
       Job::Log.first.tap do |log|
@@ -120,6 +123,9 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
       end
 
       click_link I18n.t('ss.links.back')
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(current_path).to eq page_path
 
       basic_values = page.all("#addon-basic dd").map(&:text)

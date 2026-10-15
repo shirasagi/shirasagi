@@ -148,6 +148,10 @@ ja:
     models:
       event/page: イベントページ
       event/search: イベント検索ページ
+      event/node/page: イベントリスト
+      event/node/search: イベント検索
+      event/part/calendar: カレンダー
+      event/part/search: イベント検索
     errors:
       messages:
         blank_where_having_event_name: を入力してください（イベントタイトルが設定されている場合は必須です）。

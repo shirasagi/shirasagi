@@ -23,6 +23,7 @@ ja:
     models:
       mail_page/page: メール取込ページ
       mail_page/node/page: メール取込
+      mail_page/part/page: 緊急情報
     attributes:
       mail_page/addon/mail_setting:
         mail_page_from_conditions: 送信者メールアドレス

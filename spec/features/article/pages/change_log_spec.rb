@@ -5,9 +5,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let(:node) { create :article_node_page, filename: "docs", name: "article" }
   let(:item) { create(:article_page, cur_node: node) }
   let(:show_path) { article_page_path site.id, node, item }
-  context "Check change log text for orphan/non-orphan  backup" do
-    before { login_cms_user }
 
+  context "Check change log text for orphan/non-orphan  backup" do
     it "show (case for non orphan backup)" do
       backup = item.backups.limit(History.max_histories).to_a.first
       if backup.user_id
@@ -20,17 +19,36 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       elsif backup.member_id
         text = "#{Cms::Member.model_name.human}: #{backup.member_name}"
       end
-      visit show_path
-      expect(page).to have_css("tr[data-id='#{backup.id}']", text: text)
+
+      login_cms_user to: show_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+
+      page.scroll_to(find("#addon-history-agents-addons-backup"), align: :top)
+      ensure_addon_opened "#addon-history-agents-addons-backup"
+      within "#addon-history-agents-addons-backup" do
+        wait_for_turbo_frame "#addon-history-agents-addons-backup-frame"
+        expect(page).to have_css("tr[data-id='#{backup.id}']", text: text)
+      end
     end
 
     it "show case for orphan backup" do
       orphan_backup = item.backups.limit(History.max_histories).to_a.first
       orphan_backup.update(user_id: nil, member_id: nil)
       item.reload
-      visit show_path
-      text = I18n.t("ss.system_operation", locale: I18n.default_locale)
-      expect(page).to have_css("tr[data-id='#{orphan_backup.id}']", text: text)
+
+      login_cms_user to: show_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+
+      page.scroll_to(find("#addon-history-agents-addons-backup"), align: :top)
+      ensure_addon_opened "#addon-history-agents-addons-backup"
+      within "#addon-history-agents-addons-backup" do
+        wait_for_turbo_frame "#addon-history-agents-addons-backup-frame"
+
+        text = I18n.t("ss.system_operation", locale: I18n.default_locale)
+        expect(page).to have_css("tr[data-id='#{orphan_backup.id}']", text: text)
+      end
     end
   end
 end

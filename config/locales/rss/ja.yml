@@ -51,6 +51,8 @@ ja:
     models:
       rss/page: フィード
       rss/weather_xml_page:  気象庁防災情報XML
+      rss/node/page: RSS取込
+      rss/node/weather_xml: 気象庁防災情報XML
     attributes:
       rss/node/page:
       rss/page:

@@ -134,6 +134,9 @@ ja:
     models:
       inquiry/column: 入力項目
       inquiry/answer: 回答データ
+      inquiry/node/form: フォーム
+      inquiry/node/node: フォーム一覧
+      inquiry/part/feedback: フィードバック
     attributes:
       inquiry/addon/message:
         inquiry_html: 説明テキスト

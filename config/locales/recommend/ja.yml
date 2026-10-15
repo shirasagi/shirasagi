@@ -25,6 +25,9 @@ ja:
     models:
       recommend/history_log: 履歴
       recommend/similarity_score: スコア
+      recommend/node/receiver: 閲覧履歴受信
+      recommend/part/history: 閲覧履歴
+      recommend/part/similarity: 関連ページ
     attributes:
       recommend/addon/content_list:
         exclude_paths: 除外パス

@@ -13,6 +13,8 @@ describe "history_cms_backups", type: :feature, dbscope: :example, js: true do
   it do
     visit article_pages_path(site: site, cid: node)
     click_on I18n.t("ss.links.new")
+    wait_for_all_ckeditors_ready
+    wait_for_all_turbo_frames
 
     within "form#item-form" do
       fill_in "item[name]", with: unique_id
@@ -24,9 +26,13 @@ describe "history_cms_backups", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.buttons.draft_save")
     end
     wait_for_notice I18n.t("ss.notice.saved")
+    wait_for_all_ckeditors_ready
+    wait_for_all_turbo_frames
     expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
     click_on I18n.t("ss.links.edit")
+    wait_for_all_ckeditors_ready
+    wait_for_all_turbo_frames
     within "form#item-form" do
       within ".column-value-cms-column-datefield" do
         fill_in_date "item[column_values][][in_wrap][date]", with: Time.zone.yesterday
@@ -34,14 +40,22 @@ describe "history_cms_backups", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.buttons.draft_save")
     end
     wait_for_notice I18n.t("ss.notice.saved")
+    wait_for_all_ckeditors_ready
+    wait_for_all_turbo_frames
     expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
     expect(Article::Page.all.count).to eq 1
     page_item = Article::Page.all.first
     expect(page_item.backups.count).to eq 2
-    latest_backup_item = page_item.backups.first
-    within "[data-id='#{latest_backup_item.id}']" do
-      click_link I18n.t('history.compare_backup_to_previsous')
+    page.scroll_to(find("#addon-history-agents-addons-backup"), align: :top)
+    ensure_addon_opened "#addon-history-agents-addons-backup"
+    within "#addon-history-agents-addons-backup" do
+      wait_for_turbo_frame "#addon-history-agents-addons-backup-frame"
+
+      latest_backup_item = page_item.backups.first
+      within "[data-id='#{latest_backup_item.id}']" do
+        click_link I18n.t('history.compare_backup_to_previsous')
+      end
     end
 
     within ".history-backup" do

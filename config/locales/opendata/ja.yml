@@ -649,12 +649,45 @@ ja:
       opendata/idea_comment: コメント
       opendata/csv2rdf_setting: RDF変換設定
       opendata/member_notice: 会員通知
-      opendata/resources: リソース
+      opendata/resource: リソース
+      opendata/url_resource: クローリング
       opendata/export_datasets: エクスポート
       opendata/import_datasets: インポート
       opendata/dataset_importer: インポート
       opendata/resource_download_history: リソースダンロード履歴
       opendata/resource_download_report: リソースダンロード数集計結果
+      opendata/node/category: 分野
+      opendata/node/estat_category: eStat分野
+      opendata/node/area: 地域
+      opendata/node/dataset: データセット
+      opendata/node/dataset_category: データセット分野
+      opendata/node/dataset_estat_category: データセットeStat分野
+      opendata/node/dataset_area: データセット地域
+      opendata/node/search_dataset_group: データセットグループ検索
+      opendata/node/search_dataset: データセット検索
+      opendata/node/dataset_map: データセット地図
+      opendata/node/dataset_graph: データセットグラフ
+      opendata/node/sparql: SPARQL
+      opendata/node/api: API
+      opendata/node/app: アプリ
+      opendata/node/app_category: アプリ分野
+      opendata/node/search_app: アプリ検索
+      opendata/node/idea: アイデアボックス
+      opendata/node/idea_category: アイデア分野
+      opendata/node/search_idea: アイデア検索
+      opendata/node/mypage: マイページ
+      opendata/node/member: メンバー
+      opendata/node/my_profile: マイプロフィール
+      opendata/node/my_dataset: マイデータセット
+      opendata/node/my_favorite_dataset: マイリストデータセット
+      opendata/node/my_app: マイアプリ
+      opendata/node/my_idea: マイアイデア
+      opendata/part/mypage_login: ログイン
+      opendata/part/dataset: データセット
+      opendata/part/dataset_group: データセットグループ
+      opendata/part/dataset_counter: データセットカウンター
+      opendata/part/app: アプリ
+      opendata/part/idea: アイデア
     attributes:
       opendata/addon/category:
         category_ids: 分野

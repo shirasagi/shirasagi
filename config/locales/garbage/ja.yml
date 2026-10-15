@@ -66,6 +66,16 @@ ja:
       garbage/center: ゴミ回収センター
 
   mongoid:
+    models:
+      garbage/node/page: ゴミ品目
+      garbage/node/node: ゴミ品目リスト
+      garbage/node/category_list: ゴミ分別区分リスト
+      garbage/node/category: ゴミ分別区分
+      garbage/node/search: ゴミ品目検索
+      garbage/node/area_list: ゴミ地区リスト
+      garbage/node/area: ゴミ地区
+      garbage/node/center_list: ゴミ回収センターリスト
+      garbage/node/center: ゴミ回収センター
     attributes:
       garbage/node/page:
         name: 品目名

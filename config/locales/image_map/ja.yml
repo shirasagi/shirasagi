@@ -34,6 +34,8 @@ ja:
   mongoid:
     models:
       image_map/page: エリアページ
+      image_map/node/page: イメージマップ
+      image_map/part/page: イメージマップ
     attributes:
       image_map/addon/image_setting:
         image_id: 画像

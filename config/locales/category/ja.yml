@@ -20,6 +20,10 @@ ja:
       category/node: カテゴリーリスト（旧）
 
   mongoid:
+    models:
+      category/node/node: カテゴリーリスト
+      category/node/page: ページリスト
+      category/part/node: カテゴリーリスト（旧）
     attributes:
       cms/model/page:
         st_categories: カテゴリー

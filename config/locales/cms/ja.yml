@@ -1164,15 +1164,30 @@ ja:
       cms/node: フォルダー
       cms/node/node: フォルダーリスト
       cms/node/page: ページリスト
+      cms/node/import_node: 取り込みページ
+      cms/node/archive: アーカイブ
+      cms/node/photo_album: 写真一覧
       cms/node/group_page: グループ別ページリスト
+      cms/node/site_search: サイト内検索
+      cms/node/line_hub: "LINE HUB"
+      cms/node/form_search: 定型フォーム絞込
       cms/page: ページ
       cms/part: パーツ
       cms/part/free: HTML記述
-      cms/part/node: フォルダーリスト
+      cms/part/node: フォルダーリスト（旧）
+      cms/part/node2: フォルダーリスト
       cms/part/page: ページリスト
       cms/part/tabs: 新着タブ
       cms/part/crumb: パンくずリスト
+      cms/part/sns_share: SNSシェアボタン
+      cms/part/calendar_nav: アーカイブナビ(カレンダー)
+      cms/part/monthly_nav: アーカイブナビ（月次）
+      cms/part/site_search_history: サイト内検索(検索履歴)
       cms/part/history_list: 閲覧履歴
+      cms/part/site_search_keyword: サイト内検索(注目ワード)
+      cms/part/print: 印刷
+      cms/part/clipboard_copy: クリップボードへコピー
+      cms/part/form_search: 定型フォーム絞込検索
       cms/layout: レイアウト
       cms/body_layout: レイアウト
       cms/workflow/route: 承認経路
@@ -1217,6 +1232,7 @@ ja:
       cms/generation_report/history: 書き出し性能履歴
       cms/generation_report/aggregation: 書き出し性能履歴の集計結果
       cms/source_cleaner_template: ソースクリーニング
+      cms/line/statistic: 統計情報
     errors:
       models:
         cms/content:

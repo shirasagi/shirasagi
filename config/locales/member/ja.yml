@@ -212,6 +212,32 @@ ja:
       member/activity_log: 活動履歴
       member/group: グループ
       member/group_member: グループメンバー
+      member/blog_layout: ブログレイアウト
+      member/node/login: ログイン
+      member/node/registration: 会員登録
+      member/node/mypage: マイページ
+      member/node/my_profile: プロフィール
+      member/node/my_blog: マイブログ
+      member/node/blog: ブログ
+      member/node/blog_page_location: ブログの地域
+      member/node/my_photo: マイフォト
+      member/node/my_anpi_post: 安否
+      member/node/my_group: グループ
+      member/node/photo: フォト
+      member/node/photo_category: フォトカテゴリー
+      member/node/photo_location: フォトロケーション
+      member/node/photo_search: フォトサーチ
+      member/node/photo_spot: フォトスポット
+      member/node/my_line_profile: LINEプロフィール
+      member/node/line_first_registration: LINE初回登録
+      member/node/bookmark: ブックマーク
+      member/part/blog_page: ブログページ一覧
+      member/part/photo: フォト一覧
+      member/part/photo_search: フォトサーチ
+      member/part/photo_slide: フォトスライド
+      member/part/login: ログイン
+      member/part/invited_group: 招待されたグループ
+      member/part/bookmark: ブックマーク
     errors:
       models:
         member/group:

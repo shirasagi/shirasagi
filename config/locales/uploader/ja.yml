@@ -32,6 +32,10 @@ ja:
         image: 画像
         state: 上書き保存
 
+  mongoid:
+    models:
+      uploader/node/file: アップローダー
+
   tooltip:
     cms/addon/file:
       upload:

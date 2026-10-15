@@ -97,6 +97,8 @@ ja:
       guide/column: 質問項目
       guide/procedure: 手続き
       guide/question: 質問
+      guide/node/guide: 目的別ガイド
+      guide/part/node: 目的別ガイドリスト
     attributes:
       guide/column:
         select_options_id: 選択肢識別子
