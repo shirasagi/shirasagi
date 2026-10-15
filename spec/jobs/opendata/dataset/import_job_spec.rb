@@ -52,7 +52,7 @@ describe Opendata::Dataset::ImportJob, dbscope: :example do
     let!(:zip_file) { tmpfile(extname: ".zip") }
 
     before do
-      Zip::File.open(zip_file, Zip::File::CREATE) do |zip|
+      Zip::File.open(zip_file, create: true) do |zip|
         zip.get_output_stream("../shift_jis.csv") do |f|
           IO.copy_stream("#{Rails.root}/spec/fixtures/opendata/shift_jis.csv", f)
         end

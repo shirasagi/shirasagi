@@ -87,7 +87,7 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
       t = Tempfile.new(filename)
       downloaded = Time.zone.now
 
-      Zip::File.open(t.path, Zip::File::CREATE) do |zip|
+      Zip::File.open(t.path, create: true) do |zip|
         @items.each do |item|
           zip.add(::Fs.zip_safe_name("#{item.name}-#{item.id}.zip"), item.zip_path)
           item.resources.and_public.each do |resource|

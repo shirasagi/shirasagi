@@ -214,7 +214,7 @@ module SS::Zip
   # zip64 end of central directory record
   def write_64_e_o_c_d(io, offset, cdir_size, entry_count) #:nodoc:
     tmp = [
-      ::Zip::CentralDirectory::ZIP64_END_OF_CDS, # zip64 end of central dir signature
+      ::Zip::CentralDirectory::ZIP64_END_OF_CD_SIG, # zip64 end of central dir signature
       44, # size of zip64 end of central directory record (excludes signature and field itself)
       ::Zip::VERSION_MADE_BY, #  version made by
       ::Zip::VERSION_NEEDED_TO_EXTRACT_ZIP64, # version needed to extract
@@ -231,7 +231,7 @@ module SS::Zip
   # zip64 end of central directory locator
   def write_64_eocd_locator(io, zip64_eocd_offset)
     tmp = [
-      ::Zip::CentralDirectory::ZIP64_EOCD_LOCATOR,
+      ::Zip::CentralDirectory::ZIP64_EOCD_LOCATOR_SIG,
       0, # number of disk containing the start of zip64 eocd record
       zip64_eocd_offset, # offset of the start of zip64 eocd record in its disk
       1 # total number of disks
@@ -242,7 +242,7 @@ module SS::Zip
   # end of central directory record
   def write_e_o_c_d(io, offset, cdir_size, entry_count, comment) #:nodoc:
     tmp = [
-      ::Zip::CentralDirectory::END_OF_CDS,
+      ::Zip::CentralDirectory::END_OF_CD_SIG,
       0, # number of this disk
       0, # number of the disk with the start of the central directory
       [entry_count, 0xFFFF].min, # total number of entries in the central directory on this disk

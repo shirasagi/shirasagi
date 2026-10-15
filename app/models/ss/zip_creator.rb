@@ -42,7 +42,7 @@ class SS::ZipCreator
     @zip ||= begin
       ::FileUtils.mkdir_p(File.dirname(@tmp_path))
       ::FileUtils.rm_rf(@tmp_path)
-      ::Zip::File.open(@tmp_path, Zip::File::CREATE)
+      ::Zip::File.open(@tmp_path, create: true)
     end
   end
 end

@@ -50,7 +50,7 @@ describe SS::Zip::Writer do
 
   xcontext "archive with ruby zip" do
     it do
-      Zip::File.open(path, Zip::File::CREATE) do |zip|
+      Zip::File.open(path, create: true) do |zip|
         "logo.png".tap do |name|
           zip.add(name, "#{Rails.root}/spec/fixtures/ss/#{name}")
         end

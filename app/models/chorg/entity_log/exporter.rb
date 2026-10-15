@@ -29,7 +29,7 @@ class Chorg::EntityLog::Exporter
       end
     end
 
-    Zip::File.open(output_zip.path, Zip::File::CREATE) do |zip|
+    Zip::File.open(output_zip.path, create: true) do |zip|
       Dir.glob("#{root_path}/**/*").each do |file|
         name = file.gsub("#{root_path}/", "")
         zip.add(name.encode('cp932', invalid: :replace, undef: :replace, replace: "_"), file)

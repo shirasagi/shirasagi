@@ -40,7 +40,7 @@ module Opendata::Addon::ZipDataset
         end
 
         ::FileUtils.mkdir_p(::File.dirname(zip_path))
-        Zip::File.open(zip_path, Zip::File::CREATE) do |zip|
+        Zip::File.open(zip_path, create: true) do |zip|
           files.each do |name, file|
             zip.add(name, file.path)
           end
@@ -55,7 +55,7 @@ module Opendata::Addon::ZipDataset
       file.rewind
 
       ::FileUtils.mkdir_p(::File.dirname(zip_path))
-      Zip::File.open(zip_path, Zip::File::CREATE) do |zip|
+      Zip::File.open(zip_path, create: true) do |zip|
         zip.add(name, file.path)
       end
     end

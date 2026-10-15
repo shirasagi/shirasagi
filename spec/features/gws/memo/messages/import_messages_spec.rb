@@ -51,7 +51,7 @@ describe "gws_memo_message_import_messages", type: :feature, dbscope: :example, 
       end
 
       zip_file_path = tmpfile(extname: ".zip", binary: true) { |f| f.write '' }
-      Zip::File.open(zip_file_path, Zip::File::CREATE) do |zip|
+      Zip::File.open(zip_file_path, create: true) do |zip|
         zip.add(eml_entry_path, eml_file_path)
       end
 
@@ -217,7 +217,7 @@ describe "gws_memo_message_import_messages", type: :feature, dbscope: :example, 
       end
 
       zip_file_path = tmpfile(extname: ".zip", binary: true) { |f| f.write '' }
-      Zip::File.open(zip_file_path, Zip::File::CREATE) do |zip|
+      Zip::File.open(zip_file_path, create: true) do |zip|
         zip.add(eml_entry_path, eml_file_path)
       end
 

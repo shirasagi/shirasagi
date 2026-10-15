@@ -112,7 +112,7 @@ class Frypan
       puts ""
 
       Dir.chdir(root)
-      Zip::File.open("#{zip_file}.tmp", Zip::File::CREATE) do |ar|
+      Zip::File.open("#{zip_file}.tmp", create: true) do |ar|
         TARGETS.each do |dir|
           ar.mkdir "#{name}/#{dir}/#{mod}" if File.exist? "#{dir}/#{mod}"
           Dir.glob("#{dir}/#{mod}{/**/*,.*}") do |f|

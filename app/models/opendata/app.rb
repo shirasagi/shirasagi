@@ -85,7 +85,7 @@ class Opendata::App
     File.unlink(zip_filename) if File.exist?(zip_filename)
 
     if appfiles.present?
-      Zip::File.open(zip_filename, Zip::File::CREATE) do |archive|
+      Zip::File.open(zip_filename, create: true) do |archive|
         appfiles.each do |appfile|
           name = ::Fs.zip_safe_path(appfile.filename)
           archive.add(name, appfile.file.path)
