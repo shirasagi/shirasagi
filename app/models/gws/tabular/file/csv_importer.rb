@@ -136,7 +136,7 @@ class Gws::Tabular::File::CsvImporter
   end
 
   def find_item(id)
-    model.where(user_id: user.id, id: id).first
+    model.where(id: id).first
   end
 
   def set_item_defaults(item)
@@ -149,8 +149,7 @@ class Gws::Tabular::File::CsvImporter
 
   def importable_item?(item)
     if item.user_id != user.id
-      Rails.logger.info { "この行は#{item.user_i18n_name}のアイテムを更新しようとしています。他人のアイテムは更新することができません。" }
-      return false
+      Rails.logger.warn { "#{item.user_name}のアイテムを更新しようとしています。" }
     end
 
     true

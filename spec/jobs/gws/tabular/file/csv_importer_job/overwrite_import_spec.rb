@@ -21,6 +21,15 @@ describe Gws::Tabular::File::CsvImportJob, dbscope: :example do
   before do
     Gws::Tabular::FormPublishJob.bind(site_id: site, user_id: admin).perform_now(form.id.to_s)
 
+    expect(Gws::Job::Log.count).to eq 1
+    Gws::Job::Log.all.each do |log|
+      expect(log.state).to eq Gws::Job::Log::STATE_COMPLETED
+      expect(log.logs).to include(/INFO -- : .* Started Job/)
+      expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      expect(log.logs).not_to include(include('WARN'))
+      expect(log.logs).not_to include(include('ERROR'))
+    end
+
     form.reload
     release = form.current_release
     expect(release).to be_present
@@ -58,11 +67,11 @@ describe Gws::Tabular::File::CsvImportJob, dbscope: :example do
         job.perform_now(space.id.to_s, form.id.to_s, form.current_release.id.to_s, ss_csv_file.id)
 
         expect(Gws::Job::Log.count).to eq 2
-        Gws::Job::Log.all.each do |log|
+        Gws::Job::Log.all.reorder(id: -1).first.tap do |log|
           expect(log.state).to eq Gws::Job::Log::STATE_COMPLETED
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
-          expect(log.logs).not_to include(include('WARN'))
+          expect(log.logs).to include(/WARN -- : .* #{::Regexp.escape("#{user1.name}のアイテムを更新しようとしています。")}/)
           expect(log.logs).not_to include(include('ERROR'))
         end
 
