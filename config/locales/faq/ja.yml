@@ -15,13 +15,6 @@ ja:
       faq/question: 質問
       faq/search: FAQ記事検索
 
-  cms:
-    nodes:
-      faq/page: FAQ記事リスト
-      faq/search: FAQ記事検索
-    parts:
-      faq/search: FAQ記事検索
-
   mongoid:
     models:
       faq/page: FAQ記事

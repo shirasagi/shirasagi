@@ -8,10 +8,6 @@ ja:
     addons:
       sitemap/body: サイトマップ
 
-  cms:
-    nodes:
-      sitemap/page: サイトマップ
-
   cms_role:
     read_other_sitemap_pages: ページの閲覧（全て）
     read_private_sitemap_pages: ページの閲覧（所有）

@@ -13,12 +13,6 @@ ja:
       mail_page/mail_setting: メール取込設定
       mail_page/arrival_plan: 緊急情報表示
 
-  cms:
-    nodes:
-      mail_page/page: メール取込
-    parts:
-      mail_page/page: 緊急情報
-
   mongoid:
     models:
       mail_page/page: メール取込ページ

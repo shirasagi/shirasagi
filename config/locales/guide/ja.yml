@@ -86,12 +86,6 @@ ja:
       guide/genre: ジャンル
       guide/guide_list: リスト表示
 
-  cms:
-    nodes:
-      guide/guide: 目的別ガイド
-    parts:
-      guide/node: 目的別ガイドリスト
-
   mongoid:
     models:
       guide/column: 質問項目

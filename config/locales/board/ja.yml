@@ -91,11 +91,6 @@ ja:
       board/map_point: 地図
       board/anpi_list: リスト表示
 
-  cms:
-    nodes:
-      board/post: 掲示板
-      board/anpi_post: 安否掲示板
-
   cms_role:
     read_board_posts: 投稿の閲覧
     edit_board_posts: 投稿の編集

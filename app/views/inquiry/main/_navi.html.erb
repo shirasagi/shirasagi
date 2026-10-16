@@ -1,13 +1,13 @@
 <nav class="mod-navi">
   <% menus = Inquiry.enum_menu_items(@cur_site, @cur_node, @cur_user).to_a %>
   <% if menus.present? %>
-    <h2><%= t("cms.nodes.inquiry/form") %></h2>
+    <h2><%= Inquiry::Node::Form.model_name.human %></h2>
     <% menus.each do |menu_item| %>
       <h3><%= link_to menu_item.label, menu_item.path, class: menu_item.css_classes %></h3>
     <% end %>
   <% end %>
 
-  <h2><%= t("cms.nodes.inquiry/node") %></h2>
+  <h2><%= Inquiry::Node::Node.model_name.human %></h2>
   <h3><%= link_to t("inquiry.nodes"), inquiry_nodes_path %></h3>
 </nav>
 

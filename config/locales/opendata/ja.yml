@@ -512,42 +512,6 @@ ja:
       opendata/metadata/node_setting: メタデータ設定
       opendata/profile_setting: プロフィール設定
 
-  cms:
-    nodes:
-      opendata/category: 分野
-      opendata/estat_category: eStat分野
-      opendata/area: 地域
-      opendata/dataset: データセット
-      opendata/dataset_category: データセット分野
-      opendata/dataset_estat_category: データセットeStat分野
-      opendata/dataset_area: データセット地域
-      opendata/search_dataset_group: データセットグループ検索
-      opendata/search_dataset: データセット検索
-      opendata/dataset_map: データセット地図
-      opendata/dataset_graph: データセットグラフ
-      opendata/sparql: SPARQL
-      opendata/api: API
-      opendata/app: アプリ
-      opendata/app_category: アプリ分野
-      opendata/search_app: アプリ検索
-      opendata/idea: アイデアボックス
-      opendata/idea_category: アイデア分野
-      opendata/search_idea: アイデア検索
-      opendata/mypage: マイページ
-      opendata/member: メンバー
-      opendata/my_profile: マイプロフィール
-      opendata/my_dataset: マイデータセット
-      opendata/my_favorite_dataset: マイリストデータセット
-      opendata/my_app: マイアプリ
-      opendata/my_idea: マイアイデア
-    parts:
-      opendata/mypage_login: ログイン
-      opendata/dataset: データセット
-      opendata/dataset_group: データセットグループ
-      opendata/dataset_counter: データセットカウンター
-      opendata/app: アプリ
-      opendata/idea: アイデア
-
   cms_role:
     read_other_opendata_datasets: データセットの閲覧（全て）
     read_private_opendata_datasets: データセットの閲覧（所有）

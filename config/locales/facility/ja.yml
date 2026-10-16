@@ -72,15 +72,6 @@ ja:
       facility/node_list: リスト表示
       facility/notice: お知らせ
 
-  cms:
-    nodes:
-      facility/page: 施設情報
-      facility/node: 施設リスト
-      facility/category: 施設の種類
-      facility/service: 施設の用途
-      facility/location: 施設のある地域
-      facility/search: 施設検索
-
   mongoid:
     models:
       facility/image: 施設写真

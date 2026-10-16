@@ -34,11 +34,6 @@ ja:
       rss/page/weather_xml: 気象庁防災情報XML
       rss/anpi_mail_setting: 安否確認メール設定
 
-  cms:
-    nodes:
-      rss/page: RSS取込
-      rss/weather_xml: 気象庁防災情報XML
-
   job:
     models:
       rss/import_job: RSS取込/RSS取込

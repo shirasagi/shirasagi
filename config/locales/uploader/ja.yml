@@ -12,10 +12,6 @@ ja:
   modules:
     uploader: アップローダー
 
-  cms:
-    nodes:
-      uploader/file: アップローダー
-
   activemodel:
     models:
       uploader/file: アップローダー

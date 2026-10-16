@@ -12,13 +12,6 @@ ja:
       category/summary_page: サマリーページ
       category/map_setting: 地図設定
 
-  cms:
-    nodes:
-      category/node: カテゴリーリスト
-      category/page: ページリスト
-    parts:
-      category/node: カテゴリーリスト（旧）
-
   mongoid:
     models:
       category/node/node: カテゴリーリスト

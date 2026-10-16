@@ -28,7 +28,7 @@ describe "article_node_map_search", type: :feature, dbscope: :example, js: true 
       end
       within_cbox do
         within ".mod-article" do
-          click_on I18n.t("cms.nodes.article/map_search")
+          click_on I18n.t("mongoid.models.article/node/map_search")
         end
       end
       within "#item-form" do

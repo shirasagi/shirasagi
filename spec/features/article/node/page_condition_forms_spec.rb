@@ -32,7 +32,7 @@ describe "article_node_page_condition_forms", type: :feature, dbscope: :example,
       end
       within_cbox do
         within ".mod-article" do
-          click_on I18n.t("cms.nodes.article/page")
+          click_on I18n.t("mongoid.models.article/node/page")
         end
       end
       within "#item-form" do

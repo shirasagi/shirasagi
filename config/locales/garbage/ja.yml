@@ -53,18 +53,6 @@ ja:
       garbage/k5374/description: 5374連携：スタイル設定
       garbage/k5374/collection: 5374連携：収集日
 
-  cms:
-    nodes:
-      garbage/page: ゴミ品目
-      garbage/node: ゴミ品目リスト
-      garbage/category_list: ゴミ分別区分リスト
-      garbage/category: ゴミ分別区分
-      garbage/search: ゴミ品目検索
-      garbage/area_list: ゴミ地区リスト
-      garbage/area: ゴミ地区
-      garbage/center_list: ゴミ回収センターリスト
-      garbage/center: ゴミ回収センター
-
   mongoid:
     models:
       garbage/node/page: ゴミ品目
