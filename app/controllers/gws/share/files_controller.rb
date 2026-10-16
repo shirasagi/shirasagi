@@ -89,6 +89,20 @@ class Gws::Share::FilesController < ApplicationController
     p
   end
 
+  def set_items
+    @items ||= begin
+      items = @model.site(@cur_site).active
+
+      if @model.other_permission?(:read, @cur_user, site: @cur_site)
+        items = items.allow(:read, @cur_user, site: @cur_site)
+      else
+        items = items.readable(@cur_user, site: @cur_site)
+      end
+
+      items
+    end
+  end
+
   def set_item
     super
     raise "404" unless @item.readable?(@cur_user) || @item.allowed?(:read, @cur_user, site: @cur_site)
@@ -142,6 +156,8 @@ class Gws::Share::FilesController < ApplicationController
   public
 
   def index
+    set_items
+
     set_folder
 
     if @category.present? || @folder.present?
@@ -152,14 +168,6 @@ class Gws::Share::FilesController < ApplicationController
     end
 
     @sort = params.dig(:s, :sort) || @cur_site.share_default_sort || 'filename_asc'
-
-    @items = @model.site(@cur_site).active
-
-    if @model.other_permission?(:read, @cur_user, site: @cur_site)
-      @items = @items.allow(:read, @cur_user, site: @cur_site)
-    else
-      @items = @items.readable(@cur_user, site: @cur_site)
-    end
 
     @items = @items.
       search(params[:s]).

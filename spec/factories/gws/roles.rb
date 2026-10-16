@@ -174,6 +174,23 @@ FactoryBot.define do
     end
   end
 
+  trait :gws_role_share_editor do
+    after(:build) do |item|
+      item.permissions += %w(
+        use_gws_share
+        read_private_gws_share_folders
+        edit_private_gws_share_folders
+        delete_private_gws_share_folders
+        download_private_gws_share_folders
+        read_private_gws_share_files
+        edit_private_gws_share_files
+        delete_private_gws_share_files
+        write_private_gws_share_files
+        trash_private_gws_share_files
+      )
+    end
+  end
+
   factory :gws_role, class: Gws::Role, traits: [:gws_role]
 
   factory :gws_role_admin, class: Gws::Role, traits: [:gws_role, :gws_role_admin]
