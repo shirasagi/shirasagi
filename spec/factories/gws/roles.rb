@@ -191,6 +191,19 @@ FactoryBot.define do
     end
   end
 
+  trait :gws_role_tabular_file_editor do
+    after(:build) do |item|
+      item.permissions += %w(
+        use_gws_tabular
+        read_gws_tabular_files
+        edit_gws_tabular_files
+        delete_gws_tabular_files
+        download_gws_tabular_files
+        import_gws_tabular_files
+      )
+    end
+  end
+
   factory :gws_role, class: Gws::Role, traits: [:gws_role]
 
   factory :gws_role_admin, class: Gws::Role, traits: [:gws_role, :gws_role_admin]
