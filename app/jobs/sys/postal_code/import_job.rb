@@ -1,6 +1,10 @@
 require 'csv'
 
 class Sys::PostalCode::ImportJob < Sys::PostalCode::ImportBase
+  include Job::SS::TaskFilter
+
+  self.task_name = 'sys:postal_code'
+
   def import_file
     SS::Csv.foreach_row(@cur_file, headers: false) do |row, i|
       import_row(row, i)
@@ -27,5 +31,7 @@ class Sys::PostalCode::ImportJob < Sys::PostalCode::ImportBase
     item.town = town
     item.town_kana = town_kana
     item.save!
+
+    task.log("#{postal_code}: #{item.prefecture}#{item.city}#{item.town}")
   end
 end

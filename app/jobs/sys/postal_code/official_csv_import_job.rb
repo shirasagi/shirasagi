@@ -2,6 +2,10 @@ require 'csv'
 require 'nkf'
 
 class Sys::PostalCode::OfficialCsvImportJob < Sys::PostalCode::ImportBase
+  include Job::SS::TaskFilter
+
+  self.task_name = 'sys:postal_code'
+
   def import_file
     error_count = 0
     SS::Csv.foreach_row(@cur_file, headers: false) do |row, i|
@@ -35,6 +39,8 @@ class Sys::PostalCode::OfficialCsvImportJob < Sys::PostalCode::ImportBase
     item.town = normalize_town(town, max_length: Sys::PostalCode::MAX_TOWN_LENGTH)
     item.town_kana = normalize_town_kana(town_kana, max_length: Sys::PostalCode::MAX_TOWN_KANA_LENGTH)
     item.save!
+
+    task.log("#{postal_code}: #{item.prefecture}#{item.city}#{item.town}")
   end
 
   def normalize_pref_kana(pref_kana, max_length:)
