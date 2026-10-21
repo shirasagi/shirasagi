@@ -17,7 +17,7 @@ class Opendata::Harvest::ShirasagiScraper
       search_url = dataset_search_url.sub(':page', count.to_s)
       puts search_url
 
-      f = ::URI.open(search_url, read_timeout: 20)
+      f = ::OpenURI.open_uri(search_url, read_timeout: 20)
       html = f.read
       #charset = f.charset
       charset = "utf-8"
@@ -38,7 +38,7 @@ class Opendata::Harvest::ShirasagiScraper
   def get_dataset(dataset_url)
     dataset = {}
 
-    f = ::URI.open(dataset_url, read_timeout: 20)
+    f = ::OpenURI.open_uri(dataset_url, read_timeout: 20)
     html = f.read
     #charset = f.charset
     charset = "utf-8"

@@ -37,8 +37,8 @@ describe Opendata::Harvest::ExportJob, dbscope: :example, ckan: true do
 
   # rubocop:disable Security/Open
   def expect_same_file(file1, file2)
-    str1 = URI.open(file1).read
-    str2 = URI.open(file2).read
+    str1 = OpenURI.open_uri(file1).read
+    str2 = OpenURI.open_uri(file2).read
     expect(str1).to eq str2
   end
   # rubocop:enable Security/Open

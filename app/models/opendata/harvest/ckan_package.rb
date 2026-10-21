@@ -235,7 +235,7 @@ class Opendata::Harvest::CkanPackage
   ## resource apis
 
   def resource_show(id)
-    result = ::URI.open(resource_show_url(id), read_timeout: 10).read
+    result = ::OpenURI.open_uri(resource_show_url(id), read_timeout: 10).read
     result = ::JSON.parse(result)
     validate_result("resource_show", result)
     result["result"]

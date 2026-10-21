@@ -28,7 +28,7 @@ module Opendata::Sparql
 
       begin
         temp_file = Tempfile.new("temp")
-        URI.open(ttl_url) do |f|
+        OpenURI.open_uri(ttl_url) do |f|
           f.each do |line|
             encoding = NKF.guess(line)
             temp_file.puts line.encode(Encoding::UTF_8, encoding)
