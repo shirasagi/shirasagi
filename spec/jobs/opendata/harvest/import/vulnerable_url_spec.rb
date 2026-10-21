@@ -7,11 +7,12 @@ describe Opendata::Harvest::ImportJob, type: :feature, dbscope: :example do
   let(:file_path) { "#{Rails.root}/tmp/hacked-#{$$}" }
   let(:vulnerable_url) { "|touch #{file_path} #" }
   let!(:importer) do
-    create :opendata_harvest_importer, cur_site: site, cur_node: node, source_url: vulnerable_url, api_type: "ckan"
+    create :opendata_harvest_importer, cur_site: site, cur_node: node, source_url: unique_url, api_type: "ckan"
   end
 
   before do
     FileUtils.rm_f(file_path)
+    importer.set(source_url: vulnerable_url)
   end
 
   it do
