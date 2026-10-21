@@ -64,6 +64,7 @@ en:
       authn_context:
         password_protected_transport: "User name and Password"
         windows: "Integrated Windows Authentication"
+        none: "Not specified"
     links:
       new_from_metadata: Import metadata
       new_from_discovery: Create from Discovery
@@ -321,6 +322,7 @@ en:
         - Select Authentication method of IdP
         - "User name and Password: Authenticate with username and password. This is the default authentication method."
         - "Integrated Windows Authentication: Use Integrated Windows Authentication. The IdP side must support this authentication method."
+        - "Not specified: Do not specify an authentication method (RequestedAuthnContext is not sent). Users can authenticate with any method allowed by the IdP, such as Windows Hello PIN or passkeys."
 
     sys/notice:
       name:
