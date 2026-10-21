@@ -32,8 +32,10 @@ SHIRASAGI is Contents Management System.
 - 一般ユーザーで実行する場合は、sudo が利用できることを確認してください。<br />
 - パラメーターの"example.jp"には、ブラウザでアクセスする際のドメイン名または、IPアドレスを指定してください。<br />
 
+例) 一般ユーザが ssuser の場合
+
 ```
-$ su - user-which-executes-shirasagi-server
+$ su - ssuser
 $ curl https://raw.githubusercontent.com/shirasagi/shirasagi/master/bin/install.sh | bash -s example.jp
 ```
 
@@ -50,18 +52,17 @@ Nginxの導入につきましては開発マニュアルの[Nginxのインスト
 ### パッケージのダウンロード
 
 ```
-$ su -
-# dnf -y install epel-release wget
-# dnf config-manager --disable epel
-# dnf --enablerepo=epel -y update epel-release
-# dnf -y groupinstall "Development tools"
-# dnf -y --enablerepo=epel,powertools install ImageMagick ImageMagick-devel openssl-devel libyaml-devel
+$ sudo dnf -y install epel-release wget
+$ sudo dnf config-manager --disable epel
+$ sudo dnf --enablerepo=epel -y update epel-release
+$ sudo dnf -y groupinstall "Development tools"
+$ sudo dnf -y --enablerepo=epel,powertools install ImageMagick ImageMagick-devel openssl-devel libyaml-devel mecab mecab-devel mecab-ipadic
 ```
 
 ### MongoDB のインストール
 
 ```
-# vi /etc/yum.repos.d/mongodb-org-8.0.repo
+$ sudo vi /etc/yum.repos.d/mongodb-org-8.0.repo
 ```
 
 ```
@@ -74,18 +75,18 @@ gpgkey=https://pgp.mongodb.com/server-8.0.asc
 ```
 
 ```
-# dnf install -y --enablerepo=mongodb-org-8.0 mongodb-org
-# systemctl start mongod
-# systemctl enable mongod
+$ sudo dnf install -y --enablerepo=mongodb-org-8.0 mongodb-org
+$ sudo systemctl start mongod
+$ sudo systemctl enable mongod
 ```
 
 ### asdf のインストール
 
 ```
-# wget https://github.com/asdf-vm/asdf/releases/download/v0.18.1/asdf-v0.18.1-linux-amd64.tar.gz
-# tar -xzf asdf-v0.18.1-linux-amd64.tar.gz
-# mv asdf /usr/local/bin/
-# vi ~/.bashrc
+$ wget https://github.com/asdf-vm/asdf/releases/download/v0.18.1/asdf-v0.18.1-linux-amd64.tar.gz
+$ tar -xzf asdf-v0.18.1-linux-amd64.tar.gz
+$ sudo mv asdf /usr/local/bin/
+$ vi ~/.bashrc
 ```
 
 ```
@@ -95,24 +96,24 @@ export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 ```
 
 ```
-# source ~/.bashrc
+$ source ~/.bashrc
 ```
 
 ### Ruby のインストール
 
 ```
-# asdf plugin add ruby
-# asdf install ruby 3.4.10
-# asdf set ruby 3.4.10
+$ asdf plugin add ruby
+$ asdf install ruby 3.4.10
+$ asdf set ruby 3.4.10
 ```
 
 ### Nodejs のインストール
 
 ```
-# asdf plugin add nodejs
-# asdf install nodejs 24.17.0
-# asdf set nodejs 24.17.0
-# npm install -g yarn
+$ asdf plugin add nodejs
+$ asdf install nodejs 24.17.0
+$ asdf set nodejs 24.17.0
+$ npm install -g yarn
 ```
 
 ### SHIRASAGI のインストール
@@ -120,27 +121,38 @@ export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 SHIRASAGI のダウンロード (stable)
 
 ```
-# git clone -b stable https://github.com/shirasagi/shirasagi /var/www/shirasagi
+$ sudo mkdir -p /var/www
+$ sudo chown -R ssuser: /var/www
+$ git clone -b stable https://github.com/shirasagi/shirasagi /var/www/shirasagi
+```
+
+Mecab-ruby のインストール
+
+```
+$ cp -arp /var/www/shirasagi/vendor/mecab/mecab-ruby-0.996.tar.gz ./
+$ tar xvzf mecab-ruby-0.996.tar.gz && cd mecab-ruby-0.996
+$ ruby extconf.rb && make && make install
 ```
 
 設定ファイルの設置と gem のインストール
 
 ```
-# cd /var/www/shirasagi
-# cp -n config/samples/*.{yml,rb} config/
-# bundle install --without development test
+$ cd /var/www/shirasagi
+$ cp -n config/samples/*.{yml,rb} config/
+$ bundle install --without development test
 $ bundle exec rails credentials:edit
-# ./bin/deploy
+$ bundle exec bin/deploy
 ```
 
-> secret_key_base 関する警告が表示された場合は、[トラブルシューティング](https://shirasagi.github.io/trouble-shootings/secret_key_base.html)をご確認ください。
+> `GLIBC_2.29` 関する警告が発生された場合には、`bundle config set force_ruby_platform true` を実行し再度 `bundle install` から実行してください。
 
 Web サーバの起動
 
 ```
-# cp -n /var/www/shirasagi/bin/puma.service /etc/systemd/system/puma.service
-# systemctl daemon-reload
-# systemctl start puma
+$ sudo cp -n /var/www/shirasagi/bin/puma.service /etc/systemd/system/puma.service
+$ sudo sed -i 's/User=root/User=ssuser/g' /etc/systemd/system/puma.service
+$ sudo systemctl daemon-reload
+$ sudo systemctl start puma
 ```
 
 ## サイトの作成
@@ -148,20 +160,20 @@ Web サーバの起動
 データベース（インデックス）の作成
 
 ```
-# bundle exec rake db:drop
-# bundle exec rake db:create_indexes
+$ bundle exec rake db:drop
+$ bundle exec rake db:create_indexes
 ```
 
 新規サイトの追加
 
 ```
-# bundle exec rake ss:create_site data='{ name: "サイト名", host: "www", domains: "localhost:3000" }'
+$ bundle exec rake ss:create_site data='{ name: "サイト名", host: "www", domains: "localhost:3000" }'
 ```
 
 サンプルデータ (自治体サンプル) の投入
 
 ```
-# bundle exec rake db:seed name=demo site=www
+$ bundle exec rake db:seed name=demo site=www
 ```
 
 ## サイトの確認
