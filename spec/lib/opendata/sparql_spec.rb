@@ -12,6 +12,23 @@ describe Opendata::Sparql do
 
   describe ".save" do
     let(:ttl_file) { Rails.root.join('spec', 'fixtures', 'opendata', 'test-1.ttl').to_s }
+    let(:ttl_url) { unique_url }
+
+    before do
+      @net_connect_allowed = WebMock.net_connect_allowed?
+      WebMock.disable_net_connect!(allow_localhost: true)
+      WebMock.reset!
+
+      # failed_return = { body: "", status: 404, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
+      # stub_request(:any, url1).to_return(failed_return)
+      # stub_request(:any, url2).to_return(failed_return)
+      stub_request(:any, ttl_url).to_return(body: File.read(ttl_file), status: 200, headers: { 'Content-Type' => 'text/turtle' })
+    end
+
+    after do
+      WebMock.reset!
+      WebMock.allow_net_connect! if @net_connect_allowed
+    end
 
     context "save success" do
       it do
@@ -19,7 +36,7 @@ describe Opendata::Sparql do
         allow(sparql_client_stub).to receive(:update).and_return("this is stub")
         allow(SPARQL::Client).to receive(:new).and_return(sparql_client_stub)
 
-        ret = Opendata::Sparql.save unique_id, ttl_file
+        ret = Opendata::Sparql.save unique_id, ttl_url
         expect(ret).to be_a Array
       end
     end
@@ -30,7 +47,7 @@ describe Opendata::Sparql do
         allow(sparql_client_stub).to receive(:update).and_raise(SocketError)
         allow(SPARQL::Client).to receive(:new).and_return(sparql_client_stub)
 
-        expect { Opendata::Sparql.save unique_id, ttl_file }.to raise_error SocketError
+        expect { Opendata::Sparql.save unique_id, ttl_url }.to raise_error SocketError
       end
     end
   end
