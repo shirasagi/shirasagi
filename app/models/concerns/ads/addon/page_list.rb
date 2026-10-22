@@ -13,6 +13,11 @@ module Ads::Addon
       # field :lower_html, type: String
       # permit_params :link_action, :link_target, :sort, :with_category, :upper_html, :lower_html
       permit_params :link_action, :link_target, :with_category
+
+      liquidize do
+        export :link_action
+        export :link_target
+      end
     end
 
     def link_action_options

@@ -27,6 +27,16 @@ class Ads::Banner
 
   default_scope ->{ where(route: "ads/banner") }
 
+  template_variable_handler :link_url, :template_variable_handler_link_url
+  template_variable_handler :link_target, :template_variable_handler_name
+  template_variable_handler 'img.src', :template_variable_handler_img_src
+
+  liquidize do
+    export :link_url
+    export :link_target
+    export :file
+  end
+
   def self.link_target_options
     [
       [I18n.t('ads.options.link_target.self'), '_self'],
@@ -50,5 +60,15 @@ class Ads::Banner
     return if link_url.blank?
 
     errors.add :link_url, :invalid if link_url == '#'
+  end
+
+  def template_variable_handler_link_url(_name, _issuer)
+    link_url.presence || url
+  end
+
+  def template_variable_handler_img_src(_name, _issuer)
+    if file
+      file.url
+    end
   end
 end
