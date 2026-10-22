@@ -16,10 +16,6 @@ module SS::PluginBase
     settings = SS.config.try(self.class.scope)
     return true if settings.blank?
 
-    if plugin_type == 'part'
-      puts 'part'
-    end
-
     plugin_settings = settings.try(plugin_type.pluralize)
     return true if plugin_settings.blank?
 
