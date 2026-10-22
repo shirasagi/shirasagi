@@ -5,7 +5,7 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
   let(:node)  { create :ads_node_banner, cur_site: site }
   let!(:part) { create :ads_part_banner, cur_site: site, cur_node: node }
   let!(:item1) { create :ads_banner, cur_site: site, cur_node: node }
-  let!(:item2) { create :ads_banner, cur_site: site, cur_node: node, additional_attr: 'rel="nofollow"' }
+  let!(:item2) { create :ads_banner, cur_site: site, cur_node: node }
 
   let(:layout)   { create_cms_layout part }
   let(:node_cms) { create :cms_node, layout_id: layout.id }
@@ -25,7 +25,7 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
       expect(page).to have_selector(".ss-image-box-item-list span a img[alt='#{item1.name}']")
 
       expect(page).to have_css(".ss-image-box")
-      expect(page).to have_selector(".ss-image-box-item-list span a[rel='nofollow'] img[alt='#{item2.name}']")
+      expect(page).to have_selector(".ss-image-box-item-list span a img[alt='#{item2.name}']")
 
       first(".ss-image-box-item-list span a img[alt='#{item1.name}']").click
       expect(page).to have_selector(".ss-image-box-item-list span a img[alt='#{item1.name}']")
@@ -113,7 +113,7 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
       expect(page).to have_selector(".ss-image-box-item-list span a img[alt='#{item1.name}']")
 
       expect(page).to have_css(".ss-image-box")
-      expect(page).to have_selector(".ss-image-box-item-list span a[rel='nofollow'] img[alt='#{item2.name}']")
+      expect(page).to have_selector(".ss-image-box-item-list span a img[alt='#{item2.name}']")
 
       first(".ss-image-box-item-list span a img[alt='#{item1.name}']").click
       expect(page).to have_selector(".ss-image-box-item-list span a img[alt='#{item1.name}']")

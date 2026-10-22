@@ -27,25 +27,4 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
       expect(logs).not_to include(include("xss"))
     end
   end
-
-  context "vulnerability in Ads::Banner#additional_attr" do
-    let(:vulnerable_additional_attr) do
-      %(onclick="Reflect.set(window,'xss',1); console.log('xss'); return false;" autofocus="autofocus")
-    end
-    let!(:item1) do
-      create :ads_banner, cur_site: site, cur_node: node, link_url: unique_url, additional_attr: vulnerable_additional_attr
-    end
-
-    it do
-      visit node_cms.full_url
-      wait_for_js_ready
-
-      first(".ss-image-box-item a").click
-
-      expect(page.evaluate_script("window.xss")).to be_blank
-
-      logs = capture_console_logs
-      expect(logs).not_to include(include("xss"))
-    end
-  end
 end
