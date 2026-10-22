@@ -1,5 +1,4 @@
 import { Controller } from "@hotwired/stimulus"
-import { csrfToken } from "../../ss/tool";
 
 export default class extends Controller {
   static values = {
