@@ -4,7 +4,7 @@ describe Opendata::Harvest::ImportJob, type: :feature, dbscope: :example do
   let!(:site) { cms_site }
   let!(:user) { cms_user }
   let!(:node) { create(:opendata_node_dataset, cur_site: site) }
-  let(:file_path) { "#{Rails.root}/tmp/hacked-#{$$}" }
+  let(:file_path) { "#{Rails.root}/tmp/hacked-#{$PID}" }
   let(:vulnerable_url) { "|touch #{file_path} #" }
   let!(:importer) do
     create :opendata_harvest_importer, cur_site: site, cur_node: node, source_url: unique_url, api_type: "ckan"
