@@ -63,12 +63,12 @@ class Ads::Banner
   end
 
   def template_variable_handler_link_url(_name, _issuer)
-    link_url.presence || url
+    ERB::Util.html_escape(link_url.presence || url)
   end
 
   def template_variable_handler_img_src(_name, _issuer)
     if file
-      file.url
+      ERB::Util.html_escape(file.url)
     end
   end
 end

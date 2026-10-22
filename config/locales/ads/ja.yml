@@ -106,11 +106,11 @@ ja:
           &lt;div class="ss-image-box-item-list">
             {% for page in pages %}
               &lt;span class="ss-image-box-item"">
-                &lt;a target="{{ par.link_target | default: page.link_target | default: "_self" }}" href="{{ page.link_url }}">
+                &lt;a target="{{ part.link_target | default: page.link_target | default: "_self" | escape }}" href="{{ page.link_url | escape }}">
                   {% if page.file %}
-                    &lt;img src="{{ page.file.url }}" alt="{{ page.name }}">
+                    &lt;img src="{{ page.file.url | escape }}" alt="{{ page.name | escape }}">
                   {% else %}
-                    {{ page.name }}
+                    {{ page.name | escape }}
                   {% endif %}
                 &lt;/a>
               &lt;/span>
@@ -123,11 +123,11 @@ ja:
           &lt;div class="ss-image-box-item-list">
             {% for page in pages %}
               &lt;span class="ss-image-box-item"">
-                &lt;a target="{{ part.link_target | default: page.link_target | default: "_self" }}" href="{{ page.url }}">
+                &lt;a target="{{ part.link_target | default: page.link_target | default: "_self" | escape }}" href="{{ page.url | escape }}">
                   {% if page.file %}
-                    &lt;img src="{{ page.file.url }}" alt="{{ page.name }}">
+                    &lt;img src="{{ page.file.url | escape }}" alt="{{ page.name | escape }}">
                   {% else %}
-                    {{ page.name }}
+                    {{ page.name | escape }}
                   {% endif %}
                 &lt;/a>
               &lt;/span>

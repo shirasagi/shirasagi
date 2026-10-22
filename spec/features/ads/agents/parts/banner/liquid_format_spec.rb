@@ -8,11 +8,11 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
       <div class="ss-image-box-item-list">
         {% for page in pages %}
         <span class="ss-image-box-item loop-html" data-id="{{ page.id }}">
-          <a target="{{ part.link_target | default: page.link_target | default: "_self" }}" href="{{ page.link_url }}">
+          <a target="{{ part.link_target | default: page.link_target | default: "_self" | escape }}" href="{{ page.link_url | escape }}">
             {% if page.file %}
-              <img src="{{ page.file.url }}" alt="{{ page.name }}">
+              <img src="{{ page.file.url | escape }}" alt="{{ page.name | escape }}">
             {% else %}
-              {{ page.name }}
+              {{ page.name | escape }}
             {% endif %}
           </a>
         </span>
