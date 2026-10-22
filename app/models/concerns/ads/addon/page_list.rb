@@ -2,15 +2,17 @@ module Ads::Addon
   module PageList
     extend ActiveSupport::Concern
     extend SS::Addon
+    include Cms::Addon::List::Model
 
     included do
       field :link_action, type: String
       field :link_target, type: String
-      field :sort, type: String
+      # field :sort, type: String
       field :with_category, type: String
-      field :upper_html, type: String
-      field :lower_html, type: String
-      permit_params :link_action, :link_target, :sort, :with_category, :upper_html, :lower_html
+      # field :upper_html, type: String
+      # field :lower_html, type: String
+      # permit_params :link_action, :link_target, :sort, :with_category, :upper_html, :lower_html
+      permit_params :link_action, :link_target, :with_category
     end
 
     def link_action_options
