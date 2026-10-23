@@ -4,7 +4,12 @@
 <div class="ss-image-box-item-list">
   <% @items.each do |item| %>
     <%
-      url = @cur_part.link_action.present? ? item.link_url : item.url
+      case @cur_part.link_action
+      when "direct" # 直リンク
+        url = item.link_url
+      else # クッションページ
+        url = item.url_with_redirect
+      end
       link_target = target ? target : item.link_target.presence
       link_options = link_target ? { target: link_target, rel: "noopener" } : { target: "_self" }
     %>

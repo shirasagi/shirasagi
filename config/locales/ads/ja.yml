@@ -113,11 +113,11 @@ ja:
         -
         - |-
           使用例： 「クッションページ」の場合
-          上記の page.link_url を page.url に変更します。
+          上記の page.link_url を page.url_with_redirect に変更します。
           &lt;div class="ss-image-box-item-list">
             {% for page in pages %}
               &lt;span class="ss-image-box-item"">
-                &lt;a target="{{ part.link_target | default: page.link_target | default: "_self" | escape }}" href="{{ page.url | escape }}">
+                &lt;a target="{{ part.link_target | default: page.link_target | default: "_self" | escape }}" href="{{ page.url_with_redirect | escape }}">
                   {% if page.file %}
                     &lt;img src="{{ page.file.url | escape }}" alt="{{ page.name | escape }}">
                   {% else %}
