@@ -28,10 +28,12 @@ class Opendata::Harvest::Importer
 
   field :source_host, type: String
 
+  before_validation :set_source_host
+
   validates :name, presence: true
   validates :api_type, presence: true
-  validates :source_url, presence: true
-  validate :validate_host, if: -> { source_url.present? }
+  validates :source_url, presence: true, url: true
+  validates :source_host, presence: true
 
   has_many :datasets, class_name: 'Opendata::Dataset', dependent: :nullify, inverse_of: :harvest_importer
   has_many :reports, class_name: 'Opendata::Harvest::Importer::Report', dependent: :destroy, inverse_of: :importer
@@ -43,10 +45,10 @@ class Opendata::Harvest::Importer
 
   private
 
-  def validate_host
-    self.source_host = ::Addressable::URI.parse(source_url).host
-  rescue => e
-    errors.add :source_host, :invalid
+  def set_source_host
+    if source_url
+      self.source_host = ::Addressable::URI.parse(source_url).host rescue nil
+    end
   end
 
   public

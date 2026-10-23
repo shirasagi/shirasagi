@@ -18,9 +18,9 @@ describe Opendata::Harvest::ImportJob, dbscope: :example, tmpdir: true, ckan: tr
   let!(:dataset1) { create :opendata_dataset, cur_site: site, cur_node: node, group_ids: [group.id] }
   let!(:dataset2) { create :opendata_dataset, cur_site: site, cur_node: node, group_ids: [group.id] }
 
-  let!(:file_path1) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
-  let!(:file_path2) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis-2.csv") }
-  let!(:file_path3) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis-3.csv") }
+  let!(:file_path1) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv").to_s }
+  let!(:file_path2) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis-2.csv").to_s }
+  let!(:file_path3) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis-3.csv").to_s }
 
   let!(:ckan_package) { Opendata::Harvest::CkanPackage.new(ckan_url) }
 
@@ -49,13 +49,24 @@ describe Opendata::Harvest::ImportJob, dbscope: :example, tmpdir: true, ckan: tr
     dataset.reload
   end
 
-  # rubocop:disable Security/Open
-  def expect_same_file(file1, file2)
-    str1 = URI.open(file1).read
-    str2 = URI.open(file2).read
-    expect(str1).to eq str2
+  def expect_same_file(left_url_or_file_path, right_url_or_file_path)
+    if left_url_or_file_path.start_with?("http://", "https://")
+      left_open = OpenURI.method(:open_uri)
+    else
+      left_open = File.method(:open)
+    end
+    if right_url_or_file_path.start_with?("http://", "https://")
+      right_open = OpenURI.method(:open_uri)
+    else
+      right_open = File.method(:open)
+    end
+
+    left_open.call(left_url_or_file_path, "rb") do |left_io|
+      right_open.call(right_url_or_file_path, "rb") do |right_io|
+        expect(Fs.compare_stream_head(left_io, right_io)).to be_truthy
+      end
+    end
   end
-  # rubocop:enable Security/Open
 
   before do
     create_resource(dataset1, file_path1)

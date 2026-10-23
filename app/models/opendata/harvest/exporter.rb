@@ -28,11 +28,13 @@ class Opendata::Harvest::Exporter
   has_many :dataset_relations, class_name: 'Opendata::Harvest::Exporter::DatasetRelation',
     dependent: :destroy, inverse_of: :exporter
 
+  before_validation :set_host
+
   validates :name, presence: true
   validates :api_type, presence: true
-  validates :url, presence: true
+  validates :url, presence: true, url: true
+  validates :host, presence: true
   validates :api_key, presence: true
-  validate :validate_host, if: -> { url.present? }
 
   permit_params :name, :url, :api_type, :api_key, :order, :state
 
@@ -40,10 +42,10 @@ class Opendata::Harvest::Exporter
 
   private
 
-  def validate_host
-    self.host = ::Addressable::URI.parse(url).host
-  rescue => e
-    errors.add :host, :invalid
+  def set_host
+    if url
+      self.host = ::Addressable::URI.parse(url).host rescue nil
+    end
   end
 
   public
