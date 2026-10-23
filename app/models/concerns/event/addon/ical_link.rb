@@ -7,6 +7,8 @@ module Event::Addon
       field :ical_uid, type: String
       field :ical_link, type: String
       permit_params :ical_uid, :ical_link
+      before_validation :encode_ical_link
+      validates :ical_link, url: { absolute_path: true }
     end
 
     module ClassMethods
@@ -45,6 +47,13 @@ module Event::Addon
     def json_url
       ret = ical_link rescue nil
       ret.present? ? nil : super
+    end
+
+    private
+
+    def encode_ical_link
+      return unless ical_link_changed?
+      self.ical_link = SS.safe_encode_url(ical_link)
     end
   end
 end
