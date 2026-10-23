@@ -32,11 +32,13 @@ class Ads::Banner
 
   default_scope ->{ where(route: "ads/banner") }
 
+  template_variable_handler :url, :template_variable_handler_url
   template_variable_handler :link_url, :template_variable_handler_link_url
   template_variable_handler :link_target, :template_variable_handler_name
   template_variable_handler 'img.src', :template_variable_handler_img_src
 
   liquidize do
+    export :url_with_redirect
     export :link_url
     export :link_target
     export :file
@@ -47,8 +49,10 @@ class Ads::Banner
   end
   delegate :link_target_options, to: :class
 
-  def url
-    uri = ::Addressable::URI.parse(super)
+  def url_with_redirect
+    return self.url if link_url.blank?
+
+    uri = ::Addressable::URI.parse(self.url)
     uri.query = { redirect: link_url }.to_param
     uri.to_s
   end
@@ -70,13 +74,15 @@ class Ads::Banner
     errors.add :link_url, :invalid if link_url == '#'
   end
 
+  def template_variable_handler_url
+    SS.safe_encode_url(url_with_redirect)
+  end
+
   def template_variable_handler_link_url(_name, _issuer)
-    SS.safe_encode_url(link_url.presence || url)
+    SS.safe_encode_url(link_url)
   end
 
   def template_variable_handler_img_src(_name, _issuer)
-    if file
-      SS.safe_encode_url(file.url)
-    end
+    SS.safe_encode_url(file.try(:url))
   end
 end
