@@ -281,6 +281,8 @@ module SS
   # rubocop:enable Naming/MethodParameterName
 
   def safe_encode_url(url)
+    return url if url.blank?
+
     escaped = Addressable::URI.unencode(url) rescue url
     return url if escaped != url
 

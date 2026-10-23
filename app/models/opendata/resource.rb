@@ -19,7 +19,7 @@ class Opendata::Resource
 
   permit_params :state, :name, :text, :format, :license_id, :source_url, :order, :in_update_dataset
 
-  before_validation :set_source_url, if: ->{ source_url.present? }
+  before_validation :set_source_url, if: ->{ source_url_changed? }
   before_validation :set_filename, if: ->{ in_file.present? }
   before_validation :validate_in_file, if: ->{ in_file.present? }
   before_validation :validate_in_tsv, if: ->{ in_tsv.present? }
@@ -27,7 +27,7 @@ class Opendata::Resource
 
   validates :in_file, presence: true, if: ->{ file_id.blank? && source_url.blank? }
   validates :format, presence: true
-  validates :source_url, url: true, if: ->{ source_url.present? }
+  validates :source_url, url: { allow_blank: true }
 
   after_save :save_dataset
   after_destroy :compression_dataset
@@ -166,7 +166,7 @@ class Opendata::Resource
     else
       self.filename = nil
       self.file.destroy if file
-      self.source_url = ::Addressable::URI.escape(source_url) if !source_url.ascii_only?
+      self.source_url = SS.safe_encode_url(source_url)
     end
   end
 

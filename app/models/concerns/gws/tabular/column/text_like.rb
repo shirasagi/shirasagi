@@ -190,6 +190,10 @@ module Gws::Tabular::Column::TextLike
     when "tel"
       file_model.validates field_name, format: { with: TEL_PATTERN, message: :tel, allow_blank: true }
     when "url"
+      file_model.before_validation do
+        next unless send("#{field_name}_changed?")
+        send("#{field_name}=", SS.safe_encode_url(send(field_name)))
+      end
       file_model.validates field_name, url: true
     when "color"
       file_model.validates field_name, "ss/color" => true

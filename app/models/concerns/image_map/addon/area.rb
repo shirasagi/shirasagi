@@ -14,6 +14,8 @@ module ImageMap::Addon
       permit_params in_area: [:x, :y, :width, :height]
       permit_params :link_url, :area_state
 
+      before_validation :encode_link_url
+
       validate :validate_in_area
       validates :link_url, url: { absolute_path: true, allow_blank: true }
       validates :link_url, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
@@ -45,6 +47,11 @@ module ImageMap::Addon
     end
 
     private
+
+    def encode_link_url
+      return unless link_url_changed?
+      self.link_url = SS.safe_encode_url(link_url)
+    end
 
     def validate_in_area
       return if in_area.blank?

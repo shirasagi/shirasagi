@@ -8,7 +8,7 @@
     </dd>
   <% else %>
     <dt><%= @model.t :source_url %></dt>
-    <dd><%= link_to @item.source_url, @item.source_url, target: "_blank", rel: "noopener" %></dd>
+    <dd><%= link_to @item.source_url, sns_redirect_path(ref: @item.source_url), target: "_blank", rel: "noopener" %></dd>
   <% end %>
 
   <dt><%= @model.t :state %></dt>

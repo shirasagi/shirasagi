@@ -82,5 +82,19 @@ describe SS, dbscope: :example do
         expect(path).to eq origin
       end
     end
+
+    context "with ldap://" do
+      it do
+        url = "ldap://ldap.example.com/dc=example,dc=com"
+        expect(SS.safe_encode_url(url)).to eq url
+
+        url = "ldap://ldap.example.com/dc=example,dc=com?postalAddress"
+        expect(SS.safe_encode_url(url)).to eq url
+
+        url = "ldap://ldap.example.com/cn=Barbara Jensen,dc=example,dc=com?cn,mail,telephoneNumber"
+        expected = "ldap://ldap.example.com/cn=Barbara%20Jensen,dc=example,dc=com?cn,mail,telephoneNumber"
+        expect(SS.safe_encode_url(url)).to eq expected
+      end
+    end
   end
 end

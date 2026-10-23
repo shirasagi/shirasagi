@@ -79,7 +79,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:column1_value2) { unique_id }
   let(:column2_value2) { "#{rand(2000..2050)}/01/01" }
   let(:column3_label2) { unique_id }
-  let(:column3_url2) { "http://#{site.domain}/日本語/" }
+  let(:column3_url2) { "https://#{site.domain}/日本語/" }
+  let(:column3_url2_expected) { "https://#{site.domain}/%E6%97%A5%E6%9C%AC%E8%AA%9E/" }
   let(:column4_value2) { "#{unique_id}#{unique_id}\n#{unique_id}#{unique_id}#{unique_id}" }
   let(:column5_value2) { column5.select_options.sample }
   let(:column6_value2) { column6.select_options.sample }
@@ -558,7 +559,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           item.column_values.find_by(column_id: column3.id).tap do |column_value|
             expect(column_value.name).to eq column3.name
             expect(column_value.link_label).to eq column3_label2
-            expect(column_value.link_url).to eq column3_url2
+            expect(column_value.link_url).to eq column3_url2_expected
             expect(column_value.order).to eq 2
             expect(column_value.alignment).to be_blank
           end
@@ -1104,7 +1105,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(item.column_values.find_by(column_id: column1.id).value).to eq column1_value2
           expect(item.column_values.find_by(column_id: column2.id).date).to eq Time.zone.parse(column2_value2)
           expect(item.column_values.find_by(column_id: column3.id).link_label).to eq column3_label2
-          expect(item.column_values.find_by(column_id: column3.id).link_url).to eq column3_url2
+          expect(item.column_values.find_by(column_id: column3.id).link_url).to eq column3_url2_expected
           expect(item.column_values.find_by(column_id: column4.id).value).to eq column4_value2.gsub("\n", "\r\n")
           expect(item.column_values.find_by(column_id: column5.id).value).to eq column5_value2
           expect(item.column_values.find_by(column_id: column6.id).value).to eq column6_value2

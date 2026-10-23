@@ -9,9 +9,11 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
 
   permit_values :link_url, :link_label, :link_target
 
+  before_validation :encode_link_url
   validates :link_url, url: { absolute_path: true, allow_blank: true }
   validate :validate_link_url
   validates :link_url, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
+  validates :link_target, inclusion: { in: %w(_blank), allow_blank: true }
 
   before_validation :set_link_item, unless: ->{ @new_clone }
 
@@ -95,6 +97,11 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
   end
 
   private
+
+  def encode_link_url
+    return unless link_url_changed?
+    self.link_url = SS.safe_encode_url(link_url)
+  end
 
   def validate_link_url
     return if link_url.blank?

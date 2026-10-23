@@ -13,7 +13,15 @@ module Facility::Addon
 
       permit_params :kana, :postcode, :address, :tel, :fax, :related_url
 
+      before_validation :encode_related_url
       validates :related_url, url: { absolute_path: true, allow_blank: true }
+    end
+
+    private
+
+    def encode_related_url
+      return unless related_url_changed?
+      self.related_url = SS.safe_encode_url(related_url)
     end
   end
 end
