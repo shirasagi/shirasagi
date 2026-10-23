@@ -22,6 +22,8 @@ module KeyVisual::Addon::SwiperSetting
   DEFAULT_KV_PAUSE = 4_000
   DEFAULT_KV_THUMBNAIL_COUNT = 4
 
+  AVAILABLE_LINK_TARGETS = %w(_blank).freeze
+
   included do
     field :link_target, type: String
     field :kv_speed, type: Integer
@@ -37,7 +39,7 @@ module KeyVisual::Addon::SwiperSetting
     permit_params :link_target, :kv_speed, :kv_space, :kv_autoplay, :kv_pause, :kv_navigation, :kv_pagination_style
     permit_params :kv_thumbnail, :kv_thumbnail_count, :kv_scrollbar
 
-    validates :link_target, inclusion: { in: %w(_blank), allow_blank: true }
+    validates :link_target, inclusion: { in: AVAILABLE_LINK_TARGETS, allow_blank: true }
     validates :kv_autoplay, inclusion: { in: %w(disabled enabled started), allow_blank: true }
     validates :kv_navigation, inclusion: { in: %w(hide show), allow_blank: true }
     validates :kv_pagination_style, inclusion: { in: %w(none disc number bullets fraction progressbar), allow_blank: true }
@@ -46,10 +48,7 @@ module KeyVisual::Addon::SwiperSetting
   end
 
   def link_target_options
-    [
-      [I18n.t('key_visual.options.link_target.self'), ''],
-      [I18n.t('key_visual.options.link_target.blank'), '_blank'],
-    ]
+    AVAILABLE_LINK_TARGETS.map { [ I18n.t(_1, scope: "ss.options.link_target"), _1 ] }
   end
 
   def kv_autoplay_options

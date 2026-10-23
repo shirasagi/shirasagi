@@ -7,9 +7,6 @@ ja:
       start: 再生
       stop: 停止
     options:
-      link_target:
-        self: 同じタブで表示
-        blank: 別のタブで表示
       autoplay:
         disabled: 自動再生しない
         enabled: 自動再生する（手動で開始）
