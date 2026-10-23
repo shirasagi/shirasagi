@@ -1,0 +1,21 @@
+<%
+  target = @cur_part.link_target.presence
+%>
+<div class="ss-image-box-item-list">
+  <% @items.each do |item| %>
+    <%
+      url = @cur_part.link_action.present? ? item.link_url : item.url
+      link_target = target ? target : item.link_target.presence
+      link_options = link_target ? { target: link_target, rel: "noopener" } : { target: "_self" }
+    %>
+    <span class="ss-image-box-item">
+      <%= link_to url, **link_options do %>
+        <% if file = item.file %>
+          <%= image_tag file.url, alt: item.name %>
+        <% else %>
+          <%= item.name %>
+        <% end %>
+      <% end %>
+    </span>
+  <% end %>
+</div>

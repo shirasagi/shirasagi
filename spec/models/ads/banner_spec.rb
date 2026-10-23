@@ -124,4 +124,49 @@ describe Ads::Banner do
       end
     end
   end
+
+  describe "link_url normalization(percent encode)" do
+    let!(:site) { cms_site }
+    let!(:node) { create :ads_node_banner, cur_site: site }
+
+    context "with 日本語 in path #1" do
+      it do
+        item = build(:ads_banner, cur_site: site, cur_node: node, link_url: "https://www.example.jp/日本語")
+        expect(item).to be_valid
+        expect(item.link_url).to eq "https://www.example.jp/%E6%97%A5%E6%9C%AC%E8%AA%9E"
+      end
+    end
+
+    context "with 日本語 in path #2" do
+      it do
+        item = build(:ads_banner, cur_site: site, cur_node: node, link_url: "/日本語")
+        expect(item).to be_valid
+        expect(item.link_url).to eq "/%E6%97%A5%E6%9C%AC%E8%AA%9E"
+      end
+    end
+
+    context "with vulnerable path #1" do
+      it do
+        item = build(:ads_banner, cur_site: site, cur_node: node, link_url: %(/x" onclick="alert(1)"))
+        expect(item).to be_valid
+        expect(item.link_url).to eq "/x%22%20onclick=%22alert(1)%22"
+      end
+    end
+
+    context "with already normalized #1" do
+      it do
+        item = build(:ads_banner, cur_site: site, cur_node: node, link_url: "https://www.example.jp/%E6%97%A5%E6%9C%AC%E8%AA%9E")
+        expect(item).to be_valid
+        expect(item.link_url).to eq "https://www.example.jp/%E6%97%A5%E6%9C%AC%E8%AA%9E"
+      end
+    end
+
+    context "with already normalized #2" do
+      it do
+        item = build(:ads_banner, cur_site: site, cur_node: node, link_url: "/%E6%97%A5%E6%9C%AC%E8%AA%9E")
+        expect(item).to be_valid
+        expect(item.link_url).to eq "/%E6%97%A5%E6%9C%AC%E8%AA%9E"
+      end
+    end
+  end
 end

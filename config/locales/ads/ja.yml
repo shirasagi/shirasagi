@@ -9,8 +9,8 @@ ja:
         cushion: クッションページ
         direct: 直リンク
       link_target:
-        self: 同じタブで表示
-        blank: 別のタブで表示
+        _self: 同じタブで表示
+        _blank: 別のタブで表示
         individual_setting: 個別設定
       sort:
         order: 指定順
@@ -49,7 +49,6 @@ ja:
         name: サイト名
         link_url: リンクURL
         file_id: バナー画像
-        additional_attr: 追加属性
         link_target: リンク表示
       ads/access_log:
         date: アクセス日
@@ -65,13 +64,11 @@ ja:
         - 広告バナーのリンク先のURLを入力します。
       file_id:
         - 広告バナーに利用する画像を登録します。
-      additional_attr:
-        - a要素の追加属性を入力します。
       link_target:
         - リンクの表示形式を設定します。
     ads/addon/page_list:
       link_action:
-        - リンクの動作を設定します。
+        - リンクの動作を設定します。ループHTMLを空にした場合に有効です。独自のループHTMLを設定する場合はループHTMLで制御してください。
         -
         - クッションページ：
         - 外部サイトへ移動する旨のページを表示します。
@@ -80,7 +77,7 @@ ja:
         - 直接外部サイトへ移動します。
         - アクセス集計には反映されません。
       link_target:
-        - リンクの表示形式を設定します。
+        - リンクの表示形式を設定します。ループHTMLを空にした場合に有効です。独自のループHTMLを設定する場合はループHTMLで制御してください。
       with_category:
         - 表示中のページにカテゴリーが設定されている場合、そのカテゴリーを設定しているバナーのみ表示します。
       sort:
@@ -89,4 +86,44 @@ ja:
         - リスト部分の上部に任意の内容をHTMLで記述することが可能です。
       lower_html:
         - リスト部分の下部に任意の内容をHTMLで記述することが可能です。
-
+      loop_html:
+        - 自動生成されたリスト表示部分のHTMLを指定することが可能です。省略した場合は標準のループHTMLで描画されます。
+        - 一般的なページの変数だけでなく以下の変数を記入することが可能です。
+        -
+        - "#{link_url} リンクURL"
+        - "#{link_target} リンク表示"
+      loop_liquid:
+        - Liquid 形式で記述します。
+        -
+        - |-
+          使用例： 「直リンク」の場合
+          &lt;div class="ss-image-box-item-list">
+            {% for page in pages %}
+              &lt;span class="ss-image-box-item"">
+                &lt;a target="{{ part.link_target | default: page.link_target | default: "_self" | escape }}" href="{{ page.link_url | escape }}">
+                  {% if page.file %}
+                    &lt;img src="{{ page.file.url | escape }}" alt="{{ page.name | escape }}">
+                  {% else %}
+                    {{ page.name | escape }}
+                  {% endif %}
+                &lt;/a>
+              &lt;/span>
+            {% endfor %}
+          &lt;/div>
+        -
+        - |-
+          使用例： 「クッションページ」の場合
+          上記の page.link_url を page.url に変更します。
+          &lt;div class="ss-image-box-item-list">
+            {% for page in pages %}
+              &lt;span class="ss-image-box-item"">
+                &lt;a target="{{ part.link_target | default: page.link_target | default: "_self" | escape }}" href="{{ page.url | escape }}">
+                  {% if page.file %}
+                    &lt;img src="{{ page.file.url | escape }}" alt="{{ page.name | escape }}">
+                  {% else %}
+                    {{ page.name | escape }}
+                  {% endif %}
+                &lt;/a>
+              &lt;/span>
+            {% endfor %}
+          &lt;/div>
