@@ -22,13 +22,13 @@ module Opendata::Sparql
       SS.config.opendata.fuseki["disable"] == "test"
     end
 
-    def save(graph_name, ttl_url)
-      dump("sparql#save:  #{graph_name}, #{ttl_url}") if test?
+    def save(graph_name, ttl_path)
+      dump("sparql#save:  #{graph_name}, #{ttl_path}") if test?
       return true if disable?
 
       begin
         temp_file = Tempfile.new("temp")
-        URI.open(ttl_url) do |f|
+        File.open(ttl_path) do |f|
           f.each do |line|
             encoding = NKF.guess(line)
             temp_file.puts line.encode(Encoding::UTF_8, encoding)
