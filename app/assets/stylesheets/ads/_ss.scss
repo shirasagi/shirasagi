@@ -29,3 +29,16 @@
     }
   }
 }
+
+#addon-ads-agents-addons-page_list {
+  [data-loop-format="shirasagi"] {
+    .loop-format-liquid {
+      display: none;
+    }
+  }
+  [data-loop-format="liquid"] {
+    .loop-format-shirasagi {
+      display: none;
+    }
+  }
+}

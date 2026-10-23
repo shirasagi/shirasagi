@@ -279,4 +279,11 @@ module SS
     "#{FACEBOOK_SHARER_URL}?#{params.to_query}"
   end
   # rubocop:enable Naming/MethodParameterName
+
+  def safe_encode_url(url)
+    escaped = Addressable::URI.unencode(url) rescue url
+    return url if escaped != url
+
+    Addressable::URI.encode(url) rescue url
+  end
 end

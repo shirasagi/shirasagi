@@ -1,0 +1,11 @@
+<%
+  source = @cur_part.loop_liquid
+  return if source.blank?
+
+  # liquid_registers comes from app/helpers/application_helper.rb
+  template = ::Cms.parse_liquid(source, liquid_registers)
+
+  assigns = { "part" => @cur_part, "pages" => @items.to_a }
+  assigns["origin"] = @origin if @origin
+%>
+<%== template.render(assigns) %>
