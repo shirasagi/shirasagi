@@ -2,7 +2,6 @@
 
 return if @items.blank?
 wrap_id = "key_visual-images-#{@items[0].id}"
-target  = @cur_part.link_target.present? ? %(target="#{@cur_part.link_target}" rel="noopener") : nil
 opts = {}
 opts['speed'] = @cur_part.kv_speed if @cur_part.kv_speed.present?
 opts['pause'] = @cur_part.kv_pause if @cur_part.kv_pause.present?
@@ -23,11 +22,20 @@ opts['pause'] = @cur_part.kv_pause if @cur_part.kv_pause.present?
     <% next unless file %>
 
     <li>
-      <% if item.link_url.present? %>
-        <a href="<%= item.link_url %>" <%== target %>><%= image_tag file.url, alt: item.name %></a>
-      <% else %>
-        <%= image_tag file.url, alt: item.name %>
-      <% end %>
+      <%=
+        inner_tag = image_tag file.url, alt: item.name
+        if item.link_url.present?
+          if @cur_part.link_target.present?
+            link_options = { target: @cur_part.link_target, rel: "noopener" }
+          else
+            link_options = SS::EMPTY_HASH
+          end
+          outer_tag = link_to inner_tag, item.link_url, **link_options
+        else
+          outer_tag = inner_tag
+        end
+        outer_tag
+      %>
     </li>
     <% end %>
   </ul>
