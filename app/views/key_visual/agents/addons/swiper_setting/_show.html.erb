@@ -1,6 +1,6 @@
 <dl class="see mod-key_visual-pagelist">
   <dt><%= @model.t :link_target %></dt>
-  <dd><%= @item.label :link_target %></dd>
+  <dd><%= @item.label(:link_target) || t("ss.options.link_target._self") %></dd>
 
   <dt><%= @model.t :kv_speed %></dt>
   <dd>

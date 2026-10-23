@@ -2,7 +2,6 @@
 
 return if @items.blank?
 wrap_id = "member-photo-slide-#{@items[0].id}"
-target  = @cur_part.link_target.present? ? %(target="#{@cur_part.link_target}" rel="noopener") : nil
 opts = {}
 opts['speed'] = @cur_part.kv_speed if @cur_part.kv_speed.present?
 opts['pause'] = @cur_part.kv_pause if @cur_part.kv_pause.present?
@@ -22,9 +21,20 @@ opts['pause'] = @cur_part.kv_pause if @cur_part.kv_pause.present?
     <% @items.each do |item| %>
       <%
         next unless item.image
-        url = @cur_part.node_url.present? ? item.full_url : item.url
       %>
-      <li><a href="<%= url %>" <%== target %>><%= image_tag item.image.url, alt: item.name %></a></li>
+      <li>
+        <%=
+          url = @cur_part.node_url.present? ? item.full_url : item.url
+          if @cur_part.link_target.present?
+            link_options = { target: @cur_part.link_target, rel: "noopener" }
+          else
+            link_options = SS::EMPTY_HASH
+          end
+
+          inner_tag = image_tag item.image.url, alt: item.name
+          link_to inner_tag, url, **link_options
+        %>
+      </li>
     <% end %>
   </ul>
 

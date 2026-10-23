@@ -1,6 +1,6 @@
 <dl class="see mod-key_visual-pagelist">
   <dt><%= @model.t :link_target %><%= @model.tt :link_target %></dt>
-  <dd><%= f.select :link_target, @item.link_target_options %></dd>
+  <dd><%= f.select :link_target, @item.link_target_options, include_blank: t("ss.options.link_target._self") %></dd>
 
   <dt><%= @model.t :kv_speed %><%= @model.tt :kv_speed %></dt>
   <dd><%= f.number_field :kv_speed, placeholder: KeyVisual::Part::SwiperSlide::DEFAULT_KV_SPEED %><%= I18n.t("datetime.prompts.milli_second") %></dd>
