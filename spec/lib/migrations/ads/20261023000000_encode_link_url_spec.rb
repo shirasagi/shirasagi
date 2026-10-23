@@ -4,10 +4,30 @@ require Rails.root.join("lib/migrations/ads/20261023000000_encode_link_url.rb")
 RSpec.describe SS::Migration20261023000000, dbscope: :example do
   let!(:site) { cms_site }
   let!(:node) { create :ads_node_banner, cur_site: site }
-  let!(:item1) { create(:ads_banner, cur_site: site, cur_node: node, link_url: "https://www.example.jp/日本語") }
-  let!(:item2) { create(:ads_banner, cur_site: site, cur_node: node, link_url: "/日本語") }
-  let!(:item3) { create(:ads_banner, cur_site: site, cur_node: node, link_url: %(/x" onclick="alert(1)")) }
-  let!(:item4) { create(:ads_banner, cur_site: site, cur_node: node, link_url: "https://www.example.jp/%E6%97%A5%E6%9C%AC%E8%AA%9E") }
+  let!(:item1) do
+    link_url = "https://www.example.jp/日本語"
+    item = create(:ads_banner, cur_site: site, cur_node: node, link_url: unique_url)
+    item.set(link_url: link_url)
+    item
+  end
+  let!(:item2) do
+    link_url = "/日本語"
+    item = create(:ads_banner, cur_site: site, cur_node: node, link_url: unique_url)
+    item.set(link_url: link_url)
+    item
+  end
+  let!(:item3) do
+    link_url = %(/x" onclick="alert(1)")
+    item = create(:ads_banner, cur_site: site, cur_node: node, link_url: unique_url)
+    item.set(link_url: link_url)
+    item
+  end
+  let!(:item4) do
+    link_url = "https://www.example.jp/%E6%97%A5%E6%9C%AC%E8%AA%9E"
+    item = create(:ads_banner, cur_site: site, cur_node: node, link_url: )
+    item.set(link_url: link_url)
+    item
+  end
 
   before do
     described_class.new.change

@@ -16,8 +16,25 @@ RSpec.describe SS::Migration20261023000001, dbscope: :example do
   end
   let!(:part3) do
     part = create(:ads_part_banner, cur_site: site, cur_node: node)
+    # 許可外の値
     part.set(link_target: unique_id)
     part
+  end
+  let!(:page1) do
+    page = create(:ads_banner, cur_site: site, cur_node: node)
+    page.set(link_target: "_self")
+    page
+  end
+  let!(:page2) do
+    page = create(:ads_banner, cur_site: site, cur_node: node)
+    page.set(link_target: "_blank")
+    page
+  end
+  let!(:page3) do
+    page = create(:ads_banner, cur_site: site, cur_node: node)
+    # 許可外の値
+    page.set(link_target: unique_id)
+    page
   end
 
   before do
@@ -32,7 +49,16 @@ RSpec.describe SS::Migration20261023000001, dbscope: :example do
       expect(after_migration.link_target).to eq "_blank"
     end
     Ads::Part::Banner.find(part3.id).tap do |after_migration|
-      expect(after_migration.link_target).to eq part3.link_target
+      expect(after_migration.link_target).to be_blank
+    end
+    Ads::Banner.find(page1.id).tap do |after_migration|
+      expect(after_migration.link_target).to eq "_self"
+    end
+    Ads::Banner.find(page2.id).tap do |after_migration|
+      expect(after_migration.link_target).to eq "_blank"
+    end
+    Ads::Banner.find(page3.id).tap do |after_migration|
+      expect(after_migration.link_target).to be_blank
     end
   end
 end
