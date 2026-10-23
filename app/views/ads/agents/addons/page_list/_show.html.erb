@@ -1,29 +1,60 @@
+<div data-loop-format="<%= @item.loop_format.presence || "shirasagi" %>">
+  <dl class="see mod-ads-pagelist">
+    <dt><%= @model.t :sort %></dt>
+    <dd><%= @item.label :sort %></dd>
+
+    <dt><%= @model.t :with_category %></dt>
+    <dd><%= @item.label :with_category %></dd>
+
+    <dt><%= @model.t :loop_format %></dt>
+    <dd><%= @item.label :loop_format %></dd>
+  </dl>
+
+  <dl class="see loop-format-shirasagi">
+    <dt><%= @model.t :upper_html %></dt>
+    <dd>
+      <%=
+        if @item.upper_html.present?
+          text_area_tag :upper_html, @item.upper_html, class: "html"
+        end
+      %>
+    </dd>
+
+    <dt><%= @model.t :link_action %></dt>
+    <dd><%= @item.label(:link_action) %></dd>
+
+    <dt><%= @model.t :link_target %></dt>
+    <dd><%= @item.label(:link_target) || t("ads.options.link_target.individual_setting") %></dd>
+
+    <dt><%= t("cms.loop_html") %></dt>
+    <dd>
+      <%=
+        if @item.loop_html.present?
+          text_area_tag :loop_html, @item.loop_html, class: "html"
+        end
+      %>
+    </dd>
+
+    <dt><%= @model.t :lower_html %></dt>
+    <dd>
+      <%=
+        if @item.lower_html.present?
+          text_area_tag :lower_html, @item.lower_html, class: "html"
+        end
+      %>
+    </dd>
+  </dl>
+
+  <dl class="see loop-format-liquid">
+    <dt><%= @model.t :loop_liquid %></dt>
+    <dd>
+      <%=
+        if @item.loop_liquid.present?
+          text_area_tag :loop_liquid, @item.loop_liquid, class: "html"
+        end
+      %>
+    </dd>
+  </dl>
+</div>
+
 <%= code_editor ".mod-ads-pagelist .html", mode: :html, readonly: true %>
-
-<dl class="see mod-ads-pagelist">
-  <dt><%= @model.t :link_action %></dt>
-  <dd><%= @item.label(:link_action) %></dd>
-
-  <dt><%= @model.t :link_target %></dt>
-  <dd><%= @item.label(:link_target) || t("ads.options.link_target.individual_setting") %></dd>
-
-  <dt><%= @model.t :sort %></dt>
-  <dd><%= @item.label :sort %></dd>
-
-  <dt><%= @model.t :with_category %></dt>
-  <dd><%= @item.label :with_category %></dd>
-
-  <dt><%= @model.t :upper_html %></dt>
-  <dd>
-    <% if @item.upper_html.present? %>
-    <%= text_area_tag :upper_html, @item.upper_html, class: "html" %>
-    <% end %>
-  </dd>
-
-  <dt><%= @model.t :lower_html %></dt>
-  <dd>
-    <% if @item.lower_html.present? %>
-    <%= text_area_tag :lower_html, @item.lower_html, class: "html" %>
-    <% end %>
-  </dd>
-</dl>
