@@ -13,7 +13,7 @@
 
   <dt><%= @model.t :poster_url %></dt>
 
-  <dd><%= link_to @item.poster_url, @item.poster_url, target: :_blank if @item.poster_url.present? %></dd>
+  <dd><%= link_to @item.poster_url, sns_redirect_path(ref: @item.poster_url), target: "_blank", rel: "noopener" if @item.poster_url.present? %></dd>
 
   <dt><%= @model.t :delete_key %></dt>
   <dd><%= @item.delete_key %></dd>

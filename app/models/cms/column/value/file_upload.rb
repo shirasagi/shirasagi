@@ -13,6 +13,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   permit_values :file_id, :file_name, :file_label, :text, :image_html_type, :link_url
 
   validates :link_url, url: { absolute_path: true, allow_blank: true }
+  validate :encode_link_url
 
   before_parent_save :before_save_file
   after_parent_destroy :destroy_file
@@ -124,6 +125,15 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   end
 
   private
+
+  def encode_link_url
+    return if errors[:link_url].present?
+    return unless link_url_changed?
+    self.link_url = SS.follow_up_url_encode!(link_url)
+  rescue => e
+    Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+    errors.add :link_url, :url
+  end
 
   def validate_resouce_url(value)
     /\Ahttps?:\/\//.match?(value) && Addressable::URI.parse(value) rescue false
