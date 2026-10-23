@@ -16,6 +16,8 @@ class Ads::Banner
 
   belongs_to_file :file
 
+  before_validation :encode_link_url
+
   validates :link_url, presence: true, url: { absolute_path: true }
   validate :validate_link_url
   #validates :file_id, presence: true
@@ -56,6 +58,11 @@ class Ads::Banner
 
   private
 
+  def encode_link_url
+    return if link_url.blank?
+    self.link_url = SS.safe_encode_url(link_url)
+  end
+
   def validate_link_url
     return if link_url.blank?
 
@@ -63,12 +70,12 @@ class Ads::Banner
   end
 
   def template_variable_handler_link_url(_name, _issuer)
-    ERB::Util.html_escape(link_url.presence || url)
+    SS.safe_encode_url(link_url.presence || url)
   end
 
   def template_variable_handler_img_src(_name, _issuer)
     if file
-      ERB::Util.html_escape(file.url)
+      SS.safe_encode_url(file.url)
     end
   end
 end
