@@ -1,24 +1,22 @@
 <!doctype html>
 <html lang="<%= I18n.locale %>">
-
 <%
   # translate
   if SS::TranslateSupport.translate?(request)
     @redirect_link = SS::TranslateSupport.embed_translate_path(request, @redirect_link)
   end
-
   # preview
   if SS::PreviewSupport.preview?(request)
     @redirect_link = SS::PreviewSupport.embed_preview_path(request, @redirect_link)
   end
 %>
-
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="refresh" content="0; URL=<%= @redirect_link %>">
   <title><%= @window_name %></title>
   <%= Cms.canonical_full_url(@cur_site, request).try { tag.link(rel: "canonical", href: _1) } %>
 </head>
-<body></body>
-
+<body>
+  次のページにリダイレクトします: <%= link_to @redirect_link, @redirect_link %>
+</body>
 </html>
