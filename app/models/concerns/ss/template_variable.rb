@@ -3,19 +3,14 @@ module SS::TemplateVariable
 
   module ClassMethods
     def template_variable_handlers
-      instance_variable_get(:@_template_variable_handlers) || []
-    end
-
-    def template_variable_handlers=(value)
-      instance_variable_set(:@_template_variable_handlers, value)
+      @_template_variable_handlers ||= {}
     end
 
     def template_variable_handler(name, proc = nil, &block)
       handlers = template_variable_handlers
 
       name = name.to_sym if name.respond_to?(:to_sym)
-      handlers << [name, proc || block]
-      self.template_variable_handlers = handlers
+      handlers[name] = proc || block
     end
 
     def render_template(*args)
@@ -46,10 +41,10 @@ module SS::TemplateVariable
 
   def find_template_variable_handler(name)
     name = name.to_sym
-    handler_def = self.class.template_variable_handlers.find { |handler_name, _| handler_name == name }
-    return nil unless handler_def
+    handler = self.class.template_variable_handlers[name]
+    return nil unless handler
 
-    case handler = handler_def[1]
+    case handler
     when ::Symbol, ::String
       method(handler)
     when ::Proc
