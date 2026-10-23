@@ -5,8 +5,10 @@ class SS::Migration20261023000001
 
   def change
     previous_part_link_targets = Set.new(%w(self blank))
+    current_part_link_targets = Set.new(%w(_self _blank))
     each_part do |part|
       next if part.link_target.blank?
+      next if current_part_link_targets.include?(part.link_target)
 
       if previous_part_link_targets.include?(part.link_target)
         part.set(link_target: "_#{part.link_target}")
@@ -16,10 +18,10 @@ class SS::Migration20261023000001
       end
     end
 
-    previous_page_link_targets = Set.new(%w(_self _blank))
+    available_page_link_targets = Set.new(%w(_self _blank))
     each_page do |page|
       next if page.link_target.blank?
-      next if previous_page_link_targets.include?(page.link_target)
+      next if available_page_link_targets.include?(page.link_target)
 
       # 許可外の値が保存されている
       page.unset(:link_target)
