@@ -4,7 +4,7 @@
 
 <dl class="see mod-cms-site-search-setting">
   <dt><%= @model.t :link_target %><%= @model.tt :link_target %></dt>
-  <dd><%= f.select :link_target, @item.link_target_options %></dd>
+  <dd><%= f.select :link_target, @item.link_target_options, include_blank: t('cms.options.link_target.self') %></dd>
 
   <dt><%= @model.t :search_type_state %><%= @model.tt :search_type_state %></dt>
   <dd><%= f.select :search_type_state, @item.search_type_state_options %></dd>

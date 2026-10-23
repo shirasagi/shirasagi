@@ -21,7 +21,6 @@ module Cms::Addon::SiteSearch
 
     def link_target_options
       [
-        [I18n.t('cms.options.link_target.self'), ''],
         [I18n.t('cms.options.link_target.blank'), 'blank'],
       ]
     end
