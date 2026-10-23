@@ -66,6 +66,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('inquiry.submit')
         end
       end
+      expect(page).to have_css(".inquiry-sent", text: Nokogiri::HTML.fragment(inquiry_form.inquiry_sent_html).text)
 
       expect(Inquiry::Answer.site(site).count).to eq 1
       answer = Inquiry::Answer.first
