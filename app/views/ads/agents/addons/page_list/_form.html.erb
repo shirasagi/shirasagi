@@ -20,7 +20,7 @@
     <dd><%= f.select :link_action, @item.link_action_options %></dd>
 
     <dt><%= @model.t :link_target %><%= @model.tt :link_target %></dt>
-    <dd><%= f.select :link_target, @item.link_target_options %></dd>
+    <dd><%= f.select :link_target, @item.link_target_options, include_blank: t("ads.options.link_target.individual_setting") %></dd>
 
     <dt><%= t("cms.loop_html") %><%= @model.tt :loop_html %></dt>
     <dd><%= f.text_area :loop_html, class: :html, style: "height: 100px;" %></dd>

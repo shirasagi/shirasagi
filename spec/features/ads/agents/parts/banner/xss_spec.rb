@@ -14,7 +14,11 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
       %(/x" onclick="window.xss=1; console.log('xss'); return false;)
     end
     let!(:item1) do
-      create :ads_banner, cur_site: site, cur_node: node, link_url: vulnerable_link_url, link_target: vulnerable_link_target
+      create :ads_banner, cur_site: site, cur_node: node, link_url: vulnerable_link_url
+    end
+
+    before do
+      item1.set(link_target: vulnerable_link_target)
     end
 
     context "with default loop format" do

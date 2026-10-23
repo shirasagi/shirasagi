@@ -3,13 +3,13 @@
   <dd><%= @item.send :name %></dd>
 
   <dt><%= @model.t :link_url %></dt>
-  <dd><%= link_to @item.link_url, @item.link_url, target: "_blank", rel: "noopener" %></dd>
+  <dd><%= link_to @item.link_url, sns_redirect_path(ref: @item.link_url), target: "_blank", rel: "noopener" %></dd>
 
   <dt><%= @model.t :file_id %></dt>
   <dd><%= show_image_info @item.file %></dd>
 
   <dt><%= @model.t :link_target %></dt>
-  <dd><%= (@item.present? && @item.link_target == "_blank") ? I18n.t('ads.options.link_target.blank') : I18n.t('ads.options.link_target.self') %></dd>
+  <dd><%= @item.label(:link_target) %></dd>
 
   <dt><%= @model.t :order %></dt>
   <dd><%= @item.send :order %></dd>

@@ -9,8 +9,8 @@ ja:
         cushion: クッションページ
         direct: 直リンク
       link_target:
-        self: 同じタブで表示
-        blank: 別のタブで表示
+        _self: 同じタブで表示
+        _blank: 別のタブで表示
         individual_setting: 個別設定
       sort:
         order: 指定順

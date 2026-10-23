@@ -26,8 +26,12 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
   let!(:node_cms) { create :cms_node, layout_id: layout.id }
 
   context "public" do
-    let!(:item1) { create :ads_banner, cur_site: site, cur_node: node, link_url: unique_url, link_target: unique_id }
-    let!(:item2) { create :ads_banner, cur_site: site, cur_node: node, link_url: unique_url, link_target: unique_id }
+    let!(:item1) do
+      create :ads_banner, cur_site: site, cur_node: node, link_url: unique_url, link_target: %w(_self _blank).sample
+    end
+    let!(:item2) do
+      create :ads_banner, cur_site: site, cur_node: node, link_url: unique_url, link_target: %w(_self _blank).sample
+    end
 
     it do
       visit node_cms.full_url

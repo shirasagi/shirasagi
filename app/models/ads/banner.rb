@@ -11,6 +11,8 @@ class Ads::Banner
 
   set_permission_name "ads_banners"
 
+  AVAILABLE_LINK_TARGETS = %w(_self _blank).freeze
+
   field :link_url, type: String
   field :link_target, type: String
 
@@ -20,6 +22,7 @@ class Ads::Banner
 
   validates :link_url, presence: true, url: { absolute_path: true }
   validate :validate_link_url
+  validates :link_target, inclusion: { in: AVAILABLE_LINK_TARGETS, allow_blank: true }
   #validates :file_id, presence: true
 
   permit_params :link_url, :link_target
@@ -40,11 +43,9 @@ class Ads::Banner
   end
 
   def self.link_target_options
-    [
-      [I18n.t('ads.options.link_target.self'), '_self'],
-      [I18n.t('ads.options.link_target.blank'), '_blank'],
-    ]
+    AVAILABLE_LINK_TARGETS.map { [ I18n.t(_1, scope: "ads.options.link_target"), _1 ] }
   end
+  delegate :link_target_options, to: :class
 
   def url
     uri = ::Addressable::URI.parse(super)

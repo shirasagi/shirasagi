@@ -2,10 +2,10 @@
 
 <dl class="see mod-ads-pagelist">
   <dt><%= @model.t :link_action %></dt>
-  <dd><%= @item.label :link_action %></dd>
+  <dd><%= @item.label(:link_action) %></dd>
 
   <dt><%= @model.t :link_target %></dt>
-  <dd><%= @item.label :link_target %></dd>
+  <dd><%= @item.label(:link_target) || t("ads.options.link_target.individual_setting") %></dd>
 
   <dt><%= @model.t :sort %></dt>
   <dd><%= @item.label :sort %></dd>
