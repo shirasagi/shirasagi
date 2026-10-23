@@ -21,7 +21,7 @@ describe "cms_nodes", type: :feature, dbscope: :example, js: true do
       end
       within_cbox do
         within ".mod-article" do
-          click_on I18n.t("cms.nodes.article/page")
+          click_on I18n.t("mongoid.models.article/node/page")
         end
       end
 
@@ -63,7 +63,7 @@ describe "cms_nodes", type: :feature, dbscope: :example, js: true do
 
       within_cbox do
         within ".mod-article" do
-          click_on I18n.t("cms.nodes.article/page")
+          click_on I18n.t("mongoid.models.article/node/page")
         end
       end
 

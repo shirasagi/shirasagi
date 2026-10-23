@@ -63,11 +63,11 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
         end
       end
       within_cbox do
-        click_link I18n.t("cms.nodes.ads/banner")
+        click_link I18n.t("mongoid.models.ads/node/banner")
       end
       wait_for_js_ready
       within "form#item-form" do
-        expect(page).to have_content "#{I18n.t("modules.ads")}/#{I18n.t("cms.nodes.ads/banner")}"
+        expect(page).to have_content "#{I18n.t("modules.ads")}/#{I18n.t("mongoid.models.ads/node/banner")}"
 
         click_button I18n.t('ss.buttons.save')
       end

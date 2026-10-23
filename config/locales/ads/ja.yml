@@ -22,12 +22,6 @@ ja:
       ads/category: カテゴリー
       ads/page_list: リスト表示
 
-  cms:
-    nodes:
-      ads/banner: 広告バナー
-    parts:
-      ads/banner: 広告バナー
-
   cms_role:
     read_other_ads_banners: バナーの閲覧（全て）
     read_private_ads_banners: バナーの閲覧（所有）

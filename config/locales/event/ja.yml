@@ -114,14 +114,6 @@ ja:
       event/facility: 施設
       event/calendar: カレンダー
 
-  cms:
-    nodes:
-      event/page: イベントリスト
-      event/search: イベント検索
-    parts:
-      event/calendar: カレンダー
-      event/search: イベント検索
-
   cms_role:
     read_other_event_pages: ページの閲覧（全て）
     read_private_event_pages: ページの閲覧（所有）

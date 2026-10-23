@@ -52,13 +52,6 @@ ja:
       ezine/subscription: 購読
       ezine/subscription_constraint: 購読制約
 
-  cms:
-    nodes:
-      ezine/page: 配信記事一覧
-      ezine/backnumber: バックナンバー
-      ezine/member_page: 会員向けメール配信
-      ezine/category_node: カテゴリ
-
   mongoid:
     models:
       ezine/column: メルマガ項目

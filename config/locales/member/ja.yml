@@ -174,36 +174,6 @@ ja:
       member/editor_setting: エディタ設定
       member/line_attributes: LINE配信属性
 
-  cms:
-    nodes:
-      member/login: ログイン
-      member/registration: 会員登録
-      member/mypage: マイページ
-      member/my_profile: プロフィール
-      member/my_blog: マイブログ
-      member/blog: ブログ
-      member/blog_page_location: ブログの地域
-      member/my_photo: マイフォト
-      member/my_anpi_post: 安否
-      member/my_group: グループ
-      member/photo: フォト
-      member/photo_category: フォトカテゴリー
-      member/photo_location: フォトロケーション
-      member/photo_search: フォトサーチ
-      member/photo_spot: フォトスポット
-      member/my_line_profile: LINEプロフィール
-      member/line_first_registration: LINE初回登録
-      member/bookmark: ブックマーク
-
-    parts:
-      member/blog_page: ブログページ一覧
-      member/photo: フォト一覧
-      member/photo_search: フォトサーチ
-      member/photo_slide: フォトスライド
-      member/login: ログイン
-      member/invited_group: 招待されたグループ
-      member/bookmark: ブックマーク
-
   mongoid:
     models:
       member/blog_page: ブログページ
@@ -219,6 +189,7 @@ ja:
       member/node/my_profile: プロフィール
       member/node/my_blog: マイブログ
       member/node/blog: ブログ
+      member/node/blog_page: ブログ
       member/node/blog_page_location: ブログの地域
       member/node/my_photo: マイフォト
       member/node/my_anpi_post: 安否

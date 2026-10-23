@@ -8,12 +8,6 @@ ja:
       image_map/image_setting: 画像設定
       image_map/area: イメージマップ
 
-  cms:
-    nodes:
-      image_map/page: イメージマップ
-    parts:
-      image_map/page: イメージマップ
-
   cms_role:
     read_other_image_map_pages: エリアページの閲覧（全て）
     read_private_image_map_pages: エリアページの閲覧（所有）

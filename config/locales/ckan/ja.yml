@@ -15,14 +15,6 @@ ja:
         add: データ追加
         update: データ更新
 
-  cms:
-    nodes:
-      ckan/page: 新着
-    parts:
-      ckan/status: 件数
-      ckan/page: ページリスト
-      ckan/reference: 参照（ハーベスト）
-
   modules:
     ckan: CKAN
     addons:

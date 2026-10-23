@@ -10,7 +10,7 @@
 </ul>
 <% end %>
 <% if @cur_node.route == 'ezine/member_page' %>
-<h3><%= link_to t("cms.nodes.ezine/member_page"), ezine_member_pages_path %></h3>
+<h3><%= link_to Ezine::Node::MemberPage.model_name.human, ezine_member_pages_path %></h3>
 <ul class="narrow-page">
   <li><%= link_to t("ezine.member_page_member"), members_ezine_member_pages_path %></li>
   <li><%= link_to t("ezine.test_member"), ezine_test_members_path %></li>
