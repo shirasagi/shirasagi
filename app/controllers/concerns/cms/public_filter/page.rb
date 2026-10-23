@@ -52,6 +52,9 @@ module Cms::PublicFilter::Page
     if page.view_layout == "cms/redirect"
       @redirect_link = Sys::TrustedUrlValidator.url_restricted? ? trusted_url!(page.redirect_link) : page.redirect_link
       html = render_to_string html: "", layout: "cms/redirect"
+    elsif (redirect_path = request.env["ss.redirect_path"]) && !mobile_path?
+      @redirect_link = Sys::TrustedUrlValidator.url_restricted? ? trusted_url!(redirect_path) : redirect_path
+      html = render_to_string html: "", layout: "cms/redirect"
     elsif response.media_type == "text/html" && page.layout
       html = render_to_string html: render_layout(page.layout).html_safe, layout: "cms/page"
     else
