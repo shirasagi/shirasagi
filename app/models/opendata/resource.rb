@@ -19,7 +19,7 @@ class Opendata::Resource
 
   permit_params :state, :name, :text, :format, :license_id, :source_url, :order, :in_update_dataset
 
-  before_validation :set_source_url, if: ->{ source_url_changed? }
+  before_validation :set_source_url, if: ->{ source_url.present? }
   before_validation :set_filename, if: ->{ in_file.present? }
   before_validation :validate_in_file, if: ->{ in_file.present? }
   before_validation :validate_in_tsv, if: ->{ in_tsv.present? }
