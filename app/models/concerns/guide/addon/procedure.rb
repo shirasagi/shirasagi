@@ -19,6 +19,7 @@ module Guide::Addon
       permit_params :remarks
       permit_params :order
 
+      before_validation :encode_link_url
       validates :link_url, url: { absolute_path: true, allow_blank: true }
 
       template_variable_handler(:id, :template_variable_handler_name)
@@ -95,6 +96,13 @@ module Guide::Addon
         edges += question.edges.in(optional_necessary_point_ids: [id])
       end
       edges.count
+    end
+
+    private
+
+    def encode_link_url
+      return unless link_url_changed?
+      self.link_url = SS.safe_encode_url(link_url)
     end
   end
 end

@@ -16,6 +16,8 @@ class Board::Post
 
   permit_params :captcha, :captcha_key
 
+  before_validation :encode_poster_url
+
   validates :poster, presence: true
   validates :email, email: true
   validates :poster_url, url: true
@@ -74,5 +76,12 @@ class Board::Post
         end
       end
     end
+  end
+
+  private
+
+  def encode_poster_url
+    return unless poster_url_changed?
+    self.poster_url = SS.safe_encode_url(poster_url)
   end
 end

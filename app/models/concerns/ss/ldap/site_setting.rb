@@ -9,6 +9,8 @@ module SS::Ldap::SiteSetting
 
     permit_params :ldap_use_state, :ldap_url, :ldap_openssl_verify_mode
 
+    before_validation :encode_ldap_url
+
     validates :ldap_use_state, inclusion: { in: %w(system individual), allow_blank: true }
     validates :ldap_url, url: { scheme: %w(ldap ldaps) }
     validates :ldap_openssl_verify_mode, inclusion: { in: %w(none peer client_once fail_if_no_peer_cert), allow_blank: true }
@@ -48,5 +50,12 @@ module SS::Ldap::SiteSetting
       end
     end
     config
+  end
+
+  private
+
+  def encode_ldap_url
+    return unless ldap_url_changed?
+    self.ldap_url = SS.safe_encode_url(ldap_url)
   end
 end

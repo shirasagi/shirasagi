@@ -12,6 +12,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   permit_values :file_id, :file_name, :file_label, :text, :image_html_type, :link_url
 
+  before_validation :encode_link_url
   validates :link_url, url: { absolute_path: true, allow_blank: true }
 
   before_parent_save :before_save_file
@@ -124,6 +125,11 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   end
 
   private
+
+  def encode_link_url
+    return unless link_url_changed?
+    self.link_url = SS.safe_encode_url(link_url)
+  end
 
   def validate_resouce_url(value)
     /\Ahttps?:\/\//.match?(value) && Addressable::URI.parse(value) rescue false

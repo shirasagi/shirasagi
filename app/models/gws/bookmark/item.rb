@@ -9,6 +9,8 @@ module Gws::Bookmark
 
     set_permission_name 'gws_bookmarks', :edit
 
+    AVAILABLE_LINK_TARGETS = %w(_self _blank).freeze
+
     seqid :id
     field :name, type: String
     field :order, type: Integer
@@ -19,8 +21,11 @@ module Gws::Bookmark
 
     permit_params :name, :link_target, :order, :url, :bookmark_model, :folder_id
 
+    before_validation :encode_url
+
     validates :name, presence: true, length: { maximum: 80 }
-    validates :url, presence: true
+    validates :url, presence: true, url: { absolute_path: true }
+    validates :link_target, inclusion: { in: AVAILABLE_LINK_TARGETS, allow_blank: true }
     validates :bookmark_model, presence: true
     validates :bookmark_model, inclusion: { in: Gws::Bookmark::BOOKMARK_MODEL_ALL_TYPES, allow_blank: true }
     validates :folder_id, presence: true
@@ -83,13 +88,20 @@ module Gws::Bookmark
     end
 
     def link_target_options
-      I18n.t("ss.options.link_target").map { |k, v| [v, k] }
+      AVAILABLE_LINK_TARGETS.map { [ I18n.t(_1, scope: "ss.options.link_target"), _1 ] }
     end
 
     def link_to_options
       options = {}
       options = { target: :_blank, rel: "noopener" } if link_target == "_blank"
       options
+    end
+
+    private
+
+    def encode_url
+      return unless url_changed?
+      self.url = SS.safe_encode_url(url)
     end
   end
 end

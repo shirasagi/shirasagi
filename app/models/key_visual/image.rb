@@ -16,6 +16,8 @@ class KeyVisual::Image
 
   belongs_to_file :file
 
+  before_validation :encode_link_url
+
   validates :file_id, presence: true
   validates :link_url, url: { absolute_path: true, allow_blank: true }
   validate :validate_display_remark
@@ -47,5 +49,12 @@ class KeyVisual::Image
     return if display_remarks.blank?
     keys = I18n.t("key_visual.options.display_remarks").keys.map(&:to_s)
     errors.add :display_remarks, :invalid if (display_remarks - keys).present?
+  end
+
+  private
+
+  def encode_link_url
+    return unless link_url_changed?
+    self.link_url = SS.safe_encode_url(link_url)
   end
 end
