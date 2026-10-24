@@ -193,6 +193,15 @@ module Gws::Tabular::Column::TextLike
       file_model.before_validation do
         next unless send("#{field_name}_changed?")
         send("#{field_name}=", SS.follow_up_url_encode!(send(field_name)))
+        if file_model.fields[field_name].options[:localize]
+          translations = send("#{field_name}_translations")
+          translations.keys.each do |locale|
+            translations[locale] = SS.follow_up_url_encode!(translations[locale])
+          end
+          send("#{field_name}_translations=", translations)
+        else
+          send("#{field_name}=", SS.follow_up_url_encode!(send(field_name)))
+        end
       rescue => e
         Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
         errors.add field_name.to_sym, :url
