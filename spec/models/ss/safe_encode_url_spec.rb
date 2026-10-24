@@ -83,9 +83,15 @@ describe SS, dbscope: :example do
       end
     end
 
-    context "with partially encoded url" do
+    context "with partially encoded url case1" do
       it do
         expect(SS.safe_encode_url("https://example.test/a%20b/c d")).to eq "https://example.test/a%20b/c%20d"
+      end
+    end
+
+    context "with partially encoded url case2" do
+      it do
+        expect(SS.safe_encode_url("https://example.test/a%3Fb")).to eq "https://example.test/a%3Fb"
       end
     end
 

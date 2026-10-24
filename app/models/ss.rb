@@ -282,11 +282,6 @@ module SS
 
   def safe_encode_url(url)
     return url if url.blank?
-
-    # デコードしてからエンコードする。こうすることで
-    # 1. 何回エンコードしても安全
-    # 2. 部分的にエンコードされたURL（例: "https://example.test/a%20b/c d"）もエンコードできる
-    unencoded = Addressable::URI.unencode(url) rescue url
-    Addressable::URI.encode(unencoded) rescue url
+    Addressable::URI.normalized_encode(url) rescue url
   end
 end
