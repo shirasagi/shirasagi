@@ -192,7 +192,15 @@ module Gws::Tabular::Column::TextLike
     when "url"
       file_model.before_validation do
         next unless send("#{field_name}_changed?")
-        send("#{field_name}=", SS.safe_encode_url(send(field_name)))
+        if file_model.fields[field_name].options[:localize]
+          translations = send("#{field_name}_translations")
+          translations.keys.each do |locale|
+            translations[locale] = SS.safe_encode_url(translations[locale])
+          end
+          send("#{field_name}_translations=", translations)
+        else
+          send("#{field_name}=", SS.safe_encode_url(send(field_name)))
+        end
       end
       file_model.validates field_name, url: true
     when "color"
