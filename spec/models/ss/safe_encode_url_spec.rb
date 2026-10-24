@@ -83,6 +83,12 @@ describe SS, dbscope: :example do
       end
     end
 
+    context "with partially encoded url" do
+      it do
+        expect(SS.safe_encode_url("https://example.test/a%20b/c d")).to eq "https://example.test/a%20b/c%20d"
+      end
+    end
+
     context "with ldap://" do
       it do
         url = "ldap://ldap.example.com/dc=example,dc=com"
