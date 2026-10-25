@@ -7,6 +7,8 @@ module Event::Addon
       field :ical_uid, type: String
       field :ical_link, type: String
       permit_params :ical_uid, :ical_link
+      validates :ical_link, url: { absolute_path: true }
+      validate :encode_ical_link
     end
 
     module ClassMethods
@@ -45,6 +47,17 @@ module Event::Addon
     def json_url
       ret = ical_link rescue nil
       ret.present? ? nil : super
+    end
+
+    private
+
+    def encode_ical_link
+      return unless ical_link_changed?
+      return if errors[:ical_link].present?
+      self.ical_link = SS.follow_up_url_encode!(ical_link)
+    rescue => e
+      Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+      errors.add :ical_link, :url
     end
   end
 end
