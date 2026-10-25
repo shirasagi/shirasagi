@@ -24,7 +24,13 @@ RSpec.describe SS::Migration20261023000000, dbscope: :example do
   end
   let!(:item4) do
     link_url = "https://www.example.jp/%E6%97%A5%E6%9C%AC%E8%AA%9E"
-    item = create(:ads_banner, cur_site: site, cur_node: node, link_url: )
+    item = create(:ads_banner, cur_site: site, cur_node: node, link_url: unique_url)
+    item.set(link_url: link_url)
+    item
+  end
+  let!(:item5) do
+    link_url = "javascript:alert(1)"
+    item = create(:ads_banner, cur_site: site, cur_node: node, link_url: unique_url)
     item.set(link_url: link_url)
     item
   end
@@ -45,5 +51,8 @@ RSpec.describe SS::Migration20261023000000, dbscope: :example do
 
     item4.reload
     expect(item4.link_url).to eq "https://www.example.jp/%E6%97%A5%E6%9C%AC%E8%AA%9E"
+
+    item5.reload
+    expect(item5.link_url).to be_blank
   end
 end

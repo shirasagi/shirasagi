@@ -1,5 +1,7 @@
 #frozen_string_literal: true
 
+require "addressable"
+
 module SS
   module_function
 
@@ -280,10 +282,40 @@ module SS
   end
   # rubocop:enable Naming/MethodParameterName
 
-  def safe_encode_url(url)
-    escaped = Addressable::URI.unencode(url) rescue url
-    return url if escaped != url
+  module UrlFollowUpRegexps
+    AUTHORITY = /[^#{Addressable::URI::CharacterClasses::AUTHORITY}%]/
+    FRAGMENT = /[^#{Addressable::URI::CharacterClasses::FRAGMENT}%]/
+    PATH = /[^#{Addressable::URI::CharacterClasses::PATH}%]/
+    QUERY = /[^#{Addressable::URI::CharacterClasses::QUERY}%]/
+    SCHEME = /[^#{Addressable::URI::CharacterClasses::SCHEME}%]/
+  end
 
-    Addressable::URI.encode(url) rescue url
+  # 追いURLエンコード
+  #
+  # 1. 二重URLエンコードの防止。
+  # 2. 未URLエンコード部分のみエンコード。エンコードされている部分は変化なし。
+  # 3. 不正な % を %25 へエンコード
+  def follow_up_url_encode!(url)
+    return url if url.blank?
+
+    # デコードしてからエンコードする方法では都合の悪いURLがある
+    # そこで、未エンコードの文字だけエンコードする
+    url_str = url.to_str
+    uri_object = url_str.is_a?(Addressable::URI) ? url_str : Addressable::URI.parse(url_str)
+    scheme = SS.follow_up_url_encode_component!(uri_object.scheme, UrlFollowUpRegexps::SCHEME)
+    authority = SS.follow_up_url_encode_component!(uri_object.authority, UrlFollowUpRegexps::AUTHORITY)
+    path = SS.follow_up_url_encode_component!(uri_object.path, UrlFollowUpRegexps::PATH)
+    query = SS.follow_up_url_encode_component!(uri_object.query, UrlFollowUpRegexps::QUERY)
+    fragment = SS.follow_up_url_encode_component!(uri_object.fragment, UrlFollowUpRegexps::FRAGMENT)
+    encoded_uri = Addressable::URI.new(scheme: scheme, authority: authority, path: path, query: query, fragment: fragment)
+    encoded_uri.to_s
+  end
+
+  def follow_up_url_encode_component!(component, character_class)
+    return nil if component.nil?
+
+    ret = Addressable::URI.encode_component(component, character_class)
+    ret = ret.gsub(/%(?!\h{2})/, "%25") if ret
+    ret
   end
 end
