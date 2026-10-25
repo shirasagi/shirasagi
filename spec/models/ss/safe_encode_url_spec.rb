@@ -149,6 +149,18 @@ describe SS, dbscope: :example do
       end
     end
 
+    context "backslash" do
+      it do
+        expect(SS.safe_encode_url("https://example.jp/a\\b")).to eq "https://example.jp/a%5Cb"
+      end
+    end
+
+    context "line break" do
+      it do
+        expect(SS.safe_encode_url(%(https://example.jp/a\nb))).to eq "https://example.jp/a%0Ab"
+      end
+    end
+
     context "with ldap://" do
       it do
         url = "ldap://ldap.example.com/dc=example,dc=com"

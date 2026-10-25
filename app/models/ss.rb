@@ -283,11 +283,11 @@ module SS
   # rubocop:enable Naming/MethodParameterName
 
   module UrlFollowUpRegexps
-    AUTHORITY = /[^#{Addressable::URI::CharacterClasses::AUTHORITY}\\%]/
-    FRAGMENT = /[^#{Addressable::URI::CharacterClasses::FRAGMENT}\\%]/
-    PATH = /[^#{Addressable::URI::CharacterClasses::PATH}\\%]/
-    QUERY = /[^#{Addressable::URI::CharacterClasses::QUERY}\\%]/
-    SCHEME = /[^#{Addressable::URI::CharacterClasses::SCHEME}\\%]/
+    AUTHORITY = /[^#{Addressable::URI::CharacterClasses::AUTHORITY}%]/
+    FRAGMENT = /[^#{Addressable::URI::CharacterClasses::FRAGMENT}%]/
+    PATH = /[^#{Addressable::URI::CharacterClasses::PATH}%]/
+    QUERY = /[^#{Addressable::URI::CharacterClasses::QUERY}%]/
+    SCHEME = /[^#{Addressable::URI::CharacterClasses::SCHEME}%]/
   end
 
   def safe_encode_url(url)
