@@ -295,27 +295,27 @@ module SS
   # 1. 二重URLエンコードの防止。
   # 2. 未URLエンコード部分のみエンコード。エンコードされている部分は変化なし。
   # 3. 不正な % を %25 へエンコード
-  def follow_up_url_encode(url)
+  def follow_up_url_encode!(url)
     return url if url.blank?
 
     # デコードしてからエンコードする方法では都合の悪いURLがある
     # そこで、未エンコードの文字だけエンコードする
     url_str = url.to_str
     uri_object = url_str.is_a?(Addressable::URI) ? url_str : Addressable::URI.parse(url_str)
-    scheme = Addressable::URI.encode_component(uri_object.scheme, UrlFollowUpRegexps::SCHEME)
-    scheme = scheme.gsub(/%(?!\h{2})/, "%25") if scheme
-    authority = Addressable::URI.encode_component(uri_object.authority, UrlFollowUpRegexps::AUTHORITY)
-    authority = authority.gsub(/%(?!\h{2})/, "%25") if authority
-    path = Addressable::URI.encode_component(uri_object.path, UrlFollowUpRegexps::PATH)
-    path = path.gsub(/%(?!\h{2})/, "%25") if path
-    query = Addressable::URI.encode_component(uri_object.query, UrlFollowUpRegexps::QUERY)
-    query = query.gsub(/%(?!\h{2})/, "%25") if query
-    fragment = Addressable::URI.encode_component(uri_object.fragment, UrlFollowUpRegexps::FRAGMENT)
-    fragment = fragment.gsub(/%(?!\h{2})/, "%25") if fragment
+    scheme = SS.follow_up_url_encode_component!(uri_object.scheme, UrlFollowUpRegexps::SCHEME)
+    authority = SS.follow_up_url_encode_component!(uri_object.authority, UrlFollowUpRegexps::AUTHORITY)
+    path = SS.follow_up_url_encode_component!(uri_object.path, UrlFollowUpRegexps::PATH)
+    query = SS.follow_up_url_encode_component!(uri_object.query, UrlFollowUpRegexps::QUERY)
+    fragment = SS.follow_up_url_encode_component!(uri_object.fragment, UrlFollowUpRegexps::FRAGMENT)
     encoded_uri = Addressable::URI.new(scheme: scheme, authority: authority, path: path, query: query, fragment: fragment)
     encoded_uri.to_s
-  rescue => e
-    Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
-    url
+  end
+
+  def follow_up_url_encode_component!(component, character_class)
+    return nil if component.nil?
+
+    ret = Addressable::URI.encode_component(component, character_class)
+    ret = ret.gsub(/%(?!\h{2})/, "%25") if ret
+    ret
   end
 end

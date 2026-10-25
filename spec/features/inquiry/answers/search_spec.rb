@@ -375,6 +375,14 @@ describe "inquiry_answers", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".list-item[data-id]", text: answer1.data_summary)
           expect(page).to have_no_css(".list-item[data-id='#{answer2.id}']")
         end
+      end
+
+      it do
+        within ".list-items" do
+          expect(page).to have_css(".list-item[data-id]", count: 0)
+          expect(page).to have_no_css(".list-item[data-id='#{answer1.id}']")
+          expect(page).to have_no_css(".list-item[data-id='#{answer2.id}']")
+        end
 
         within ".index-search" do
           select group2.trailing_name, from: 's[group]'
@@ -384,6 +392,14 @@ describe "inquiry_answers", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".list-item[data-id]", count: 1)
           expect(page).to have_css(".list-item[data-id]", text: answer2.data_summary)
           expect(page).to have_no_css(".list-item[data-id='#{answer1.id}']")
+        end
+      end
+
+      it do
+        within ".list-items" do
+          expect(page).to have_css(".list-item[data-id]", count: 0)
+          expect(page).to have_no_css(".list-item[data-id='#{answer1.id}']")
+          expect(page).to have_no_css(".list-item[data-id='#{answer2.id}']")
         end
 
         within ".index-search" do
