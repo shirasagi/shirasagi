@@ -7,7 +7,7 @@ class SS::Migration20261023000000
     each_item do |item|
       next if item.link_url.blank?
 
-      link_url = SS.follow_up_url_encode(item.link_url)
+      link_url = SS.follow_up_url_encode!(item.link_url)
       next if link_url == item.link_url
 
       item.set(link_url: link_url)
