@@ -18,8 +18,6 @@ class Ads::Banner
 
   belongs_to_file :file
 
-  before_validation :encode_link_url
-
   validates :link_url, presence: true, url: { absolute_path: true }
   validate :validate_link_url
   validates :link_target, inclusion: { in: AVAILABLE_LINK_TARGETS, allow_blank: true }
@@ -59,24 +57,26 @@ class Ads::Banner
 
   private
 
-  def encode_link_url
-    return if link_url.blank?
-    self.link_url = SS.follow_up_url_encode(link_url)
-  end
-
   def validate_link_url
     return if link_url.blank?
+    if link_url == '#'
+      errors.add :link_url, :invalid
+      return
+    end
 
-    errors.add :link_url, :invalid if link_url == '#'
+    self.link_url = SS.follow_up_url_encode!(link_url)
+  rescue => e
+    Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+    errors.add :link_url, :url
   end
 
   def template_variable_handler_link_url(_name, _issuer)
-    SS.follow_up_url_encode(link_url.presence || url)
+    SS.follow_up_url_encode!(link_url.presence || url) rescue nil
   end
 
   def template_variable_handler_img_src(_name, _issuer)
     if file
-      SS.follow_up_url_encode(file.url)
+      SS.follow_up_url_encode!(file.url) rescue nil
     end
   end
 end
