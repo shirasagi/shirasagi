@@ -5,12 +5,21 @@ class SS::Migration20261023000000
 
   def change
     each_item do |item|
-      next if item.link_url.blank?
+      link_url = item.link_url
+      next if link_url.blank?
 
-      link_url = SS.safe_encode_url(item.link_url)
-      next if link_url == item.link_url
+      if UrlValidator.valid?(link_url, absolute_path: true)
+        link_url = SS.follow_up_url_encode!(link_url) rescue nil
+      else
+        link_url = nil
+      end
+      next if link_url && link_url == item.link_url
 
-      item.set(link_url: link_url)
+      if link_url
+        item.set(link_url: link_url)
+      else
+        item.unset(:link_url)
+      end
     end
   end
 

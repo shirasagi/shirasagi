@@ -104,8 +104,10 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
         fill_in "item[3_confirm]", with: email
         click_on I18n.t("inquiry.confirm")
       end
-      within "form" do
-        click_on I18n.t("inquiry.submit")
+      within ".inquiry-form.confirm" do
+        within "form" do
+          click_on I18n.t("inquiry.submit")
+        end
       end
       expect(page).to have_content(ApplicationController.helpers.sanitize(node.inquiry_sent_html, tags: []))
 
