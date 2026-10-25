@@ -1,5 +1,7 @@
 #frozen_string_literal: true
 
+require "addressable"
+
 module SS
   module_function
 
@@ -280,6 +282,14 @@ module SS
   end
   # rubocop:enable Naming/MethodParameterName
 
+  module UrlFollowUpRegexps
+    AUTHORITY = /[^#{Addressable::URI::CharacterClasses::AUTHORITY}\\%]/
+    FRAGMENT = /[^#{Addressable::URI::CharacterClasses::FRAGMENT}\\%]/
+    PATH = /[^#{Addressable::URI::CharacterClasses::PATH}\\%]/
+    QUERY = /[^#{Addressable::URI::CharacterClasses::QUERY}\\%]/
+    SCHEME = /[^#{Addressable::URI::CharacterClasses::SCHEME}\\%]/
+  end
+
   def safe_encode_url(url)
     return url if url.blank?
 
@@ -287,16 +297,16 @@ module SS
     # そこで、未エンコードの文字だけエンコードする
     url_str = url.to_str
     uri_object = url_str.is_a?(Addressable::URI) ? url_str : Addressable::URI.parse(url_str)
-    scheme = Addressable::URI.encode_component(
-      uri_object.scheme, Addressable::URI::CharacterClasses::SCHEME + "\\%")
-    authority = Addressable::URI.encode_component(
-      uri_object.authority, Addressable::URI::CharacterClasses::AUTHORITY + "\\%")
-    path = Addressable::URI.encode_component(
-      uri_object.path, Addressable::URI::CharacterClasses::PATH + "\\%")
-    query = Addressable::URI.encode_component(
-      uri_object.query, Addressable::URI::CharacterClasses::QUERY + "\\%")
-    fragment = Addressable::URI.encode_component(
-      uri_object.fragment, Addressable::URI::CharacterClasses::FRAGMENT + "\\%")
+    scheme = Addressable::URI.encode_component(uri_object.scheme, UrlFollowUpRegexps::SCHEME)
+    scheme = scheme.gsub(/%(?!\h{2})/, "%25") if scheme
+    authority = Addressable::URI.encode_component(uri_object.authority, UrlFollowUpRegexps::AUTHORITY)
+    authority = authority.gsub(/%(?!\h{2})/, "%25") if authority
+    path = Addressable::URI.encode_component(uri_object.path, UrlFollowUpRegexps::PATH)
+    path = path.gsub(/%(?!\h{2})/, "%25") if path
+    query = Addressable::URI.encode_component(uri_object.query, UrlFollowUpRegexps::QUERY)
+    query = query.gsub(/%(?!\h{2})/, "%25") if query
+    fragment = Addressable::URI.encode_component(uri_object.fragment, UrlFollowUpRegexps::FRAGMENT)
+    fragment = fragment.gsub(/%(?!\h{2})/, "%25") if fragment
     encoded_uri = Addressable::URI.new(scheme: scheme, authority: authority, path: path, query: query, fragment: fragment)
     encoded_uri.to_s
   rescue => e
