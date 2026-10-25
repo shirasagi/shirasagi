@@ -95,6 +95,54 @@ describe SS, dbscope: :example do
       end
     end
 
+    context "code '%2F' ('/') within path" do
+      it do
+        # 基本戦略として全体を一度デコードしてからエンコードする。このような基本戦略のため、ケアすべき特別な状況がある。
+        # パス内の '%2F' ('/') はデコードせずにそのままにしなければ意味が変わってしまう。
+        expect(SS.safe_encode_url("https://example.test/files/a%2Fb")).to eq "https://example.test/files/a%2Fb"
+        expect(SS.safe_encode_url("/files/a%2Fb")).to eq "/files/a%2Fb"
+      end
+    end
+
+    context "code '%3F' ('?') within path" do
+      it do
+        # 基本戦略として全体を一度デコードしてからエンコードする。このような基本戦略のため、ケアすべき特別な状況がある。
+        # パス内の '%3F' ('?') はデコードせずにそのままにしなければ意味が変わってしまう。
+        expect(SS.safe_encode_url("https://example.test/files/a%3Fb")).to eq "https://example.test/files/a%3Fb"
+        expect(SS.safe_encode_url("/files/a%3Fb")).to eq "/files/a%3Fb"
+      end
+    end
+
+    context "code '%23' ('#') within path" do
+      it do
+        # 基本戦略として全体を一度デコードしてからエンコードする。このような基本戦略のため、ケアすべき特別な状況がある。
+        # パス内の '%23' ('#') はデコードせずにそのままにしなければ意味が変わってしまう。
+        expect(SS.safe_encode_url("https://example.test/files/a%23b")).to eq "https://example.test/files/a%23b"
+        expect(SS.safe_encode_url("/files/a%23b")).to eq "/files/a%23b"
+      end
+    end
+
+    context "code '%26' ('&') within query" do
+      it do
+        # 基本戦略として全体を一度デコードしてからエンコードする。このような基本戦略のため、ケアすべき特別な状況がある。
+        # クエリ内の '%26' ('&') はデコードせずにそのままにしなければ意味が変わってしまう。
+        expect(SS.safe_encode_url("https://example.test/files?a%26b=c")).to eq "https://example.test/files?a%26b=c"
+        expect(SS.safe_encode_url("https://example.test/files?a%26b")).to eq "https://example.test/files?a%26b"
+        expect(SS.safe_encode_url("https://example.test/files?a%26b=c")).to eq "https://example.test/files?a%26b=c"
+        expect(SS.safe_encode_url("/files?a%26b=c")).to eq "/files?a%26b=c"
+        expect(SS.safe_encode_url("/files?a%26b")).to eq "/files?a%26b"
+      end
+    end
+
+    context "code '%40' ('@') within authority" do
+      it do
+        # 基本戦略として全体を一度デコードしてからエンコードする。このような基本戦略のため、ケアすべき特別な状況がある。
+        # オーソリティ内の '%40' ('@') はデコードせずにそのままにしなければ意味が変わってしまう。
+        expect(SS.safe_encode_url("https://user@example.test/files")).to eq "https://user@example.test/files"
+        expect(SS.safe_encode_url("https://user%40example.test@example.test/files")).to eq "https://user%40example.test@example.test/files"
+      end
+    end
+
     context "with ldap://" do
       it do
         url = "ldap://ldap.example.com/dc=example,dc=com"

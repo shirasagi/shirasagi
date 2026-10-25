@@ -282,6 +282,25 @@ module SS
 
   def safe_encode_url(url)
     return url if url.blank?
-    Addressable::URI.normalized_encode(url) rescue url
+
+    # デコードしてからエンコードする方法では都合の悪いURLがある
+    # そこで、未エンコードの文字だけエンコードする
+    url_str = url.to_str
+    uri_object = url_str.is_a?(Addressable::URI) ? url_str : Addressable::URI.parse(url_str)
+    scheme = Addressable::URI.encode_component(
+      uri_object.scheme, Addressable::URI::CharacterClasses::SCHEME + "\\%")
+    authority = Addressable::URI.encode_component(
+      uri_object.authority, Addressable::URI::CharacterClasses::AUTHORITY + "\\%")
+    path = Addressable::URI.encode_component(
+      uri_object.path, Addressable::URI::CharacterClasses::PATH + "\\%")
+    query = Addressable::URI.encode_component(
+      uri_object.query, Addressable::URI::CharacterClasses::QUERY + "\\%")
+    fragment = Addressable::URI.encode_component(
+      uri_object.fragment, Addressable::URI::CharacterClasses::FRAGMENT + "\\%")
+    encoded_uri = Addressable::URI.new(scheme: scheme, authority: authority, path: path, query: query, fragment: fragment)
+    encoded_uri.to_s
+  rescue => e
+    Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+    url
   end
 end
