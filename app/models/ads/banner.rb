@@ -61,7 +61,7 @@ class Ads::Banner
 
   def encode_link_url
     return if link_url.blank?
-    self.link_url = SS.safe_encode_url(link_url)
+    self.link_url = SS.follow_up_url_encode(link_url)
   end
 
   def validate_link_url
@@ -71,12 +71,12 @@ class Ads::Banner
   end
 
   def template_variable_handler_link_url(_name, _issuer)
-    SS.safe_encode_url(link_url.presence || url)
+    SS.follow_up_url_encode(link_url.presence || url)
   end
 
   def template_variable_handler_img_src(_name, _issuer)
     if file
-      SS.safe_encode_url(file.url)
+      SS.follow_up_url_encode(file.url)
     end
   end
 end
