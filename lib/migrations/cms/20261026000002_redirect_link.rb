@@ -1,4 +1,4 @@
-class SS::Migration20261026000001
+class SS::Migration20261026000002
   include SS::Migration::Base
 
   depends_on "20261026000000"

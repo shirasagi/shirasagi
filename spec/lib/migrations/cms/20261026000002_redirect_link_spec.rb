@@ -1,7 +1,7 @@
 require 'spec_helper'
-require Rails.root.join("lib/migrations/cms/20261026000001_redirect_link.rb")
+require Rails.root.join("lib/migrations/cms/20261026000002_redirect_link.rb")
 
-RSpec.describe SS::Migration20261026000001, dbscope: :example do
+RSpec.describe SS::Migration20261026000002, dbscope: :example do
   let!(:site) { cms_site }
   let!(:node) { create :rss_node_page, cur_site: site }
   let!(:page1) do
