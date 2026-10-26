@@ -22,8 +22,7 @@ reviews:
     enabled: true
     drafts: false
     base_branches:
-      - master
-      - develop
+      - ".*"
 
   # レビューで無視するパス（CI/lintで十分カバーされるもの・自動生成物）
   path_filters:
