@@ -13,8 +13,16 @@ describe UrlValidator, type: :validator do
       end
     end
 
-    context 'with valid url' do
+    context 'with valid url #1' do
       subject! { clazz.new("http://#{unique_id}.example.jp/") }
+
+      it do
+        expect(subject).to be_valid
+      end
+    end
+
+    context 'with valid url #2' do
+      subject! { clazz.new("HTTPS://#{unique_id}.example.jp/") }
 
       it do
         expect(subject).to be_valid
@@ -62,6 +70,14 @@ describe UrlValidator, type: :validator do
       end
     end
 
+    context 'with valid url' do
+      subject! { clazz.new("HTTPS://#{unique_id}.example.jp/") }
+
+      it do
+        expect(subject).to be_valid
+      end
+    end
+
     context 'with invalid scheme' do
       subject! { clazz.new("http://#{unique_id}.example.jp/") }
 
@@ -85,7 +101,7 @@ describe UrlValidator, type: :validator do
       end
     end
 
-    context 'with valid absolute path url #1' do
+    context 'with valid absolute url #1' do
       subject! { clazz.new("//www.example.jp/docs/3481.html") }
 
       it do
@@ -93,11 +109,47 @@ describe UrlValidator, type: :validator do
       end
     end
 
-    context 'with valid absolute path url #2' do
+    context 'with valid absolute url #2' do
+      subject! { clazz.new("//www.example.jp") }
+
+      it do
+        expect(subject).to be_valid
+      end
+    end
+
+    context 'with valid absolute url #3' do
+      subject! { clazz.new("//www.example.jp/") }
+
+      it do
+        expect(subject).to be_valid
+      end
+    end
+
+    context 'with valid absolute url containing relative path' do
+      subject! { clazz.new("//www.example.jp/docs/../../README.html") }
+
+      it do
+        expect(subject).to be_invalid
+        expect(subject.errors[:url]).to have(1).items
+        expect(subject.errors[:url]).to include(I18n.t("errors.messages.url"))
+      end
+    end
+
+    context 'with valid absolute path #1' do
       subject! { clazz.new("/docs/3481.html") }
 
       it do
         expect(subject).to be_valid
+      end
+    end
+
+    context 'with valid absolute path containing relative path' do
+      subject! { clazz.new("/docs/../../README.html") }
+
+      it do
+        expect(subject).to be_invalid
+        expect(subject.errors[:url]).to have(1).items
+        expect(subject.errors[:url]).to include(I18n.t("errors.messages.url"))
       end
     end
 
@@ -111,6 +163,16 @@ describe UrlValidator, type: :validator do
 
     context 'with valid relative path' do
       subject! { clazz.new("docs/3481.html") }
+
+      it do
+        expect(subject).to be_invalid
+        expect(subject.errors[:url]).to have(1).items
+        expect(subject.errors[:url]).to include(I18n.t("errors.messages.url"))
+      end
+    end
+
+    context 'with valid relative path containing relative path' do
+      subject! { clazz.new("docs/../../README.html") }
 
       it do
         expect(subject).to be_invalid
@@ -162,7 +224,7 @@ describe UrlValidator, type: :validator do
       end
     end
 
-    context 'with valid absolute path url #1' do
+    context 'with valid absolute url #1' do
       subject! { clazz.new("//www.example.jp/docs/3481.html") }
 
       it do
@@ -170,11 +232,47 @@ describe UrlValidator, type: :validator do
       end
     end
 
-    context 'with valid absolute path url #2' do
+    context 'with valid absolute url #2' do
+      subject! { clazz.new("//www.example.jp") }
+
+      it do
+        expect(subject).to be_valid
+      end
+    end
+
+    context 'with valid absolute url #3' do
+      subject! { clazz.new("//www.example.jp/") }
+
+      it do
+        expect(subject).to be_valid
+      end
+    end
+
+    context 'with valid absolute url containing relative path' do
+      subject! { clazz.new("//www.example.jp/docs/../../README.html") }
+
+      it do
+        expect(subject).to be_invalid
+        expect(subject.errors[:url]).to have(1).items
+        expect(subject.errors[:url]).to include(I18n.t("errors.messages.url"))
+      end
+    end
+
+    context 'with valid absolute path #1' do
       subject! { clazz.new("/docs/3481.html") }
 
       it do
         expect(subject).to be_valid
+      end
+    end
+
+    context 'with valid absolute path containing relative path' do
+      subject! { clazz.new("/docs/../../README.html") }
+
+      it do
+        expect(subject).to be_invalid
+        expect(subject.errors[:url]).to have(1).items
+        expect(subject.errors[:url]).to include(I18n.t("errors.messages.url"))
       end
     end
 
@@ -191,6 +289,16 @@ describe UrlValidator, type: :validator do
 
       it do
         expect(subject).to be_valid
+      end
+    end
+
+    context 'with valid relative path containing relative path' do
+      subject! { clazz.new("docs/../../README.html") }
+
+      it do
+        expect(subject).to be_invalid
+        expect(subject.errors[:url]).to have(1).items
+        expect(subject.errors[:url]).to include(I18n.t("errors.messages.url"))
       end
     end
 
