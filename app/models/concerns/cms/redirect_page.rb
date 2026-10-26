@@ -23,7 +23,7 @@ module Cms::RedirectPage
 
   def encode_redirect_link
     return if errors[:redirect_link].present?
-    return if redirect_link_changed?
+    return unless redirect_link_changed?
     return if redirect_link.blank?
 
     uri = Addressable::URI.parse(redirect_link)
