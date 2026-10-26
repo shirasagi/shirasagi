@@ -11,7 +11,7 @@ class UrlValidator < ActiveModel::EachValidator
 
       # 絶対パスと相対パスの場合の検証
       if options[:absolute_path] || options[:relative_path]
-        if uri.scheme.blank? && uri.path.present? && uri.request_uri == uri.normalize.request_uri
+        if uri.scheme.blank? && uri.path.present?
           if options[:absolute_path] && value.start_with?("/")
             return true
           end

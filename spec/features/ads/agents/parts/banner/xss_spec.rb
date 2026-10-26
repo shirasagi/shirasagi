@@ -14,7 +14,10 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
       %(/x" onclick="window.xss=1; console.log('xss'); return false;)
     end
     let!(:item1) do
-      create :ads_banner, cur_site: site, cur_node: node, link_url: vulnerable_link_url
+      page = create :ads_banner, cur_site: site, cur_node: node, link_url: unique_url
+      page.set(link_url: vulnerable_link_url)
+      FileUtils.rm_f(page.path)
+      page
     end
 
     before do
