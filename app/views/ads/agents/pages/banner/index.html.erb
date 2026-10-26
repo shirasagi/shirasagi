@@ -2,7 +2,7 @@
 <html lang="<%= I18n.locale %>">
 <head>
 <meta charset="UTF-8" />
-<% if @cur_page.link_url != '#' %>
+<% if @cur_page.link_url.present? && @cur_page.link_url != '#' && UrlValidator.valid?(@cur_page.link_url, absolute_path: true) %>
 <meta http-equiv="refresh" content="0; URL=<%= @cur_page.link_url %>">
 <% end %>
 <title><%= @cur_page.name %></title>
@@ -10,7 +10,9 @@
 </head>
 <body>
   <%= @cur_page.name %><br />
-  <%= link_to @cur_page.link_url, @cur_page.link_url %>
+  <% if @cur_page.link_url.present? && @cur_page.link_url != '#' && UrlValidator.valid?(@cur_page.link_url, absolute_path: true) %>
+    <%= link_to @cur_page.link_url, @cur_page.link_url %>
+  <% end %>
   <img src="<%= @cur_page.count_url %>" width="0" height="0" border="0" alt="" />
 </body>
 </html>
