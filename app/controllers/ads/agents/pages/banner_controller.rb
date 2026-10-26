@@ -3,5 +3,6 @@ class Ads::Agents::Pages::BannerController < ApplicationController
 
   def index
     @cur_page.layout_id = nil
+    render formats: %i[html]
   end
 end
