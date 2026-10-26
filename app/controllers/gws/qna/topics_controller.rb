@@ -30,8 +30,10 @@ class Gws::Qna::TopicsController < ApplicationController
       when 'trash'
         base_criteria.allow(:trash, @cur_user, site: @cur_site).only_deleted
       else
-        conditions = @model.readable_conditions(@cur_user, site: @cur_site)
-        conditions += [ @model.allow_condition(:read, @cur_user, site: @cur_site) ]
+        conditions = [ @model.allow_condition(:read, @cur_user, site: @cur_site) ]
+        if !@model.requires_read_permission_to_read? || @model.allowed?(:read, @cur_user, site: @cur_site)
+          conditions += @model.readable_conditions(@cur_user, site: @cur_site)
+        end
         base_criteria.and_public.without_deleted.where("$and" => [{ "$or" => conditions }])
       end
     end

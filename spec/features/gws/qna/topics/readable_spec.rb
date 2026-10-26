@@ -38,6 +38,15 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
     end
   end
 
+  context "with the user who has no read permission" do
+    let!(:role) { create(:gws_role, permissions: %w(use_gws_qna)) }
+
+    it "#show" do
+      visit gws_qna_topic_path(site: site, mode: '-', category: '-', id: item)
+      expect(status_code).to eq 404
+    end
+  end
+
   context "with the topic not readable by the user" do
     it "#show" do
       visit gws_qna_topics_path(site: site, mode: '-', category: '-')
