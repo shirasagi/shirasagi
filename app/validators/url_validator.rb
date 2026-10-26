@@ -40,9 +40,9 @@ class UrlValidator < ActiveModel::EachValidator
 
     def check_path_type(uri)
       expanded_path = File.expand_path(uri.path, "/")
-      if expanded_path == uri.path
+      if expanded_path == uri.path || "#{expanded_path}/" == uri.path
         :absolute
-      elsif expanded_path[1..-1] == uri.path
+      elsif expanded_path[1..-1] == uri.path || "#{expanded_path[1..-1]}/" == uri.path
         :relative
       else
         # ./ や ../ を含んでいるとNGとする
