@@ -1,0 +1,73 @@
+require 'spec_helper'
+
+describe "gws_monitor_comments", type: :feature, dbscope: :example do
+  let!(:site) { gws_site }
+  let!(:g1) { create(:gws_group, name: "#{site.name}/g-#{unique_id}") }
+  let!(:g2) { create(:gws_group, name: "#{site.name}/g-#{unique_id}") }
+  let!(:role) do
+    create(
+      :gws_role, permissions: %w(
+        use_gws_monitor read_private_gws_monitor_categories read_private_gws_monitor_posts
+        edit_private_gws_monitor_posts delete_private_gws_monitor_posts trash_private_gws_monitor_posts
+      )
+    )
+  end
+  let!(:user1) { create(:gws_user, group_ids: [ g1.id ], gws_role_ids: [ role.id ]) }
+  let!(:user2) { create(:gws_user, group_ids: [ g2.id ], gws_role_ids: [ role.id ]) }
+  let!(:topic) do
+    create(
+      :gws_monitor_topic, attend_group_ids: [ g1.id, g2.id ], state: 'public', article_state: 'open',
+      spec_config: 'my_group', answer_state_hash: { g1.id.to_s => "answered", g2.id.to_s => "preparation" }
+    )
+  end
+  let!(:comment) do
+    create(:gws_monitor_post, cur_user: user1, user_group_id: g1.id, topic_id: topic.id, parent_id: topic.id)
+  end
+  let(:name) { "name-#{unique_id}" }
+
+  context "with the user who answered" do
+    before { login_user user1 }
+
+    it "#edit" do
+      visit gws_monitor_answer_path(site: site, id: topic)
+      within "#post-#{comment.id}" do
+        click_on I18n.t("ss.links.edit")
+      end
+      within "form#item-form" do
+        fill_in "item[name]", with: name
+        click_on I18n.t("ss.buttons.save")
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
+
+      comment.reload
+      expect(comment.name).to eq name
+    end
+
+    it "#delete" do
+      visit gws_monitor_answer_path(site: site, id: topic)
+      within "#post-#{comment.id}" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+      wait_for_notice I18n.t("ss.notice.deleted")
+
+      expect { comment.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+    end
+  end
+
+  context "with the user in another attended group" do
+    before { login_user user2 }
+
+    it "#edit" do
+      visit edit_gws_monitor_topic_parent_comment_path(site: site, topic_id: topic, parent_id: topic, id: comment)
+      expect(status_code).to eq 403
+    end
+
+    it "#delete" do
+      visit delete_gws_monitor_topic_parent_comment_path(site: site, topic_id: topic, parent_id: topic, id: comment)
+      expect(status_code).to eq 403
+    end
+  end
+end
