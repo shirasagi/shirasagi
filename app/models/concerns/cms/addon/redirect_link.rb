@@ -10,6 +10,7 @@ module Cms::Addon
       ret = try(:redirect_link).presence
       return super unless ret
       return super unless UrlValidator.valid?(ret)
+      return super if Sys::TrustedUrlValidator.url_restricted? && !Cms.trusted_url?(s, ret)
 
       ret
     end
@@ -21,6 +22,7 @@ module Cms::Addon
       ret = try(:redirect_link).presence
       return super unless ret
       return super unless UrlValidator.valid?(ret)
+      return super if Sys::TrustedUrlValidator.url_restricted? && !Cms.trusted_url?(s, ret)
 
       ret
     end

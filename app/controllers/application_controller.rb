@@ -163,7 +163,8 @@ class ApplicationController < ActionController::Base
   end
 
   def trusted_url?(url)
-    url = ::Addressable::URI.parse(url.to_s)
+    url = url.to_str
+    uri_object = url.is_a?(Addressable::URI) ? url : Addressable::URI.parse(url)
 
     known_trusted_urls = []
     if @cur_site.present? && @cur_site.respond_to?(:domain_with_subdir)
@@ -173,7 +174,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    Sys::TrustedUrlValidator.valid_url?(url, known_trusted_urls)
+    Sys::TrustedUrlValidator.valid_url?(uri_object, known_trusted_urls)
   end
   helper_method :trusted_url?
 

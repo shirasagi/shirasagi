@@ -473,4 +473,18 @@ module Cms
     end
     Addressable::URI.join(site.full_root_url, request_path).to_s
   end
+
+  def trusted_url?(site, url)
+    url = url.to_str
+    uri_object = url.is_a?(Addressable::URI) ? url : Addressable::URI.parse(url)
+
+    if site.present? && site.respond_to?(:domain_with_subdir)
+      domain_with_subdir = site.domain_with_subdir
+      if domain_with_subdir.present?
+        known_trusted_urls = [ "//#{domain_with_subdir}" ]
+      end
+    end
+
+    Sys::TrustedUrlValidator.valid_url?(uri_object, known_trusted_urls || SS::EMPTY_ARRAY)
+  end
 end
