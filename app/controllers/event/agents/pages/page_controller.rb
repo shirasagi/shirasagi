@@ -9,6 +9,9 @@ class Event::Agents::Pages::PageController < ApplicationController
       end
       request.env["ss.redirect_path"] = @cur_page.ical_link
       redirect_to @cur_page.ical_link
+      return
     end
+
+    super
   end
 end
