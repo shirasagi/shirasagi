@@ -10,6 +10,10 @@ class Gws::PublicLinksController < ApplicationController
     @crumbs << [@cur_site.menu_links_label || t("mongoid.models.gws/link"), action: :index]
   end
 
+  def set_items
+    @items ||= @model.site(@cur_site).and_public.readable(@cur_user, site: @cur_site)
+  end
+
   public
 
   def index
