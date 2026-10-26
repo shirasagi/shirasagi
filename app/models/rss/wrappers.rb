@@ -21,7 +21,11 @@ module Rss::Wrappers
       def link
         link = @item.links.find { |link| link.rel == 'alternate' }
         link ||= @item.link
-        link.try(:href)
+        ret = link.try(:href)
+        return ret if ret.blank?
+
+        return unless UrlValidator.valid?(ret, absolute_path: true)
+        SS.follow_up_url_encode!(ret)
       end
 
       def html
@@ -74,7 +78,8 @@ module Rss::Wrappers
       end
 
       def link
-        @item.link
+        return unless UrlValidator.valid?(@item.link, absolute_path: true)
+        SS.follow_up_url_encode!(@item.link)
       end
 
       def html
@@ -110,7 +115,8 @@ module Rss::Wrappers
       end
 
       def link
-        @item.link
+        return unless UrlValidator.valid?(@item.link, absolute_path: true)
+        SS.follow_up_url_encode!(@item.link)
       end
 
       def html

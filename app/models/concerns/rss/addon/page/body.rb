@@ -9,7 +9,8 @@ module Rss::Addon::Page
       embeds_many :authors, class_name: "Rss::Author", as: :rss_author
       permit_params :rss_link, :html
 
-      validates :rss_link, presence: true
+      validates :rss_link, presence: true, url: { absolute_path: true }
+      validate :encode_rss_link
     end
 
     module ClassMethods
@@ -50,6 +51,17 @@ module Rss::Addon::Page
 
     def serve_static_file?
       false
+    end
+
+    private
+
+    def encode_rss_link
+      return unless rss_link_changed?
+      return if errors[:rss_link].present?
+      self.rss_link = SS.follow_up_url_encode!(rss_link)
+    rescue => e
+      Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+      errors.add :rss_link, :url
     end
   end
 end
