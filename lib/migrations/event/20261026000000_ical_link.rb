@@ -20,6 +20,7 @@ class SS::Migration20261026000000
       else
         item.unset(:ical_link)
       end
+    ensure
       FileUtils.rm_f(item.path)
     end
   end

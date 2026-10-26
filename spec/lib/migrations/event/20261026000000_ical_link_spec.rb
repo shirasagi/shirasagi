@@ -60,7 +60,7 @@ RSpec.describe SS::Migration20261026000000, dbscope: :example do
 
     item4.reload
     expect(item4.ical_link).to eq "https://www.example.jp/%E6%97%A5%E6%9C%AC%E8%AA%9E"
-    expect(File.exist?(item4.path)).to be_truthy # マイグレーション前後で ical_link に変化がないので書き出しファイルが存在する
+    expect(File.exist?(item4.path)).to be_falsey
 
     item5.reload
     expect(item5.ical_link).to be_blank
