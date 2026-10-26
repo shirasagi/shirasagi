@@ -7,12 +7,25 @@ module Cms::RedirectPage
 
     before_validation :normalize_redirect_link
     validates :redirect_link, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
-    validates :redirect_link, url: { absolute_path: true, allow_blank: true }, unless: ->{ Sys::TrustedUrlValidator.url_restricted? }
+    validates :redirect_link, url: { absolute_path: true, relative_path: true, allow_blank: true },
+              unless: ->{ Sys::TrustedUrlValidator.url_restricted? }
     validate :encode_redirect_link
   end
 
+  def effective_redirect_link
+    ret = try(:redirect_link).presence rescue nil
+    return ret if ret.blank?
+    return nil unless UrlValidator.valid?(ret, absolute_path: true, relative_path: true)
+
+    s = @cur_site || (try(:site) rescue nil)
+    return nil unless s.try(:redirect_link_enabled?)
+    return nil if Sys::TrustedUrlValidator.url_restricted? && !Cms.trusted_url?(s, ret)
+
+    ret
+  end
+
   def view_layout
-    redirect_link.present? ? "cms/redirect" : "cms/page"
+    effective_redirect_link.present? ? "cms/redirect" : "cms/page"
   end
 
   private

@@ -8,13 +8,7 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example, js: tru
 
   before do
     Capybara.app_host = "http://#{site.domain}"
-
-    @disable_redirect_link = SS.config.cms.disable_redirect_link
-    SS.config.replace_value_at(:cms, :disable_redirect_link, false)
-  end
-
-  after do
-    SS.config.replace_value_at(:cms, :disable_redirect_link, @disable_redirect_link)
+    site.update!(redirect_link_state: "enabled")
   end
 
   context "article node and page" do

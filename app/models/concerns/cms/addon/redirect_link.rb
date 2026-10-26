@@ -4,27 +4,11 @@ module Cms::Addon
     extend SS::Addon
 
     def url
-      s = @cur_site || site
-      return super unless s.try(:redirect_link_enabled?)
-
-      ret = try(:redirect_link).presence
-      return super unless ret
-      return super unless UrlValidator.valid?(ret)
-      return super if Sys::TrustedUrlValidator.url_restricted? && !Cms.trusted_url?(s, ret)
-
-      ret
+      effective_redirect_link.presence || super
     end
 
     def full_url
-      s = @cur_site || site
-      return super unless s.try(:redirect_link_enabled?)
-
-      ret = try(:redirect_link).presence
-      return super unless ret
-      return super unless UrlValidator.valid?(ret)
-      return super if Sys::TrustedUrlValidator.url_restricted? && !Cms.trusted_url?(s, ret)
-
-      ret
+      effective_redirect_link.presence || super
     end
   end
 end
