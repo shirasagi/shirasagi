@@ -474,7 +474,7 @@ module Cms
     Addressable::URI.join(site.full_root_url, request_path).to_s
   end
 
-  def trusted_url?(site, url)
+  def self.trusted_url?(site, url)
     url = url.to_str
     uri_object = url.is_a?(Addressable::URI) ? url : Addressable::URI.parse(url)
 
