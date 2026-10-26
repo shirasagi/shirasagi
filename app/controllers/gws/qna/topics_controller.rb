@@ -8,6 +8,9 @@ class Gws::Qna::TopicsController < ApplicationController
 
   navi_view "gws/qna/main/navi"
 
+  # 閲覧設定で公開された質問を取得対象に含めるアクション
+  READABLE_ACTIONS = %w(show read unread).freeze
+
   private
 
   def fix_params
@@ -18,6 +21,32 @@ class Gws::Qna::TopicsController < ApplicationController
     p = super
     p[:category_ids] = [@category.id] if @category.present?
     p
+  end
+
+  def set_items
+    set_mode
+    @items ||= begin
+      base_criteria = @model.site(@cur_site).topic
+      case @mode
+      when 'editable'
+        base_criteria.allow(:read, @cur_user, site: @cur_site).without_deleted
+      when 'trash'
+        base_criteria.allow(:trash, @cur_user, site: @cur_site).only_deleted
+      else
+        if READABLE_ACTIONS.include?(params[:action])
+          # 閲覧系のアクションは一覧（#items）と同じく、閲覧設定で公開された質問も対象にする
+          conditions = [ @model.allow_condition(:read, @cur_user, site: @cur_site) ]
+          if !@model.requires_read_permission_to_read? || @model.allowed?(:read, @cur_user, site: @cur_site)
+            conditions += @model.readable_conditions(@cur_user, site: @cur_site)
+          end
+          base_criteria.and_public.without_deleted.where("$and" => [{ "$or" => conditions }])
+        else
+          # 編集・削除系のアクションは属性を代入してから権限を判定するため、
+          # 閲覧設定で広げると group_ids の書き換えで所有者を奪えてしまう。allow(:read) の範囲に限定する。
+          base_criteria.allow(:read, @cur_user, site: @cur_site).without_deleted
+        end
+      end
+    end
   end
 
   def items
