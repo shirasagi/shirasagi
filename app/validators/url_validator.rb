@@ -8,14 +8,22 @@ class UrlValidator < ActiveModel::EachValidator
       return true if value.blank?
 
       uri = ::Addressable::URI.parse(value)
-      # 絶対パスの場合の検証
-      if options[:absolute_path] && uri.scheme.blank? && value.start_with?("/")
-        return true
+
+      # 絶対パスと相対パスの場合の検証
+      if options[:absolute_path] || options[:relative_path]
+        if uri.scheme.blank? && uri.path.present? && uri.request_uri == uri.normalize.request_uri
+          if options[:absolute_path] && value.start_with?("/")
+            return true
+          end
+          if options[:relative_path]
+            return true
+          end
+        end
       end
 
       # URLスキームの検証
       allowed_schemes = options[:scheme].try { |scheme| Array[scheme].flatten.map(&:to_s) } || ALLOWED_SCHEMES
-      if !allowed_schemes.include?(uri.scheme)
+      unless allowed_schemes.include?(uri.scheme)
         return false
       end
 
