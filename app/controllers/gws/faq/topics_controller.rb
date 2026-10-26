@@ -8,6 +8,9 @@ class Gws::Faq::TopicsController < ApplicationController
 
   navi_view 'gws/faq/main/navi'
 
+  # 閲覧設定で公開された FAQ を取得対象に含めるアクション
+  READABLE_ACTIONS = %w(show read unread).freeze
+
   private
 
   def fix_params
@@ -30,11 +33,18 @@ class Gws::Faq::TopicsController < ApplicationController
       when 'trash'
         base_criteria.allow(:trash, @cur_user, site: @cur_site).only_deleted
       else
-        conditions = [ @model.allow_condition(:read, @cur_user, site: @cur_site) ]
-        if !@model.requires_read_permission_to_read? || @model.allowed?(:read, @cur_user, site: @cur_site)
-          conditions += @model.readable_conditions(@cur_user, site: @cur_site)
+        if READABLE_ACTIONS.include?(params[:action])
+          # 閲覧系のアクションは一覧（#items）と同じく、閲覧設定で公開された FAQ も対象にする
+          conditions = [ @model.allow_condition(:read, @cur_user, site: @cur_site) ]
+          if !@model.requires_read_permission_to_read? || @model.allowed?(:read, @cur_user, site: @cur_site)
+            conditions += @model.readable_conditions(@cur_user, site: @cur_site)
+          end
+          base_criteria.and_public.without_deleted.where("$and" => [{ "$or" => conditions }])
+        else
+          # 編集・削除系のアクションは属性を代入してから権限を判定するため、
+          # 閲覧設定で広げると group_ids の書き換えで所有者を奪えてしまう。allow(:read) の範囲に限定する。
+          base_criteria.allow(:read, @cur_user, site: @cur_site).without_deleted
         end
-        base_criteria.and_public.without_deleted.where("$and" => [{ "$or" => conditions }])
       end
     end
   end
