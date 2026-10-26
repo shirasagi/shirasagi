@@ -2,5 +2,6 @@
 
 <dl class="see mod-cms-page_link">
   <dt><%= @model.t :redirect_link %></dt>
-  <dd><%= link_to @item.redirect_link, @item.redirect_link %></dd>
+  <%# @item.redirect_link は信頼できないのでハイパーリンクにはせず単なるテキストとして表示  %>
+  <dd><%= @item.redirect_link %></dd>
 </dl>
