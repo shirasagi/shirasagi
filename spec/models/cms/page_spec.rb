@@ -93,7 +93,12 @@ describe Cms::Page, type: :model, dbscope: :example do
   end
 
   describe "#redirect_link" do
-    subject { create(:cms_page, route: "article/page") }
+    let!(:site) { cms_site }
+    subject { create(:cms_page, cur_site: site, route: "article/page") }
+
+    before do
+      site.update!(redirect_link_state: "enabled")
+    end
 
     context "when relative path is given" do
       it do
@@ -111,14 +116,14 @@ describe Cms::Page, type: :model, dbscope: :example do
 
     context "when relative host url is given" do
       it do
-        subject.redirect_link = "//#{subject.site.domain_with_subdir}/a/b/c"
+        subject.redirect_link = "//#{site.domain_with_subdir}/a/b/c"
         expect(subject).to be_valid
       end
     end
 
     context "when absolute url is given" do
       it do
-        subject.redirect_link = "#{subject.site.full_url}/a/b/c"
+        subject.redirect_link = "#{site.full_url}/a/b/c"
         expect(subject).to be_valid
       end
     end
@@ -172,7 +177,7 @@ describe Cms::Page, type: :model, dbscope: :example do
         subject.class.all.first.tap do |item|
           expect(item.url).to eq subject.redirect_link
         end
-        # if the rss_link is forgotten to load
+        # if the redirect_link is forgotten to load
         subject.class.all.only(:_id, :route, :name, :filename, :site_id, :depth, :order).first.tap do |item|
           expect(item.url).to eq "/#{subject.filename}"
         end

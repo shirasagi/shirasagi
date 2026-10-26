@@ -1,7 +1,7 @@
 require 'spec_helper'
-require Rails.root.join("lib/migrations/event/20261026000000_ical_link.rb")
+require Rails.root.join("lib/migrations/event/20261026000001_ical_link.rb")
 
-RSpec.describe SS::Migration20261026000000, dbscope: :example do
+RSpec.describe SS::Migration20261026000001, dbscope: :example do
   let!(:site) { cms_site }
   let!(:node) { create :event_node_page, cur_site: site }
   let!(:item1) do
