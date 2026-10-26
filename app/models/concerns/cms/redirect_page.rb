@@ -24,10 +24,6 @@ module Cms::RedirectPage
     ret
   end
 
-  def view_layout
-    effective_redirect_link.present? ? "cms/redirect" : "cms/page"
-  end
-
   private
 
   def normalize_redirect_link
