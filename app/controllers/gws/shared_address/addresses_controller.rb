@@ -22,6 +22,14 @@ class Gws::SharedAddress::AddressesController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
+  def set_items
+    @items ||= begin
+      conditions = @model.readable_conditions(@cur_user, site: @cur_site)
+      conditions += [ @model.allow_condition(:read, @cur_user, site: @cur_site) ]
+      @model.site(@cur_site).without_deleted.where("$and" => [{ "$or" => conditions }])
+    end
+  end
+
   def set_address_group
     return if params[:group].blank?
     @address_group ||= Gws::SharedAddress::Group.site(@cur_site).find(params[:group])
