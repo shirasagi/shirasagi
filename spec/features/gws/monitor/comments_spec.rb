@@ -14,6 +14,7 @@ describe "gws_monitor_comments", type: :feature, dbscope: :example do
   end
   let!(:user1) { create(:gws_user, group_ids: [ g1.id ], gws_role_ids: [ role.id ]) }
   let!(:user2) { create(:gws_user, group_ids: [ g2.id ], gws_role_ids: [ role.id ]) }
+  let!(:admin) { create(:gws_user, group_ids: [ g1.id ], gws_role_ids: [ create(:gws_role_admin).id ]) }
   let!(:topic) do
     create(
       :gws_monitor_topic, attend_group_ids: [ g1.id, g2.id ], state: 'public', article_state: 'open',
@@ -54,6 +55,45 @@ describe "gws_monitor_comments", type: :feature, dbscope: :example do
       wait_for_notice I18n.t("ss.notice.deleted")
 
       expect { comment.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+    end
+
+    it "#edit via answers" do
+      visit edit_gws_monitor_answer_parent_comment_path(site: site, answer_id: topic, parent_id: topic, id: comment)
+      expect(status_code).to eq 200
+      expect(page).to have_field("item[name]", with: comment.name)
+    end
+
+    context "when the comment belongs to another topic" do
+      let!(:topic2) do
+        create(
+          :gws_monitor_topic, attend_group_ids: [ g1.id, g2.id ], state: 'public', article_state: 'open',
+          spec_config: 'my_group', answer_state_hash: { g1.id.to_s => "answered", g2.id.to_s => "preparation" }
+        )
+      end
+
+      it "#edit" do
+        visit edit_gws_monitor_answer_parent_comment_path(site: site, answer_id: topic2, parent_id: topic2, id: comment)
+        expect(status_code).to eq 404
+      end
+    end
+  end
+
+  context "with the admin" do
+    before { login_user admin }
+
+    it "#edit via admins" do
+      visit gws_monitor_admin_path(site: site, id: topic)
+      within "#post-#{comment.id}" do
+        click_on I18n.t("ss.links.edit")
+      end
+      within "form#item-form" do
+        fill_in "item[name]", with: name
+        click_on I18n.t("ss.buttons.save")
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
+
+      comment.reload
+      expect(comment.name).to eq name
     end
   end
 
