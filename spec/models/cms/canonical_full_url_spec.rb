@@ -117,6 +117,14 @@ describe Cms, type: :model, dbscope: :example do
           )
           expect(Cms.canonical_full_url(site, request)).to eq "#{site.full_root_url}ad/page30.html?redirect=/kurashi/"
         end
+        "/ad/page30.html?redirect=%2Fkurashi%2F".tap do |request_path|
+          request = ActionDispatch::Request.new(
+            "rack.input" => "",
+            "REQUEST_METHOD" => "GET",
+            "PATH_INFO" => request_path
+          )
+          expect(Cms.canonical_full_url(site, request)).to eq "#{site.full_root_url}ad/page30.html?redirect=/kurashi/"
+        end
       end
     end
   end
