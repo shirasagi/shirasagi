@@ -20,6 +20,7 @@ class SS::Migration20261023000000
       else
         item.unset(:link_url)
       end
+      FileUtils.rm_f(item.path)
     end
   end
 
