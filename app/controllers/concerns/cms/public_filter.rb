@@ -18,6 +18,8 @@ module Cms::PublicFilter
 
   PART_FORWARDABLE_HEADERS = Set.new(%w(x-ss-received-by)).freeze
 
+  REDIRECT_STATUS_CODES = Set.new([ 301, 302, 303, 307, 308 ]).freeze
+
   def index
     if @cur_path.match?(/\.p[1-9]\d*\.html$/)
       page = @cur_path.sub(/.*\.p(\d+)\.html$/, '\\1')
@@ -211,11 +213,14 @@ module Cms::PublicFilter
   end
 
   def send_page(page, resp)
-    if page.view_layout == "cms/redirect" && !mobile_path?
+    if REDIRECT_STATUS_CODES.include?(resp.status)
+      self.response = resp
+    elsif page.view_layout == "cms/redirect" && !mobile_path?
       @redirect_link = Sys::TrustedUrlValidator.url_restricted? ? trusted_url!(page.redirect_link) : page.redirect_link
       render html: "", layout: "cms/redirect"
     elsif (redirect_path = request.env["ss.redirect_path"]) && !mobile_path?
       @redirect_link = Sys::TrustedUrlValidator.url_restricted? ? trusted_url!(redirect_path) : redirect_path
+      @window_name ||= "#{page.try(:window_name).presence || page.name} - #{@cur_site.try(:name)}"
       render html: "", layout: "cms/redirect"
     elsif resp.media_type == "text/html" && page.layout
       layout = request.xhr? ? false : "cms/page"
