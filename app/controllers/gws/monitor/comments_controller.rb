@@ -64,7 +64,7 @@ class Gws::Monitor::CommentsController < ApplicationController
   def set_items
     @items ||= begin
       set_topic_and_parent
-      @topic.descendants
+      @topic.descendants.where(parent_id: @parent.id)
     end
   end
 

@@ -75,6 +75,23 @@ describe "gws_monitor_comments", type: :feature, dbscope: :example do
         visit edit_gws_monitor_answer_parent_comment_path(site: site, answer_id: topic2, parent_id: topic2, id: comment)
         expect(status_code).to eq 404
       end
+
+      context "when the parent in the url is not the actual parent" do
+        let!(:other_parent) do
+          create(:gws_monitor_post, cur_user: user2, user_group_id: g2.id, topic_id: topic2.id, parent_id: topic2.id)
+        end
+
+        it "#edit and #delete" do
+          visit edit_gws_monitor_answer_parent_comment_path(site: site, answer_id: topic, parent_id: other_parent, id: comment)
+          expect(status_code).to eq 404
+          visit delete_gws_monitor_answer_parent_comment_path(site: site, answer_id: topic, parent_id: other_parent, id: comment)
+          expect(status_code).to eq 404
+
+          comment.reload
+          expect(comment.parent_id).to eq topic.id
+          expect(comment.topic_id).to eq topic.id
+        end
+      end
     end
   end
 
