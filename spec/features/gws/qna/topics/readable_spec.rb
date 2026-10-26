@@ -18,6 +18,11 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
     create :gws_qna_topic, category_ids: [ category.id ], readable_setting_range: 'select',
       readable_group_ids: gws_user.group_ids
   end
+  let!(:selected_item) do
+    create :gws_qna_topic, category_ids: [ category.id ], readable_setting_range: 'select',
+      readable_group_ids: [ g1.id ]
+  end
+  let(:name) { "name-#{unique_id}" }
 
   before { login_user user1 }
 
@@ -35,6 +40,39 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
       click_on I18n.t('gws/qna.topic.unset_browsed')
       expect(status_code).to eq 200
       expect(item.reload.browsed?(user1)).to be_falsey
+    end
+  end
+
+  context "with the topic readable by the user's group" do
+    it "#show" do
+      visit gws_qna_topics_path(site: site, mode: '-', category: '-')
+      click_on selected_item.name
+      expect(status_code).to eq 200
+      expect(page).to have_css(".topic .name", text: selected_item.name)
+    end
+  end
+
+  context "with the user who can edit only own group's topics" do
+    it "#edit, #update, #delete and #destroy" do
+      # 閲覧設定で公開されただけの質問は編集・削除できない（取得範囲は allow(:read) のまま）
+      visit edit_gws_qna_topic_path(site: site, mode: '-', category: '-', id: item)
+      expect(status_code).to eq 404
+
+      visit delete_gws_qna_topic_path(site: site, mode: '-', category: '-', id: item)
+      expect(status_code).to eq 404
+
+      # group_ids を自分のグループに書き換えて送っても、所有者を奪えない
+      page.driver.put gws_qna_topic_path(site: site, mode: '-', category: '-', id: item),
+        item: { name: name, group_ids: [ g1.id ] }
+      expect(status_code).to eq 404
+
+      item.reload
+      expect(item.name).not_to eq name
+      expect(item.group_ids).not_to include(g1.id)
+
+      page.driver.delete gws_qna_topic_path(site: site, mode: '-', category: '-', id: item)
+      expect { item.reload }.not_to raise_error
+      expect(item.deleted).to be_blank
     end
   end
 
