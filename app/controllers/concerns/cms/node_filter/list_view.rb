@@ -44,9 +44,10 @@ module Cms::NodeFilter::ListView
     body = render_to_string(template: "index")
     mime = rendered_format
 
-    if @cur_node.view_layout == "cms/redirect" && (redirect_link = @cur_node.effective_redirect_link) && !mobile_path?
-      @redirect_link = redirect_link
-      body = render_to_string(html: "", layout: "cms/redirect")
+    if (redirect_path = request.env["ss.redirect_path"]) && !mobile_path?
+      @redirect_link = Sys::TrustedUrlValidator.url_restricted? ? trusted_url!(redirect_path) : redirect_path
+      @window_name ||= "#{@cur_node.try(:window_name).presence || @cur_node.name} - #{@cur_site.try(:name)}"
+      render html: "", layout: "cms/redirect"
     elsif mime.html? && @cur_node.layout
       @last_rendered_layout = nil if @last_rendered_node_filename != @cur_node.filename
       @last_rendered_layout ||= begin
