@@ -95,6 +95,61 @@ describe "gws_monitor_comments", type: :feature, dbscope: :example do
     end
   end
 
+  context "with the user who has only use and read_private permissions" do
+    let!(:minimum_role) { create(:gws_role, permissions: %w(use_gws_monitor read_private_gws_monitor_posts)) }
+    let!(:user3) { create(:gws_user, group_ids: [ g1.id ], gws_role_ids: [ minimum_role.id ]) }
+    let!(:topic3) do
+      create(
+        :gws_monitor_topic, attend_group_ids: [ g1.id, g2.id ], state: 'public', article_state: 'open',
+        spec_config: 'my_group', answer_state_hash: { g1.id.to_s => "public", g2.id.to_s => "preparation" }
+      )
+    end
+    let(:answer_name) { "answer-#{unique_id}" }
+
+    before { login_user user3 }
+
+    it "answers, edits and deletes own answer" do
+      # 回答する
+      visit gws_monitor_topic_path(site: site, id: topic3)
+      click_on I18n.t("gws/monitor.links.comment")
+      within "form#item-form" do
+        fill_in "item[name]", with: answer_name
+        click_on I18n.t("gws/monitor.links.comment")
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
+      answer = Gws::Monitor::Post.where(topic_id: topic3.id, name: answer_name).first
+      expect(answer).to be_present
+      expect(answer.user_ids).to be_blank
+      expect(answer.group_ids).to be_blank
+      expect(topic3.reload.answer_state_hash[g1.id.to_s]).to eq "answered"
+
+      # 回答済み一覧に出る
+      visit gws_monitor_answers_path(site: site)
+      click_on topic3.name
+
+      # 編集する
+      within "#post-#{answer.id}" do
+        click_on I18n.t("ss.links.edit")
+      end
+      within "form#item-form" do
+        fill_in "item[name]", with: name
+        click_on I18n.t("ss.buttons.save")
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
+      expect(answer.reload.name).to eq name
+
+      # 削除する
+      within "#post-#{answer.id}" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+      wait_for_notice I18n.t("ss.notice.deleted")
+      expect { answer.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+    end
+  end
+
   context "with the admin" do
     before { login_user admin }
 
