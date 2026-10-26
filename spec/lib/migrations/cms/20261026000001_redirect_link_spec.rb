@@ -92,23 +92,23 @@ RSpec.describe SS::Migration20261026000001, dbscope: :example do
     expect(File.exist?(page5.path)).to be_falsey
 
     node1.reload
-    expect(page1.redirect_link).to eq "https://www.example.jp/%E6%97%A5%E6%9C%AC%E8%AA%9E"
+    expect(node1.redirect_link).to eq "https://www.example.jp/%E6%97%A5%E6%9C%AC%E8%AA%9E"
     expect(File.exist?(node1.path)).to be_falsey
 
     node2.reload
-    expect(page2.redirect_link).to eq "/%E6%97%A5%E6%9C%AC%E8%AA%9E"
+    expect(node2.redirect_link).to eq "/%E6%97%A5%E6%9C%AC%E8%AA%9E"
     expect(File.exist?(node2.path)).to be_falsey
 
     node3.reload
-    expect(page3.redirect_link).to eq "/x%22%20onclick=%22alert(1)%22"
+    expect(node3.redirect_link).to eq "/x%22%20onclick=%22alert(1)%22"
     expect(File.exist?(node3.path)).to be_falsey
 
     node4.reload
-    expect(page4.redirect_link).to eq "https://www.example.jp/%E6%97%A5%E6%9C%AC%E8%AA%9E"
+    expect(node4.redirect_link).to eq "https://www.example.jp/%E6%97%A5%E6%9C%AC%E8%AA%9E"
     expect(File.exist?(node4.path)).to be_falsey
 
     node5.reload
-    expect(page5.redirect_link).to be_blank
+    expect(node5.redirect_link).to be_blank
     expect(File.exist?(node5.path)).to be_falsey
   end
 end
