@@ -39,10 +39,11 @@ class UrlValidator < ActiveModel::EachValidator
     private
 
     def check_path_type(uri)
-      expanded_path = File.expand_path(uri.path, "/")
-      if expanded_path == uri.path || "#{expanded_path}/" == uri.path
+      unencoded = Addressable::URI.unencode_component(uri.path)
+      expanded = File.expand_path(unencoded, "/")
+      if expanded == unencoded || "#{expanded}/" == unencoded
         :absolute
-      elsif expanded_path[1..-1] == uri.path || "#{expanded_path[1..-1]}/" == uri.path
+      elsif !unencoded.include?("\\") && (expanded[1..-1] == unencoded || "#{expanded[1..-1]}/" == unencoded)
         :relative
       else
         # ./ や ../ を含んでいるとNGとする

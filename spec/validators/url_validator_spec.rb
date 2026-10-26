@@ -189,8 +189,18 @@ describe UrlValidator, type: :validator do
       end
     end
 
-    context 'with valid relative path containing relative path' do
+    context 'with valid relative path containing relative path #1' do
       subject! { clazz.new("docs/../../README.html") }
+
+      it do
+        expect(subject).to be_invalid
+        expect(subject.errors[:url]).to have(1).items
+        expect(subject.errors[:url]).to include(I18n.t("errors.messages.url"))
+      end
+    end
+
+    context 'with valid relative path containing relative path #2' do
+      subject! { clazz.new("docs/%2E%2E/%2E%2E/README.html") }
 
       it do
         expect(subject).to be_invalid
@@ -226,6 +236,26 @@ describe UrlValidator, type: :validator do
 
       it do
         expect(subject).to be_valid
+      end
+    end
+
+    context 'with invalid authority #1' do
+      subject! { clazz.new("\\evil.example") }
+
+      it do
+        expect(subject).to be_invalid
+        expect(subject.errors[:url]).to have(1).items
+        expect(subject.errors[:url]).to include(I18n.t("errors.messages.url"))
+      end
+    end
+
+    context 'with invalid authority #2' do
+      subject! { clazz.new("\\\\evil.example") }
+
+      it do
+        expect(subject).to be_invalid
+        expect(subject.errors[:url]).to have(1).items
+        expect(subject.errors[:url]).to include(I18n.t("errors.messages.url"))
       end
     end
   end
@@ -326,8 +356,18 @@ describe UrlValidator, type: :validator do
       end
     end
 
-    context 'with valid relative path containing relative path' do
+    context 'with valid relative path containing relative path #1' do
       subject! { clazz.new("docs/../../README.html") }
+
+      it do
+        expect(subject).to be_invalid
+        expect(subject.errors[:url]).to have(1).items
+        expect(subject.errors[:url]).to include(I18n.t("errors.messages.url"))
+      end
+    end
+
+    context 'with valid relative path containing relative path #2' do
+      subject! { clazz.new("docs/%2E%2E/%2E%2E/README.html") }
 
       it do
         expect(subject).to be_invalid
@@ -363,6 +403,26 @@ describe UrlValidator, type: :validator do
 
       it do
         expect(subject).to be_valid
+      end
+    end
+
+    context 'with invalid authority #1' do
+      subject! { clazz.new("\\evil.example") }
+
+      it do
+        expect(subject).to be_invalid
+        expect(subject.errors[:url]).to have(1).items
+        expect(subject.errors[:url]).to include(I18n.t("errors.messages.url"))
+      end
+    end
+
+    context 'with invalid authority #2' do
+      subject! { clazz.new("\\\\evil.example") }
+
+      it do
+        expect(subject).to be_invalid
+        expect(subject.errors[:url]).to have(1).items
+        expect(subject.errors[:url]).to include(I18n.t("errors.messages.url"))
       end
     end
   end
