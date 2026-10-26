@@ -1,4 +1,6 @@
 class Sys::TrustedUrlValidator < ActiveModel::EachValidator
+  ALLOWED_SCHEMES = Set.new(%w(http https)).freeze
+
   class << self
     def myself_url?(url)
       return false if Rails.application.current_request.blank?
@@ -9,6 +11,9 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
       request_url = ::Addressable::URI.parse(Rails.application.current_request.url) rescue nil
       return false unless request_url
 
+      if url.scheme.present? && !ALLOWED_SCHEMES.include?(url.scheme.downcase)
+        return false
+      end
       if url.host.present? && url.host != request_url.host
         return false
       end
@@ -64,7 +69,12 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
     end
 
     def trusted_url_one?(trusted_template_url, uncertain_url)
-      if trusted_template_url.scheme.present? && uncertain_url.scheme != trusted_template_url.scheme
+      if trusted_template_url.scheme.present?
+        if uncertain_url.scheme != trusted_template_url.scheme
+          return false
+        end
+      end
+      if uncertain_url.scheme.present? && !ALLOWED_SCHEMES.include?(uncertain_url.scheme.downcase)
         return false
       end
       if trusted_template_url.host.present?

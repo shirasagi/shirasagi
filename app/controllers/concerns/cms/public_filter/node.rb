@@ -96,8 +96,8 @@ module Cms::PublicFilter::Node
       raise e
     end
 
-    if node.view_layout == "cms/redirect"
-      @redirect_link = Sys::TrustedUrlValidator.url_restricted? ? trusted_url!(node.redirect_link) : node.redirect_link
+    if node.view_layout == "cms/redirect" && (redirect_link = node.effective_redirect_link)
+      @redirect_link = redirect_link
       html = render_to_string html: "", layout: "cms/redirect"
     elsif response.media_type == "text/html" && node.layout
       html = render_layout_with_pagination_cache(node.layout, opts[:cache])

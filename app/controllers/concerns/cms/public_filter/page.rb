@@ -49,8 +49,8 @@ module Cms::PublicFilter::Page
       raise e
     end
 
-    if page.view_layout == "cms/redirect"
-      @redirect_link = Sys::TrustedUrlValidator.url_restricted? ? trusted_url!(page.redirect_link) : page.redirect_link
+    if page.view_layout == "cms/redirect" && (redirect_link = page.effective_redirect_link)
+      @redirect_link = redirect_link
       html = render_to_string html: "", layout: "cms/redirect"
     elsif (redirect_path = request.env["ss.redirect_path"]) && !mobile_path?
       @redirect_link = Sys::TrustedUrlValidator.url_restricted? ? trusted_url!(redirect_path) : redirect_path
