@@ -30,6 +30,10 @@ describe Cms::Page::GenerateJob, dbscope: :example do
         expect(meta_elements).to have(1).items
         expect(meta_elements[0]["content"]).to include(page1.ical_link)
       end
+      document.css('title').tap do |title_elements|
+        expect(title_elements).to have(1).items
+        expect(title_elements[0].text).to eq "#{page1.name} - #{site.name}"
+      end
       document.css('link[rel="canonical"]').tap do |canonical_elements|
         expect(canonical_elements).to have(1).items
         expect(canonical_elements[0]["href"]).to eq Addressable::URI.join(site.full_root_url, page1.ical_link).to_s
