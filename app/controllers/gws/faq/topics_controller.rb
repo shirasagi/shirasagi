@@ -20,6 +20,23 @@ class Gws::Faq::TopicsController < ApplicationController
     p
   end
 
+  def set_items
+    set_mode
+    @items ||= begin
+      base_criteria = @model.site(@cur_site).topic
+      case @mode
+      when 'editable'
+        base_criteria.allow(:read, @cur_user, site: @cur_site).without_deleted
+      when 'trash'
+        base_criteria.allow(:trash, @cur_user, site: @cur_site).only_deleted
+      else
+        conditions = @model.readable_conditions(@cur_user, site: @cur_site)
+        conditions += [ @model.allow_condition(:read, @cur_user, site: @cur_site) ]
+        base_criteria.and_public.without_deleted.where("$and" => [{ "$or" => conditions }])
+      end
+    end
+  end
+
   def items
     if @mode == 'editable'
       @model.site(@cur_site).topic.allow(:read, @cur_user, site: @cur_site).without_deleted
