@@ -101,6 +101,12 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
     return if errors[:link_url].present?
     return unless link_url_changed?
     self.link_url = SS.follow_up_url_encode!(link_url)
+
+    if link_url.present? && column.link_max_length.present? && column.link_max_length > 0
+      if link_url.length > column.link_max_length
+        self.errors.add(:link_url, :too_long, count: column.link_max_length)
+      end
+    end
   rescue => e
     Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
     errors.add :link_url, :url
