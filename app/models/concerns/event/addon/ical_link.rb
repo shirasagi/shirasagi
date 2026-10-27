@@ -29,23 +29,29 @@ module Event::Addon
       end
     end
 
+    def effective_ical_link
+      return ical_link if ical_link.blank?
+      return unless UrlValidator.valid?(ical_link, absolute_path: true)
+      SS.follow_up_url_encode!(ical_link) rescue nil
+    end
+
     def url
-      ret = ical_link rescue nil
+      ret = effective_ical_link rescue nil
       ret.presence || super
     end
 
     def full_url
-      ret = ical_link rescue nil
+      ret = effective_ical_link rescue nil
       ret.presence || super
     end
 
     def json_path
-      ret = ical_link rescue nil
+      ret = effective_ical_link rescue nil
       ret.present? ? nil : super
     end
 
     def json_url
-      ret = ical_link rescue nil
+      ret = effective_ical_link rescue nil
       ret.present? ? nil : super
     end
 

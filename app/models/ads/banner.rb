@@ -35,7 +35,7 @@ class Ads::Banner
   template_variable_handler 'img.src', :template_variable_handler_img_src
 
   liquidize do
-    export :link_url
+    export :effective_link_url, as: :link_url
     export :link_target
     export :file
   end
@@ -45,9 +45,16 @@ class Ads::Banner
   end
   delegate :link_target_options, to: :class
 
+  def effective_link_url
+    return link_url if link_url.blank?
+    return if link_url == '#'
+    return unless UrlValidator.valid?(link_url, absolute_path: true)
+    SS.follow_up_url_encode!(link_url) rescue nil
+  end
+
   def url
     uri = ::Addressable::URI.parse(super)
-    uri.query = { redirect: link_url }.to_param
+    uri.query = { redirect: effective_link_url }.to_param
     uri.to_s
   end
 
@@ -71,7 +78,7 @@ class Ads::Banner
   end
 
   def template_variable_handler_link_url(_name, _issuer)
-    SS.follow_up_url_encode!(link_url.presence || url) rescue nil
+    SS.follow_up_url_encode!(effective_link_url) rescue nil
   end
 
   def template_variable_handler_img_src(_name, _issuer)

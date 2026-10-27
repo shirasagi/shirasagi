@@ -31,13 +31,19 @@ module Rss::Addon::Page
       end
     end
 
+    def effective_rss_link
+      return rss_link if rss_link.blank?
+      return unless UrlValidator.valid?(rss_link, absolute_path: true)
+      SS.follow_up_url_encode!(rss_link) rescue nil
+    end
+
     def url
-      ret = rss_link rescue nil
+      ret = effective_rss_link rescue nil
       ret.presence || super
     end
 
     def full_url
-      ret = rss_link rescue nil
+      ret = effective_rss_link rescue nil
       ret.presence || super
     end
 
