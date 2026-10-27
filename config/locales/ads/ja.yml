@@ -50,6 +50,7 @@ ja:
         link_url: リンクURL
         file_id: バナー画像
         link_target: リンク表示
+        tags: タグ
       ads/access_log:
         date: アクセス日
         link_url: リンクURL
@@ -92,6 +93,7 @@ ja:
         -
         - "#{link_url} リンクURL"
         - "#{link_target} リンク表示"
+        - "#{tags} タグ"
       loop_liquid:
         - Liquid 形式で記述します。
         -
@@ -99,7 +101,7 @@ ja:
           使用例： 「直リンク」の場合
           &lt;div class="ss-image-box-item-list">
             {% for page in pages %}
-              &lt;span class="ss-image-box-item"">
+              &lt;span class="ss-image-box-item" data-tags="{{ page.tags | join: " " | escape }}">
                 &lt;a target="{{ part.link_target | default: page.link_target | default: "_self" | escape }}" href="{{ page.link_url | escape }}">
                   {% if page.file %}
                     &lt;img src="{{ page.file.url | escape }}" alt="{{ page.name | escape }}">
@@ -116,7 +118,7 @@ ja:
           上記の page.link_url を page.url に変更します。
           &lt;div class="ss-image-box-item-list">
             {% for page in pages %}
-              &lt;span class="ss-image-box-item"">
+              &lt;span class="ss-image-box-item" data-tags="{{ page.tags | join: " " | escape }}">
                 &lt;a target="{{ part.link_target | default: page.link_target | default: "_self" | escape }}" href="{{ page.url | escape }}">
                   {% if page.file %}
                     &lt;img src="{{ page.file.url | escape }}" alt="{{ page.name | escape }}">
