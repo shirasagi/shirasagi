@@ -10,8 +10,9 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
   permit_values :link_url, :link_label, :link_target
 
   validates :link_url, url: { absolute_path: true, allow_blank: true }
-  validate :validate_link_url
+  validate :encode_link_url
   validates :link_url, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
+  validates :link_target, inclusion: { in: %w(_blank), allow_blank: true }
 
   before_validation :set_link_item, unless: ->{ @new_clone }
 
@@ -96,11 +97,19 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
 
   private
 
-  def validate_link_url
-    return if link_url.blank?
-    ::Addressable::URI.parse(link_url)
-  rescue
-    errors.add :link_url, :invalid
+  def encode_link_url
+    return if errors[:link_url].present?
+    return unless link_url_changed?
+    self.link_url = SS.follow_up_url_encode!(link_url)
+
+    if link_url.present? && column.link_max_length.present? && column.link_max_length > 0
+      if link_url.length > column.link_max_length
+        self.errors.add(:link_url, :too_long, count: column.link_max_length)
+      end
+    end
+  rescue => e
+    Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+    errors.add :link_url, :url
   end
 
   def set_link_item

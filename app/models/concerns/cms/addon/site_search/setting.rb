@@ -16,11 +16,11 @@ module Cms::Addon::SiteSearch
       permit_params :link_target, :search_type_state,
         :article_node_state, :category_state, :organization_state,
         :site_search_type, :sort_state, :sort_type, st_article_node_ids: []
+      validates :link_target, inclusion: { in: %w(blank), allow_blank: true }
     end
 
     def link_target_options
       [
-        [I18n.t('cms.options.link_target.self'), ''],
         [I18n.t('cms.options.link_target.blank'), 'blank'],
       ]
     end

@@ -1,6 +1,6 @@
 <dl class="see">
   <dt><%= @model.t :link_target %></dt>
-  <dd><%= @item.label(:link_target) %></dd>
+  <dd><%= @item.label(:link_target) || t('cms.options.link_target.self') %></dd>
 
   <dt><%= @model.t :search_type_state %></dt>
   <dd><%= @item.label(:search_type_state) %></dd>

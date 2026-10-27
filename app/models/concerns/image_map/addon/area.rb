@@ -17,6 +17,7 @@ module ImageMap::Addon
       validate :validate_in_area
       validates :link_url, url: { absolute_path: true, allow_blank: true }
       validates :link_url, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
+      validate :encode_link_url
     end
 
     def area_anchor
@@ -45,6 +46,15 @@ module ImageMap::Addon
     end
 
     private
+
+    def encode_link_url
+      return if errors[:link_url].present?
+      return unless link_url_changed?
+      self.link_url = SS.follow_up_url_encode!(link_url)
+    rescue => e
+      Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+      errors.add :link_url, :url
+    end
 
     def validate_in_area
       return if in_area.blank?

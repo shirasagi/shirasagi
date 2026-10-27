@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
           page_name = source['page_name']
           page_url = source['page_url']
 
-          link_target = (@cur_node.link_target == 'blank') ? '_blank' : nil
+          link_options = (@cur_node.link_target == 'blank') ? { target: '_blank', rel: 'noopener' } : SS::EMPTY_HASH
 
           if !title.to_s.match('\(') && source.dig('file', 'extname').present? && source.dig('file', 'size').present?
             title = "#{title} (#{source.dig('file', 'extname').upcase} #{number_to_human_size(source.dig('file', 'size'))})"
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           categories = source['categories'].presence || []
         %>
-        <h2><%= link_to title, url, class: 'title', target: link_target %></h2>
+        <h2><%= link_to title, url, class: 'title', **link_options %></h2>
         <div class="summary">
           <% if image.present? %>
             <div class="image"><%= image_tag image[:url], alt: image[:name] %></div>
