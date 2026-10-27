@@ -41,11 +41,16 @@ module Cms::NodeFilter::ListView
   # 他のカスタマイズには存在するのかも？テストできるように判定メソッドを差し替える。
   if Rails.env.test?
     def _redirect_link_available?
-      @cur_site.try(:redirect_link_enabled?) && @cur_node.effective_redirect_link.present?
+      return false unless @cur_site.try(:redirect_link_enabled?)
+      return false if @cur_node.effective_redirect_link.blank?
+      true
     end
   else
     def _redirect_link_available?
-      @cur_node.is_a?(Cms::Addon::RedirectLink) && @cur_site.try(:redirect_link_enabled?) && @cur_node.effective_redirect_link.present?
+      return false unless @cur_node.is_a?(Cms::Addon::RedirectLink)
+      return false unless @cur_site.try(:redirect_link_enabled?)
+      return false if @cur_node.effective_redirect_link.blank?
+      true
     end
   end
 
