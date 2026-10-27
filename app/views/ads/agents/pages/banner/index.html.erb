@@ -1,17 +1,18 @@
+<% effective_link_url = @cur_page.effective_link_url %>
 <!doctype html>
 <html lang="<%= I18n.locale %>">
 <head>
 <meta charset="UTF-8" />
-<% if @cur_page.link_url.present? && @cur_page.link_url != '#' && UrlValidator.valid?(@cur_page.link_url, absolute_path: true) %>
-<meta http-equiv="refresh" content="0; URL=<%= @cur_page.link_url %>">
+<% if effective_link_url.present? %>
+<meta http-equiv="refresh" content="0; URL=<%= effective_link_url %>">
 <% end %>
 <title><%= @cur_page.name %></title>
 <%= Cms.canonical_full_url(@cur_site, request).try { tag.link(rel: "canonical", href: _1) } %>
 </head>
 <body>
   <%= @cur_page.name %><br />
-  <% if @cur_page.link_url.present? && @cur_page.link_url != '#' && UrlValidator.valid?(@cur_page.link_url, absolute_path: true) %>
-    <%= link_to @cur_page.link_url, @cur_page.link_url %>
+  <% if effective_link_url.present? %>
+    <%= link_to effective_link_url, effective_link_url %>
   <% end %>
   <img src="<%= @cur_page.count_url %>" width="0" height="0" border="0" alt="" />
 </body>

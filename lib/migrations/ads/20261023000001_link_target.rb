@@ -1,7 +1,7 @@
 class SS::Migration20261023000001
   include SS::Migration::Base
 
-  depends_on "20261023000000"
+  depends_on "20261009000000"
 
   def change
     previous_part_link_targets = Set.new(%w(self blank))

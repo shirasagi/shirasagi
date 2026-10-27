@@ -1,8 +1,8 @@
 <article class="body">
   <p><%== @cur_page.html %></p>
-  <% if @cur_page.rss_link.present? %>
+  <% if @cur_page.effective_rss_link.present? %>
     <footer>
-      <p><%= link_to "全文を読む", @cur_page.rss_link, target: "_blank", rel: "noopener" %></p>
+      <p><%= link_to "全文を読む", @cur_page.effective_rss_link, target: "_blank", rel: "noopener" %></p>
     </footer>
   <% end %>
 </article>

@@ -56,7 +56,7 @@ module Event::IcalHelper
   private
 
   def create_event(event, item, recurrence)
-    url = item.try(:ical_link) || item.full_url
+    url = item.try(:effective_ical_link) || item.full_url
     event.url = ::Icalendar::Values::Uri.new(url)
 
     summary = item.event_name || item.name
