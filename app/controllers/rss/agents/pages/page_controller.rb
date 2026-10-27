@@ -10,6 +10,9 @@ class Rss::Agents::Pages::PageController < ApplicationController
         raise SS::NotFoundError, "url is untrusted."
       end
       redirect_to @cur_page.rss_link
+      return
     end
+
+    super
   end
 end

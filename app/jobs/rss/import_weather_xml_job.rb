@@ -74,8 +74,9 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     elapsed = Benchmark.realtime do
       page = super
       return page if page.nil? || page.invalid?
+      return page if page.effective_rss_link.blank?
 
-      content = download_with_cache(page.rss_link)
+      content = download_with_cache(page.effective_rss_link)
       return page if content.nil?
       content.force_encoding(Encoding::UTF_8)
 
@@ -90,7 +91,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
       @imported_pages << page
     end
 
-    @task.log "imported #{page.try(:rss_link)} in #{elapsed} seconds"
+    @task.log "imported #{page.try(:effective_rss_link)} in #{elapsed} seconds"
 
     page
   end
@@ -234,7 +235,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
   def save_imported_urls
     return if @imported_pages.blank?
 
-    urls_with_date = @imported_pages.map { |page| [ page.rss_link, page.released ] }
+    urls_with_date = @imported_pages.map { |page| [ page.effective_rss_link, page.released ] }
 
     # いわゆる「ログ」に相当する情報なので、DB ではなくファイルに保存したい。
     # 古い情報には意味がない。気象庁からは 24 時間以上前の情報は配信されていないみたい。
