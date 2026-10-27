@@ -96,8 +96,9 @@ module Cms::PublicFilter::Node
       raise e
     end
 
-    if node.view_layout == "cms/redirect" && (redirect_link = node.effective_redirect_link)
-      @redirect_link = redirect_link
+    if redirect_path = request.env["ss.redirect_path"]
+      @redirect_link = redirect_path
+      @window_name ||= "#{node.try(:window_name).presence || node.name} - #{@cur_site.try(:name)}"
       html = render_to_string html: "", layout: "cms/redirect"
     elsif response.media_type == "text/html" && node.layout
       html = render_layout_with_pagination_cache(node.layout, opts[:cache])

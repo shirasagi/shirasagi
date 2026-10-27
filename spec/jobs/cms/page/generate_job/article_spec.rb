@@ -1,29 +1,25 @@
 require 'spec_helper'
 
 describe Cms::Page::GenerateJob, dbscope: :example do
-  let(:site) { cms_site }
-  let(:user) { cms_user }
-  let(:layout) { create_cms_layout }
-  let(:node) { create :article_node_page, cur_site: cms_site, layout_id: layout.id }
+  let!(:site) do
+    site = cms_site
+    site.update!(redirect_link_state: "enabled")
+    site
+  end
+  let!(:user) { cms_user }
+  let!(:layout) { create_cms_layout }
+  let!(:node) { create :article_node_page, cur_site: site, layout: layout }
 
   let!(:page1) do
-    create(:article_page,
-      cur_site: cms_site,
-      cur_user: user,
-      cur_node: node,
-      state: 'public',
-      layout_id: layout.id,
-      file_ids: [ss_file1.id]
-    )
+    create(:article_page, cur_site: site, cur_user: user, cur_node: node, layout: layout,
+           state: 'public', file_ids: [ss_file1.id])
   end
   let!(:page2) do
-    create(:article_page,
-      cur_site: cms_site,
-      cur_user: user,
-      cur_node: node,
-      state: 'public',
-      layout_id: layout.id
-    )
+    create(:article_page, cur_site: site, cur_user: user, cur_node: node, layout: layout, state: 'public')
+  end
+  let!(:page3) do
+    create(:article_page, cur_site: site, cur_user: user, cur_node: node, layout: layout,
+           redirect_link: "/#{unique_id}.pdf", state: 'public')
   end
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
   let!(:column1) do
@@ -65,6 +61,8 @@ describe Cms::Page::GenerateJob, dbscope: :example do
       Fs.rm_rf ss_file3.public_path
       Fs.rm_rf ss_file4.public_path
 
+      Fs.rm_rf page3.path
+
       expect { described_class.bind(site_id: site.id).perform_now }.to output(include(page1.url, page2.url)).to_stdout
     end
 
@@ -95,13 +93,33 @@ describe Cms::Page::GenerateJob, dbscope: :example do
         expect(canonical_elements[0]["href"]).to eq page2.full_url
       end
 
+      expect(File.size(page3.path)).to be > 0
+      Nokogiri::HTML5::Document.parse(File.read(page3.path)).tap do |doc|
+        doc.css('meta[http-equiv="refresh"]').tap do |refresh_elements|
+          expect(refresh_elements).to have(1).items
+          expect(refresh_elements[0]["content"]).to include page3.redirect_link
+        end
+        doc.css('title').tap do |title_elements|
+          expect(title_elements).to have(1).items
+          expect(title_elements[0].text).to eq "#{page3.name} - #{site.name}"
+        end
+        doc.css('link[rel="canonical"]').tap do |canonical_elements|
+          expect(canonical_elements).to have(1).items
+          expect(canonical_elements[0]["href"]).to include page3.full_url
+        end
+        doc.css('body a').tap do |a_elements|
+          expect(a_elements).to have(1).items
+          expect(a_elements[0]["href"]).to eq page3.redirect_link
+        end
+      end
+
       expect(Cms::Task.count).to eq 2
       Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_pages').first.tap do |task|
         expect(task.state).to eq 'completed'
         expect(task.started).not_to be_nil
         expect(task.closed).not_to be_nil
-        expect(task.total_count).to eq 2
-        expect(task.current_count).to eq 2
+        expect(task.total_count).to eq 3
+        expect(task.current_count).to eq 3
         expect(task.logs).to include(include(page1.filename))
         expect(task.node_id).to be_nil
         # logs are saved in a file
@@ -136,7 +154,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
         expect(title.sha256_hash).to be_present
         expect(title.generation_type).to eq "pages"
 
-        expect(Cms::GenerationReport::History[title].all.count).to eq 5
+        expect(Cms::GenerationReport::History[title].all.count).to eq 6
         expect(Cms::GenerationReport::Aggregation[title].all.count).to eq 1
       end
     end
@@ -185,6 +203,18 @@ describe Cms::Page::GenerateJob, dbscope: :example do
         expect(canonical_elements[0]["href"]).to eq page2.full_url
       end
 
+      expect(File.size(page3.path)).to be > 0
+      Nokogiri::HTML5::Document.parse(File.read(page3.path)).tap do |doc|
+        doc.css('meta[http-equiv="refresh"]').tap do |refresh_elements|
+          expect(refresh_elements).to have(1).items
+          expect(refresh_elements[0]["content"]).to include page3.redirect_link
+        end
+        doc.css('link[rel="canonical"]').tap do |canonical_elements|
+          expect(canonical_elements).to have(1).items
+          expect(canonical_elements[0]["href"]).to include page3.full_url
+        end
+      end
+
       expect(Cms::Task.count).to eq 2
       Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_pages').first.tap do |task|
         expect(task.state).to eq 'ready'
@@ -193,8 +223,8 @@ describe Cms::Page::GenerateJob, dbscope: :example do
         expect(task.state).to eq 'completed'
         expect(task.started).not_to be_nil
         expect(task.closed).not_to be_nil
-        expect(task.total_count).to eq 2
-        expect(task.current_count).to eq 2
+        expect(task.total_count).to eq 3
+        expect(task.current_count).to eq 3
         expect(task.logs).to include(include(page1.filename))
         expect(task.node_id).to eq node.id
       end

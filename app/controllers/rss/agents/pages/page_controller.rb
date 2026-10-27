@@ -3,6 +3,9 @@ class Rss::Agents::Pages::PageController < ApplicationController
 
   def index
     if @cur_page.rss_link.present?
+      unless UrlValidator.valid?(@cur_page.rss_link, absolute_path: true)
+        raise SS::NotFoundError, "url is invalid."
+      end
       if Sys::TrustedUrlValidator.url_restricted? && !trusted_url?(@cur_page.rss_link)
         raise SS::NotFoundError, "url is untrusted."
       end
