@@ -61,6 +61,13 @@ class Gws::Monitor::CommentsController < ApplicationController
     @parent ||= @model.site(@cur_site).find(params[:parent_id])
   end
 
+  def set_items
+    @items ||= begin
+      set_topic_and_parent
+      @topic.descendants.where(parent_id: @parent.id)
+    end
+  end
+
   def check_creatable
     creatable = false
     creatable = true if @topic.allowed?(:edit, @cur_user, site: @cur_site)
