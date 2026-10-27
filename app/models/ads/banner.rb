@@ -78,7 +78,7 @@ class Ads::Banner
   end
 
   def template_variable_handler_link_url(_name, _issuer)
-    SS.follow_up_url_encode!(effective_link_url.presence || url) rescue nil
+    SS.follow_up_url_encode!(effective_link_url) rescue nil
   end
 
   def template_variable_handler_img_src(_name, _issuer)
