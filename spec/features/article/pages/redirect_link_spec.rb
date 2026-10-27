@@ -41,7 +41,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       visit show_path
       within "#addon-cms-agents-addons-redirect_link" do
-        expect(page).to have_link redirect_link
+        expect(page).to have_content redirect_link
       end
     end
   end
@@ -62,7 +62,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t('ss.notice.saved')
 
       within "#addon-cms-agents-addons-redirect_link" do
-        expect(page).to have_link redirect_link
+        expect(page).to have_content redirect_link
       end
     end
 
@@ -75,7 +75,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t('ss.notice.saved')
 
       within "#addon-cms-agents-addons-redirect_link" do
-        expect(page).to have_link redirect_link
+        expect(page).to have_content redirect_link
       end
     end
 
@@ -85,7 +85,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       visit show_path
       within "#addon-cms-agents-addons-redirect_link" do
-        expect(page).to have_link redirect_link
+        expect(page).to have_content redirect_link
       end
     end
   end

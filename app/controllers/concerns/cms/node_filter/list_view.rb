@@ -37,17 +37,37 @@ module Cms::NodeFilter::ListView
     Fs.rm_rf file
   end
 
+  # フォルダーの redirect_link 対応が実装されているが、redirect_link が有効になったフォルダーが標準機能にはない。
+  # 他のカスタマイズには存在するのかも？テストできるように判定メソッドを差し替える。
+  if Rails.env.test?
+    def _redirect_link_available?
+      return false unless @cur_site.try(:redirect_link_enabled?)
+      return false if @cur_node.effective_redirect_link.blank?
+      true
+    end
+  else
+    def _redirect_link_available?
+      return false unless @cur_node.is_a?(Cms::Addon::RedirectLink)
+      return false unless @cur_site.try(:redirect_link_enabled?)
+      return false if @cur_node.effective_redirect_link.blank?
+      true
+    end
+  end
+
   def _render_with_pagination(items)
     save_items = @items
     @items = items
 
+    if _redirect_link_available?
+      @redirect_link = @cur_node.effective_redirect_link
+      @window_name ||= "#{@cur_node.try(:window_name).presence || @cur_node.name} - #{@cur_site.try(:name)}"
+      return render_to_string(html: "", layout: "cms/redirect")
+    end
+
     body = render_to_string(template: "index")
     mime = rendered_format
 
-    if @cur_node.view_layout == "cms/redirect" && (redirect_link = @cur_node.effective_redirect_link) && !mobile_path?
-      @redirect_link = redirect_link
-      body = render_to_string(html: "", layout: "cms/redirect")
-    elsif mime.html? && @cur_node.layout
+    if mime.html? && @cur_node.layout
       @last_rendered_layout = nil if @last_rendered_node_filename != @cur_node.filename
       @last_rendered_layout ||= begin
         rendered_layout = render_layout(@cur_node.layout, content: "<!-- layout_yield --><!-- /layout_yield -->")
@@ -71,7 +91,7 @@ module Cms::NodeFilter::ListView
       @task.log "#{@cur_node.url}#{basename}" if @task
     end
 
-    if self.class.generates_rss
+    if self.class.generates_rss && !_redirect_link_available?
       basename = "rss.xml"
       rss = _render_rss(@cur_node, [])
       if Fs.write_data_if_modified("#{@cur_node.path}/#{basename}", rss.to_xml)
@@ -91,6 +111,12 @@ module Cms::NodeFilter::ListView
   public
 
   def index
+    if _redirect_link_available?
+      request.env["ss.redirect_path"] = @cur_node.effective_redirect_link
+      redirect_to @cur_node.effective_redirect_link
+      return
+    end
+
     @items = SS::SortEmulator.new(pages, @cur_node.sort_hash)
 
     if params[:page].numeric?
@@ -109,6 +135,8 @@ module Cms::NodeFilter::ListView
   end
 
   def rss
+    raise SS::NotFoundError, "redirect is available." if _redirect_link_available?
+
     @items = SS::SortEmulator.new(pages, @cur_node.sort_hash)
     @items = @items.take(@cur_node.limit)
 
@@ -116,6 +144,8 @@ module Cms::NodeFilter::ListView
   end
 
   def rss_recent
+    raise SS::NotFoundError, "redirect is available." if _redirect_link_available?
+
     @cur_site = Cms::Site.find(@cur_site.id)
     raise "404" if @cur_site.rss_recent_disabled?
     rss
@@ -128,10 +158,10 @@ module Cms::NodeFilter::ListView
       return true
     end
 
-    if all_pages.blank?
+    if all_pages.blank? || _redirect_link_available?
       generate_empty_files
       cleanup_index_files(1)
-      cleanup_rss_file unless self.class.generates_rss
+      cleanup_rss_file if !self.class.generates_rss || _redirect_link_available?
       return true
     end
 
