@@ -74,6 +74,15 @@ class Cms::LinkChecker
     @max_redirection = SS.config.cms.check_links["max_redirection"].to_i
   end
 
+  def ssrf_allow_list
+    return @ssrf_allow_list if instance_variable_defined?(:@ssrf_allow_list)
+    @ssrf_allow_list = Array(SS.config.cms.check_links["ssrf_allow_list"]).flatten.select(&:present?).uniq
+  end
+
+  def ssrf_resolver
+    @ssrf_resolver
+  end
+
   # この設定は自サイトに向けてのもの。自サイトは Rails routing で解決するようにしたので HTTP アクセスは発生しないので不要となった
   # def http_basic_authentication
   #   return @http_basic_authentication if instance_variable_defined?(:@http_basic_authentication)
@@ -172,8 +181,12 @@ class Cms::LinkChecker
     faraday_options = { url: addressable_full_url.origin, request: { timeout: head_request_timeout } }
     faraday_options[:proxy] = proxy_options if proxy_options.present?
     faraday_options[:ssl] = ssl_options if ssl_options.present?
+    ssrf_filter_options = {}
+    ssrf_filter_options[:allowlist] = ssrf_allow_list if ssrf_allow_list.present?
+    ssrf_filter_options[:resolver] = ssrf_resolver if ssrf_resolver.present?
     http_client = Faraday.new(faraday_options) do |builder|
       builder.request :url_encoded
+      builder.request :ssrf_filter, **ssrf_filter_options
       # Basic 認証設定は自サイトに向けてのもの。
       # 自サイトは Rails routing で解決するようにしたので HTTP アクセスは発生しないので不要となった
       # if http_basic_authentication.present?

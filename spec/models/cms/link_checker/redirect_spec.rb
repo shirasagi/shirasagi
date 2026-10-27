@@ -3,6 +3,12 @@ require 'spec_helper'
 describe Cms::LinkChecker, dbscope: :example do
   let!(:site0) { cms_site }
   let!(:site) { create :cms_site_subdir, parent: site0 }
+  let(:ip_address) { "10.11.102.8" }
+  let!(:checker) do
+    checker = Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true)
+    checker.instance_variable_set(:@ssrf_resolver, ->(_hostname) { [ ip_address ] })
+    checker
+  end
 
   before do
     WebMock.disable_net_connect!(allow_localhost: true)
@@ -16,8 +22,8 @@ describe Cms::LinkChecker, dbscope: :example do
   end
 
   context "when external site responds a typical redirection" do
-    let(:url0) { unique_url }
-    let(:url1) { unique_url }
+    let(:url0) { "https://#{unique_domain}/#{unique_id}/" }
+    let(:url1) { "https://#{unique_domain}/#{unique_id}/" }
 
     before do
       stub_request(:head, url0)
@@ -27,7 +33,6 @@ describe Cms::LinkChecker, dbscope: :example do
     end
 
     it do
-      checker = Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true)
       result = checker.check_url(url0)
       expect(result.success?).to be_truthy
       expect(result.result).to eq :success
@@ -39,7 +44,7 @@ describe Cms::LinkChecker, dbscope: :example do
   end
 
   context "when external site responds a cyclic redirection #1" do
-    let(:url0) { unique_url }
+    let(:url0) { "https://#{unique_domain}/#{unique_id}/" }
 
     before do
       stub_request(:head, url0)
@@ -47,7 +52,6 @@ describe Cms::LinkChecker, dbscope: :example do
     end
 
     it do
-      checker = Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true)
       result = checker.check_url(url0)
       expect(result.success?).to be_falsey
       expect(result.result).to eq :error
@@ -59,8 +63,8 @@ describe Cms::LinkChecker, dbscope: :example do
   end
 
   context "when external site responds a cyclic redirection #2" do
-    let(:url0) { unique_url }
-    let(:url1) { unique_url }
+    let(:url0) { "https://#{unique_domain}/#{unique_id}/" }
+    let(:url1) { "https://#{unique_domain}/#{unique_id}/" }
 
     before do
       stub_request(:head, url0)
@@ -70,7 +74,6 @@ describe Cms::LinkChecker, dbscope: :example do
     end
 
     it do
-      checker = Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true)
       result = checker.check_url(url0)
       expect(result.success?).to be_falsey
       expect(result.result).to eq :error
@@ -82,15 +85,17 @@ describe Cms::LinkChecker, dbscope: :example do
   end
 
   context "when external site responds many redirections #1" do
-    let(:url0) { unique_url }
-    let(:url1) { unique_url }
-    let(:url2) { unique_url }
-    let(:url3) { unique_url }
-    let(:url4) { unique_url }
-    let(:url5) { unique_url }
-    let(:url6) { unique_url }
+    let(:url0) { "https://#{unique_domain}/#{unique_id}/" }
+    let(:url1) { "https://#{unique_domain}/#{unique_id}/" }
+    let(:url2) { "https://#{unique_domain}/#{unique_id}/" }
+    let(:url3) { "https://#{unique_domain}/#{unique_id}/" }
+    let(:url4) { "https://#{unique_domain}/#{unique_id}/" }
+    let(:url5) { "https://#{unique_domain}/#{unique_id}/" }
+    let(:url6) { "https://#{unique_domain}/#{unique_id}/" }
 
     before do
+      checker.instance_variable_set(:@max_redirection, 5)
+
       stub_request(:head, url0)
         .to_return(status: 302, body: "", headers: { 'Location' => url1 })
       stub_request(:head, url1)
@@ -108,8 +113,6 @@ describe Cms::LinkChecker, dbscope: :example do
     end
 
     it do
-      checker = Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true)
-      checker.instance_variable_set(:@max_redirection, 5)
       result = checker.check_url(url0)
       expect(result.success?).to be_falsey
       expect(result.result).to eq :error

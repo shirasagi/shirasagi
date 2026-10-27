@@ -3,6 +3,12 @@ require 'spec_helper'
 describe Cms::LinkChecker, dbscope: :example do
   let!(:site0) { cms_site }
   let!(:site) { create :cms_site_subdir, parent: site0 }
+  let(:ip_address) { "10.11.102.8" }
+  let!(:checker) do
+    checker = Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true)
+    checker.instance_variable_set(:@ssrf_resolver, ->(_hostname) { [ ip_address ] })
+    checker
+  end
 
   before do
     WebMock.disable_net_connect!(allow_localhost: true)
@@ -16,7 +22,7 @@ describe Cms::LinkChecker, dbscope: :example do
   end
 
   context "when external site is given" do
-    let(:url) { unique_url }
+    let(:url) { "https://#{unique_domain}/#{unique_id}/" }
 
     before do
       stub_request(:head, url)
@@ -27,7 +33,6 @@ describe Cms::LinkChecker, dbscope: :example do
       let(:http_status) { 200 }
 
       it do
-        checker = Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true)
         result = checker.check_url(url)
         expect(result.success?).to be_truthy
         expect(result.result).to eq :success
@@ -42,7 +47,6 @@ describe Cms::LinkChecker, dbscope: :example do
       let(:http_status) { 400 }
 
       it do
-        checker = Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true)
         result = checker.check_url(url)
         expect(result.success?).to be_falsey
         expect(result.result).to eq :error
@@ -57,7 +61,6 @@ describe Cms::LinkChecker, dbscope: :example do
       let(:http_status) { 500 }
 
       it do
-        checker = Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true)
         result = checker.check_url(url)
         expect(result.success?).to be_falsey
         expect(result.result).to eq :error
@@ -70,18 +73,17 @@ describe Cms::LinkChecker, dbscope: :example do
   end
 
   context "when external site is timed out" do
-    let(:url) { unique_url }
+    let(:url) { "https://#{unique_domain}/#{unique_id}/" }
 
     before do
-      stub_request(:head, url).to_timeout
+      stub_request(:head, url).to_raise(Timeout::Error)
     end
 
     it do
-      checker = Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true)
       result = checker.check_url(url)
       expect(result.success?).to be_falsey
       expect(result.result).to eq :error
-      expect(result.error_code).to eq :link_check_failed_not_found
+      expect(result.error_code).to eq :link_check_failed_timeout
       expect(result.redirection_count).to eq 0
       expect(result.content_type).to be_blank
       expect(result.content).to be_blank

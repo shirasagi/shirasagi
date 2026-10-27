@@ -3,6 +3,12 @@ require 'spec_helper'
 describe Cms::LinkChecker, dbscope: :example do
   let!(:site0) { cms_site }
   let!(:site) { create :cms_site_subdir, parent: site0 }
+  let(:ip_address) { "10.11.102.8" }
+  let!(:checker) do
+    checker = Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true)
+    checker.instance_variable_set(:@ssrf_resolver, ->(_hostname) { [ ip_address ] })
+    checker
+  end
 
   before do
     WebMock.disable_net_connect!(allow_localhost: true)
@@ -18,13 +24,7 @@ describe Cms::LinkChecker, dbscope: :example do
   context "when ldaps is given" do
     let(:url) { "ldaps://#{unique_domain}/#{unique_id}/" }
 
-    before do
-      stub_request(:head, url)
-        .to_return(status: 200, body: "", headers: { 'Content-Type' => 'text/html; charset=utf-8' })
-    end
-
     it do
-      checker = Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true)
       result = checker.check_url(url)
       expect(result.success?).to be_falsey
       expect(result.result).to eq :error
@@ -38,13 +38,7 @@ describe Cms::LinkChecker, dbscope: :example do
   context "when ssh is given" do
     let(:url) { "ssh://#{unique_domain}/#{unique_id}/" }
 
-    before do
-      stub_request(:head, url)
-        .to_return(status: 200, body: "", headers: { 'Content-Type' => 'text/html; charset=utf-8' })
-    end
-
     it do
-      checker = Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true)
       result = checker.check_url(url)
       expect(result.success?).to be_falsey
       expect(result.result).to eq :error
@@ -56,23 +50,20 @@ describe Cms::LinkChecker, dbscope: :example do
   end
 
   context "when the redirect destination is ftp" do
-    let(:url0) { unique_url }
+    let(:url0) { "https://#{unique_domain}/#{unique_id}/" }
     let(:url1) { "ftp://#{unique_domain}/#{unique_id}/" }
 
     before do
       stub_request(:head, url0)
-        .to_return(status: 200, body: "", headers: { 'Location' => url1 })
-      stub_request(:head, url1)
-        .to_return(status: 200, body: "", headers: { 'Content-Type' => 'text/html; charset=utf-8' })
+        .to_return(status: 302, body: "", headers: { 'Location' => url1 })
     end
 
     it do
-      checker = Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true)
       result = checker.check_url(url0)
       expect(result.success?).to be_falsey
       expect(result.result).to eq :error
       expect(result.error_code).to eq :link_check_failed_not_found
-      expect(result.redirection_count).to eq 1
+      expect(result.redirection_count).to eq 0
       expect(result.content_type).to be_blank
       expect(result.content).to be_blank
     end
