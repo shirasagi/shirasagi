@@ -20,6 +20,7 @@ module Guide::Addon
       permit_params :order
 
       validates :link_url, url: { absolute_path: true, allow_blank: true }
+      validate :encode_link_url
 
       template_variable_handler(:id, :template_variable_handler_name)
       template_variable_handler(:name, :template_variable_handler_name)
@@ -95,6 +96,17 @@ module Guide::Addon
         edges += question.edges.in(optional_necessary_point_ids: [id])
       end
       edges.count
+    end
+
+    private
+
+    def encode_link_url
+      return if errors[:link_url].present?
+      return unless link_url_changed?
+      self.link_url = SS.follow_up_url_encode!(link_url)
+    rescue => e
+      Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+      errors.add :link_url, :url
     end
   end
 end

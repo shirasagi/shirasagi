@@ -18,6 +18,7 @@ class KeyVisual::Image
 
   validates :file_id, presence: true
   validates :link_url, url: { absolute_path: true, allow_blank: true }
+  validate :encode_link_url
   validate :validate_display_remark
 
   permit_params :link_url, :remark_html
@@ -47,5 +48,16 @@ class KeyVisual::Image
     return if display_remarks.blank?
     keys = I18n.t("key_visual.options.display_remarks").keys.map(&:to_s)
     errors.add :display_remarks, :invalid if (display_remarks - keys).present?
+  end
+
+  private
+
+  def encode_link_url
+    return if errors[:link_url].present?
+    return unless link_url_changed?
+    self.link_url = SS.follow_up_url_encode!(link_url)
+  rescue => e
+    Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+    errors.add :link_url, :url
   end
 end

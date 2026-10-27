@@ -27,7 +27,8 @@ class Opendata::Resource
 
   validates :in_file, presence: true, if: ->{ file_id.blank? && source_url.blank? }
   validates :format, presence: true
-  validates :source_url, url: true, if: ->{ source_url.present? }
+  validates :source_url, url: { allow_blank: true }
+  validate :encode_source_url
 
   after_save :save_dataset
   after_destroy :compression_dataset
@@ -168,6 +169,15 @@ class Opendata::Resource
       self.file.destroy if file
       self.source_url = ::Addressable::URI.escape(source_url) if !source_url.ascii_only?
     end
+  end
+
+  def encode_source_url
+    return if errors[:source_url].present?
+    return unless source_url_changed?
+    self.source_url = SS.follow_up_url_encode!(source_url)
+  rescue => e
+    Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+    errors.add :source_url, :url
   end
 
   def compression_dataset

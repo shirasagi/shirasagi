@@ -19,6 +19,7 @@ class Board::Post
   validates :poster, presence: true
   validates :email, email: true
   validates :poster_url, url: true
+  validate :encode_poster_url
   validates :node_id, presence: true
 
   validate :validate_text, if: -> { node.text_size_limit != 0 }
@@ -74,5 +75,16 @@ class Board::Post
         end
       end
     end
+  end
+
+  private
+
+  def encode_poster_url
+    return if errors[:poster_url].present?
+    return unless poster_url_changed?
+    self.poster_url = SS.follow_up_url_encode!(poster_url)
+  rescue => e
+    Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+    errors.add :poster_url, :url
   end
 end

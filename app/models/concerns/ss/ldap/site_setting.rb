@@ -11,6 +11,7 @@ module SS::Ldap::SiteSetting
 
     validates :ldap_use_state, inclusion: { in: %w(system individual), allow_blank: true }
     validates :ldap_url, url: { scheme: %w(ldap ldaps) }
+    validate :encode_ldap_url
     validates :ldap_openssl_verify_mode, inclusion: { in: %w(none peer client_once fail_if_no_peer_cert), allow_blank: true }
   end
 
@@ -48,5 +49,16 @@ module SS::Ldap::SiteSetting
       end
     end
     config
+  end
+
+  private
+
+  def encode_ldap_url
+    return if errors[:ldap_url].present?
+    return unless ldap_url_changed?
+    self.ldap_url = SS.follow_up_url_encode!(ldap_url)
+  rescue => e
+    Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+    errors.add :ldap_url, :url
   end
 end
