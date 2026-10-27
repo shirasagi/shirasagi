@@ -94,8 +94,10 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
         click_button I18n.t('inquiry.confirm')
       end
 
-      within 'footer.send' do
-        click_button I18n.t('inquiry.submit')
+      within 'div.inquiry-form.confirm' do
+        within 'footer.send' do
+          click_button I18n.t('inquiry.submit')
+        end
       end
       expect(page).to have_css(".inquiry-sent", text: "お問い合わせを受け付けました。")
 
@@ -178,8 +180,10 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
         click_button I18n.t('inquiry.confirm')
       end
 
-      within 'footer.send' do
-        click_button I18n.t('inquiry.submit')
+      within 'div.inquiry-form.confirm' do
+        within 'footer.send' do
+          click_button I18n.t('inquiry.submit')
+        end
       end
       expect(page).to have_css(".inquiry-sent", text: "お問い合わせを受け付けました。")
 

@@ -129,10 +129,10 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
-
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         wait_for_all_ckeditors_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -184,10 +184,10 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: approve_comment2
           click_on I18n.t("workflow.buttons.approve")
         end
-
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         wait_for_all_ckeditors_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -240,10 +240,10 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: approve_comment3
           click_on I18n.t("workflow.buttons.approve")
         end
-
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment3)}/)
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         wait_for_all_ckeditors_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment3)}/)
 
         item.reload
         expect(item.workflow_state).to eq "approve"
@@ -374,10 +374,10 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
-
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         wait_for_all_ckeditors_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -410,10 +410,10 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: approve_comment2
           click_on I18n.t("workflow.buttons.approve")
         end
-
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         wait_for_all_ckeditors_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -458,10 +458,10 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: approve_comment3
           click_on I18n.t("workflow.buttons.approve")
         end
-
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment3)}/)
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         wait_for_all_ckeditors_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment3)}/)
 
         item.reload
         expect(item.workflow_state).to eq "approve"
@@ -584,10 +584,10 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
-
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         wait_for_all_ckeditors_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -638,10 +638,10 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: approve_comment2
           click_on I18n.t("workflow.buttons.approve")
         end
-
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         wait_for_all_ckeditors_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -830,10 +830,10 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
-
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         wait_for_all_ckeditors_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -878,10 +878,10 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: approve_comment3
           click_on I18n.t("workflow.buttons.approve")
         end
-
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment3)}/)
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         wait_for_all_ckeditors_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment3)}/)
 
         item.reload
         expect(item.workflow_state).to eq "approve"

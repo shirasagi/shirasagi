@@ -169,6 +169,7 @@ describe 'members/agents/nodes/my_group', type: :feature, dbscope: :example, js:
 
           click_button "登録"
         end
+        expect(page).to have_css(".cms-member-registration-complete", text: "会員登録が完了しました")
 
         visit index_url
 

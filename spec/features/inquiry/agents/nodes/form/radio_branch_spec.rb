@@ -186,7 +186,11 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
       expect(page).not_to have_css(".errorExplanation")
 
       # confirm
-      click_on I18n.t("inquiry.submit")
+      within 'div.inquiry-form.confirm' do
+        within 'footer.send' do
+          click_on I18n.t("inquiry.submit")
+        end
+      end
       expect(page).to have_css(".inquiry-sent")
 
       # database

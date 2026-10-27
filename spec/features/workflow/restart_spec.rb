@@ -127,6 +127,8 @@ describe "restart", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.approve")
         end
         wait_for_notice I18n.t("workflow.notice.approved")
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
         item.reload
@@ -149,6 +151,8 @@ describe "restart", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.approve")
         end
         wait_for_notice I18n.t("workflow.notice.approved")
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
 
         item.reload
@@ -172,6 +176,8 @@ describe "restart", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.approve")
         end
         wait_for_notice I18n.t("workflow.notice.approved")
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment3)}/)
 
         item.reload

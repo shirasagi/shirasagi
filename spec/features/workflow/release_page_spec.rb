@@ -87,7 +87,9 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
-
+        wait_for_notice I18n.t("workflow.notice.approved")
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
         item.reload
@@ -188,7 +190,9 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
             fill_in "remand[comment]", with: approve_comment1
             click_on I18n.t("workflow.buttons.approve")
           end
-
+          wait_for_notice I18n.t("workflow.notice.approved")
+          wait_for_all_turbo_frames
+          wait_for_all_ckeditors_ready
           expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
           item.reload

@@ -79,7 +79,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
         click_button I18n.t('inquiry.confirm')
       end
 
-      within 'div.inquiry-form' do
+      within 'div.inquiry-form.confirm' do
         within 'div.columns' do
           expect(find("[name='item[1]']")['value']).to eq answer1
         end
@@ -128,7 +128,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
         click_button I18n.t('inquiry.confirm')
       end
 
-      within 'div.inquiry-form' do
+      within 'div.inquiry-form.confirm' do
         within 'div.columns' do
           expect(find("[name='item[1]']")['value']).to eq answer2
         end

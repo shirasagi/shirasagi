@@ -61,7 +61,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       end
 
       expect(status_code).to eq 200
-      within 'div.inquiry-form' do
+      within 'div.inquiry-form.confirm' do
         within 'div.columns' do
           expect(find("[name='item[1]']")['value']).to eq 'シラサギ太郎'
           expect(find("[name='item[2]']")['value']).to eq '株式会社シラサギ'
@@ -204,7 +204,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       expect(current_path).to start_with "#{site.mobile_location}/#{node.filename}/"
       # mobile モードの場合、form の action は /mobile/ で始まる
       expect(find('form')['action']).to start_with "#{site.mobile_location}/#{node.filename}/"
-      within 'div.inquiry-form' do
+      within 'div.inquiry-form.confirm' do
         within 'div.columns' do
           expect(find("[name='item[1]']")['value']).to eq 'シラサギ太郎'
           expect(find("[name='item[2]']")['value']).to eq '株式会社シラサギ'
@@ -272,7 +272,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       end
 
       expect(status_code).to eq 200
-      within 'div.inquiry-form' do
+      within 'div.inquiry-form.confirm' do
         within 'div.columns' do
           expect(find("[name='item[1]']")['value']).to eq 'シラサギ太郎'
           expect(find("[name='item[2]']")['value']).to eq '株式会社シラサギ'
@@ -311,7 +311,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       end
 
       expect(status_code).to eq 200
-      within 'div.inquiry-form' do
+      within 'div.inquiry-form.confirm' do
         within 'div.columns' do
           expect(find("[name='item[1]']")['value']).to eq 'シラサギ太郎'
           expect(find("[name='item[2]']")['value']).to eq '株式会社シラサギ'
