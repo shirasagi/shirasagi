@@ -39,8 +39,11 @@ gem 'csv'
 gem 'diff-lcs'
 gem 'diffy'
 gem 'dotenv-rails'
+gem 'faraday'
+gem 'faraday-ssrf-filter'
 gem 'fast_blank'
 gem 'fastimage'
+gem 'faraday'
 gem 'geocoder'
 gem 'google-api-client'
 gem 'holiday_japan'
@@ -112,7 +115,6 @@ gem 'sparql-client'
 gem 'unf'
 
 # elasticsearch
-gem 'faraday'
 gem 'elasticsearch', '~> 8'
 
 # line

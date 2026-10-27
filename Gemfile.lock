@@ -197,6 +197,8 @@ GEM
     faraday-patron (1.0.0)
     faraday-rack (1.0.0)
     faraday-retry (1.0.4)
+    faraday-ssrf-filter (0.2.0)
+      faraday (>= 1.0, < 3)
     faraday_middleware (1.2.1)
       faraday (~> 1.0)
     fast_blank (1.0.1)
@@ -829,6 +831,7 @@ DEPENDENCIES
   elasticsearch (~> 8)
   factory_bot_rails
   faraday
+  faraday-ssrf-filter
   fast_blank
   fastimage
   fuubar
