@@ -1,7 +1,7 @@
 class SS::Migration20261023000002
   include SS::Migration::Base
 
-  depends_on "20261023000001"
+  depends_on "20261009000000"
 
   def change
     # ads/part/slide とは異なり self / _self は許可されていない
