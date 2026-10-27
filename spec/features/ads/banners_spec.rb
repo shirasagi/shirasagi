@@ -10,6 +10,7 @@ describe "ads_banners", type: :feature, dbscope: :example, js: true do
     )
   end
   let(:name) { "sample" }
+  let(:tags) { Array.new(2) { "tag-#{unique_id}" } }
   let(:name2) { "modify" }
 
   before { login_cms_user }
@@ -25,12 +26,21 @@ describe "ads_banners", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         fill_in "item[name]", with: name
-        fill_in "item[link_url]", with: "http://example.jp"
+        fill_in "item[link_url]", with: "https://example.jp"
+        fill_in "item[tags]", with: tags.join(" ")
         attach_to_ss_file_field "item[file_id]", file
 
         click_button I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t("ss.notice.saved")
+
+      expect(Ads::Banner.all.count).to eq 1
+      item = Ads::Banner.all.first
+      expect(item.site_id).to eq site.id
+      expect(item.name).to eq name
+      expect(item.link_url).to eq "https://example.jp"
+      expect(item.tags).to eq tags
+      expect(item.file_id).to eq file.id
 
       visit index_path
       click_on name
@@ -42,6 +52,13 @@ describe "ads_banners", type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t("ss.notice.saved")
 
+      item.reload
+      expect(item.site_id).to eq site.id
+      expect(item.name).to eq name2
+      expect(item.link_url).to eq "https://example.jp"
+      expect(item.tags).to eq tags
+      expect(item.file_id).to eq file.id
+
       visit index_path
       click_on name2
       click_on I18n.t("ss.links.delete")
@@ -49,6 +66,8 @@ describe "ads_banners", type: :feature, dbscope: :example, js: true do
         click_button I18n.t('ss.buttons.delete')
       end
       wait_for_notice I18n.t("ss.notice.deleted")
+
+      expect { item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
     end
   end
 

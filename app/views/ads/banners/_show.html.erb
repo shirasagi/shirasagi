@@ -11,6 +11,9 @@
   <dt><%= @model.t :link_target %></dt>
   <dd><%= @item.label(:link_target) %></dd>
 
+  <dt><%= @model.t :tags %></dt>
+  <dd><%= @item.tags.try(:join, ", ") %></dd>
+
   <dt><%= @model.t :order %></dt>
   <dd><%= @item.send :order %></dd>
 </dl>

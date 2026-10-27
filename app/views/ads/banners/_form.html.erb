@@ -11,6 +11,9 @@
   <dt><%= @model.t :link_target %><%= @model.tt :link_target %></dt>
   <dd><%= f.select :link_target, Ads::Banner.link_target_options %></dd>
 
+  <dt><%= @model.t :tags %><%= @model.tt :tags %></dt>
+  <dd><%= f.text_field :tags %></dd>
+
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
 </dl>
