@@ -15,7 +15,7 @@
     </span>
   </dd>
 
-  <% if @item.redirect_link.blank? %>
+  <% if @item.effective_redirect_link.blank? %>
     <dd><div class="cms-preview-links"><%= safe_join cms_preview_links(@item), '|' %></div></dd>
   <% end %>
 
