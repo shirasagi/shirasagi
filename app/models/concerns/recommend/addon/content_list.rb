@@ -18,11 +18,15 @@ module Recommend::Addon
     def condition_hash(options = {})
       cond = []
       if conditions.present?
-        paths = conditions.map { |path| path.start_with?("/") ? /\A#{path}/ : /\A\/#{path}/ }
+        paths = conditions.map do |path|
+          path.start_with?("/") ? /\A#{::Regexp.escape(path)}/ : /\A\/#{::Regexp.escape(path)}/
+        end
         cond << { path: { "$in" => paths } }
       end
       if exclude_paths.present?
-        paths = exclude_paths.map { |path| path.start_with?("/") ? /\A#{path}/ : /\A\/#{path}/ }
+        paths = exclude_paths.map do |path|
+          path.start_with?("/") ? /\A#{::Regexp.escape(path)}/ : /\A\/#{::Regexp.escape(path)}/
+        end
         cond << { path: { "$nin" => paths } }
       end
       cond.present? ? { "$and" => cond } : {}
