@@ -34,7 +34,7 @@ module Inquiry::Addon
       basic_auth = credentials
       api = ::Kintone::Api.new(kintone_domain, kintone_app_api_token) do |conn|
         if basic_auth && basic_auth[kintone_domain]
-          conn.basic_auth(basic_auth[kintone_domain].user, basic_auth[kintone_domain].password)
+          conn.request(:authorization, :basic, basic_auth[kintone_domain].user, basic_auth[kintone_domain].password)
         end
       end
       api = api.guest(kintone_app_guest_space_id) if kintone_app_guest_space_id.present?

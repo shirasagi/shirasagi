@@ -66,7 +66,9 @@ class Opendata::IdeaComment
       criteria = self.where({})
       return criteria if params.blank?
 
-      criteria = criteria.where(text: /#{params[:keyword]}/) if params[:keyword].present?
+      if params[:keyword].present?
+        criteria = criteria.keyword_in params[:keyword], :text
+      end
       criteria = search_poster(params, criteria)
     end
 
