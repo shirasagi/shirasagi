@@ -85,5 +85,19 @@ module Opendata::Resource::Model
     def format_options
       SS.config.opendata.available_resource_formats
     end
+
+    def search(params)
+      criteria = self.where({})
+      return criteria if params.blank?
+
+      if params[:keyword].present?
+        criteria = criteria.where(name: /#{::Regexp.escape(params[:keyword])}/)
+      end
+      if params[:format].present?
+        criteria = criteria.where(format: params[:format].upcase)
+      end
+
+      criteria
+    end
   end
 end

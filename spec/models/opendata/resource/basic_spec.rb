@@ -78,6 +78,12 @@ describe Opendata::Resource, dbscope: :example do
     it { expect(described_class.format_options).to include "AVI" }
   end
 
+  describe ".search" do
+    it { expect(described_class.search(keyword: "keyword_b633").selector.to_h).to include("name" => /keyword_b633/) }
+    it { expect(described_class.search(format: "csv").selector.to_h).to include("format" => "CSV") }
+    it { expect(described_class.search(xxxx: "xxxxx").selector.to_h).to be_empty }
+  end
+
   context "ttl file", fuseki: true do
     let(:file) { Rails.root.join("spec", "fixtures", "opendata", "test-1.ttl") }
     let(:content_type) { "application/octet-stream" }
