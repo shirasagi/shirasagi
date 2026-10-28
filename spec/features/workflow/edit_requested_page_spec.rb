@@ -226,10 +226,10 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: remand_comment
           click_on I18n.t("workflow.buttons.remand")
         end
-        wait_for_js_ready
-        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment)
-        wait_for_all_ckeditors_ready
+        wait_for_notice I18n.t("workflow.notice.remanded")
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment)
 
         click_on I18n.t("article.page_navi.back_to_index")
         expect(page).to have_content(item.name)
@@ -499,10 +499,10 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: remand_comment
           click_on I18n.t("workflow.buttons.remand")
         end
-        wait_for_js_ready
-        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment)
-        wait_for_all_ckeditors_ready
+        wait_for_notice I18n.t("workflow.notice.remanded")
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment)
 
         click_on I18n.t("article.page_navi.back_to_index")
         expect(page).to have_content(branch_item.name)

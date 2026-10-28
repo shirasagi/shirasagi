@@ -693,10 +693,10 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: remand_comment3
           click_on I18n.t("workflow.buttons.remand")
         end
-
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment3)}/)
+        wait_for_notice I18n.t("workflow.notice.remanded")
         wait_for_all_turbo_frames
         wait_for_all_ckeditors_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment3)}/)
 
         item.reload
         expect(item.workflow_state).to eq "remand"
