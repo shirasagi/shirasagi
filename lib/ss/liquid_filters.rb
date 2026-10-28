@@ -183,7 +183,7 @@ module SS::LiquidFilters
     return unless page
     return unless page.is_a?(Cms::Model::Page)
     criteria = Cms::Page.site(page.site)
-    criteria = criteria.where(filename: /\A#{filename}\//) if filename.present?
+    criteria = criteria.where(filename: /\A#{::Regexp.escape(filename)}\//) if filename.present?
     criteria.where(name: page.name).nin(id: page.id).to_a
   end
 

@@ -40,7 +40,7 @@ class Gws::Presence::ResetJob < Gws::ApplicationJob
 
   def each_user(&block)
     group_ids = [site.id]
-    group_ids += ::Gws::Group.active.where(name: /^#{site.name}\//).pluck(:id)
+    group_ids += ::Gws::Group.active.where(name: /^#{::Regexp.escape(site.name)}\//).pluck(:id)
 
     all_user_ids = ::Gws::User.active.in(group_ids: group_ids).pluck(:id)
     all_user_ids.each_slice(100) do |ids|

@@ -44,17 +44,12 @@ module Opendata::Api::ResourceSearchFilter
   end
 
   def agree?(resource, queries)
-    result = true
-
-    queries.each do |query|
+    queries.all? do |query|
       field, term = Addressable::URI.unencode(query).split(":")
       property = convert_property_name(field)
-      if resource[property.to_sym] !~ /#{term}/i
-        result = false
-      end
+      value = resource.try(property)
+      value.present? && value.match(/#{Regexp.escape(term)}/i)
     end
-
-    result
   end
 
   def init_resource_search

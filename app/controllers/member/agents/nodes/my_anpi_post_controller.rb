@@ -37,7 +37,7 @@ class Member::Agents::Nodes::MyAnpiPostController < ApplicationController
     if @cur_node.deny_ips.present?
       remote_ip = remote_addr
       @cur_node.deny_ips.each do |deny_ip|
-        raise "404" if remote_ip.match?(/^#{deny_ip}/)
+        raise "404" if remote_ip.start_with?(deny_ip)
       end
     end
   end

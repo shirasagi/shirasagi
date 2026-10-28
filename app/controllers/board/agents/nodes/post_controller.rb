@@ -16,7 +16,7 @@ class Board::Agents::Nodes::PostController < ApplicationController
     if @cur_node.deny_ips.present?
       remote_ip = remote_addr
       @cur_node.deny_ips.each do |deny_ip|
-        raise SS::ForbiddenError if remote_ip.match?(/^#{deny_ip}/)
+        raise SS::ForbiddenError if remote_ip.start_with?(deny_ip)
       end
     end
   end

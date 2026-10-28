@@ -41,9 +41,9 @@ class Board::Post
 
   def validate_banned_words
     cur_node.banned_words.each do |word|
-      errors.add :name, :invalid_word, word: word if name.match?(/#{word}/)
-      errors.add :text, :invalid_word, word: word if text.match?(/#{word}/)
-      errors.add :poster, :invalid_word, word: word if poster.match?(/#{word}/)
+      errors.add :name, :invalid_word, word: word if name.present? && name.include?(word)
+      errors.add :text, :invalid_word, word: word if text.present? && text.include?(word)
+      errors.add :poster, :invalid_word, word: word if poster.present? && poster.include?(word)
     end
   end
 

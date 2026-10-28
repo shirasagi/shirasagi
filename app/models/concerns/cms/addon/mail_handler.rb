@@ -30,10 +30,10 @@ module Cms::Addon::MailHandler
     body = body.gsub(/\r\n/, "\n").strip
 
     if start_line.present?
-      body = body.sub(/^.*?#{start_line}/m, "").strip
+      body = body.sub(/^.*?#{::Regexp.escape(start_line)}/m, "").strip
     end
     if terminate_line.present?
-      body = body.sub(/#{terminate_line}.*$/m, "").strip
+      body = body.sub(/#{::Regexp.escape(terminate_line)}.*$/m, "").strip
     end
     if subject_state == "include"
       body = I18n.t("cms.notices.line_mail_handler_subject", subject: mail.subject, body: body)

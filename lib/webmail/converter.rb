@@ -5,7 +5,7 @@ class Webmail::Converter
     end
 
     def extract_display_name(address)
-      address.gsub(/<?#{extract_address(address)}>?/, "").strip
+      address.gsub(/<?#{::Regexp.escape(extract_address(address))}>?/, "").strip
     end
 
     def quote_address(address)
