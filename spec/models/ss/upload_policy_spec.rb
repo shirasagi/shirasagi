@@ -5,6 +5,10 @@ describe SS::UploadPolicy, dbscope: :example do
   let(:user) { cms_user }
 
   before do
+    @save_current_site = SS.current_site
+    @save_current_user = SS.current_user
+    @save_current_user_group = SS.current_user_group
+    @save_current_organization = SS.current_organization
     @save_current_token = SS.current_token
 
     SS.current_site = nil
@@ -16,6 +20,10 @@ describe SS::UploadPolicy, dbscope: :example do
 
   after do
     SS.current_token = @save_current_token
+    SS.current_site = @save_current_site
+    SS.current_user = @save_current_user
+    SS.current_user_group = @save_current_user_group
+    SS.current_organization = @save_current_organization
   end
 
   describe "methods" do
