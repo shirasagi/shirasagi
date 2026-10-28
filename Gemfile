@@ -119,7 +119,7 @@ gem 'elasticsearch', '~> 8'
 gem 'line-bot-api', '~> 1.29'
 
 # kintone
-gem 'kintone', git: "https://github.com/jue58/kintone.git"
+gem 'kintone', git: "https://github.com/shirasagi/kintone.git"
 
 group :development, :test do
   gem 'brakeman', require: false
