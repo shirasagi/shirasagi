@@ -114,7 +114,7 @@ class Translate::Converter
       html.delete!("</html>", "")
     else
       html = doc.to_s
-      html.sub!(/(<html.*?)lang="#{::Regexp.escape(@source.code)}"/, "\\1lang=\"#{::Regexp.escape(@target.code)}\"")
+      html.sub!(/(<html.*?)lang="#{::Regexp.escape(@source.code)}"/, "\\1lang=\"#{@target.code}\"")
       html.sub!(/<body( |>)/m, '<body data-translate="' + @target.code + '"\\1')
       html.sub!(/<\/head>/, '<meta name="google" value="notranslate">' + "</head>")
     end
