@@ -90,8 +90,12 @@ module Opendata::Resource::Model
       criteria = self.where({})
       return criteria if params.blank?
 
-      criteria = criteria.where(name: /#{params[:keyword]}/) if params[:keyword].present?
-      criteria = criteria.where(format: params[:format].upcase) if params[:format].present?
+      if params[:keyword].present?
+        criteria = criteria.where(name: /#{::Regexp.escape(params[:keyword])}/)
+      end
+      if params[:format].present?
+        criteria = criteria.where(format: /#{::Regexp.escape(params[:format])}/i)
+      end
 
       criteria
     end
