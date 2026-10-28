@@ -24,8 +24,8 @@ class MailPage::ImportJob < Cms::ApplicationJob
     from_domain = from.sub(/^.+@/, "")
     to_domain = to.sub(/^.+@/, "")
     nodes = MailPage::Node::Page.site(site)
-      .in(mail_page_from_conditions: /^(#{Regexp.escape(from)}|#{Regexp.escape(from_domain)})$/)
-      .in(mail_page_to_conditions: /^(#{Regexp.escape(to)}|#{Regexp.escape(to_domain)})$/)
+      .in(mail_page_from_conditions: /^(#{::Regexp.escape(from)}|#{::Regexp.escape(from_domain)})$/)
+      .in(mail_page_to_conditions: /^(#{::Regexp.escape(to)}|#{::Regexp.escape(to_domain)})$/)
 
     nodes.each do |node|
       node.create_page_from_mail(mail)
