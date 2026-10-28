@@ -1,0 +1,25 @@
+# docker_line 用の Mongoid 設定。
+# compose がこのファイルを /app/config/mongoid.yml にマウントする（ホスト側の config/mongoid.yml は変更しない）。
+# DB はコンテナ内の mongo サービスに閉じるので、ホストの mongo（別 worktree の ss）とは混ざらない。
+development: &development
+  clients:
+    default:
+      database: ss
+      hosts:
+        - <%= "#{ENV.fetch('MONGODB_HOST', 'mongo')}:#{ENV.fetch('MONGODB_PORT', '27017')}" %>
+      options:
+        truncate_logs: false
+
+test:
+  clients:
+    default:
+      database: ss_test
+      hosts:
+        - <%= "#{ENV.fetch('MONGODB_HOST', 'mongo')}:#{ENV.fetch('MONGODB_PORT', '27017')}" %>
+      options:
+        truncate_logs: false
+        read:
+          mode: :primary
+
+production:
+  <<: *development

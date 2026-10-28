@@ -1,0 +1,4 @@
+# tunnel サービス（ngrok）の設定。管理 UI（http://localhost:4040）をコンテナ外から見られるように 0.0.0.0 で待ち受ける。
+# authtoken は .env の NGROK_AUTHTOKEN（環境変数）から渡す。
+version: "2"
+web_addr: 0.0.0.0:4040

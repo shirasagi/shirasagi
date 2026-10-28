@@ -1,0 +1,85 @@
+# LINE 連携 実験用コンテナ。
+#   起動:   docker compose -f docker_line/docker-compose.yml up --build
+#   初期化: docker compose -f docker_line/docker-compose.yml run --rm web bash docker_line/bin/setup.sh
+#
+# DB はコンテナ内 mongo（named volume）で自己完結し、ホストの mongo とは混ざらない。
+# コードはホスト側をマウントするのでホットリロードで動く。
+# 公開 URL（ngrok）と配信予約の自動実行は profile で opt-in にしている（下記 tunnel / scheduler）。
+name: shirasagi-line
+
+x-app: &app
+  image: shirasagi-line:dev                      # web / scheduler で同じイメージを使う
+  build:
+    context: .
+    dockerfile: Dockerfile
+  working_dir: /app
+  volumes:
+    - ..:/app:cached                              # ホスト側コード = ホットリロード
+    - ./mongoid.yml:/app/config/mongoid.yml:ro    # ホストの config/mongoid.yml を汚さず差し替える
+    - bundle:/usr/local/bundle                    # gem をコンテナ側に隔離・永続
+    - node_modules:/app/node_modules              # node_modules も分離（mac/linux ネイティブ差の回避）
+  environment:
+    RAILS_ENV: development
+    PORT: "3000"
+    MONGODB_HOST: mongo
+    MONGODB_PORT: "27017"
+    TZ: Asia/Tokyo
+    SITE_HOST: www                                # setup.sh が作るサイトの host
+    PUBLIC_DOMAIN: ${NGROK_DOMAIN:-}              # ngrok の固定ドメイン。setup.sh がサイトのドメインに追加する
+    LINE_DELIVER_INTERVAL: ${LINE_DELIVER_INTERVAL:-900}
+
+services:
+  web:
+    <<: *app
+    command: bash docker_line/bin/start.sh
+    ports:
+      - "3000:3000"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    stdin_open: true
+    tty: true
+
+  mongo:
+    image: mongo:8.0                              # 本番 bin/install.sh と同じ 8.0 系
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27018:27017"                             # ホスト側 27018（既存ホスト mongo の 27017 と衝突回避）
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # LINE プラットフォームからの Webhook / LINE Login コールバックを受けるための公開 URL（opt-in）。
+  #   docker compose -f docker_line/docker-compose.yml --profile tunnel up
+  # .env に NGROK_AUTHTOKEN / NGROK_DOMAIN が必要（.env.example 参照）。管理 UI は http://localhost:4040
+  tunnel:
+    image: ngrok/ngrok:3
+    profiles: ["tunnel"]
+    command: ["http", "web:3000", "--url=https://${NGROK_DOMAIN:-}", "--config=/etc/ngrok.yml"]   # NGROK_DOMAIN 未設定だと ngrok が URL 不正で止まる
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN:-}
+    volumes:
+      - ./ngrok.yml:/etc/ngrok.yml:ro
+    ports:
+      - "4040:4040"
+    depends_on:
+      - web
+
+  # 配信予約（cms:line:deliver）とリッチメニュー更新（cms:line:apply_richmenu）の定期実行（opt-in）。
+  # 本番の cron（settings/cron.html）の代わり。
+  #   docker compose -f docker_line/docker-compose.yml --profile scheduler up
+  scheduler:
+    <<: *app
+    profiles: ["scheduler"]
+    command: bash docker_line/bin/scheduler.sh
+    depends_on:
+      web:
+        condition: service_started
+
+volumes:
+  bundle:
+  node_modules:
+  mongo_data:
