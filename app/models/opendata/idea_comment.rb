@@ -67,7 +67,7 @@ class Opendata::IdeaComment
       return criteria if params.blank?
 
       if params[:keyword].present?
-        criteria = criteria.where(text: /#{::Regexp.escape(params[:keyword])}/)
+        criteria = criteria.keyword_in params[:keyword], :text
       end
       criteria = search_poster(params, criteria)
     end
