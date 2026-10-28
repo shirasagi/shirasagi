@@ -55,7 +55,7 @@ class Webmail::Mailbox
     ]
     name = self.name
     list.each do |src, dst|
-      next unless name =~ /^#{src}(\.|$)/
+      next unless name =~ /^#{::Regexp.escape(src)}(\.|$)/
       dir = src.include?('.') ? src.sub(/[^.]+$/, '') : ''
       name = dir + name.sub(/^#{::Regexp.escape(src)}(\.|$)/, dst + '\\1')
     end
@@ -67,7 +67,7 @@ class Webmail::Mailbox
   end
 
   def special_mailbox?
-    imap.special_mailboxes.find { |m| original_name =~ /^#{m}(\.|$)/ }.present?
+    imap.special_mailboxes.find { |m| original_name =~ /^#{::Regexp.escape(m)}(\.|$)/ }.present?
   end
 
   def status
