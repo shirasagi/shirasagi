@@ -14,6 +14,7 @@
   <% if effective_link_url.present? %>
     <%= link_to effective_link_url, effective_link_url %>
   <% end %>
-  <img src="<%= @cur_page.count_url %>" width="0" height="0" border="0" alt="" />
+  <%# ビーコン送信用 img タグの alt は "" にするのが標準っぽい %>
+  <%= image_tag @cur_page.count_url, width: 0, height: 0, alt: "", aria: { hidden: true } %>
 </body>
 </html>
