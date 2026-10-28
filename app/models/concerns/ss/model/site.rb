@@ -217,7 +217,7 @@ module SS::Model::Site
           sites.each do |s|
             domains = s.domains_with_subdir
             domains.each do |domain|
-              if host_with_path =~ /^#{domain}\// && "#{domain}/".count("/") > depth
+              if host_with_path.start_with?("#{domain}/") && "#{domain}/".count("/") > depth
                 site = s
                 depth = "#{domain}/".count("/")
               end
