@@ -1,42 +1,34 @@
 require 'spec_helper'
 
-describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
-  let(:site) { cms_site }
-  let(:layout) { create_cms_layout }
-  let(:node) do
+describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: true do
+  let!(:site) { cms_site }
+  let!(:layout) { create_cms_layout cur_site: site }
+  let!(:node) do
     create(
-      :inquiry_node_form,
-      cur_site: site,
-      layout_id: layout.id,
-      inquiry_captcha: 'enabled',
-      notice_state: 'enabled',
-      notice_content: 'include_answers',
-      notice_emails: ['notice@example.jp'],
-      from_name: 'admin',
-      from_email: 'admin@example.jp',
-      reply_state: 'disabled',
-      kintone_app_activation: 'enabled',
-      kintone_app_api_token: unique_id,
-      kintone_app_key: 1)
+      :inquiry_node_form, cur_site: site, layout: layout, inquiry_captcha: 'enabled',
+      notice_state: 'enabled', notice_content: 'include_answers', notice_emails: ['notice@example.jp'],
+      from_name: 'admin', from_email: 'admin@example.jp', reply_state: 'disabled',
+      kintone_app_activation: 'enabled', kintone_app_api_token: unique_id, kintone_app_key: 1)
   end
-  let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/" }
   let(:kintone_domain) { "#{unique_id}.example.jp" }
   let(:kintone_url) { "https://#{kintone_domain}/k/v1/record.json" }
 
   before do
     ActionMailer::Base.deliveries = []
+    @net_connect_allowed = WebMock.net_connect_allowed?
+    WebMock.disable_net_connect!(allow_localhost: true)
     WebMock.reset!
   end
 
   after do
     ActionMailer::Base.deliveries = []
     WebMock.reset!
+    WebMock.allow_net_connect! if @net_connect_allowed
   end
 
   context "when kintone_app_activation is enabled" do
     before do
-      site.kintone_domain = kintone_domain
-      site.save!
+      site.update!(kintone_domain: kintone_domain)
       site.reload
 
       node.columns.create! attributes_for(:inquiry_column_name).reverse_merge({cur_site: site, kintone_field_code: 'name'})
@@ -50,12 +42,11 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       node.reload
 
       stub_request(:post, kintone_url).
-        to_return(status: 200, body: { id: 100, revision: 1 }.to_json, headers: { 'Content-Type' => 'application/json'})
+        to_return(status: 200, body: { id: 100, revision: 1 }.to_json, headers: { 'Content-Type' => 'application/json' })
     end
 
     it do
-      visit index_url
-      expect(status_code).to eq 200
+      visit node.full_url
       within 'div.inquiry-form' do
         within 'div.columns' do
           fill_in "item[1]", with: "シラサギ太郎"
@@ -71,8 +62,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         click_button I18n.t('inquiry.confirm')
       end
 
-      expect(status_code).to eq 200
-      within 'div.inquiry-form' do
+      within 'div.inquiry-form.confirm' do
         within 'div.columns' do
           expect(find("[name='item[1]']")['value']).to eq 'シラサギ太郎'
           expect(find("[name='item[2]']")['value']).to eq '株式会社シラサギ'
@@ -91,7 +81,6 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         end
       end
 
-      expect(status_code).to eq 200
       expect(find('div.inquiry-sent').text).to eq node.inquiry_sent_html.gsub(/<.*?>/, '')
 
       expect(Inquiry::Answer.site(site).count).to eq 1
@@ -152,7 +141,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         # inquiry_column_upload_file
         expect(mail_body(notify_mail)).to include("- " + node.columns[7].name)
         expect(mail_body(notify_mail)).to include("logo.png")
-        expect(notify_mail.message_id).to end_with("@#{site.domain}.mail")
+        expect(notify_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
 
       ActionMailer::Base.deliveries[1].tap do |notify_mail|
@@ -186,33 +175,23 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         # inquiry_column_upload_file
         expect(mail_body(notify_mail)).to include("- " + node.columns[7].name)
         expect(mail_body(notify_mail)).to include("logo.png")
-        expect(notify_mail.message_id).to end_with("@#{site.domain}.mail")
+        expect(notify_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
     end
 
     context 'with kintone_guest_space_id' do
       let(:node) do
         create(
-          :inquiry_node_form,
-          cur_site: site,
-          layout_id: layout.id,
-          inquiry_captcha: 'enabled',
-          notice_state: 'enabled',
-          notice_content: 'include_answers',
-          notice_emails: ['notice@example.jp'],
-          from_name: 'admin',
-          from_email: 'admin@example.jp',
-          reply_state: 'disabled',
-          kintone_app_activation: 'enabled',
-          kintone_app_api_token: unique_id,
-          kintone_app_key: 1,
-          kintone_app_guest_space_id: 1)
+          :inquiry_node_form, cur_site: site, layout: layout, inquiry_captcha: 'enabled',
+          notice_state: 'enabled', notice_content: 'include_answers', notice_emails: ['notice@example.jp'],
+          from_name: 'admin', from_email: 'admin@example.jp', reply_state: 'disabled',
+          kintone_app_activation: 'enabled', kintone_app_api_token: unique_id,
+          kintone_app_key: 1, kintone_app_guest_space_id: 1)
       end
       let(:kintone_url) { "https://#{kintone_domain}/k/guest/1/v1/record.json" }
 
       it do
-        visit index_url
-        expect(status_code).to eq 200
+        visit node.full_url
         within 'div.inquiry-form' do
           within 'div.columns' do
             fill_in "item[1]", with: "シラサギ太郎"
@@ -228,8 +207,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           click_button I18n.t('inquiry.confirm')
         end
 
-        expect(status_code).to eq 200
-        within 'div.inquiry-form' do
+        within 'div.inquiry-form.confirm' do
           within 'div.columns' do
             expect(find("[name='item[1]']")['value']).to eq 'シラサギ太郎'
             expect(find("[name='item[2]']")['value']).to eq '株式会社シラサギ'
@@ -248,7 +226,6 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           end
         end
 
-        expect(status_code).to eq 200
         expect(find('div.inquiry-sent').text).to eq node.inquiry_sent_html.gsub(/<.*?>/, '')
 
         expect(Inquiry::Answer.site(site).count).to eq 1
@@ -309,7 +286,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           # inquiry_column_upload_file
           expect(mail_body(notify_mail)).to include("- " + node.columns[7].name)
           expect(mail_body(notify_mail)).to include("logo.png")
-          expect(notify_mail.message_id).to end_with("@#{site.domain}.mail")
+          expect(notify_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
         end
 
         ActionMailer::Base.deliveries[1].tap do |notify_mail|
@@ -343,7 +320,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           # inquiry_column_upload_file
           expect(mail_body(notify_mail)).to include("- " + node.columns[7].name)
           expect(mail_body(notify_mail)).to include("logo.png")
-          expect(notify_mail.message_id).to end_with("@#{site.domain}.mail")
+          expect(notify_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
         end
       end
     end
@@ -366,8 +343,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
     end
 
     it do
-      visit index_url
-      expect(status_code).to eq 200
+      visit node.full_url
       within 'div.inquiry-form' do
         within 'div.columns' do
           fill_in "item[1]", with: "シラサギ太郎"
@@ -383,8 +359,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         click_button I18n.t('inquiry.confirm')
       end
 
-      expect(status_code).to eq 200
-      within 'div.inquiry-form' do
+      within 'div.inquiry-form.confirm' do
         within 'div.columns' do
           expect(find("[name='item[1]']")['value']).to eq 'シラサギ太郎'
           expect(find("[name='item[2]']")['value']).to eq '株式会社シラサギ'
@@ -403,7 +378,6 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         end
       end
 
-      expect(status_code).to eq 200
       expect(find('div.inquiry-sent').text).to eq node.inquiry_sent_html.gsub(/<.*?>/, '')
 
       expect(Inquiry::Answer.site(site).count).to eq 1
@@ -464,7 +438,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         # inquiry_column_upload_file
         expect(mail_body(notify_mail)).to include("- " + node.columns[7].name)
         expect(mail_body(notify_mail)).to include("logo.png")
-        expect(notify_mail.message_id).to end_with("@#{site.domain}.mail")
+        expect(notify_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
 
       ActionMailer::Base.deliveries[1].tap do |notify_mail|
@@ -498,7 +472,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         # inquiry_column_upload_file
         expect(mail_body(notify_mail)).to include("- " + node.columns[7].name)
         expect(mail_body(notify_mail)).to include("logo.png")
-        expect(notify_mail.message_id).to end_with("@#{site.domain}.mail")
+        expect(notify_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
     end
   end
@@ -506,19 +480,10 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
   context "when kintone_app_activation is disabled" do
     let(:node) do
       create(
-        :inquiry_node_form,
-        cur_site: site,
-        layout_id: layout.id,
-        inquiry_captcha: 'enabled',
-        notice_state: 'enabled',
-        notice_content: 'include_answers',
-        notice_emails: ['notice@example.jp'],
-        from_name: 'admin',
-        from_email: 'admin@example.jp',
-        reply_state: 'disabled',
-        kintone_app_activation: 'disabled',
-        kintone_app_api_token: unique_id,
-        kintone_app_key: 1)
+        :inquiry_node_form, cur_site: site, layout: layout, inquiry_captcha: 'enabled',
+        notice_state: 'enabled', notice_content: 'include_answers', notice_emails: ['notice@example.jp'],
+        from_name: 'admin', from_email: 'admin@example.jp', reply_state: 'disabled',
+        kintone_app_activation: 'disabled', kintone_app_api_token: unique_id, kintone_app_key: 1)
     end
 
     before do
@@ -541,8 +506,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
     end
 
     it do
-      visit index_url
-      expect(status_code).to eq 200
+      visit node.full_url
       within 'div.inquiry-form' do
         within 'div.columns' do
           fill_in "item[1]", with: "シラサギ太郎"
@@ -558,8 +522,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         click_button I18n.t('inquiry.confirm')
       end
 
-      expect(status_code).to eq 200
-      within 'div.inquiry-form' do
+      within 'div.inquiry-form.confirm' do
         within 'div.columns' do
           expect(find("[name='item[1]']")['value']).to eq 'シラサギ太郎'
           expect(find("[name='item[2]']")['value']).to eq '株式会社シラサギ'
@@ -578,7 +541,6 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         end
       end
 
-      expect(status_code).to eq 200
       expect(find('div.inquiry-sent').text).to eq node.inquiry_sent_html.gsub(/<.*?>/, '')
 
       expect(Inquiry::Answer.site(site).count).to eq 1
@@ -639,7 +601,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         # inquiry_column_upload_file
         expect(mail_body(notify_mail)).to include("- " + node.columns[7].name)
         expect(mail_body(notify_mail)).to include("logo.png")
-        expect(notify_mail.message_id).to end_with("@#{site.domain}.mail")
+        expect(notify_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
 
       ActionMailer::Base.deliveries[1].tap do |notify_mail|
@@ -673,7 +635,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         # inquiry_column_upload_file
         expect(mail_body(notify_mail)).to include("- " + node.columns[7].name)
         expect(mail_body(notify_mail)).to include("logo.png")
-        expect(notify_mail.message_id).to end_with("@#{site.domain}.mail")
+        expect(notify_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
     end
   end
@@ -699,8 +661,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
     end
 
     it do
-      visit index_url
-      expect(status_code).to eq 200
+      visit node.full_url
       within 'div.inquiry-form' do
         within 'div.columns' do
           fill_in "item[1]", with: "シラサギ太郎"
@@ -716,8 +677,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         click_button I18n.t('inquiry.confirm')
       end
 
-      expect(status_code).to eq 200
-      within 'div.inquiry-form' do
+      within 'div.inquiry-form.confirm' do
         within 'div.columns' do
           expect(find("[name='item[1]']")['value']).to eq 'シラサギ太郎'
           expect(find("[name='item[2]']")['value']).to eq '株式会社シラサギ'
@@ -736,7 +696,6 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         end
       end
 
-      expect(status_code).to eq 200
       expect(find('div.inquiry-sent').text).to eq node.inquiry_sent_html.gsub(/<.*?>/, '')
 
       expect(Inquiry::Answer.site(site).count).to eq 1
@@ -797,7 +756,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         # inquiry_column_upload_file
         expect(mail_body(notify_mail)).to include("- " + node.columns[7].name)
         expect(mail_body(notify_mail)).to include("logo.png")
-        expect(notify_mail.message_id).to end_with("@#{site.domain}.mail")
+        expect(notify_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
 
       ActionMailer::Base.deliveries[1].tap do |notify_mail|
@@ -831,7 +790,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         # inquiry_column_upload_file
         expect(mail_body(notify_mail)).to include("- " + node.columns[7].name)
         expect(mail_body(notify_mail)).to include("logo.png")
-        expect(notify_mail.message_id).to end_with("@#{site.domain}.mail")
+        expect(notify_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
     end
   end
@@ -860,8 +819,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
     end
 
     it do
-      visit index_url
-      expect(status_code).to eq 200
+      visit node.full_url
       within 'div.inquiry-form' do
         within 'div.columns' do
           fill_in "item[1]", with: "シラサギ太郎"
@@ -877,8 +835,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         click_button I18n.t('inquiry.confirm')
       end
 
-      expect(status_code).to eq 200
-      within 'div.inquiry-form' do
+      within 'div.inquiry-form.confirm' do
         within 'div.columns' do
           expect(find("[name='item[1]']")['value']).to eq 'シラサギ太郎'
           expect(find("[name='item[2]']")['value']).to eq '株式会社シラサギ'
@@ -897,7 +854,6 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         end
       end
 
-      expect(status_code).to eq 200
       expect(find('div.inquiry-sent').text).to eq node.inquiry_sent_html.gsub(/<.*?>/, '')
 
       expect(Inquiry::Answer.site(site).count).to eq 1
@@ -958,7 +914,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         # inquiry_column_upload_file
         expect(mail_body(notify_mail)).to include("- " + node.columns[7].name)
         expect(mail_body(notify_mail)).to include("logo.png")
-        expect(notify_mail.message_id).to end_with("@#{site.domain}.mail")
+        expect(notify_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
 
       ActionMailer::Base.deliveries[1].tap do |notify_mail|
@@ -992,7 +948,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         # inquiry_column_upload_file
         expect(mail_body(notify_mail)).to include("- " + node.columns[7].name)
         expect(mail_body(notify_mail)).to include("logo.png")
-        expect(notify_mail.message_id).to end_with("@#{site.domain}.mail")
+        expect(notify_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
     end
   end
@@ -1022,8 +978,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           }
         end
 
-        visit index_url
-        expect(status_code).to eq 200
+        visit node.full_url
         within 'div.inquiry-form' do
           within 'div.columns' do
             fill_in "item[1]", with: "シラサギ太郎"
@@ -1031,8 +986,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           click_button I18n.t('inquiry.confirm')
         end
 
-        expect(status_code).to eq 200
-        within 'div.inquiry-form' do
+        within 'div.inquiry-form.confirm' do
           within 'div.columns' do
             expect(find("[name='item[1]']")['value']).to eq 'シラサギ太郎'
           end
@@ -1044,7 +998,6 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           end
         end
 
-        expect(status_code).to eq 200
         expect(find('div.inquiry-sent').text).to eq node.inquiry_sent_html.gsub(/<.*?>/, '')
 
         expect(Inquiry::Answer.site(site).count).to eq 1
@@ -1076,8 +1029,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           }
         end
 
-        visit index_url
-        expect(status_code).to eq 200
+        visit node.full_url
         within 'div.inquiry-form' do
           within 'div.columns' do
             fill_in "item[1]", with: "シラサギ太郎"
@@ -1085,8 +1037,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           click_button I18n.t('inquiry.confirm')
         end
 
-        expect(status_code).to eq 200
-        within 'div.inquiry-form' do
+        within 'div.inquiry-form.confirm' do
           within 'div.columns' do
             expect(find("[name='item[1]']")['value']).to eq 'シラサギ太郎'
           end
@@ -1098,7 +1049,6 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           end
         end
 
-        expect(status_code).to eq 200
         expect(find('div.inquiry-sent').text).to eq node.inquiry_sent_html.gsub(/<.*?>/, '')
 
         expect(Inquiry::Answer.site(site).count).to eq 1
