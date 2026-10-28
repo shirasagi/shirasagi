@@ -6,7 +6,7 @@ class Lsorg::GroupTree
   def initialize(root_group, exclude_groups = [])
     @exclude_group_names = root_only(exclude_groups).map(&:name)
 
-    groups = Cms::Group.where(name: /^#{root_group.name}(\/|$)/).active
+    groups = Cms::Group.where(name: /^#{::Regexp.escape(root_group.name)}(\/|$)/).active
     groups = groups.tree_sort(root_name: dirname(root_group.name))
     @group_names = groups.map(&:name).reject { |name| exclude?(name) }
 
