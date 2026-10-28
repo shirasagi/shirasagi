@@ -84,7 +84,7 @@ class Mobile::Converter < String
       name = src_attr["alt"].presence || src_attr["title"].presence || href.sub(/.*\//, "")
       cls = "tag-img" + ( src_attr["class"] ? " #{src_attr['class']}" : "" )
 
-      if href =~ /^\/fs\/.+?\/_\/.+?#{ext}/
+      if href =~ /^\/fs\/.+?\/_\/.+?#{Regexp.escape(ext)}/
         # ss_file thumb
         if href =~ /\/thumb\//
           match
