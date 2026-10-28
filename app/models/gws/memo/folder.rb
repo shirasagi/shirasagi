@@ -28,9 +28,9 @@ class Gws::Memo::Folder
 
   scope :children, ->(name) do
     if name == I18n.t('gws/memo/folder.inbox')
-      where('$and' => [ {name: /^(?!.*\/).*$/} ] )
+      where('$and' => [ { name: /^(?!.*\/).*$/ } ] )
     else
-      where('$and' => [ {name: /#{name}\/(?!.*\/).*$/} ] )
+      where('$and' => [ { name: /#{::Regexp.escape(name)}\/(?!.*\/).*$/ } ] )
     end
   end
 
@@ -62,7 +62,7 @@ class Gws::Memo::Folder
   end
 
   def verify_folders
-    folders = dependant_scope.where(name: /^#{name}.*/)
+    folders = dependant_scope.where(name: /^#{::Regexp.escape(name)}.*/)
     folders.each do |folder|
       next if folder.messages.blank?
       errors.add :base, I18n.t("mongoid.errors.models.gws/memo/folder.found_messages", name: folder.name)
