@@ -13,7 +13,9 @@ describe "rss_agents_pages_page", type: :feature, dbscope: :example do
   end
 
   it do
-    visit item.full_url
+    # item.full_url にアクセスすると rss_link にアクセスしたのと同じになるので、
+    # full_url を自分で組み立ててアクセスしてみる。
+    visit Addressable::URI.join(site.full_root_url, "#{item.filename}/").to_s
     expect(status_code).to eq 200
     # it is expected that accessing index_url is redirected to article page
     expect(current_path).to eq article.url
