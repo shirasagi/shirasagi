@@ -16,7 +16,7 @@ describe Rss::Page, dbscope: :example do
     its(:full_url) { is_expected.not_to be_nil }
     its(:json_path) { is_expected.to be_nil }
     its(:json_url) { is_expected.to be_nil }
-    its(:serve_static_file?) { is_expected.to be_falsey }
+    its(:serve_static_file?) { is_expected.to be_truthy }
     its(:private_show_path) { is_expected.to eq show_path }
   end
 
@@ -29,7 +29,7 @@ describe Rss::Page, dbscope: :example do
 
   describe "serve_static_file?" do
     subject { create :rss_page, site: site, node: node }
-    its(:serve_static_file?) { is_expected.to be_falsey }
+    its(:serve_static_file?) { is_expected.to be_truthy }
   end
 
   describe "url and full_url" do
