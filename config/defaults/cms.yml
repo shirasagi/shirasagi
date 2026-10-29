@@ -133,6 +133,8 @@ production: &production
     check_mobile_path: true
     # ssrf_allow_list:
     #   - '10.0.0.0/8'
+    # ssrf_deny_list:
+    #   - '93.184.216.0/24'
 
   close_days_before: 7
   max_term_form: 10

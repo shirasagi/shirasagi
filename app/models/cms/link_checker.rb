@@ -81,6 +81,11 @@ class Cms::LinkChecker
     @ssrf_allow_list = Array(SS.config.cms.check_links["ssrf_allow_list"]).flatten.select(&:present?).uniq
   end
 
+  def ssrf_deny_list
+    return @ssrf_deny_list if instance_variable_defined?(:@ssrf_deny_list)
+    @ssrf_deny_list = Array(SS.config.cms.check_links["ssrf_deny_list"]).flatten.select(&:present?).uniq
+  end
+
   # この設定は自サイトに向けてのもの。自サイトは Rails routing で解決するようにしたので HTTP アクセスは発生しないので不要となった
   # def http_basic_authentication
   #   return @http_basic_authentication if instance_variable_defined?(:@http_basic_authentication)
@@ -181,6 +186,7 @@ class Cms::LinkChecker
     faraday_options[:ssl] = ssl_options if ssl_options.present?
     ssrf_filter_options = {}
     ssrf_filter_options[:allowlist] = ssrf_allow_list if ssrf_allow_list.present?
+    ssrf_filter_options[:denylist] = ssrf_deny_list if ssrf_deny_list.present?
     ssrf_filter_options[:resolver] = self.class.ssrf_resolver if self.class.ssrf_resolver.present?
     http_client = Faraday.new(faraday_options) do |builder|
       builder.request :url_encoded
