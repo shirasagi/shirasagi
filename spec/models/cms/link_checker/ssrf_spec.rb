@@ -41,7 +41,7 @@ describe Cms::LinkChecker, dbscope: :example do
   end
 
   context "when IPv6 loopback address is given" do
-    let(:url) { "https://::1/" }
+    let(:url) { "https://[::1]/" }
 
     before do
       stub_request(:head, url)
@@ -79,7 +79,7 @@ describe Cms::LinkChecker, dbscope: :example do
   end
 
   context "when IPv6 unique local address is given" do
-    let(:url) { "https://fc00::1/" }
+    let(:url) { "https://[fc00::1]/" }
 
     before do
       stub_request(:head, url)
@@ -117,7 +117,7 @@ describe Cms::LinkChecker, dbscope: :example do
   end
 
   context "when IPv6 link-local address is given" do
-    let(:url) { "https://fe80::1/" }
+    let(:url) { "https://[fe80::1]/" }
 
     before do
       stub_request(:head, url)
