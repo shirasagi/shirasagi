@@ -127,6 +127,6 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
     path = preview_path? ? cms_preview_path(site: @cur_site, path: path) : ::File.join(@cur_site.full_url, path)
 
     request.env["ss.redirect_path"] = path
-    render html: "", layout: nil
+    redirect_to path
   end
 end

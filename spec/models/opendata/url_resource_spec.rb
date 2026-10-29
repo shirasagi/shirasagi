@@ -259,7 +259,10 @@ describe Opendata::UrlResource, dbscope: :example do
   end
 
   describe ".search" do
-    it { expect(described_class.search(keyword: "keyword_b633").selector.to_h).to include("name" => /keyword_b633/) }
+    it do
+      query = { "$or" =>[ { "name" => /keyword_b633/i } ] }
+      expect(described_class.search(keyword: "keyword_b633").selector.to_h).to eq query
+    end
     it { expect(described_class.search(format: "csv").selector.to_h).to include("format" => "CSV") }
     it { expect(described_class.search(xxxx: "xxxxx").selector.to_h).to be_empty }
   end

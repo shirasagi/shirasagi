@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true do
-  let(:site)  { cms_site }
-  let(:node)  { create :ads_node_banner, cur_site: site }
+  let!(:site)  { cms_site }
+  let!(:node)  { create :ads_node_banner, cur_site: site }
   let!(:part) { create :ads_part_banner, cur_site: site, cur_node: node }
-  let!(:item1) { create :ads_banner, cur_site: site, cur_node: node }
-  let!(:item2) { create :ads_banner, cur_site: site, cur_node: node }
+  let!(:item1) { create :ads_banner, cur_site: site, cur_node: node, tags: %w(tag0 tag1) }
+  let!(:item2) { create :ads_banner, cur_site: site, cur_node: node, tags: %w(tag0 tag2) }
 
-  let(:layout)   { create_cms_layout part }
-  let(:node_cms) { create :cms_node, layout_id: layout.id }
+  let!(:layout)   { create_cms_layout part, cur_site: site }
+  let!(:node_cms) { create :cms_node, cur_site: site, layout: layout }
 
   before do
     item1.link_url = node_cms.url
@@ -23,9 +23,10 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
       visit node_cms.full_url
       expect(page).to have_css(".ss-image-box")
       expect(page).to have_selector(".ss-image-box-item-list span a img[alt='#{item1.name}']")
-
-      expect(page).to have_css(".ss-image-box")
       expect(page).to have_selector(".ss-image-box-item-list span a img[alt='#{item2.name}']")
+      expect(page).to have_selector(".ss-image-box-item[data-tag~='tag0']", count: 2)
+      expect(page).to have_selector(".ss-image-box-item[data-tag~='tag1']", count: 1)
+      expect(page).to have_selector(".ss-image-box-item[data-tag~='tag2']", count: 1)
 
       first(".ss-image-box-item-list span a img[alt='#{item1.name}']").click
       expect(page).to have_selector(".ss-image-box-item-list span a img[alt='#{item1.name}']")
@@ -38,21 +39,25 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
       end
     end
 
-    it "check link targets" do 
+    it "check link targets" do
       item1.update(link_target: "_blank", link_url: "/example.jp")
       item1.reload
       item2.update(link_target: "_self")
       item2.reload
       part.update(link_target: "")
       part.reload
+
       visit node_cms.full_url
       expect(page).to have_css(".ss-image-box")
+      expect(page).to have_selector(".ss-image-box-item[data-tag~='tag0']", count: 2)
+      expect(page).to have_selector(".ss-image-box-item[data-tag~='tag1']", count: 1)
+      expect(page).to have_selector(".ss-image-box-item[data-tag~='tag2']", count: 1)
       link_selector1 = ".ss-image-box-item-list span a[target='#{item1.link_target}'] img[alt='#{item1.name}']"
       link_selector2 = ".ss-image-box-item-list span a img[alt='#{item2.name}']"
 
       # check for the ad needs to open in new tab
 
-      expect(page).to have_selector(link_selector1)  
+      expect(page).to have_selector(link_selector1)
       link = find(link_selector1).find(:xpath, '..')
       expect(link[:target]).to eq "_blank"
       previous_url = current_url

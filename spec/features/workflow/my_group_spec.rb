@@ -340,7 +340,9 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: remand_comment1
           click_on I18n.t("workflow.buttons.remand")
         end
-
+        wait_for_notice I18n.t("workflow.notice.remanded")
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment1)}/)
 
         item.reload
@@ -527,7 +529,9 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: remand_comment2
           click_on I18n.t("workflow.buttons.remand")
         end
-
+        wait_for_notice I18n.t("workflow.notice.remanded")
+        wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment2)}/)
 
         item.reload

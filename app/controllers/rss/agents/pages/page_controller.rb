@@ -9,6 +9,7 @@ class Rss::Agents::Pages::PageController < ApplicationController
       if Sys::TrustedUrlValidator.url_restricted? && !trusted_url?(@cur_page.rss_link)
         raise SS::NotFoundError, "url is untrusted."
       end
+      request.env["ss.redirect_path"] = @cur_page.rss_link
       redirect_to @cur_page.rss_link
       return
     end
