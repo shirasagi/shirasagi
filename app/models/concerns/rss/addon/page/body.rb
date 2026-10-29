@@ -55,10 +55,6 @@ module Rss::Addon::Page
       nil
     end
 
-    def serve_static_file?
-      false
-    end
-
     private
 
     def encode_rss_link

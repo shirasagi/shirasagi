@@ -9,6 +9,11 @@ describe Rss::Agents::Pages::PageController, type: :request, dbscope: :example d
     create(:rss_page, cur_site: site, cur_node: node, layout: layout, rss_link: "/#{unique_id}.pdf")
   end
 
+  before do
+    Fs.rm_rf node.path
+    Fs.rm_rf page1.path
+  end
+
   it do
     expect(File.exist?(page1.path)).to be_falsey
 

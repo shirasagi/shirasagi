@@ -18,4 +18,8 @@ class Rss::WeatherXmlPage
   skip_callback(:destroy, :before, :create_history_trash)
 
   self.default_released_type = "fixed"
+
+  def serve_static_file?
+    false
+  end
 end
