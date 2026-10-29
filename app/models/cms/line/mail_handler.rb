@@ -23,8 +23,7 @@ class Cms::Line::MailHandler
     :order, :handle_state, :statistic_state
 
   validates :name, presence: true, length: { maximum: 40 }
-  validates :filename, presence: true, uniqueness: { scope: :site_id }, length: { maximum: 200 }
-  validate :validate_filename
+  validates :filename, presence: true, uniqueness: { scope: :site_id }, length: { maximum: 200 }, "cms/filename" => true
 
   def order
     value = self[:order].to_i
@@ -103,11 +102,6 @@ class Cms::Line::MailHandler
   end
 
   private
-
-  def validate_filename
-    return if filename.blank?
-    errors.add :filename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+$/
-  end
 
   class << self
     def search(params)

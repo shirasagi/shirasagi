@@ -166,7 +166,7 @@ module Cms::Model::Page
     dst_dir = ::File.dirname(dst).sub(/^\.$/, "")
 
     return errors.add :filename, :empty if dst.blank?
-    return errors.add :filename, :invalid if dst !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname)})?$/
+    return errors.add :filename, :invalid unless Cms::FilenameValidator.valid?(dst, allow_suffixes: fix_extname)
     return errors.add :base, :same_filename if filename == dst
     return errors.add :base, :branch_page_can_not_move if self.try(:branch?)
 

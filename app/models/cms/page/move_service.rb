@@ -83,7 +83,7 @@ class Cms::Page::MoveService
       return
     end
 
-    if destination !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(page.send(:fix_extname))})?$/
+    unless Cms::FilenameValidator.valid?(destination, allow_suffixes: page.send(:fix_extname))
       errors.add :base, I18n.t('cms.all_contents_moves.errors.invalid_filename_chars')
       return
     end

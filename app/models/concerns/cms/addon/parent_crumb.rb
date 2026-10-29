@@ -7,10 +7,14 @@ module Cms::Addon
       field :parent_crumb_urls, type: SS::Extensions::Lines
       permit_params parent_crumb_urls: []
 
-      validate :validate_parent_crumb_urls, if: -> { parent_crumb_urls.present? }
+      before_validation :normalize_parent_crumb_urls
+      validates :parent_crumb_urls, "cms/filename" => { allow_blank: true }
     end
 
-    def validate_parent_crumb_urls
+    private
+
+    def normalize_parent_crumb_urls
+      return if parent_crumb_urls.blank?
       self.parent_crumb_urls = parent_crumb_urls.select(&:present?)
     end
   end

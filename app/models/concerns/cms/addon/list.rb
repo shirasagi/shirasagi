@@ -46,6 +46,7 @@ module Cms::Addon::List
       before_validation :validate_conditions
       before_validation :validate_loop_format
 
+      validates :conditions, "cms/filename" => { site_modifier: true, allow_blank: true }
       validates :no_items_display_state, inclusion: { in: %w(show hide), allow_blank: true }
       validates :loop_format, inclusion: { in: %w(shirasagi liquid), allow_blank: true }
       validates :loop_liquid, liquid_format: true, if: ->{ loop_format_liquid? }

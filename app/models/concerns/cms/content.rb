@@ -328,11 +328,11 @@ module Cms::Content
   def validate_filename
     if @basename
       return errors.add :basename, :empty if @basename.blank?
-      errors.add :basename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
-      errors.add :basename, :invalid if basename !~ /^[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
+      errors.add :basename, :invalid unless Cms::FilenameValidator.valid?(filename, allow_suffixes: fix_extname)
+      errors.add :basename, :invalid unless Cms::FilenameValidator.valid?(basename, allow_suffixes: fix_extname)
     else
       return errors.add :filename, :empty if filename.blank?
-      errors.add :filename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
+      errors.add :filename, :invalid unless Cms::FilenameValidator.valid?(filename, allow_suffixes: fix_extname)
     end
 
     self.filename = filename.sub(/\..*$/, "") + fix_extname if fix_extname && basename.present?

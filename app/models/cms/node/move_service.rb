@@ -51,7 +51,7 @@ class Cms::Node::MoveService
 
     dst = destination_filename
 
-    if dst !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
+    unless Cms::FilenameValidator.valid?(dst, allow_suffixes: fix_extname)
       errors.add :destination_basename, :invalid
     end
 

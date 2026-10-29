@@ -59,11 +59,11 @@ class Cms::Line::DeliverCategory::Base
   def validate_filename
     if @basename
       return errors.add :basename, :empty if @basename.blank?
-      errors.add :basename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+$/
+      errors.add :basename, :invalid unless Cms::FilenameValidator.valid?(filename)
       errors.add :basename, :invalid if @basename !~ /^[\w\-]+$/
     else
       return errors.add :filename, :empty if filename.blank?
-      errors.add :filename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+$/
+      errors.add :filename, :invalid unless Cms::FilenameValidator.valid?(filename)
     end
   end
 
