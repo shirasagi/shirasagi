@@ -121,8 +121,8 @@ SHIRASAGI のダウンロード (stable)
 
 ```
 $ sudo mkdir -p /var/www
-$ sudo chown -R ssuser: /var/www
-$ git clone -b stable https://github.com/shirasagi/shirasagi /var/www/shirasagi
+$ git clone -b stable https://github.com/shirasagi/shirasagi ~/shirasagi
+$ sudo mv ~/shirasagi /var/www/
 ```
 
 Mecab-ruby のインストール
