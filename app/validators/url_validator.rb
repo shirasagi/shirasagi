@@ -8,6 +8,8 @@ class UrlValidator < ActiveModel::EachValidator
       return true if value.blank?
 
       uri = ::Addressable::URI.parse(value)
+      return false if options[:only_path] && (uri.scheme.present? || uri.authority.present?)
+
       if uri.path.present?
         path_type = check_path_type(uri)
         return false unless path_type

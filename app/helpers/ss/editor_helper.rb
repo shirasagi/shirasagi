@@ -186,10 +186,10 @@ module SS::EditorHelper
     return editor_options if @cur_site.nil?
     if @cur_node
       color_button = @cur_node.try(:color_button) || @cur_site.color_button
-      editor_css_path = @cur_node.try(:editor_css_path) || @cur_site.editor_css_path
+      editor_css_path = @cur_node.try(:effective_editor_css_path) || @cur_site.effective_editor_css_path
     else
       color_button = @cur_site.color_button
-      editor_css_path = @cur_site.editor_css_path
+      editor_css_path = @cur_site.effective_editor_css_path
     end
 
     if color_button == 'enabled'
