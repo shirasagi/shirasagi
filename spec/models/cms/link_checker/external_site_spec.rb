@@ -4,13 +4,12 @@ describe Cms::LinkChecker, dbscope: :example do
   let!(:site0) { cms_site }
   let!(:site) { create :cms_site_subdir, parent: site0 }
   let(:ip_address) { "10.11.102.8" }
-  let!(:checker) do
-    checker = Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true)
-    checker.instance_variable_set(:@ssrf_resolver, ->(_hostname) { [ ip_address ] })
-    checker
-  end
+  let!(:checker) { Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true) }
 
   before do
+    @save_ssrf_resolver = Cms::LinkChecker.ssrf_resolver
+    Cms::LinkChecker.ssrf_resolver = ->(_hostname) { [ ip_address ] }
+
     WebMock.disable_net_connect!(allow_localhost: true)
     Fs.rm_rf site0.path
   end
@@ -19,6 +18,8 @@ describe Cms::LinkChecker, dbscope: :example do
     Fs.rm_rf site0.path
     WebMock.reset!
     WebMock.allow_net_connect!
+
+    Cms::LinkChecker.ssrf_resolver = @save_ssrf_resolver
   end
 
   context "when external site is given" do

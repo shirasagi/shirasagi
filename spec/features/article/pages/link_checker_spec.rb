@@ -26,17 +26,22 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
   let(:invalid_url1) { "https://invalid.example.jp /" }
 
   let(:redirection_url0) { "https://redirection-0.example.jp/" }
-  let(:redirection_url1) { "http://redirection-1.example.jp/" }
+  let(:redirection_url1) { "https://redirection-1.example.jp/" }
   let(:redirection_url2) { "https://redirection-2.example.jp/" }
-  let(:redirection_url3) { "http://redirection-3.example.jp/" }
+  let(:redirection_url3) { "https://redirection-3.example.jp/" }
   let(:redirection_url4) { "https://redirection-4.example.jp/" }
-  let(:redirection_url5) { "http://redirection-5.example.jp/" }
+  let(:redirection_url5) { "https://redirection-5.example.jp/" }
   let(:redirection_self_url) { "https://redirection-self.example.jp/" }
 
   let(:success) { I18n.t("errors.messages.link_check_success") }
   let(:failure) { I18n.t("errors.messages.link_check_failure") }
 
+  let(:ip_address) { "10.11.102.8" }
+
   before do
+    @save_ssrf_resolver = Cms::LinkChecker.ssrf_resolver
+    Cms::LinkChecker.ssrf_resolver = ->(_hostname) { [ ip_address ] }
+
     @net_connect_allowed = WebMock.net_connect_allowed?
     WebMock.disable_net_connect!(allow_localhost: true)
     WebMock.reset!
@@ -67,6 +72,8 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
   after do
     WebMock.reset!
     WebMock.allow_net_connect! if @net_connect_allowed
+
+    Cms::LinkChecker.ssrf_resolver = @save_ssrf_resolver
   end
 
   context "check links" do

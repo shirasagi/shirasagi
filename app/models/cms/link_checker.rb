@@ -6,6 +6,8 @@ class Cms::LinkChecker
   DEFAULT_HEAD_REQUEST_TIMEOUT = 5
   TEXT_HTML_MIME_TYPE = "text/html"
 
+  cattr_accessor :ssrf_resolver, instance_accessor: false
+
   attr_accessor :cur_user, :root_url, :fetch_content
   # attr_writer :fs_url, :head_request_timeout, :max_redirection, :http_basic_authentication
   attr_writer :fs_url, :head_request_timeout, :max_redirection
@@ -77,10 +79,6 @@ class Cms::LinkChecker
   def ssrf_allow_list
     return @ssrf_allow_list if instance_variable_defined?(:@ssrf_allow_list)
     @ssrf_allow_list = Array(SS.config.cms.check_links["ssrf_allow_list"]).flatten.select(&:present?).uniq
-  end
-
-  def ssrf_resolver
-    @ssrf_resolver
   end
 
   # この設定は自サイトに向けてのもの。自サイトは Rails routing で解決するようにしたので HTTP アクセスは発生しないので不要となった
@@ -183,7 +181,7 @@ class Cms::LinkChecker
     faraday_options[:ssl] = ssl_options if ssl_options.present?
     ssrf_filter_options = {}
     ssrf_filter_options[:allowlist] = ssrf_allow_list if ssrf_allow_list.present?
-    ssrf_filter_options[:resolver] = ssrf_resolver if ssrf_resolver.present?
+    ssrf_filter_options[:resolver] = self.class.ssrf_resolver if self.class.ssrf_resolver.present?
     http_client = Faraday.new(faraday_options) do |builder|
       builder.request :url_encoded
       builder.request :ssrf_filter, **ssrf_filter_options
