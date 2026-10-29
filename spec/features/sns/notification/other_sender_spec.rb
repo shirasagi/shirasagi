@@ -31,4 +31,17 @@ describe 'sns/notifications', type: :feature, dbscope: :example do
       expect(status_code).to eq 404
     end
   end
+
+  context "when the user has deleted the notification" do
+    before do
+      item.update!(member_ids: [user.id, other.id])
+      item.destroy_from_member(user)
+      login_gws_user
+    end
+
+    it do
+      visit sns_notification_path(id: item.id)
+      expect(status_code).to eq 404
+    end
+  end
 end

@@ -31,4 +31,17 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example do
       expect(status_code).to eq 404
     end
   end
+
+  context "when the user has deleted the notification" do
+    before do
+      item.update!(member_ids: [user.id, other.id])
+      item.destroy_from_member(user)
+      login_gws_user
+    end
+
+    it do
+      visit gws_memo_notice_path(site: site, id: item.id)
+      expect(status_code).to eq 404
+    end
+  end
 end
