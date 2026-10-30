@@ -43,7 +43,7 @@ class Cms::LinkChecker
 
     def message
       if error_code
-        I18n.t("errors.messages.#{error_code}")
+        I18n.t(error_code, scope: "errors.messages")
       end
     end
 

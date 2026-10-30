@@ -49,6 +49,7 @@ describe Cms::LinkChecker, dbscope: :example do
       expect(result.success?).to be_truthy
       expect(result.result).to eq :success
       expect(result.error_code).to be_blank
+      expect(result.message).to be_blank
       expect(result.redirection_count).to eq 1
       expect(result.content_type).to eq "text/html; charset=utf-8"
       expect(result.content).to be_blank
@@ -72,6 +73,7 @@ describe Cms::LinkChecker, dbscope: :example do
       expect(result.success?).to be_truthy
       expect(result.result).to eq :success
       expect(result.error_code).to be_blank
+      expect(result.message).to be_blank
       expect(result.redirection_count).to eq 1
       expect(result.content_type).to eq "text/html; charset=utf-8"
       expect(result.content).to be_blank
@@ -91,6 +93,8 @@ describe Cms::LinkChecker, dbscope: :example do
       expect(result.success?).to be_falsey
       expect(result.result).to eq :error
       expect(result.error_code).to eq :link_check_failed_cyclic_redirection
+      expect(result.message).to be_present
+      expect(result.message).not_to include "Translation missing"
       expect(result.redirection_count).to eq 1
       expect(result.content_type).to be_blank
       expect(result.content).to be_blank
@@ -113,6 +117,8 @@ describe Cms::LinkChecker, dbscope: :example do
       expect(result.success?).to be_falsey
       expect(result.result).to eq :error
       expect(result.error_code).to eq :link_check_failed_cyclic_redirection
+      expect(result.message).to be_present
+      expect(result.message).not_to include "Translation missing"
       expect(result.redirection_count).to eq 2
       expect(result.content_type).to be_blank
       expect(result.content).to be_blank
@@ -152,6 +158,8 @@ describe Cms::LinkChecker, dbscope: :example do
       expect(result.success?).to be_falsey
       expect(result.result).to eq :error
       expect(result.error_code).to eq :link_check_failed_redirection
+      expect(result.message).to be_present
+      expect(result.message).not_to include "Translation missing"
       expect(result.redirection_count).to eq 6
       expect(result.content_type).to be_blank
       expect(result.content).to be_blank

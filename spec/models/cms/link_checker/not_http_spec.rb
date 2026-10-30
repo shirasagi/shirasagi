@@ -30,6 +30,8 @@ describe Cms::LinkChecker, dbscope: :example do
       expect(result.success?).to be_falsey
       expect(result.result).to eq :error
       expect(result.error_code).to eq :link_check_failed_ignored
+      expect(result.message).to be_present
+      expect(result.message).not_to include "Translation missing"
       expect(result.redirection_count).to eq 0
       expect(result.content_type).to be_blank
       expect(result.content).to be_blank
@@ -44,6 +46,8 @@ describe Cms::LinkChecker, dbscope: :example do
       expect(result.success?).to be_falsey
       expect(result.result).to eq :error
       expect(result.error_code).to eq :link_check_failed_ignored
+      expect(result.message).to be_present
+      expect(result.message).not_to include "Translation missing"
       expect(result.redirection_count).to eq 0
       expect(result.content_type).to be_blank
       expect(result.content).to be_blank
@@ -64,6 +68,8 @@ describe Cms::LinkChecker, dbscope: :example do
       expect(result.success?).to be_falsey
       expect(result.result).to eq :error
       expect(result.error_code).to eq :link_check_failed_not_found
+      expect(result.message).to be_present
+      expect(result.message).not_to include "Translation missing"
       expect(result.redirection_count).to eq 0
       expect(result.content_type).to be_blank
       expect(result.content).to be_blank
