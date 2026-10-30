@@ -182,6 +182,8 @@ GEM
       multipart-post (~> 2.0)
     faraday-net_http (3.5.0)
       net-http (~> 0.5)
+    faraday-ssrf-filter (0.4.2)
+      faraday (>= 1.0, < 3)
     fast_blank (1.0.1)
     fastimage (2.4.1)
     ffi (1.17.4)
@@ -813,6 +815,7 @@ DEPENDENCIES
   elasticsearch (~> 8)
   factory_bot_rails
   faraday
+  faraday-ssrf-filter
   fast_blank
   fastimage
   fuubar
@@ -920,4 +923,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.6.9
+   2.5.22

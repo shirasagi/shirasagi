@@ -5,6 +5,16 @@ describe Cms::ContentLinkCheckerComponent, type: :component, dbscope: :example d
   let!(:user) { cms_user }
   let!(:layout) { create_cms_layout cur_site: site }
   let!(:node) { create :article_node_page, cur_site: site, layout: layout }
+  let(:ip_address) { "10.11.102.8" }
+
+  before do
+    @save_ssrf_resolver = Cms::LinkChecker.ssrf_resolver
+    Cms::LinkChecker.ssrf_resolver = ->(_hostname) { [ ip_address ] }
+  end
+
+  after do
+    Cms::LinkChecker.ssrf_resolver = @save_ssrf_resolver
+  end
 
   describe ".render" do
     context "html with no links" do

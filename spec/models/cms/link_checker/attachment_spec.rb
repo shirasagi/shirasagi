@@ -40,11 +40,12 @@ describe Cms::LinkChecker, dbscope: :example do
     end
 
     it do
-      checker = Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true)
+      checker = Cms::LinkChecker.new(cur_site: site, root_url: site.full_url, fetch_content: true)
       result = checker.check_url(file.full_url)
       expect(result.success?).to be_truthy
       expect(result.result).to eq :success
       expect(result.error_code).to be_blank
+      expect(result.message).to be_blank
       expect(result.redirection_count).to eq 0
       expect(result.content_type).to eq "application/pdf"
       expect(result.content).to be_blank

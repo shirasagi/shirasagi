@@ -8,10 +8,16 @@ class Cms::ContentLinkChecker
     def self.from(result)
       case result
       when Cms::LinkChecker::Result
-        new(
-          result: result.success? ? :success : :error,
-          message: result.message, redirection_count: result.redirection_count,
-          normalized_url: nil)
+        if result.success?
+          success(redirection_count: result.redirection_count)
+        else
+          # error
+          if result.error_code == :link_check_failed_ignored
+            skip(redirection_count: result.redirection_count)
+          else
+            error(message: result.message, redirection_count: result.redirection_count)
+          end
+        end
       else
         "Unsupported Type: #{result.class.name}"
       end
@@ -105,7 +111,8 @@ class Cms::ContentLinkChecker
   end
 
   def checker
-    @checker ||= Cms::LinkChecker.new(cur_user: cur_user, root_url: cur_site.full_root_url)
+    @checker ||= Cms::LinkChecker.new(
+      cur_site: cur_site, cur_user: cur_user, root_url: cur_site.full_root_url)
   end
 
   def check_url(full_url)

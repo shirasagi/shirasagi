@@ -1,11 +1,19 @@
 require 'spec_helper'
 
 describe Cms::CheckLinksJob, dbscope: :example do
-  let!(:site0) { cms_site }
-  let!(:site) { create :cms_site_subdir, parent: site0 }
-  let!(:site_url) { "http://#{site.domain}/#{site.subdir}" }
+  let!(:site0) do
+    site = cms_site
+    site.update!(https: "enabled")
+    site
+  end
+  let!(:site) { create :cms_site_subdir, parent: site0, https: "enabled" }
+  let!(:site_url) { "https://#{site.domain}/#{site.subdir}" }
+  let(:ip_address) { "10.11.102.8" }
 
   before do
+    @save_ssrf_resolver = Cms::LinkChecker.ssrf_resolver
+    Cms::LinkChecker.ssrf_resolver = ->(_hostname) { [ ip_address ] }
+
     WebMock.disable_net_connect!(allow_localhost: true)
     ActionMailer::Base.deliveries = []
     Fs.rm_rf site0.path
@@ -16,6 +24,8 @@ describe Cms::CheckLinksJob, dbscope: :example do
     Fs.rm_rf site0.path
     WebMock.reset!
     WebMock.allow_net_connect!
+
+    Cms::LinkChecker.ssrf_resolver = @save_ssrf_resolver
   end
 
   context "normal case" do
@@ -421,7 +431,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
 
     before do
       not_found_return = { body: "", status: 404, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
-      stub_request(:any, url).to_return(not_found_return)
+      stub_request(:any, "https://#{url}").to_return(not_found_return)
 
       html1 = <<~HTML
         <a href="#{url}">External Page</a>
@@ -466,7 +476,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
       end
 
       # 外部サイトURLについては転送量を押さえる目的で HEAD でアクセスする
-      expect(a_request(:head, url)).to have_been_made.times(1)
+      expect(a_request(:head, "https://#{url}")).to have_been_made.times(1)
     end
   end
 

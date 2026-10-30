@@ -324,7 +324,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   private
 
   def checker
-    @checker ||= Cms::LinkChecker.new(root_url: @base_url, fetch_content: true)
+    @checker ||= Cms::LinkChecker.new(cur_site: @site, root_url: @base_url, fetch_content: true)
   end
 
   def same_domain_site_path?(source)

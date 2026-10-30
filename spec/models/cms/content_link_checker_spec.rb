@@ -5,9 +5,17 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
   let!(:user) { cms_user }
   let!(:layout) { create_cms_layout cur_site: site }
   let!(:node) { create :article_node_page, cur_site: site, layout: layout }
+  let(:ip_address) { "10.11.102.8" }
+
+  before do
+    @save_ssrf_resolver = Cms::LinkChecker.ssrf_resolver
+    Cms::LinkChecker.ssrf_resolver = ->(_hostname) { [ ip_address ] }
+  end
 
   after do
     expect(SS.current_user).to be_blank
+
+    Cms::LinkChecker.ssrf_resolver = @save_ssrf_resolver
   end
 
   context "with several links" do
@@ -145,12 +153,12 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
 
   context "with redirection url" do
     let(:redirection_url0) { "https://redirection-0.example.jp/" }
-    let(:redirection_url1) { "http://redirection-1.example.jp/" }
+    let(:redirection_url1) { "https://redirection-1.example.jp/" }
     let(:redirection_url2) { "https://redirection-2.example.jp/" }
-    let(:redirection_url3) { "http://redirection-3.example.jp/" }
+    let(:redirection_url3) { "https://redirection-3.example.jp/" }
     let(:redirection_url4) { "https://redirection-4.example.jp/" }
-    let(:redirection_url5) { "http://redirection-5.example.jp/" }
-    let(:redirection_url6) { "http://redirection-6.example.jp/" }
+    let(:redirection_url5) { "https://redirection-5.example.jp/" }
+    let(:redirection_url6) { "https://redirection-6.example.jp/" }
     let(:redirection_self_url) { "https://redirection-self.example.jp/" }
     let(:redirection_page) { "https://redirection-page.example.jp/" }
     let(:html) do
@@ -188,7 +196,9 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
         .to_return(status: 302, headers: { 'Location' => article.full_url, 'Content-Type' => 'text/html; charset=utf-8' })
 
       @save_check_links = SS.config.cms.check_links.dup
-      SS.config.replace_value_at(:cms, :check_links, { "max_redirection" => 5 })
+      check_links = @save_check_links.dup
+      check_links["max_redirection"] = 5
+      SS.config.replace_value_at(:cms, :check_links, check_links)
     end
 
     after do

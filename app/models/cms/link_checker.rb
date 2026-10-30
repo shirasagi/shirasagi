@@ -6,7 +6,9 @@ class Cms::LinkChecker
   DEFAULT_HEAD_REQUEST_TIMEOUT = 5
   TEXT_HTML_MIME_TYPE = "text/html"
 
-  attr_accessor :cur_user, :root_url, :fetch_content
+  cattr_accessor :ssrf_resolver, instance_accessor: false
+
+  attr_accessor :cur_site, :cur_user, :root_url, :fetch_content
   # attr_writer :fs_url, :head_request_timeout, :max_redirection, :http_basic_authentication
   attr_writer :fs_url, :head_request_timeout, :max_redirection
 
@@ -41,7 +43,7 @@ class Cms::LinkChecker
 
     def message
       if error_code
-        I18n.t("errors.messages.#{error_code}")
+        I18n.t(error_code, scope: "errors.messages")
       end
     end
 
@@ -52,37 +54,14 @@ class Cms::LinkChecker
     end
   end
 
-  def fs_url
-    return @fs_url if instance_variable_defined?(:@fs_url)
-
-    if root_url
-      @fs_url = ::File.join(root_url, "/fs/")
-    else
-      @fs_url = nil
-    end
-  end
-
-  def head_request_timeout
-    return @head_request_timeout if instance_variable_defined?(:@head_request_timeout)
-
-    @head_request_timeout = SS.config.cms.check_links["head_request_timeout"]
-    @head_request_timeout ||= DEFAULT_HEAD_REQUEST_TIMEOUT
-  end
-
-  def max_redirection
-    return @max_redirection if instance_variable_defined?(:@max_redirection)
-    @max_redirection = SS.config.cms.check_links["max_redirection"].to_i
-  end
-
-  # この設定は自サイトに向けてのもの。自サイトは Rails routing で解決するようにしたので HTTP アクセスは発生しないので不要となった
-  # def http_basic_authentication
-  #   return @http_basic_authentication if instance_variable_defined?(:@http_basic_authentication)
-  #   @http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
-  # end
-
   def check_url(full_url, redirection: nil)
     full_url = to_addressable(full_url)
     redirection ||= Redirection.new
+
+    if ignore_urls.match?(full_url)
+      return Result.error(
+        error_code: :link_check_failed_ignored, redirection_count: redirection.count)
+    end
 
     site = find_site(full_url)
     if site.blank?
@@ -107,7 +86,46 @@ class Cms::LinkChecker
     end
   end
 
+  private
+
+  def fs_url
+    return @fs_url if instance_variable_defined?(:@fs_url)
+
+    if root_url
+      @fs_url = ::File.join(root_url, "/fs/")
+    else
+      @fs_url = nil
+    end
+  end
+
+  def head_request_timeout
+    return @head_request_timeout if instance_variable_defined?(:@head_request_timeout)
+
+    @head_request_timeout = SS.config.cms.check_links["head_request_timeout"]
+    @head_request_timeout ||= DEFAULT_HEAD_REQUEST_TIMEOUT
+  end
+
+  def max_redirection
+    return @max_redirection if instance_variable_defined?(:@max_redirection)
+    @max_redirection = SS.config.cms.check_links["max_redirection"].to_i
+  end
+
+  def ssrf_allow_list
+    return @ssrf_allow_list if instance_variable_defined?(:@ssrf_allow_list)
+    @ssrf_allow_list = Array(SS.config.cms.check_links["ssrf_allow_list"]).flatten.select(&:present?).uniq
+  end
+
+  def ssrf_deny_list
+    return @ssrf_deny_list if instance_variable_defined?(:@ssrf_deny_list)
+    @ssrf_deny_list = Array(SS.config.cms.check_links["ssrf_deny_list"]).flatten.select(&:present?).uniq
+  end
+
+  def ignore_urls
+    @ignore_urls ||= Cms::CheckLinks::IgnoreUrlMatcher.new(cur_site: cur_site)
+  end
+
   def to_addressable(full_url)
+    full_url = full_url.to_str
     full_url = Addressable::URI.parse(full_url) unless full_url.is_a?(Addressable::URI)
     full_url.normalize
   end
@@ -172,8 +190,13 @@ class Cms::LinkChecker
     faraday_options = { url: addressable_full_url.origin, request: { timeout: head_request_timeout } }
     faraday_options[:proxy] = proxy_options if proxy_options.present?
     faraday_options[:ssl] = ssl_options if ssl_options.present?
+    ssrf_filter_options = {}
+    ssrf_filter_options[:allowlist] = ssrf_allow_list if ssrf_allow_list.present?
+    ssrf_filter_options[:denylist] = ssrf_deny_list if ssrf_deny_list.present?
+    ssrf_filter_options[:resolver] = self.class.ssrf_resolver if self.class.ssrf_resolver.present?
     http_client = Faraday.new(faraday_options) do |builder|
       builder.request :url_encoded
+      builder.request :ssrf_filter, **ssrf_filter_options
       # Basic 認証設定は自サイトに向けてのもの。
       # 自サイトは Rails routing で解決するようにしたので HTTP アクセスは発生しないので不要となった
       # if http_basic_authentication.present?
