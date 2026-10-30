@@ -22,7 +22,7 @@ require_relative "../app/models/ss/config"
 Bundler.require(*Rails.groups)
 
 module SS
-  mattr_reader(:version) { "1.21.0" }
+  mattr_reader(:version) { "1.21.1" }
 
   class Current
     THREAD_LOCAL_VARIABLES = %i[env request site user user_group organization token].freeze

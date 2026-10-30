@@ -56,10 +56,10 @@ SS.ready(function() {
       init = {};
     }
     params = this.defaultParams(selector, opts);
-    if (opts['events']) {
+    if (opts['pageUrl']) {
       $.extend(true, params, this.editableParams(selector, opts));
     }
-    if (opts['events']) {
+    if (opts['pageUrl']) {
       $.extend(true, params, this.tapMenuParams(selector, opts));
     }
     for (var i in opts.eventSources) {
@@ -74,8 +74,9 @@ SS.ready(function() {
     }
 
     // custom params
-    delete params.useWorkload
-    delete params.tapMenu
+    delete params.pageUrl;
+    delete params.useWorkload;
+    delete params.tapMenu;
 
     var calendarEl = document.querySelector(selector);
     var calendar = new FullCalendar.Calendar(calendarEl, params);
@@ -125,6 +126,11 @@ SS.ready(function() {
         day: i18next.t('gws/schedule.calendar.buttonText.day'),
         listMonth: i18next.t('gws/schedule.calendar.buttonText.listMonth'),
         listWeek: i18next.t('gws/schedule.calendar.buttonText.listMonth')
+      },
+      buttonHints: {
+        today: i18next.t('gws/schedule.calendar.buttonText.today'),
+        prev: i18next.t('ss.links.prev'),
+        next: i18next.t('ss.links.next')
       },
       customButtons: {
         withTodo: {
@@ -209,9 +215,12 @@ SS.ready(function() {
           listDaySideFormat: false
         }
       },
+      viewHint: function(buttonText, _buttonName) {
+        return buttonText;
+      },
       loading: function (isLoading) {
         var calendar = document.querySelector(selector).calendar;
-        var target = document.querySelector(selector)
+        var target = document.querySelector(selector);
 
         target.querySelector('.fc-loading')?.remove();
 
@@ -251,7 +260,7 @@ SS.ready(function() {
         var event = arg.event;
         var el = arg.el;
 
-        var nameEl = (el.querySelector('.fc-event-title') || el.querySelector('.fc-list-event-title a'))
+        var nameEl = (el.querySelector('.fc-event-title') || el.querySelector('.fc-list-event-title a'));
         if (!nameEl) return;
 
         el.style.color = event.textColor;
@@ -265,7 +274,7 @@ SS.ready(function() {
           if (el.className.includes('fc-event-allday')) {
             fcClass = 'fc-date';
             format = 'MM/DD';
-            end = end.add(-1, 'days')
+            end = end.add(-1, 'days');
           } else {
             el.querySelector('span.fc-event-time')?.remove();
           }
@@ -322,7 +331,7 @@ SS.ready(function() {
   };
 
   Gws_Schedule_Calendar.tapMenuParams = function (selector, opts) {
-    var url = opts['events'].replace(/\.json/, '');
+    var url = opts['pageUrl'];
 
     return {
       dateClick: function (info) {
@@ -391,7 +400,7 @@ SS.ready(function() {
   };
 
   Gws_Schedule_Calendar.editableParams = function (selector, opts) {
-    var url = opts['events'].replace(/\.json/, '');
+    var url = opts['pageUrl'];
     var token = $('meta[name="csrf-token"]').attr('content');
 
     return {
@@ -426,10 +435,11 @@ SS.ready(function() {
 
         if (event.allDay) {
           start = moment(event.start).format('YYYY/MM/DD');
-          if (event.end) end = event.end;
         } else {
           start = moment(event.start).format('YYYY/MM/DDTHH:mm:ss');
-          end = new Date(event.start.getTime() + (1000 * 60 * 60 * 1)); // + 1 hour
+        }
+        if (event.end) {
+          end = event.end;
         }
 
         return $.ajax({
@@ -450,15 +460,20 @@ SS.ready(function() {
             });
           },
           error: function (xhr, _status, _error) {
-            alert(xhr.responseJSON.join("\n"));
+            if (xhr.responseJSON) {
+              alert(xhr.responseJSON.join("\n"));
+            } else {
+              alert('Error');
+            }
             return info.revert();
           }
         });
       },
       eventResize: function (info) {
         var event = info.event;
-
         var start, end = null;
+        var asyncUrl = event.extendedProps?.events ? event.extendedProps.events.replace(/\.json/, '') : url;
+
         if (event.allDay) {
           start = Gws_Schedule_Calendar.dateToString(event.start);
           if (event.end) end = Gws_Schedule_Calendar.dateToString(event.end);
@@ -466,8 +481,6 @@ SS.ready(function() {
           start = Gws_Schedule_Calendar.datetimeToString(event.start);
           if (event.end) end = Gws_Schedule_Calendar.datetimeToString(event.end);
         }
-
-        var asyncUrl = event.extendedProps?.events ? event.extendedProps.events.replace(/\.json/, '') : url;
 
         return $.ajax({
           type: 'PUT',
@@ -487,7 +500,11 @@ SS.ready(function() {
             });
           },
           error: function (xhr, _status, _error) {
-            alert(xhr.responseJSON.join("\n"));
+            if (xhr.responseJSON) {
+              alert(xhr.responseJSON.join("\n"));
+            } else {
+              alert('Error');
+            }
             return info.revert();
           }
         });
@@ -584,6 +601,8 @@ SS.ready(function() {
   function Gws_Schedule_Multiple_Calendar() {
   }
 
+  Gws_Schedule_Multiple_Calendar.controller = null;
+
   Gws_Schedule_Multiple_Calendar.renderController = function (selector, opts, init) {
     var controller, controllerWrap, params;
     if (opts == null) {
@@ -610,6 +629,7 @@ SS.ready(function() {
     var calendar = new FullCalendar.Calendar(calendarEl, params);
     calendar.render();
     calendarEl.calendar = calendar;
+    Gws_Schedule_Multiple_Calendar.controller = calendar;
 
     Gws_Schedule_Calendar.renderInitialize(selector, init);
     Gws_Schedule_Calendar.overrideAddLink(selector);
@@ -645,10 +665,10 @@ SS.ready(function() {
       init = {};
     }
     params = Gws_Schedule_Calendar.defaultParams(selector, opts);
-    if (opts['events']) {
+    if (opts['pageUrl']) {
       $.extend(true, params, Gws_Schedule_Calendar.editableParams(selector, opts));
     }
-    if (opts['events']) {
+    if (opts['pageUrl']) {
       $.extend(true, params, Gws_Schedule_Calendar.tapMenuParams(selector, opts));
     }
     for (var i in opts.eventSources) {
@@ -663,8 +683,13 @@ SS.ready(function() {
     if (init && init["view"]) {
       params["initialView"] = init["view"];
     }
+    if (Gws_Schedule_Multiple_Calendar.controller) {
+      params["initialDate"] = Gws_Schedule_Multiple_Calendar.controller.getDate();
+      params["initialView"] = Gws_Schedule_Multiple_Calendar.controller.view.type;
+    }
 
     // custom params
+    delete params.pageUrl;
     delete params.tapMenu
     delete params.useWorkload
 
@@ -758,17 +783,17 @@ SS.ready(function() {
         if (!isLoading) {
           requestAnimationFrame(function() {
             var attendance, todo;
-            todo = $('.fc .fc-withTodo-button');
-            if (todo.length) {
-              if (todo.hasClass('fc-state-active')) {
+            todo = $('.fc .fc-withTodo-button')[0];
+            if (todo) {
+              if (todo.classList.contains('fc-state-active')) {
                 $('.fc .fc-event-todo').show();
               } else {
                 $('.fc .fc-event-todo').hide();
               }
             }
-            attendance = $('.fc .fc-withAbsence-button');
-            if (attendance.length) {
-              if (attendance.hasClass('fc-state-active')) {
+            attendance = $('.fc .fc-withAbsence-button')[0];
+            if (attendance) {
+              if (attendance.classList.contains('fc-state-active')) {
                 $('.fc .fc-event-user-attendance-absence').removeClass('hide');
               } else {
                 $('.fc .fc-event-user-attendance-absence').addClass('hide');
@@ -783,6 +808,7 @@ SS.ready(function() {
         var el = arg.el;
         var start = moment(event.start)
 
+        el.title = event.title;
         el.style.color = event.textColor;
 
         if (el.className.includes('fc-event-range')) {
@@ -807,10 +833,12 @@ SS.ready(function() {
         if (event.extendedProps.category) {
           var categorySpan = $('<span class="fc-category"></span>').append(event.extendedProps.category);
           el.querySelector('.fc-event-title').prepend(categorySpan[0]);
+          el.title = `${event.extendedProps.category} | ${el.title}`;
         }
         if (event.extendedProps.facility) {
           var facilitySpan = $('<span class="fc-facility"></span>').append(event.extendedProps.facility);
           el.querySelector('.fc-event-title').append(facilitySpan[0]);
+          el.title += ` | ${event.extendedProps.facility}`;
         }
 
         if (el.className.includes('fc-event-work')) {
@@ -978,10 +1006,10 @@ SS.ready(function() {
       init = {};
     }
     params = this.defaultParams(selector, opts);
-    if (opts['events']) {
+    if (opts['pageUrl']) {
       $.extend(true, params, this.editableParams(selector, opts));
     }
-    if (opts['events']) {
+    if (opts['pageUrl']) {
       $.extend(true, params, this.tapMenuParams(selector, opts));
     }
     for (var i in opts.eventSources) {
@@ -996,8 +1024,9 @@ SS.ready(function() {
     }
 
     // custom params
-    delete params.tapMenu
-    delete params.useWorkload
+    delete params.pageUrl;
+    delete params.tapMenu;
+    delete params.useWorkload;
 
     var calendarEl = document.querySelector(selector);
     var calendar = new FullCalendar.Calendar(calendarEl, params);
@@ -1209,7 +1238,7 @@ SS.ready(function() {
   };
 
   Gws_Notice_Calendar.editableParams = function (selector, opts) {
-    var url = opts['events'].replace(/\.json/, '');
+    var url = opts['pageUrl'].replace(/\.json/, '');
     return {
       editable: true,
       eventClick: function (info) {
@@ -1268,7 +1297,6 @@ SS.ready(function() {
 
 SS.ready(function() {
   setTimeout(function() {
-    // $(document).trigger("gws:calendarInitialized");
     document.dispatchEvent(new Event('gws:calendarInitialized'));
   }, 0)
 });
