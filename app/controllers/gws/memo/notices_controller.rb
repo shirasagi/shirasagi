@@ -10,6 +10,10 @@ class Gws::Memo::NoticesController < ApplicationController
 
   private
 
+  def set_items
+    @items ||= @model.member(@cur_user).undeleted(@cur_user)
+  end
+
   def set_item
     super
     raise "404" unless @item.readable?(@cur_user, group: @cur_site)
