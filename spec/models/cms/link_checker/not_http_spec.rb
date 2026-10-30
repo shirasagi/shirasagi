@@ -4,7 +4,7 @@ describe Cms::LinkChecker, dbscope: :example do
   let!(:site0) { cms_site }
   let!(:site) { create :cms_site_subdir, parent: site0 }
   let(:ip_address) { "10.11.102.8" }
-  let!(:checker) { Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true) }
+  let!(:checker) { Cms::LinkChecker.new(cur_site: site, root_url: site.full_url, fetch_content: true) }
 
   before do
     @save_ssrf_resolver = Cms::LinkChecker.ssrf_resolver
@@ -29,7 +29,7 @@ describe Cms::LinkChecker, dbscope: :example do
       result = checker.check_url(url)
       expect(result.success?).to be_falsey
       expect(result.result).to eq :error
-      expect(result.error_code).to eq :link_check_failed_not_found
+      expect(result.error_code).to eq :link_check_failed_ignored
       expect(result.redirection_count).to eq 0
       expect(result.content_type).to be_blank
       expect(result.content).to be_blank
@@ -43,7 +43,7 @@ describe Cms::LinkChecker, dbscope: :example do
       result = checker.check_url(url)
       expect(result.success?).to be_falsey
       expect(result.result).to eq :error
-      expect(result.error_code).to eq :link_check_failed_not_found
+      expect(result.error_code).to eq :link_check_failed_ignored
       expect(result.redirection_count).to eq 0
       expect(result.content_type).to be_blank
       expect(result.content).to be_blank

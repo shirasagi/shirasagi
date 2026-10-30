@@ -40,7 +40,7 @@ describe Cms::LinkChecker, dbscope: :example do
     end
 
     it do
-      checker = Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true)
+      checker = Cms::LinkChecker.new(cur_site: site, root_url: site.full_url, fetch_content: true)
       result = checker.check_url(file.full_url)
       expect(result.success?).to be_truthy
       expect(result.result).to eq :success

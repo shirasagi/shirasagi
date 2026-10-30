@@ -4,7 +4,7 @@ describe Cms::LinkChecker, dbscope: :example do
   let!(:site0) { cms_site }
   let!(:site) { create :cms_site_subdir, parent: site0 }
   let(:ip_address) { "10.11.102.8" }
-  let!(:checker) { Cms::LinkChecker.new(root_url: site.full_url, fetch_content: true) }
+  let!(:checker) { Cms::LinkChecker.new(cur_site: site, root_url: site.full_url, fetch_content: true) }
 
   before do
     @save_ssrf_resolver = Cms::LinkChecker.ssrf_resolver

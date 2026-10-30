@@ -8,7 +8,7 @@ class Cms::LinkChecker
 
   cattr_accessor :ssrf_resolver, instance_accessor: false
 
-  attr_accessor :cur_user, :root_url, :fetch_content
+  attr_accessor :cur_site, :cur_user, :root_url, :fetch_content
   # attr_writer :fs_url, :head_request_timeout, :max_redirection, :http_basic_authentication
   attr_writer :fs_url, :head_request_timeout, :max_redirection
 
@@ -54,6 +54,40 @@ class Cms::LinkChecker
     end
   end
 
+  def check_url(full_url, redirection: nil)
+    full_url = to_addressable(full_url)
+    redirection ||= Redirection.new
+
+    if ignore_urls.match?(full_url)
+      return Result.error(
+        error_code: :link_check_failed_ignored, redirection_count: redirection.count)
+    end
+
+    site = find_site(full_url)
+    if site.blank?
+      return get_with_http(full_url, redirection: redirection)
+    end
+
+    Rails.logger.tagged(site.host) do
+      generated_file_path = get_generated_file_path(site, full_url)
+      if generated_file_path
+        content_type = SS::MimeType.find(File.extname(generated_file_path))
+        content = content_type.include?(TEXT_HTML_MIME_TYPE) ? File.read(generated_file_path) : nil
+        return Result.success(
+          redirection_count: redirection.count, content_type: content_type, content: content)
+      end
+
+      # retrieve internal page
+      if fs_path?(full_url)
+        full_url = append_access_token_if_possible(full_url)
+      end
+
+      get_with_routing(site, full_url, redirection: redirection)
+    end
+  end
+
+  private
+
   def fs_url
     return @fs_url if instance_variable_defined?(:@fs_url)
 
@@ -86,40 +120,12 @@ class Cms::LinkChecker
     @ssrf_deny_list = Array(SS.config.cms.check_links["ssrf_deny_list"]).flatten.select(&:present?).uniq
   end
 
-  # この設定は自サイトに向けてのもの。自サイトは Rails routing で解決するようにしたので HTTP アクセスは発生しないので不要となった
-  # def http_basic_authentication
-  #   return @http_basic_authentication if instance_variable_defined?(:@http_basic_authentication)
-  #   @http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
-  # end
-
-  def check_url(full_url, redirection: nil)
-    full_url = to_addressable(full_url)
-    redirection ||= Redirection.new
-
-    site = find_site(full_url)
-    if site.blank?
-      return get_with_http(full_url, redirection: redirection)
-    end
-
-    Rails.logger.tagged(site.host) do
-      generated_file_path = get_generated_file_path(site, full_url)
-      if generated_file_path
-        content_type = SS::MimeType.find(File.extname(generated_file_path))
-        content = content_type.include?(TEXT_HTML_MIME_TYPE) ? File.read(generated_file_path) : nil
-        return Result.success(
-          redirection_count: redirection.count, content_type: content_type, content: content)
-      end
-
-      # retrieve internal page
-      if fs_path?(full_url)
-        full_url = append_access_token_if_possible(full_url)
-      end
-
-      get_with_routing(site, full_url, redirection: redirection)
-    end
+  def ignore_urls
+    @ignore_urls ||= Cms::CheckLinks::IgnoreUrlMatcher.new(cur_site: cur_site)
   end
 
   def to_addressable(full_url)
+    full_url = full_url.to_str
     full_url = Addressable::URI.parse(full_url) unless full_url.is_a?(Addressable::URI)
     full_url.normalize
   end
