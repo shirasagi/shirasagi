@@ -179,6 +179,7 @@ SS.ready(function() {
         }
       },
       eventDidMount: function(arg) {
+        // var calendar = arg.el.closest('.calendar').calendar;
         var event = arg.event;
         var el = arg.el;
         var start = moment(event.start)
@@ -220,6 +221,22 @@ SS.ready(function() {
           el.querySelector(".fc-resizer")?.remove();
           el.classList.remove("fc-resizable");
         }
+
+        // // for duplicated facilities
+        // if (location.pathname.match('/facilities') && !event.allDay) {
+        //   var allEvents = calendar.getEvents();
+        //   var duplicated = allEvents.find(function(ev) {
+        //     if (ev.id === event.id || !ev.end) return false;
+        //     if (ev.allDay) return false;
+        //     if (ev.end > event.start && ev.start < event.end) {
+        //       return true;
+        //     }
+        //   });
+        //   if (duplicated) {
+        //     var duplicatedSpan = $('<span class="fc-duplicated"></span>').append('');
+        //     el.querySelector('.fc-event-title').prepend(duplicatedSpan[0]);
+        //   }
+        // }
 
         var todo = document.querySelector('.fc .fc-withTodo-button');
         if (todo) {
