@@ -19,7 +19,9 @@ describe "key_visual_agents_parts_slide", type: :feature, dbscope: :example, js:
       %(/x" onclick="window.xss=1; console.log('xss'); return false;)
     end
     let!(:item1) do
-      create :key_visual_image, cur_site: site, cur_node: node, link_url: vulnerable_link_url
+      image = create :key_visual_image, cur_site: site, cur_node: node, link_url: unique_url
+      image.set(link_url: vulnerable_link_url)
+      image
     end
 
     it do
