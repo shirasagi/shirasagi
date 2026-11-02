@@ -4,6 +4,8 @@ class Cms::ContentLinkChecker
   attr_accessor :cur_site, :cur_user, :page, :html
   attr_reader :extracted_urls, :results
 
+  SKIP_ERROR_CODES = Set.new(%i[link_check_failed_ignored link_check_failed_ssrf]).freeze
+
   Result = Data.define(:result, :message, :redirection_count, :normalized_url) do
     def self.from(result)
       case result
@@ -12,7 +14,7 @@ class Cms::ContentLinkChecker
           success(redirection_count: result.redirection_count)
         else
           # error
-          if result.error_code == :link_check_failed_ignored
+          if SKIP_ERROR_CODES.include?(result.error_code)
             skip(redirection_count: result.redirection_count)
           else
             error(message: result.message, redirection_count: result.redirection_count)

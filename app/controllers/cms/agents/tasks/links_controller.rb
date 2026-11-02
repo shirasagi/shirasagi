@@ -7,6 +7,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   include Cms::PublicFilter::Agent
 
   IGNORE_LINK_TYPES = Set.new(%i[ignore broken]).freeze
+  IGNORE_ERROR_CODES = Set.new(%i[link_check_failed_ignored link_check_failed_ssrf]).freeze
 
   before_action :set_params
 
@@ -254,7 +255,11 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     Rails.logger.info { "#{source.full_url}: check by referer: #{source.referrers.map { _1.full_url.to_s }.join(", ")}" }
     result = checker.check_url(source.full_url)
     unless result.success?
-      source.status = :error
+      if IGNORE_ERROR_CODES.include?(result.error_code)
+        source.status = :ignore
+      else
+        source.status = :error
+      end
       return
     end
 

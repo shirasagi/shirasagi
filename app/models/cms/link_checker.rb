@@ -173,6 +173,8 @@ class Cms::LinkChecker
       error_code = :link_check_failed_not_found
     end
     Result.error(error_code: error_code, redirection_count: redirection.count)
+  rescue Faraday::SsrfFilter::SSRFError
+    return Result.error(error_code: :link_check_failed_ssrf, redirection_count: redirection.count)
   rescue OpenSSL::SSL::SSLError, Faraday::SSLError
     return Result.error(
       error_code: :link_check_failed_certificate_verify_failed, redirection_count: redirection.count)

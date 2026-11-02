@@ -462,4 +462,43 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
       expect(a_request(:get, url1)).to have_been_made.times(0)
     end
   end
+
+  context "with private ip address url" do
+    let(:url1) { "http://10.224.174.6/" }
+    let!(:article) do
+      html = <<~HTML
+        <a href="#{url1}">#{url1}</a>
+      HTML
+      create :article_page, cur_node: node, layout: layout, html: html, state: "public"
+    end
+
+    before do
+      WebMock.disable_net_connect!
+
+      success_return = { body: "", status: 200, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
+      stub_request(:any, url1).to_return(success_return)
+    end
+
+    after do
+      WebMock.reset!
+      WebMock.allow_net_connect!
+    end
+
+    it do
+      checker = Cms::ContentLinkChecker.check(cur_site: site, cur_user: user, page: article, html: article.html)
+
+      expect(checker.extracted_urls.size).to eq 1
+      expect(checker.extracted_urls[url1]).to eq url1
+
+      expect(checker.results.size).to eq 1
+      checker.results[url1].tap do |result|
+        expect(result.result).to eq :skip
+        expect(result.message).to be_blank
+        expect(result.normalized_url).to eq url1
+      end
+
+      # 除外URLに指定されているので、アクセスは発生しないはず
+      expect(a_request(:get, url1)).to have_been_made.times(0)
+    end
+  end
 end
