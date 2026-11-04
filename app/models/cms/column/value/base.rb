@@ -211,7 +211,11 @@ class Cms::Column::Value::Base
         end
 
         next if @link_errors[url]
-        @link_errors[url] = checker.check_url(url)
+        result = checker.check_url(url)
+        if Cms::Agents::Tasks::LinksController::IGNORE_ERROR_CODES.include?(result.error_code)
+          result = result.with(result: :success, error_code: :link_check_failed_ignored)
+        end
+        @link_errors[url] = result
       end
     end
   end
