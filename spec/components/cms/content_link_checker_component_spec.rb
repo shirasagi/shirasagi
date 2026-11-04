@@ -5,6 +5,16 @@ describe Cms::ContentLinkCheckerComponent, type: :component, dbscope: :example d
   let!(:user) { cms_user }
   let!(:layout) { create_cms_layout cur_site: site }
   let!(:node) { create :article_node_page, cur_site: site, layout: layout }
+  let(:ip_address) { "10.11.102.8" }
+
+  before do
+    @save_ssrf_resolver = Cms::LinkChecker.ssrf_resolver
+    Cms::LinkChecker.ssrf_resolver = ->(_hostname) { [ ip_address ] }
+  end
+
+  after do
+    Cms::LinkChecker.ssrf_resolver = @save_ssrf_resolver
+  end
 
   describe ".render" do
     context "html with no links" do
@@ -244,6 +254,51 @@ describe Cms::ContentLinkCheckerComponent, type: :component, dbscope: :example d
       end
       let!(:article) { create :article_page, cur_node: node, layout: layout, html: html, state: "public" }
       let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: url1 }
+
+      before do
+        WebMock.disable_net_connect!
+
+        failed_return = { body: "", status: 404, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
+        stub_request(:any, url1).to_return(failed_return)
+      end
+
+      after do
+        WebMock.reset!
+        WebMock.allow_net_connect!
+      end
+
+      it do
+        checker = Cms::ContentLinkChecker.check(cur_site: site, cur_user: user, page: article, html: html)
+        component = described_class.new(cur_site: site, cur_user: user, checker: checker)
+        fragment = render_inline component
+        fragment.css("#errorLinkChecker").tap do |error_elements|
+          expect(error_elements).to have(1).items
+          error_elements[0].css("h2").tap do |elements|
+            expect(elements).to have(1).items
+            expect(elements[0].text.strip).to include(I18n.t("cms.link_check"))
+          end
+          error_elements[0].css(".errorExplanationBody").tap do |elements|
+            expect(elements).to have(1).items
+
+            elements[0].css("[data-url='#{url1}']").tap do |results|
+              expect(results).to have(1).items
+              expect(results.css(".skip").text.strip).to eq "[skip]"
+              expect(results.css(".url").text.strip).to eq url1
+              expect(results.css(".message")).to be_blank
+            end
+          end
+        end
+      end
+    end
+
+    context "with private ip address url" do
+      let(:url1) { "http://10.224.174.6/" }
+      let(:html) do
+        <<~HTML.freeze
+          <a href="#{url1}">#{url1}</a>
+        HTML
+      end
+      let!(:article) { create :article_page, cur_node: node, layout: layout, html: html, state: "public" }
 
       before do
         WebMock.disable_net_connect!

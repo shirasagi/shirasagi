@@ -4,14 +4,22 @@ class Cms::ContentLinkChecker
   attr_accessor :cur_site, :cur_user, :page, :html
   attr_reader :extracted_urls, :results
 
+  SKIP_ERROR_CODES = Set.new(%i[link_check_failed_ignored link_check_failed_ssrf]).freeze
+
   Result = Data.define(:result, :message, :redirection_count, :normalized_url) do
     def self.from(result)
       case result
       when Cms::LinkChecker::Result
-        new(
-          result: result.success? ? :success : :error,
-          message: result.message, redirection_count: result.redirection_count,
-          normalized_url: nil)
+        if result.success?
+          success(redirection_count: result.redirection_count)
+        else
+          # error
+          if SKIP_ERROR_CODES.include?(result.error_code)
+            skip(redirection_count: result.redirection_count)
+          else
+            error(message: result.message, redirection_count: result.redirection_count)
+          end
+        end
       else
         "Unsupported Type: #{result.class.name}"
       end
@@ -105,7 +113,8 @@ class Cms::ContentLinkChecker
   end
 
   def checker
-    @checker ||= Cms::LinkChecker.new(cur_user: cur_user, root_url: cur_site.full_root_url)
+    @checker ||= Cms::LinkChecker.new(
+      cur_site: cur_site, cur_user: cur_user, root_url: cur_site.full_root_url)
   end
 
   def check_url(full_url)

@@ -44,6 +44,8 @@ gem 'csv'
 gem 'diff-lcs'
 gem 'diffy'
 gem 'dotenv-rails'
+gem 'faraday'
+gem 'faraday-ssrf-filter'
 gem 'fast_blank'
 gem 'fastimage'
 gem 'geocoder'
@@ -117,7 +119,6 @@ gem 'sparql-client'
 gem 'unf'
 
 # elasticsearch
-gem 'faraday'
 gem 'elasticsearch', '~> 8'
 
 # line

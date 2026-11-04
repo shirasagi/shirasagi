@@ -7,6 +7,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   include Cms::PublicFilter::Agent
 
   IGNORE_LINK_TYPES = Set.new(%i[ignore broken]).freeze
+  IGNORE_ERROR_CODES = Set.new(%i[link_check_failed_ignored link_check_failed_ssrf]).freeze
 
   before_action :set_params
 
@@ -253,8 +254,12 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   def check_url(source)
     Rails.logger.info { "#{source.full_url}: check by referer: #{source.referrers.map { _1.full_url.to_s }.join(", ")}" }
     result = checker.check_url(source.full_url)
-    unless result.success?
-      source.status = :error
+    if result.error?
+      if IGNORE_ERROR_CODES.include?(result.error_code)
+        source.status = :ignore
+      else
+        source.status = :error
+      end
       return
     end
 
@@ -324,7 +329,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   private
 
   def checker
-    @checker ||= Cms::LinkChecker.new(root_url: @base_url, fetch_content: true)
+    @checker ||= Cms::LinkChecker.new(cur_site: @site, root_url: @base_url, fetch_content: true)
   end
 
   def same_domain_site_path?(source)
