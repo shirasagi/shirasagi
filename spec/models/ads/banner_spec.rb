@@ -148,8 +148,9 @@ describe Ads::Banner do
     context "with vulnerable path #1" do
       it do
         item = build(:ads_banner, cur_site: site, cur_node: node, link_url: %(/x" onclick="alert(1)"))
-        expect(item).to be_valid
-        expect(item.link_url).to eq "/x%22%20onclick=%22alert(1)%22"
+        expect(item).to be_invalid
+        expect(item.errors[:link_url]).to have(1).items
+        expect(item.errors[:link_url]).to include(I18n.t("errors.messages.url"))
       end
     end
 

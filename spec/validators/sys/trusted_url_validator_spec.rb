@@ -147,4 +147,83 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
       expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}#{request_path}"))).to be_falsey
     end
   end
+
+  # Addressable ではホストなしと解析されるが、ブラウザ(WHATWG URL)では外部ホストと解釈される URL
+  describe "urls interpreted as an external host by browsers" do
+    let(:evil_domain) { unique_domain }
+    let(:ambiguous_urls) do
+      [
+        "///#{evil_domain}",
+        "////#{evil_domain}",
+        "/\\#{evil_domain}",
+        "\\\\#{evil_domain}",
+        "\\/#{evil_domain}",
+        "/\t/#{evil_domain}",
+        "/\n/#{evil_domain}",
+        " //#{evil_domain}",
+        "\t//#{evil_domain}",
+        "https:/#{evil_domain}",
+        "https:#{evil_domain}",
+        "https:///#{evil_domain}",
+        "https://#{evil_domain}\\@#{request_domain}/",
+        "https://#{request_domain}@#{evil_domain}/",
+        "https://#{request_domain}\\#{evil_domain}/",
+        "/#{unique_id}/\u0000.html",
+      ]
+    end
+
+    before do
+      @save_url_type = SS.config.replace_value_at(:sns, :url_type, "restricted")
+      described_class.send(:clear_trusted_urls)
+    end
+
+    after do
+      SS.config.replace_value_at(:sns, :url_type, @save_url_type)
+      described_class.send(:clear_trusted_urls)
+    end
+
+    it do
+      known_trusted_urls = [ "//#{request_domain}" ]
+      ambiguous_urls.each do |url|
+        expect(described_class.myself_url?(url)).to be_falsey, "expected #{url.inspect} not to be myself url"
+        expect(described_class.trusted_url?(url, known_trusted_urls)).to be_falsey, "expected #{url.inspect} not to be trusted"
+        expect(described_class.valid_url?(url, known_trusted_urls)).to be_falsey, "expected #{url.inspect} not to be valid"
+      end
+
+      # ブラウザが除去する前後の空白は除去してから判定する
+      expect(described_class.valid_url?(" /#{unique_id}/", known_trusted_urls)).to be_truthy
+      expect(described_class.valid_url?("https://#{request_domain}/#{unique_id}/ ", known_trusted_urls)).to be_truthy
+      # ブラウザはパス中の "%5C" をデコードしないので、外部ホストとは解釈されない
+      expect(described_class.valid_url?("/%5C#{evil_domain}", known_trusted_urls)).to be_truthy
+    end
+  end
+
+  describe "#validate_each" do
+    let!(:clazz) do
+      Struct.new(:url) do
+        include ActiveModel::Validations
+
+        def self.model_name
+          ActiveModel::Name.new(self, nil, "temp")
+        end
+
+        def fields
+          { "url" => OpenStruct.new(localized?: false) }
+        end
+      end
+    end
+
+    before do
+      clazz.validates :url, "sys/trusted_url" => true
+    end
+
+    it do
+      expect(clazz.new("/#{unique_id}")).to be_valid
+      expect(clazz.new("//#{request_domain}/#{unique_id}")).to be_valid
+      expect(clazz.new("///#{unique_domain}")).to be_invalid
+      expect(clazz.new("https:/#{unique_domain}")).to be_invalid
+      # 解析できない URL は invalid
+      expect(clazz.new("https://#{unique_domain}:port/")).to be_invalid
+    end
+  end
 end
