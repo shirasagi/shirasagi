@@ -1,12 +1,16 @@
 class Sys::TrustedUrlValidator < ActiveModel::EachValidator
   ALLOWED_SCHEMES = Set.new(%w(http https)).freeze
+  # ホストが必須のスキーム。"https:/evil.example" のようにホストがないと、ブラウザは path をホストとして解釈する
+  HOST_REQUIRED_SCHEMES = Set.new(%w(http https)).freeze
+  CONTROL_CHARS = /[\x00-\x1F\x7F]/
 
   class << self
     def myself_url?(url)
       return false if Rails.application.current_request.blank?
 
-      url = ensure_addressable_url!(url) rescue nil
+      url = normalize_url!(url) rescue nil
       return false unless url
+      return false if ambiguous_url?(url)
 
       request_url = ::Addressable::URI.parse(Rails.application.current_request.url) rescue nil
       return false unless request_url
@@ -25,8 +29,9 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
     end
 
     def trusted_url?(url, known_trusted_urls = nil)
-      url = ensure_addressable_url!(url) rescue nil
+      url = normalize_url!(url) rescue nil
       return false unless url
+      return false if ambiguous_url?(url)
       return true if url.scheme.blank? && url.host.blank? && url.port.blank?
 
       if known_trusted_urls.present?
@@ -68,6 +73,35 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
       ::Addressable::URI.parse(url.to_s)
     end
 
+    # ブラウザ(WHATWG URL)と同様に、前後の空白・制御文字と途中のタブ・改行を除去してから解析する
+    def normalize_url!(url)
+      source = url.to_s
+      normalized = source.gsub(/\A[\x00-\x20]+|[\x00-\x20]+\z/, "").delete("\t\n\r")
+      return ensure_addressable_url!(url) if normalized == source
+
+      ::Addressable::URI.parse(normalized)
+    end
+
+    # Addressable とブラウザとで解釈が異なり、ブラウザでは外部ホストを指す恐れのある URL か
+    def ambiguous_url?(url)
+      return true if url.to_s.match?(CONTROL_CHARS)
+      # "https://example.jp@evil.example/" のような偽装や、"https://evil.example\@example.jp/" のように
+      # ブラウザが "\" を "/" として扱うことによるパーサー差異を防ぐ
+      return true if url.userinfo.present?
+      return true if url.authority.present? && url.authority.include?("\\")
+
+      if url.scheme.blank?
+        # "///evil.example" や "/\evil.example" は、ブラウザでは "//evil.example" と解釈される
+        return true if url.authority == ""
+        return true if url.authority.nil? && url.path.match?(%r{\A[/\\]{2}})
+      elsif HOST_REQUIRED_SCHEMES.include?(url.scheme.downcase)
+        # "https:/evil.example" や "https:///evil.example" は、ブラウザでは "https://evil.example" と解釈される
+        return true if url.host.blank?
+      end
+
+      false
+    end
+
     def trusted_url_one?(trusted_template_url, uncertain_url)
       if trusted_template_url.scheme.present?
         if uncertain_url.scheme != trusted_template_url.scheme
@@ -81,7 +115,7 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
         if trusted_template_url.host.include?("*")
           # wildcard host
           pattern = Regexp.escape(trusted_template_url.host).gsub('\*', '.*?')
-          regex = Regexp.new("^#{pattern}$", Regexp::IGNORECASE)
+          regex = Regexp.new("\\A#{pattern}\\z", Regexp::IGNORECASE)
           return false unless regex.match?(uncertain_url.host)
         else
           return false if uncertain_url.host != trusted_template_url.host
@@ -137,8 +171,7 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
       end
     else
       url = ::Addressable::URI.parse(value) rescue nil
-      return unless url
-      return if self.class.valid_url?(url, known_trusted_urls)
+      return if url && self.class.valid_url?(url, known_trusted_urls)
     end
 
     record.errors.add(attribute, options[:message] || :trusted_url)

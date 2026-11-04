@@ -4,7 +4,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:node) { create :article_node_page }
   let!(:item) { create :article_page, cur_node: node }
-  let!(:redirect_link) { "http://#{unique_id}@example.jp" }
+  let!(:redirect_link) { unique_url }
 
   let!(:new_path) { new_article_page_path site, node }
   let!(:show_path) { article_page_path site, node, item }
