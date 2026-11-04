@@ -254,7 +254,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   def check_url(source)
     Rails.logger.info { "#{source.full_url}: check by referer: #{source.referrers.map { _1.full_url.to_s }.join(", ")}" }
     result = checker.check_url(source.full_url)
-    unless result.success?
+    if result.error?
       if IGNORE_ERROR_CODES.include?(result.error_code)
         source.status = :ignore
       else
