@@ -5,9 +5,17 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
   let!(:user) { cms_user }
   let!(:layout) { create_cms_layout cur_site: site }
   let!(:node) { create :article_node_page, cur_site: site, layout: layout }
+  let(:ip_address) { "10.11.102.8" }
+
+  before do
+    @save_ssrf_resolver = Cms::LinkChecker.ssrf_resolver
+    Cms::LinkChecker.ssrf_resolver = ->(_hostname) { [ ip_address ] }
+  end
 
   after do
     expect(SS.current_user).to be_blank
+
+    Cms::LinkChecker.ssrf_resolver = @save_ssrf_resolver
   end
 
   context "with several links" do
@@ -145,12 +153,12 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
 
   context "with redirection url" do
     let(:redirection_url0) { "https://redirection-0.example.jp/" }
-    let(:redirection_url1) { "http://redirection-1.example.jp/" }
+    let(:redirection_url1) { "https://redirection-1.example.jp/" }
     let(:redirection_url2) { "https://redirection-2.example.jp/" }
-    let(:redirection_url3) { "http://redirection-3.example.jp/" }
+    let(:redirection_url3) { "https://redirection-3.example.jp/" }
     let(:redirection_url4) { "https://redirection-4.example.jp/" }
-    let(:redirection_url5) { "http://redirection-5.example.jp/" }
-    let(:redirection_url6) { "http://redirection-6.example.jp/" }
+    let(:redirection_url5) { "https://redirection-5.example.jp/" }
+    let(:redirection_url6) { "https://redirection-6.example.jp/" }
     let(:redirection_self_url) { "https://redirection-self.example.jp/" }
     let(:redirection_page) { "https://redirection-page.example.jp/" }
     let(:html) do
@@ -188,7 +196,9 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
         .to_return(status: 302, headers: { 'Location' => article.full_url, 'Content-Type' => 'text/html; charset=utf-8' })
 
       @save_check_links = SS.config.cms.check_links.dup
-      SS.config.replace_value_at(:cms, :check_links, { "max_redirection" => 5 })
+      check_links = @save_check_links.dup
+      check_links["max_redirection"] = 5
+      SS.config.replace_value_at(:cms, :check_links, check_links)
     end
 
     after do
@@ -422,6 +432,45 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
       create :article_page, cur_node: node, layout: layout, html: html, state: "public"
     end
     let!(:ignore_url) { create :check_links_ignore_url, site: site, kind: 'all', name: url1 }
+
+    before do
+      WebMock.disable_net_connect!
+
+      success_return = { body: "", status: 200, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
+      stub_request(:any, url1).to_return(success_return)
+    end
+
+    after do
+      WebMock.reset!
+      WebMock.allow_net_connect!
+    end
+
+    it do
+      checker = Cms::ContentLinkChecker.check(cur_site: site, cur_user: user, page: article, html: article.html)
+
+      expect(checker.extracted_urls.size).to eq 1
+      expect(checker.extracted_urls[url1]).to eq url1
+
+      expect(checker.results.size).to eq 1
+      checker.results[url1].tap do |result|
+        expect(result.result).to eq :skip
+        expect(result.message).to be_blank
+        expect(result.normalized_url).to eq url1
+      end
+
+      # 除外URLに指定されているので、アクセスは発生しないはず
+      expect(a_request(:get, url1)).to have_been_made.times(0)
+    end
+  end
+
+  context "with private ip address url" do
+    let(:url1) { "http://10.224.174.6/" }
+    let!(:article) do
+      html = <<~HTML
+        <a href="#{url1}">#{url1}</a>
+      HTML
+      create :article_page, cur_node: node, layout: layout, html: html, state: "public"
+    end
 
     before do
       WebMock.disable_net_connect!

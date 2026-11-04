@@ -131,6 +131,10 @@ production: &production
     max_redirection: 20
     report_max_age: 5
     check_mobile_path: true
+    # ssrf_allow_list:
+    #   - '10.0.0.0/8'
+    # ssrf_deny_list:
+    #   - '93.184.216.0/24'
 
   close_days_before: 7
   max_term_form: 10
@@ -225,6 +229,13 @@ production: &production
 
 test:
   <<: *production
+  check_links:
+    head_request_timeout: 5
+    max_redirection: 20
+    report_max_age: 5
+    check_mobile_path: true
+    ssrf_allow_list:
+      - '10.11.102.0/24'
 
 development:
   <<: *production

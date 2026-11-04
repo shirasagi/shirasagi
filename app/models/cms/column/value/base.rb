@@ -194,8 +194,9 @@ class Cms::Column::Value::Base
   def validate_link_check
     @link_errors = {}
 
-    root_url = column.form.site.full_root_url
-    checker = Cms::LinkChecker.new(cur_user: @link_check_user, root_url: root_url)
+    site = column.form.site
+    root_url = site.full_root_url
+    checker = Cms::LinkChecker.new(cur_site: site, cur_user: @link_check_user, root_url: root_url)
 
     fields.each_key do |key|
       next if LINK_CHECK_EXCLUSION_FIELDS.include?(key)
@@ -210,7 +211,11 @@ class Cms::Column::Value::Base
         end
 
         next if @link_errors[url]
-        @link_errors[url] = checker.check_url(url)
+        result = checker.check_url(url)
+        if Cms::Agents::Tasks::LinksController::IGNORE_ERROR_CODES.include?(result.error_code)
+          result = result.with(result: :success, error_code: :link_check_failed_ignored)
+        end
+        @link_errors[url] = result
       end
     end
   end
