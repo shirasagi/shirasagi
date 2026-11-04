@@ -67,7 +67,7 @@ describe Cms::LinkChecker, dbscope: :example do
       result = checker.check_url(url0)
       expect(result.success?).to be_falsey
       expect(result.result).to eq :error
-      expect(result.error_code).to eq :link_check_failed_not_found
+      expect(result.error_code).to eq :link_check_failed_ssrf
       expect(result.message).to be_present
       expect(result.message).not_to include "Translation missing"
       expect(result.redirection_count).to eq 0

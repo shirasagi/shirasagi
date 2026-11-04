@@ -9,7 +9,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
   let!(:page3) { create :cms_page, cur_site: site, layout_id: layout.id, filename: "page3.html", html: page3_html }
   let!(:page4) { create :cms_page, cur_site: site, layout_id: layout.id, filename: "page4.html", html: page4_html }
 
-  let!(:url1) { "http://sample.example.jp" }
+  let!(:url1) { "https://sample.example.jp" }
   let!(:url2) { "/inquiry/?group=1&page=1" }
   let!(:url3) { "/inquiry/?group=2&page=2" }
   let!(:url4) { "/docs/sample/" }
@@ -27,7 +27,12 @@ describe Cms::CheckLinksJob, dbscope: :example do
   let!(:page3_html) { "<a href=\"#{url3}\">#{url3}</a>" }
   let!(:page4_html) { "<a href=\"#{url4}\">#{url4}</a>" }
 
+  let(:ip_address) { "10.11.102.8" }
+
   before do
+    @save_ssrf_resolver = Cms::LinkChecker.ssrf_resolver
+    Cms::LinkChecker.ssrf_resolver = ->(_hostname) { [ ip_address ] }
+
     @net_connect_allowed = WebMock.net_connect_allowed?
     WebMock.disable_net_connect!(allow_localhost: true)
     WebMock.reset!
@@ -55,6 +60,8 @@ describe Cms::CheckLinksJob, dbscope: :example do
   after do
     WebMock.reset!
     WebMock.allow_net_connect! if @net_connect_allowed
+
+    Cms::LinkChecker.ssrf_resolver = @save_ssrf_resolver
   end
 
   context "no ignore_urls" do
