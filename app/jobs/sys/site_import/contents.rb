@@ -60,6 +60,18 @@ module Sys::SiteImport::Contents
           Event::Extensions::Recurrence.new(event_recurrence["attributes"])
         end
       end
+
+      close_date = data["close_date"]
+      state = data["state"]
+      if close_date
+        if state == "public" && close_date <= Time.zone.now
+          @task.log("#{item[:filename]} : state has been set to closed.")
+          item[:state] = "closed"
+          item[:close_date] = nil
+        elsif state == "closed"
+          item[:close_date] = nil
+        end
+      end
     end
   end
 
