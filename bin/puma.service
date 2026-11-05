@@ -7,7 +7,10 @@ User=root
 WorkingDirectory=/var/www/shirasagi
 Environment=RAILS_ENV=production
 #Environment=PORT=3000
-Environment=WEB_CONCURRENCY=2 # make sure that this value be >= 1. if this value is 0 or unset, puma worker killer won't start.
+#Environment=PRELOAD_APP=false
+#Environment=PRUNE_BUNDLER=true
+# make sure that this value be >= 1. if this value is 0 or unset, puma worker killer won't start.
+Environment=WEB_CONCURRENCY=2
 #Environment=WORKER_TIMEOUT=120
 #Environment=RAILS_MAX_THREADS=3
 #Environment=PUMA_RAM=1024
@@ -18,8 +21,8 @@ Type=simple
 TimeoutSec=300
 
 ExecStart=/bin/bash -lc 'exec bundle exec rails s'
-ExecStop=/usr/bin/kill -TERN $MAINPID
-ExecReload=/usr/bin/kill -USR2 $MAINPID
+ExecStop=/usr/bin/kill -TERM $MAINPID
+ExecReload=/usr/bin/kill -USR1 $MAINPID
 
 [Install]
 WantedBy=multi-user.target
