@@ -68,4 +68,33 @@ describe "cms_agents_parts_sns_share", type: :feature, dbscope: :example do
       expect(page).to have_css(".line_link", text: I18n.t("cms.sns_share.line"))
     end
   end
+
+  context "with old sns_share_states" do
+    let!(:site) { cms_site }
+    let!(:part) do
+      sns_share_states = Cms::Addon::SnsShare::SERVICES.index_with { "show" }
+      sns_share_orders = Cms::Addon::SnsShare::SERVICES.index_with { "0" }
+      sns_share_states['fb_like'] = 'show'
+      sns_share_orders['fb_like'] = '0'
+      sns_share_states.delete('line')
+      sns_share_orders.delete('line')
+      create :cms_part_sns_share, cur_site: site, sns_share_states: sns_share_states, sns_share_orders: sns_share_orders
+    end
+    let!(:layout) { create_cms_layout part, cur_site: site }
+    let!(:node) { create :cms_node, cur_site: site, layout: layout }
+
+    before do
+      Capybara.app_host = "http://#{site.domain}"
+    end
+
+    it "#index" do
+      visit node.url
+      expect(status_code).to eq 200
+      expect(page).to have_css(".cms-sns_share")
+      expect(page).to have_css(".fb-share")
+      expect(page).to have_css(".twitter")
+      expect(page).to have_css(".hatena")
+      expect(page).to have_css(".line")
+    end
+  end
 end

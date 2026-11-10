@@ -45,7 +45,7 @@ module Cms::Addon
     def sort_sns_share_services
       services = sns_share_services.map { [ _1, sns_share_state(_1) || 'show' ] }
       services.select! { |_service_name, service_type| service_type != 'hide' }
-      services.sort_by! { |service_name, _service_type| sns_share_order(service_name) || 0 }
+      services.sort_by! { |service_name, _service_type| sns_share_order(service_name).to_i }
       services
     end
   end
