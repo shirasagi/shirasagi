@@ -97,4 +97,35 @@ describe "cms_agents_parts_sns_share", type: :feature, dbscope: :example do
       expect(page).to have_css(".line")
     end
   end
+
+  context "with old sns_share_orders" do
+    let!(:site) { cms_site }
+    let!(:part) do
+      sns_share_states = Cms::Addon::SnsShare::SERVICES.index_with { "link_only" }
+      sns_share_orders = Cms::Addon::SnsShare::SERVICES.index_with.with_index(1) { |_, i| (i * 10).to_s }
+      sns_share_states['fb_like'] = 'show'
+      sns_share_orders['fb_like'] = '0'
+      sns_share_states.delete('line')
+      sns_share_orders.delete('line')
+      create :cms_part_sns_share, cur_site: site, sns_share_states: sns_share_states, sns_share_orders: sns_share_orders
+    end
+    let!(:layout) { create_cms_layout part, cur_site: site }
+    let!(:node) { create :cms_node, cur_site: site, layout: layout }
+
+    before do
+      Capybara.app_host = "http://#{site.domain}"
+    end
+
+    it "#index" do
+      visit node.url
+      expect(status_code).to eq 200
+      expect(page).to have_css(".cms-sns_share")
+      find_all(".site").tap do |items|
+        expect(items[0]).to have_css(".line-it-button")
+        expect(items[1]).to have_css(".fb_share_link", text: I18n.t("cms.sns_share.fb_share_button"))
+        expect(items[2]).to have_css(".twitter_link", text: I18n.t("cms.sns_share.tweet"))
+        expect(items[3]).to have_css(".hatena_link", text: I18n.t("cms.sns_share.hatena"))
+      end
+    end
+  end
 end
