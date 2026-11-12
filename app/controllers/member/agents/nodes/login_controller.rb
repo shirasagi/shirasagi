@@ -45,7 +45,7 @@ class Member::Agents::Nodes::LoginController < ApplicationController
       end
     end
 
-    available = %i[twitter twitter2 facebook yahoojp yahoojp_v2 google_oauth2 github line].any? do |type|
+    available = Cms::Member::OAUTH_PROVIDERS.any? do |type|
       @cur_node.send("#{type}_oauth") == "enabled"
     end
     unless available
@@ -57,7 +57,7 @@ class Member::Agents::Nodes::LoginController < ApplicationController
     rack_app = builder.to_app
 
     status, headers, body = rack_app.call(request.env)
-    if status.present?
+    if status.present? && !response.committed?
       # OmniAuth が応答する場合と Member::Agents::Nodes::LoginController が応答する場合とがある。
       # OmniAuth が応答した場合、Rack レスポンスが生成されるので status が nil 以外になる。
       # Member::Agents::Nodes::LoginController が応答した場合、status が nil になる。
@@ -129,10 +129,14 @@ class Member::Agents::Nodes::LoginController < ApplicationController
   end
 
   def init
+    return [ response.status, response.headers, response.body ] if response.committed?
     head :not_found
+    [ response.status, response.headers, response.body ]
   end
 
   def callback
+    return [ response.status, response.headers, response.body ] if response.committed?
+
     auth = request.env["omniauth.auth"]
     member = Cms::Member.unscoped.site(@cur_site).where(oauth_type: auth.provider, oauth_id: auth.uid).first
     if member.blank?
@@ -151,13 +155,16 @@ class Member::Agents::Nodes::LoginController < ApplicationController
     end
 
     set_member_and_redirect member, notice: created ? I18n.t('member.notice.member_created') : nil
+    [ response.status, response.headers, response.body ]
   end
 
   def failure
+    return [ response.status, response.headers, response.body ] if response.committed?
     session[:auth_site] = nil
     session[session_member_key] = nil
     flash.discard(:ref)
 
     redirect_to "#{@cur_node.url}/login.html"
+    [ response.status, response.headers, response.body ]
   end
 end
