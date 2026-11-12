@@ -45,7 +45,7 @@ class Member::Agents::Nodes::LoginController < ApplicationController
       end
     end
 
-    available = %i[twitter twitter2 facebook yahoojp yahoojp_v2 google_oauth2 github line].any? do |type|
+    available = Cms::Member::OAUTH_PROVIDERS.any? do |type|
       @cur_node.send("#{type}_oauth") == "enabled"
     end
     unless available
