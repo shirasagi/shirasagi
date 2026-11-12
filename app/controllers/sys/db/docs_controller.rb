@@ -41,6 +41,13 @@ class Sys::Db::DocsController < ApplicationController
     raise "404" unless @item = coll.find(_id: id).first
   end
 
+  def parse_filter(source)
+    filter = YAML.safe_load(source)
+    raise ArgumentError, "filter must be a hash" unless filter.is_a?(Hash)
+
+    BSON::ExtJSON.parse_obj(filter, mode: :bson)
+  end
+
   public
 
   def index
@@ -50,7 +57,7 @@ class Sys::Db::DocsController < ApplicationController
 
     if @s.filter.present?
       begin
-        filter = ExecJS.eval(@s.filter)
+        filter = parse_filter(@s.filter)
       rescue => e
         @filter_error = e.to_s
         render
