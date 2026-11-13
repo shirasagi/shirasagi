@@ -370,7 +370,7 @@ GEM
     mongoid-rspec (4.2.0)
       mongoid (>= 3.0, < 10.0)
       mongoid-compatibility (>= 0.5.1)
-    msgpack (1.8.3)
+    msgpack (1.8.7)
     multi_json (1.21.1)
     multi_xml (0.9.1)
       bigdecimal (>= 3.1, < 5)
