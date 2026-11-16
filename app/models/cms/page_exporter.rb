@@ -3,7 +3,7 @@ class Cms::PageExporter
 
   MAX_LENGTH = 1_024
 
-  attr_accessor :mode, :site, :truncate, :criteria
+  attr_accessor :mode, :site, :truncate, :criteria, :form
 
   class << self
     def name_and_filename(_item, criteria)
@@ -14,7 +14,7 @@ class Cms::PageExporter
   end
 
   def enum_csv(options = {})
-    has_form = options[:form].present?
+    has_form = self.form.present?
 
     if !options.key?(:model)
       options = options.dup
@@ -36,7 +36,7 @@ class Cms::PageExporter
       end
       draw_faq(drawer) if mode_faq?
       if has_form
-        draw_form(drawer, options[:form])
+        draw_form(drawer, self.form)
       else
         draw_body(drawer)
       end

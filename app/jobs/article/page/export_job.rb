@@ -33,7 +33,7 @@ class Article::Page::ExportJob < Cms::ApplicationJob
       criteria = criteria.exists(form_id: false)
     end
 
-    Cms::PageExporter.new(mode: "article", site: site, truncate: truncate, criteria: criteria)
+    Cms::PageExporter.new(mode: "article", site: site, truncate: truncate, criteria: criteria, form: form)
   end
 
   def notification_subject

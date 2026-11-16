@@ -6,8 +6,8 @@ describe Cms::PageExporter, dbscope: :example do
   describe ".enum_csv" do
     let!(:item) { create :article_page, cur_node: node }
     subject do
-      exporter = described_class.new(mode: "article", site: cms_site, criteria: Cms::Page.all)
-      exporter.enum_csv(encoding: "UTF-8", form: nil).to_a
+      exporter = described_class.new(mode: "article", site: cms_site, criteria: Cms::Page.all, form: nil)
+      exporter.enum_csv(encoding: "UTF-8").to_a
     end
 
     context "usual case" do
