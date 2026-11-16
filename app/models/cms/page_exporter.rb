@@ -265,7 +265,7 @@ class Cms::PageExporter
         names = []
         if item.try(:file_ids)
           SS::File.each_file(item.file_ids) do |file|
-            names << file.name.presence || file.filename.presence
+            names << file.humanized_name
           end
         end
         names.compact!
@@ -533,44 +533,71 @@ class Cms::PageExporter
   def draw_column_date_field(drawer, form, column, value_type)
     drawer.column "#{form.id}/#{column.id}/date" do
       drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:date)}" }
-      drawer.body { |item| find_column_value(item, form, column).try(:date) }
+      drawer.body { |item| find_column_value(item, form, column).try(:date).try { I18n.l(_1.to_date, format: :csv) } }
     end
   end
 
   def draw_column_file_upload(drawer, form, column, value_type)
+    draw_column_file_upload_common(drawer, form, column, value_type)
+
     case column.file_type
     when 'attachment'
-      drawer.column "#{form.id}/#{column.id}/file_label" do
-        drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.attachment.file_label")}" }
-        drawer.body { |item| find_column_value(item, form, column).try(:file_label) }
-      end
+      draw_column_file_upload_attachment(drawer, form, column, value_type)
     when 'video'
-      drawer.column "#{form.id}/#{column.id}/text" do
-        drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.video.text")}" }
-        drawer.body { |item| find_column_value(item, form, column).try(:text) }
-      end
+      draw_column_file_upload_video(drawer, form, column, value_type)
     when 'banner'
-      drawer.column "#{form.id}/#{column.id}/link_url" do
-        drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.banner.link_url")}" }
-        drawer.body { |item| find_column_value(item, form, column).try(:link_url) }
-      end
-      drawer.column "#{form.id}/#{column.id}/file_label" do
-        drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.banner.file_label")}" }
-        drawer.body { |item| find_column_value(item, form, column).try(:file_label) }
-      end
+      draw_column_file_upload_banner(drawer, form, column, value_type)
     else # 'image'
-      drawer.column "#{form.id}/#{column.id}/file_label" do
-        drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.image.file_label")}" }
-        drawer.body { |item| find_column_value(item, form, column).try(:file_label) }
+      draw_column_file_upload_image(drawer, form, column, value_type)
+    end
+  end
+
+  def draw_column_file_upload_common(drawer, form, column, value_type)
+    drawer.column "#{form.id}/#{column.id}/file" do
+      drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:file_id)}" }
+      drawer.body do |item|
+        find_column_value(item, form, column).try { _1.file.try(:humanized_name) }
       end
-      drawer.column "#{form.id}/#{column.id}/image_html_type" do
-        drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:image_html_type)}" }
-        drawer.body do |item|
-          find_column_value(item, form, column).try do |v|
-            v.image_html_type ? I18n.t("cms.options.column_image_html_type.#{v.image_html_type}") : nil
-          end
+    end
+  end
+
+  def draw_column_file_upload_image(drawer, form, column, value_type)
+    drawer.column "#{form.id}/#{column.id}/file_label" do
+      drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.image.file_label")}" }
+      drawer.body { |item| find_column_value(item, form, column).try(:file_label) }
+    end
+    drawer.column "#{form.id}/#{column.id}/image_html_type" do
+      drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:image_html_type)}" }
+      drawer.body do |item|
+        find_column_value(item, form, column).try do |v|
+          v.image_html_type ? I18n.t("cms.options.column_image_html_type.#{v.image_html_type}") : nil
         end
       end
+    end
+  end
+
+  def draw_column_file_upload_attachment(drawer, form, column, value_type)
+    drawer.column "#{form.id}/#{column.id}/file_label" do
+      drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.attachment.file_label")}" }
+      drawer.body { |item| find_column_value(item, form, column).try(:file_label) }
+    end
+  end
+
+  def draw_column_file_upload_video(drawer, form, column, value_type)
+    drawer.column "#{form.id}/#{column.id}/text" do
+      drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.video.text")}" }
+      drawer.body { |item| find_column_value(item, form, column).try(:text) }
+    end
+  end
+
+  def draw_column_file_upload_banner(drawer, form, column, value_type)
+    drawer.column "#{form.id}/#{column.id}/link_url" do
+      drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.banner.link_url")}" }
+      drawer.body { |item| find_column_value(item, form, column).try(:link_url) }
+    end
+    drawer.column "#{form.id}/#{column.id}/file_label" do
+      drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.banner.file_label")}" }
+      drawer.body { |item| find_column_value(item, form, column).try(:file_label) }
     end
   end
 
@@ -581,6 +608,22 @@ class Cms::PageExporter
         text = find_column_value(item, form, column).try(:value)
         text = text.try(:truncate, MAX_LENGTH) if truncate
         text
+      end
+    end
+    drawer.column "#{form.id}/#{column.id}/files" do
+      drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:files)}" }
+      drawer.body do |item|
+        find_column_value(item, form, column).try do |v|
+          names = []
+          SS::File.each_file(v.file_ids) do |file|
+            names << file.humanized_name
+          end
+          names.compact!
+          if truncate
+            names = SS::Csv.truncate_overflows(names, "ss.overflow_file")
+          end
+          names.join("\n")
+        end
       end
     end
   end
@@ -611,17 +654,26 @@ class Cms::PageExporter
     end
   end
 
-  alias draw_column_radio_button draw_column_free
+  def draw_column_radio_button(drawer, form, column, value_type)
+    drawer.column "#{form.id}/#{column.id}/value" do
+      drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:value)}" }
+      drawer.body do |item|
+        text = find_column_value(item, form, column).try(:value)
+        text = text.try(:truncate, MAX_LENGTH) if truncate
+        text
+      end
+    end
+  end
 
-  alias draw_column_select draw_column_free
+  alias draw_column_select draw_column_radio_button
 
-  alias draw_column_table draw_column_free
+  alias draw_column_table draw_column_radio_button
 
-  alias draw_column_text_area draw_column_free
+  alias draw_column_text_area draw_column_radio_button
 
-  alias draw_column_text_field draw_column_free
+  alias draw_column_text_field draw_column_radio_button
 
-  alias draw_column_url_field draw_column_free
+  alias draw_column_url_field draw_column_radio_button
 
   def draw_column_url_field2(drawer, form, column, value_type)
     drawer.column "#{form.id}/#{column.id}/link_url" do
@@ -631,6 +683,19 @@ class Cms::PageExporter
     drawer.column "#{form.id}/#{column.id}/link_label" do
       drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:link_label)}" }
       drawer.body { |item| find_column_value(item, form, column).try(:link_label) }
+    end
+    drawer.column "#{form.id}/#{column.id}/link_target" do
+      drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:link_target)}" }
+      drawer.body do |item|
+        column_value = find_column_value(item, form, column)
+        if column_value
+          if column_value.link_target.present?
+            I18n.t(column_value.link_target, scope: "ss.options.link_target")
+          else
+            I18n.t("ss.options.link_target._self")
+          end
+        end
+      end
     end
   end
 
@@ -655,6 +720,10 @@ class Cms::PageExporter
         end
       end
     end
+    drawer.column "#{form.id}/#{column.id}/title" do
+      drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:title)}" }
+      drawer.body { |item| find_column_value(item, form, column).try(:title) }
+    end
   end
 
   def draw_column_select_page(drawer, form, column, value_type)
@@ -662,7 +731,7 @@ class Cms::PageExporter
       drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:page_id)}" }
       drawer.body do |item|
         find_column_value(item, form, column).try do |v|
-          v.page ? "#{v.page.name}(#{v.page.id})" : nil
+          v.page ? "#{v.page.name} (#{v.page.filename})" : nil
         end
       end
     end
