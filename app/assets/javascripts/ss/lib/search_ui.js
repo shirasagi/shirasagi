@@ -310,7 +310,7 @@ this.SS_SearchUI = (function () {
         return true;
       }
     });
-    $el.find("#s_group").on("change", function (_ev) {
+    $el.find("#s_group").not(".submit-on-change").on("change", function (_ev) {
       self.selectItems($el);
       return $el.find("form.search")[0].requestSubmit();
     });

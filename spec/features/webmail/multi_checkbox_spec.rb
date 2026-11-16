@@ -529,5 +529,61 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
         end
       end
     end
+
+    context 'グループ切り替え' do
+      # グループを切り替えながら宛先を選ぶと、切り替え前にチェックした宛先が二重に入力される不具合の再現
+      it do
+        visit index_path
+        wait_for_js_ready
+        new_window = window_opened_by { click_on I18n.t("ss.links.new") }
+        within_window new_window do
+          within "form#item-form" do
+            click_on I18n.t("webmail.links.show_cc_bcc")
+            within 'dl.see.all' do
+              wait_for_cbox_opened { click_on I18n.t('modules.gws/shared_address') }
+            end
+          end
+          within_cbox do
+            select group1.name, from: 's[group]'
+            expect(page).to have_no_css("tr[data-id='#{address2.id}']")
+            check "to_ids#{address1.id}"
+
+            select group2.name, from: 's[group]'
+            expect(page).to have_no_css("tr[data-id='#{address1.id}']")
+            check "to_ids#{address2.id}"
+            check "cc_ids#{address3.id}"
+            wait_for_cbox_closed { click_on I18n.t('ss.links.select') }
+          end
+          within 'form#item-form' do
+            within '.webmail-mail-form-address.to' do
+              expect(page).to have_content(address1.name)
+              expect(page).to have_content(address2.name)
+              expect(page).to have_css(".selected-address > span", count: 2)
+            end
+            within '.webmail-mail-form-address.cc-bcc.cc' do
+              expect(page).to have_content(address3.name)
+              expect(page).to have_css(".selected-address > span", count: 1)
+            end
+            fill_in 'item[subject]', with: item_subject
+            fill_in 'item[text]', with: item_texts.join("\n")
+            click_on I18n.t('ss.buttons.send')
+          end
+        end
+        wait_for_notice I18n.t('ss.notice.sent')
+
+        expect(ActionMailer::Base.deliveries.length).to eq 1
+        ActionMailer::Base.deliveries.first.tap do |mail|
+          expect(mail_subject(mail)).to eq item_subject
+          mail.to.map(&:to_s).tap do |addresses|
+            expect(addresses).to have(2).items
+            expect(addresses).to include(address1.email, address2.email)
+          end
+          mail.cc.map(&:to_s).tap do |addresses|
+            expect(addresses).to have(1).items
+            expect(addresses).to include(address3.email)
+          end
+        end
+      end
+    end
   end
 end
