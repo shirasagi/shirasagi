@@ -24,6 +24,17 @@
   }
 }
 
+html[lang='ja'] {
+  [data-show-in='en'] {
+    display: none;
+  }
+}
+html[lang='en'] {
+  [data-show-in='ja'] {
+    display: none;
+  }
+}
+
 header,
 footer,
 nav,
