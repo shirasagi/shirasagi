@@ -20,11 +20,11 @@
       <%=
         if value.is_a?(Hash)
           content = value.try(:[], lang).presence || value.try(:[], I18n.default_locale)
+          tag.span(content, data: { show_in: lang }) if content.present?
         elsif lang == I18n.default_locale
           content = value.to_s
+          tag.span(content) if content.present?
         end
-        next if content.blank?
-        tag.span content, data: { "show-in" => lang }
       -%>
     <% end -%>
   <% end -%>
