@@ -125,6 +125,65 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
         end
       end
     end
+
+    # OTP が有効になっている場合、SAML認証には OTP は効果なし
+    # 認証基盤側で十分な本人確認がされているという前提で、シラサギ側では追加の本人確認を課さない
+    context "when otp is configured" do
+      before do
+        auth_setting = Sys::Auth::Setting.instance
+        auth_setting.mfa_otp_use_state = "always"
+        auth_setting.save!
+      end
+
+      it do
+        visit sns_mypage_path
+        click_on name
+
+        #
+        # blow form is outside of SHIRASAGI. it's sampling (https://capriza.github.io/samling/samling.html)
+        #
+        within "form#samlProps" do
+          fill_in "nameIdentifier", with: user.email
+          click_on "Next"
+        end
+
+        within "form#samlResponseForm" do
+          click_on "Post Response!"
+        end
+
+        #
+        # Now back to SHIRASAGI
+        #
+        I18n.with_locale(user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
+          # confirm a user has been logged-in
+          expect(page).to have_css(".main-navi", text: I18n.t("sns.account"))
+        end
+
+        if user.type_sso?
+          I18n.with_locale(user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
+            # do logout
+            within ".user-navigation" do
+              wait_for_event_fired("turbo:frame-load") { click_on user.name }
+
+              expect(page).to have_no_link(I18n.t("ss.logout"))
+            end
+          end
+        else
+          I18n.with_locale(user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
+            # do logout
+            within ".user-navigation" do
+              wait_for_event_fired("turbo:frame-load") { click_on user.name }
+
+              click_on I18n.t("ss.logout")
+            end
+          end
+
+          # confirm a login form has been shown
+          expect(page).to have_css(".login-box", text: I18n.t("ss.login", locale: I18n.default_locale))
+          expect(page).to have_css("li", text: name)
+        end
+      end
+    end
   end
 
   context "with sns user" do
