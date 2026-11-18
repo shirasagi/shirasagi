@@ -737,6 +737,82 @@ class Cms::PageExporter
     end
   end
 
+  def draw_column_multiple_files_upload(drawer, form, column, value_type)
+    draw_column_multiple_files_upload_common(drawer, form, column, value_type)
+
+    case column.file_type
+    when 'attachment'
+      draw_column_multiple_files_upload_attachment(drawer, form, column, value_type)
+    else # 'image'
+      draw_column_multiple_files_upload_image(drawer, form, column, value_type)
+    end
+  end
+
+  def draw_column_multiple_files_upload_common(drawer, form, column, value_type)
+    drawer.column "#{form.id}/#{column.id}/files" do
+      drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:file_ids)}" }
+      drawer.body do |item|
+        find_column_value(item, form, column).try do |v|
+          names = []
+          SS::File.each_file(v.file_ids) do |file|
+            names << file.humanized_name
+          end
+          names.compact!
+          if truncate
+            names = SS::Csv.truncate_overflows(names, "ss.overflow_file")
+          end
+          names.join("\n")
+        end
+      end
+    end
+  end
+
+  def draw_column_multiple_files_upload_image(drawer, form, column, value_type)
+    drawer.column "#{form.id}/#{column.id}/file_labels" do
+      drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_multiple_files_upload.image.file_label")}" }
+      drawer.body do |item|
+        find_column_value(item, form, column).try do |v|
+          names = []
+          v.file_ids.each_with_index do |file_id, index|
+            # file_labelは空の可能性があるので、序数を付けて分かりやすくする
+            file_label = v.file_labels[file_id.to_s]
+            names << "#{index + 1}: #{file_label}"
+          end
+          names.compact!
+          if truncate
+            names = SS::Csv.truncate_overflows(names, "ss.overflow_file")
+          end
+          names.join("\n")
+        end
+      end
+    end
+  end
+
+  def draw_column_multiple_files_upload_attachment(drawer, form, column, value_type)
+    drawer.column "#{form.id}/#{column.id}/header" do
+      drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:header)}" }
+      drawer.body { |item| find_column_value(item, form, column).try(:header) }
+    end
+    drawer.column "#{form.id}/#{column.id}/file_labels" do
+      drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_multiple_files_upload.attachment.file_label")}" }
+      drawer.body do |item|
+        find_column_value(item, form, column).try do |v|
+          names = []
+          v.file_ids.each_with_index do |file_id, index|
+            # file_labelは空の可能性があるので、序数を付けて分かりやすくする
+            file_label = v.file_labels[file_id.to_s]
+            names << "#{index + 1}: #{file_label}"
+          end
+          names.compact!
+          if truncate
+            names = SS::Csv.truncate_overflows(names, "ss.overflow_file")
+          end
+          names.join("\n")
+        end
+      end
+    end
+  end
+
   def find_column_value(item, form, column)
     return if item.form_id != form.id
     item.column_values.where(column_id: column.id).first

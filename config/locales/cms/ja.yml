@@ -1656,6 +1656,7 @@ ja:
         text: 動画の内容説明
         link_url: URL
       cms/column/value/multiple_files_upload:
+        files: ファイル
         file_ids: ファイル
         file_labels: リンクテキスト・代替テキスト
         header: 説明文
