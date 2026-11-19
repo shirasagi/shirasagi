@@ -47,6 +47,7 @@ class Cms::PageExporter
       draw_category(drawer)
       draw_event_date(drawer)
       draw_map(drawer) unless mode_faq?
+      draw_facility(drawer) unless mode_faq?
       draw_related_pages(drawer)
       draw_crumb(drawer) unless mode_event?
       draw_contact(drawer) unless mode_event?
@@ -403,6 +404,21 @@ class Cms::PageExporter
       drawer.column "map_point_#{index}_image" do
         drawer.head { "#{Article::Page.t(:map_points)}_#{index + 1}_#{Article::Page.t(:marker_image)}" }
         drawer.body { |item| item.try(:map_points).try(:[], index).try(:[], :image) }
+      end
+    end
+  end
+
+  def draw_facility(drawer)
+    drawer.column :facilities do
+      drawer.body do |item|
+        facilities = item.try(:facilities)
+        if facilities
+          names = facilities.pluck(:name, :filename).map { |name, filename| "#{name} (#{filename})" }
+          if truncate
+            names = SS::Csv.truncate_overflows(names, "cms.overflow_page")
+          end
+          names.join("\n")
+        end
       end
     end
   end
