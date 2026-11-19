@@ -128,6 +128,7 @@ class Cms::PageExporter
         keywords.try(:join, ", ")
       end
     end
+    drawer.column :description_setting, type: :label
     drawer.column :description do
       drawer.body do |item|
         text = item.try(:description)

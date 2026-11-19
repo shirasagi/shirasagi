@@ -22,7 +22,8 @@ describe Cms::PageExporter, dbscope: :example do
         HTML
         create(
           :article_page, cur_site: site, cur_node: node,
-          keywords: Array.new(2) { unique_id }, description: description, summary_html: summary_html
+          keywords: Array.new(2) { unique_id }, description_setting: %w(auto manual).sample,
+          description: description, summary_html: summary_html
         )
       end
 
@@ -34,6 +35,7 @@ describe Cms::PageExporter, dbscope: :example do
           expect(csv_table.length).to eq 1
           csv_table[0].tap do |csv_row|
             expect(csv_row[Article::Page.t(:keywords)]).to eq page1.keywords.join(", ")
+            expect(csv_row[Article::Page.t(:description_setting)]).to eq page1.label(:description_setting)
             expect(csv_row[Article::Page.t(:description)]).to eq page1.description
             expect(csv_row[Article::Page.t(:summary_html)]).to eq page1.summary_html
           end

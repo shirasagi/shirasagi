@@ -754,8 +754,8 @@ ja:
         disabled: 本文に含めない
         include: 本文に含める
       description_setting:
-        description_setting_manual: 手動
-        description_setting_auto: 自動的に本文と連動
+        auto: 自動的に本文と連動
+        manual: 手動
       site_search_type:
         page: ウェブページ
         file: 添付ファイル
