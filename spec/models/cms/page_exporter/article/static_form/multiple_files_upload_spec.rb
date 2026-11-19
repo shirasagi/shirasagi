@@ -96,17 +96,19 @@ describe Cms::PageExporter, dbscope: :example do
           # puts csv_table.headers.join("\n")
           csv_table[0].tap do |csv_row|
             expect(csv_row[Article::Page.t(:filename)]).to eq page1.basename
-            [ form.name, column1.name, column1.value_type.t(:alignment) ].join("/").tap do |header|
-              expect(csv_row[header]).to eq I18n.t(column1_alignment, scope: "cms.options.alignment")
-            end
-            [ form.name, column1.name, column1.value_type.t(:header) ].join("/").tap do |header|
-              expect(csv_row[header]).to eq column1_header
-            end
-            [ form.name, column1.name, column1.value_type.t(:files) ].join("/").tap do |header|
-              expect(csv_row[header]).to eq [ column1_file1.humanized_name, column1_file2.humanized_name ].join("\n")
-            end
-            [ form.name, column1.name, I18n.t("cms.column_multiple_files_upload.attachment.file_label") ].join("/").tap do |header|
-              expect(csv_row[header]).to eq [ "1: #{column1_file_label1}", "2: #{column1_file_label2}" ].join("\n")
+            [ form.name, column1.name ].join("/").tap do |prefix|
+              [ prefix, column1.value_type.t(:alignment) ].join("/").tap do |header|
+                expect(csv_row[header]).to eq I18n.t(column1_alignment, scope: "cms.options.alignment")
+              end
+              [ prefix, column1.value_type.t(:header) ].join("/").tap do |header|
+                expect(csv_row[header]).to eq column1_header
+              end
+              [ prefix, column1.value_type.t(:files) ].join("/").tap do |header|
+                expect(csv_row[header]).to eq [ column1_file1.humanized_name, column1_file2.humanized_name ].join("\n")
+              end
+              [ prefix, I18n.t("cms.column_multiple_files_upload.attachment.file_label") ].join("/").tap do |header|
+                expect(csv_row[header]).to eq [ "1: #{column1_file_label1}", "2: #{column1_file_label2}" ].join("\n")
+              end
             end
           end
         end

@@ -26,7 +26,8 @@ describe Cms::PageExporter, dbscope: :example do
           column_values: [
             column1.value_type.new(
               column: column1, name: column1.name, alignment: column1_alignment,
-              url: column1_url, width: column1_width, height: column1_height, auto_width: column1_auto_width, title: column1_title)
+              url: column1_url, title: column1_title,
+              width: column1_width, height: column1_height, auto_width: column1_auto_width)
           ]
         )
       end
