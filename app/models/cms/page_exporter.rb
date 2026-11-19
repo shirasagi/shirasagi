@@ -420,7 +420,7 @@ class Cms::PageExporter
 
   def draw_crumb(drawer)
     drawer.column :parent_crumb do
-      drawer.body { |item| item.try(:parent_crumb_urls) }
+      drawer.body { |item| item.try(:parent_crumb_urls).try(:join, "\n") }
     end
   end
 
