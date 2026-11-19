@@ -219,6 +219,26 @@ describe Article::Page::ImportJob, dbscope: :example do
         end
       end
 
+      context "facilities section fields is given" do
+        let!(:facility_node) { create :facility_node_node, cur_site: site }
+        let!(:facility_page1) { create :facility_node_page, cur_site: site, cur_node: facility_node }
+        let!(:facility_page2) { create :facility_node_page, cur_site: site, cur_node: facility_node }
+
+        let!(:source_page) do
+          Article::Page.create!(
+            cur_site: site, cur_node: source_node, cur_user: cms_user,
+            name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
+            facility_ids: [ facility_page1.id, facility_page2.id ], contact_group: group1
+          )
+        end
+
+        it do
+          Article::Page.site(site).node(dest_node).first.tap do |page|
+            expect(page.facility_ids).to eq source_page.facility_ids
+          end
+        end
+      end
+
       context "related_pages section fields is given" do
         let(:related_page) { create :article_page, cur_site: site, cur_node: category_node }
         let(:related_page_sort) { [ "name", "filename", "updated -1" ].sample }

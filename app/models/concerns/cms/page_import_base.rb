@@ -126,6 +126,7 @@ module Cms::PageImportBase
     define_importer_parent_crumb(importer)
     define_importer_event_date(importer)
     define_importer_map(importer)
+    define_importer_facilities(importer)
     define_importer_related_pages(importer)
     define_importer_contact_page(importer)
     define_importer_released(importer)
@@ -228,6 +229,15 @@ module Cms::PageImportBase
           next unless item.respond_to?(:map_points=)
           import_map_point(index, row, item, head, value)
         end
+      end
+    end
+  end
+
+  def define_importer_facilities(importer)
+    importer.simple_column :facilities do |row, item, head, value|
+      if item.respond_to?(:facility_ids=)
+        nodes = self.class.find_with_name_filename_pair(to_array(value), Cms::Node.site(site))
+        item.facility_ids = nodes.map(&:id)
       end
     end
   end
