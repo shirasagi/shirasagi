@@ -88,6 +88,7 @@ describe Cms::PageExporter, dbscope: :example do
               expect(csv_row[header]).to eq column1_value
             end
             [ form.name, column1.name, column1.value_type.t(:files) ].join("/").tap do |header|
+              expect(csv_table.headers).to include(header)
               expect(csv_row[header]).to be_blank
             end
           end

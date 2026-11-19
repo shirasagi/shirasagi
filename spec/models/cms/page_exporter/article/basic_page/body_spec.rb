@@ -23,6 +23,7 @@ describe Cms::PageExporter, dbscope: :example do
         SS::Csv.open(io) do |csv|
           csv_table = csv.read
           expect(csv_table.length).to eq 1
+          expect(csv_table.headers).to include(Article::Page.t(:body_part))
           csv_table[0].tap do |csv_row|
             expect(csv_row[Article::Page.t(:html)]).to eq page1.html
             expect(csv_row[Article::Page.t(:body_part)]).to be_blank

@@ -40,7 +40,7 @@ describe Cms::PageExporter, dbscope: :example do
               expect(csv_row[header]).to eq I18n.t(column1_alignment, scope: "cms.options.alignment")
             end
             [ form.name, column1.name, column1.value_type.t(:page) ].join("/").tap do |header|
-              expect(csv_row[header]).to eq "#{column1_page.name} (#{column1_page.filename})"
+              expect(csv_row[header]).to eq "#{column1_page.name} (#{column1_page.id})"
             end
 
             expect(csv_row[Article::Page.t(:map_reference_method)]).to eq page1.label(:map_reference_method)

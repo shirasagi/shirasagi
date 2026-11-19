@@ -43,6 +43,7 @@ describe Cms::PageExporter, dbscope: :example do
           csv_table = csv.read
           expect(csv_table.length).to eq 1
           # puts csv_table.headers.join("\n")
+          expect(csv_table.headers).to include(Article::Page.t(:map_reference_column_name))
           csv_table[0].tap do |csv_row|
             expect(csv_row[Article::Page.t(:map_reference_method)]).to eq page1.label(:map_reference_method)
             expect(csv_row[Article::Page.t(:map_reference_column_name)]).to be_blank

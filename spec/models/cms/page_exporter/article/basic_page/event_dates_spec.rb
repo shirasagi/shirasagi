@@ -38,9 +38,11 @@ describe Cms::PageExporter, dbscope: :example do
               expect(csv_row[header]).to eq I18n.l(page1.event_recurrences[0].until_on.to_date, format: :picker)
             end
             "#{Article::Page.t(:event_recurrences)}_1_開始時刻".tap do |header|
+              expect(csv_table.headers).to include(header)
               expect(csv_row[header]).to be_blank
             end
             "#{Article::Page.t(:event_recurrences)}_1_終了時刻".tap do |header|
+              expect(csv_table.headers).to include(header)
               expect(csv_row[header]).to be_blank
             end
             "#{Article::Page.t(:event_recurrences)}_1_曜日".tap do |header|
@@ -65,6 +67,7 @@ describe Cms::PageExporter, dbscope: :example do
               expect(csv_row[header]).to eq "毎日"
             end
             "#{Article::Page.t(:event_recurrences)}_2_除外日".tap do |header|
+              expect(csv_table.headers).to include(header)
               expect(csv_row[header]).to be_blank
             end
           end
