@@ -158,6 +158,10 @@ module Cms::PageImportBase
 
   def define_importer_meta(importer)
     importer.simple_column :keywords
+    importer.simple_column :description_setting do |row, item, head, value|
+      next unless item.respond_to?(:description_setting=)
+      item.description_setting = from_label(value, item.description_setting_options)
+    end
     importer.simple_column :description
     importer.simple_column :summary_html
   end

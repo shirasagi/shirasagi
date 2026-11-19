@@ -114,14 +114,15 @@ describe Article::Page::ImportJob, dbscope: :example do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            keywords: [ unique_id ], description: unique_id, summary_html: unique_id,
-            contact_group: group1
+            keywords: [ unique_id ], description_setting: %w(auto manual).sample, description: unique_id,
+            summary_html: unique_id, contact_group: group1
           )
         end
 
         it do
           Article::Page.site(site).node(dest_node).first.tap do |page|
             expect(page.keywords).to eq source_page.keywords
+            expect(page.description_setting).to eq source_page.description_setting
             expect(page.description).to eq source_page.description
             expect(page.summary_html).to eq source_page.summary_html
           end
