@@ -32,7 +32,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
 
       wait_for_cbox_opened { find('.btn-gws-column-item-detail').click }
       within_dialog do
-        find('.save').click
+        click_on I18n.t("ss.buttons.save")
       end
       wait_for_notice I18n.t('ss.notice.saved')
 
