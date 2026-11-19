@@ -1697,6 +1697,8 @@ ja:
         auto_width: 画面幅に合わせる
       cms/column/value/free:
         value: テキスト
+        files: ファイル
+        file_ids: ファイル
       cms/column/value/table:
         value: 表
       cms/column/value/select_page:

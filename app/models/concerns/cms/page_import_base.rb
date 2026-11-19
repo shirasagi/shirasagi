@@ -236,7 +236,7 @@ module Cms::PageImportBase
   def define_importer_facilities(importer)
     importer.simple_column :facilities do |row, item, head, value|
       if item.respond_to?(:facility_ids=)
-        nodes = self.class.find_with_name_filename_pair(to_array(value), Cms::Node.site(site))
+        nodes = self.class.find_with_name_filename_pair(to_array(value), Facility::Node::Page.site(site))
         item.facility_ids = nodes.map(&:id)
       end
     end
