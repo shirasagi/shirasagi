@@ -31,6 +31,7 @@ class Cms::PageExporter
       draw_basic(drawer, options[:model])
       draw_node_setting(drawer) if mode_all?
       draw_meta(drawer)
+      draw_thumb(drawer) if mode_article? || mode_all?
       if mode_all?
         draw_list(drawer)
       end
@@ -142,6 +143,12 @@ class Cms::PageExporter
         text = text.try(:truncate, MAX_LENGTH) if truncate
         text
       end
+    end
+  end
+
+  def draw_thumb(drawer)
+    drawer.column :thumb do
+      drawer.body { |item| item.try(:thumb).try(:humanized_name) }
     end
   end
 

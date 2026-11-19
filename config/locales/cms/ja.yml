@@ -1386,6 +1386,7 @@ ja:
         no_items_display_state: ページ未検出時表示
         substitute_html: 代替HTML
       cms/addon/thumb:
+        thumb: サムネイル画像
         thumb_id: サムネイル画像
       cms/addon/parent_crumb:
         parent_crumb: パンくず
