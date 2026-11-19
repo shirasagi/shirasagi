@@ -9,8 +9,6 @@ describe Cms::PageExporter, dbscope: :example do
 
   describe "#enum_csv" do
     context "map" do
-      let(:category1) { create :category_node_page, cur_site: site }
-      let(:category2) { create :category_node_page, cur_site: site }
       let(:map_point1) do
         {
           name: unique_id, loc: [ 138.235266, 36.244941 ], text: Array.new(2) { unique_id }.join("\n"),

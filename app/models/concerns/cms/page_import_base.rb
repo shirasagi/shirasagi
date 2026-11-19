@@ -72,6 +72,8 @@ module Cms::PageImportBase
     item = find_or_initialize!(row)
     raise I18n.t('errors.messages.auth_error') unless allowed_to_import?(item)
 
+    @map_point_imported = false
+
     item.site = site
     item.event_recurrences = nil if item.respond_to?(:event_recurrences=)
     set_page_attributes(row, item)
@@ -192,18 +194,6 @@ module Cms::PageImportBase
   end
 
   def define_importer_map(importer)
-    importer.simple_column :map_points do |row, item, head, value|
-      if item.respond_to?(:map_points=)
-        if value.present?
-          csv_table = ::CSV.parse(value)
-          map_points = csv_table.map do |csv_row|
-            { name: csv_row[0], loc: csv_row[1], text: csv_row[2], image: csv_row[3] }
-          end
-        end
-
-        item.map_points = map_points
-      end
-    end
     importer.simple_column :map_reference_method do |row, item, head, value|
       if item.respond_to?(:map_reference_method=)
         map_reference_method = from_label(value, item.map_reference_method_options)
@@ -226,6 +216,16 @@ module Cms::PageImportBase
     end
     importer.simple_column :set_zoom_level
     importer.simple_column :map_zoom_level
+
+    max_map_marker_size = Map.max_number_of_markers(site)
+    max_map_marker_size.times do |index|
+      "#{Article::Page.t(:map_points)}_#{index + 1}_#{Article::Page.t(:marker_loc)}".tap do |column_name|
+        importer.simple_column "map_point_#{index}_marker_loc".to_sym, name: column_name do |row, item, head, value|
+          next unless item.respond_to?(:map_points=)
+          import_map_point(index, row, item, head, value)
+        end
+      end
+    end
   end
 
   def define_importer_related_pages(importer)
@@ -397,6 +397,34 @@ module Cms::PageImportBase
     recurrences = recurrences ? recurrences.dup : []
     recurrences << recurrence
     item.event_recurrences = recurrences
+  end
+
+  def import_map_point(index, row, item, head, loc)
+    unless @map_point_imported
+      item.map_points = []
+      @map_point_imported = true
+    end
+    return if loc.blank?
+
+    lng, lat = loc.split(",", 2)
+    return if lng.blank? || !lng.numeric?
+    return if lat.blank? || !lat.numeric?
+
+    map_point = { loc: [ lng, lat ] }
+
+    name = row["#{Article::Page.t(:map_points)}_#{index + 1}_#{Article::Page.t(:marker_name)}"].try(:strip).presence
+    text = row["#{Article::Page.t(:map_points)}_#{index + 1}_#{Article::Page.t(:marker_text)}"].try(:strip).presence
+    image = row["#{Article::Page.t(:map_points)}_#{index + 1}_#{Article::Page.t(:marker_image)}"].try(:strip).presence
+
+    map_point[:name] = name if name
+    map_point[:text] = text if text
+    map_point[:image] = image if image
+
+    map_points = item.map_points
+    map_points = map_points ? map_points.to_a.dup : []
+    map_points << map_point
+
+    item.map_points = map_points
   end
 
   def parse_wdays(wdays)

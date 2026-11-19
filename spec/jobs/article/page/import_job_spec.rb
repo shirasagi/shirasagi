@@ -398,6 +398,96 @@ describe Article::Page::ImportJob, dbscope: :example do
       end
     end
 
+    context "blank map point is given" do
+      let!(:source_node) { create :article_node_page, cur_site: site }
+      let(:basename) { "#{unique_id}.html" }
+      let(:map_point1) do
+        {
+          name: unique_id, loc: [ 138.235266, 36.244941 ], text: Array.new(2) { unique_id }.join("\n"),
+          image: "/assets/img/openlayers/marker3.png"
+        }.stringify_keys
+      end
+      let(:map_point2) do
+        {
+          name: unique_id, loc: [ 138.235266, 36.244941 ], text: Array.new(2) { unique_id }.join("\n"),
+          image: "/assets/img/openlayers/marker3.png"
+        }.stringify_keys
+      end
+      let(:map_point3) do
+        {
+          name: unique_id, loc: [ 141.441159, 35.613984 ], text: Array.new(2) { unique_id }.join("\n"),
+          image: "/assets/img/openlayers/marker5.png"
+        }.stringify_keys
+      end
+      let(:map_zoom_level) { rand(5..12) }
+      let(:center_setting) { %w(auto designated_location).sample }
+      let(:set_center_position) { "138.252924,36.204824" }
+      let(:zoom_setting) { %w(auto designated_level).sample }
+      let(:set_zoom_level) { rand(5..12) }
+      let(:map_reference_method) { "direct" }
+      let!(:source_page) do
+        Article::Page.create!(
+          cur_site: site, cur_node: source_node, cur_user: cms_user,
+          name: unique_id, index_name: unique_id, basename: basename, order: rand(1..100),
+          map_points: [ map_point1, map_point2 ], map_zoom_level: map_zoom_level, center_setting: center_setting,
+          set_center_position: set_center_position, zoom_setting: zoom_setting, set_zoom_level: set_zoom_level,
+          map_reference_method: map_reference_method
+        )
+      end
+
+      let!(:dest_node) { create :article_node_page, cur_site: site }
+      let!(:dest_page) do
+        Article::Page.create!(
+          cur_site: site, cur_node: dest_node, cur_user: cms_user,
+          name: unique_id, index_name: unique_id, basename: basename, order: rand(1..100),
+          map_points: [ map_point3 ]
+        )
+      end
+
+      before do
+        source_page
+
+        exporter = Cms::PageExporter.new(mode: "article", site: site, criteria: Article::Page.site(site).node(source_node))
+        csv_source = exporter.enum_csv(encoding: "UTF-8").to_a.join
+        SS::Csv.open(StringIO.new(csv_source)) do |csv|
+          table = csv.read
+
+          table[0]["#{Article::Page.t(:map_points)}_1_#{Article::Page.t(:marker_name)}"] = nil
+          table[0]["#{Article::Page.t(:map_points)}_1_#{Article::Page.t(:marker_loc)}"] = nil
+          table[0]["#{Article::Page.t(:map_points)}_1_#{Article::Page.t(:marker_text)}"] = nil
+          table[0]["#{Article::Page.t(:map_points)}_1_#{Article::Page.t(:marker_image)}"] = nil
+
+          csv_source = table.to_s
+        end
+
+        filename = "#{unique_id}.csv"
+        csv_file = SS::TempFile.create_empty!(name: filename, filename: filename, content_type: 'text/csv') do |file|
+          ::File.binwrite(file.path, csv_source)
+        end
+
+        job = Article::Page::ImportJob.bind(site_id: site.id, node_id: dest_node.id, user_id: cms_user.id)
+        expect { ss_perform_now(job, csv_file.id) }.to output(include("import start #{csv_file.name}\n")).to_stdout
+
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        expect(Article::Page.site(site).node(dest_node).count).to eq 1
+      end
+
+      it do
+        Article::Page.find(dest_page.id).tap do |page|
+          expect(page.map_points).to eq [ map_point2 ]
+          expect(page.center_setting).to eq source_page.center_setting
+          expect(page.set_center_position).to eq source_page.set_center_position
+          expect(page.zoom_setting).to eq source_page.zoom_setting
+          expect(page.set_zoom_level).to eq source_page.set_zoom_level
+          expect(page.map_reference_method).to eq source_page.map_reference_method
+        end
+      end
+    end
+
     context "with UTF-8 without BOM file" do
       let(:path) { "#{Rails.root}/spec/fixtures/article/article_import_test_4.csv" }
       let(:ss_file) do
