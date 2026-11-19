@@ -475,6 +475,15 @@ class Cms::PageExporter
     drawer.column :contact_address
     drawer.column :contact_link_url
     drawer.column :contact_link_name
+    drawer.column :contact_sub_groups do
+      drawer.body do |item|
+        names = item.try(:contact_sub_groups).try(:pluck, :name) || SS::EMPTY_ARRAY
+        if names && truncate
+          names = SS::Csv.truncate_overflows(names, "ss.overflow_group")
+        end
+        names.join("\n")
+      end
+    end
   end
 
   def draw_released(drawer)

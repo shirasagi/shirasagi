@@ -86,6 +86,7 @@ ja:
         contact_group_name_id: 表示用グループ名
         contact_group_contact: 連絡先
         contact_group_relation: 連絡先連動設定
+        contact_sub_groups: 所属(組織一覧用)
         contact_sub_group_ids: 所属(組織一覧用)
       contact/addon/group:
         contact_group_name: 表示用グループ名
