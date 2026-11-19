@@ -276,6 +276,8 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       context "contact section fields is given" do
         let(:contact_state) { %w(show hide).sample }
+        let!(:contact_sub_group1) { create(:contact_group, name: "#{site.groups.first.name}/#{unique_id}", order: 10) }
+        let!(:contact_sub_group2) { create(:contact_group, name: "#{site.groups.first.name}/#{unique_id}", order: 20) }
         let!(:source_page) do
           cms_group.update(contact_groups: [
             {
@@ -294,7 +296,8 @@ describe Article::Page::ImportJob, dbscope: :example do
             contact_group_relation: contact_group_relation, contact_group_name: unique_id, contact_charge: unique_id,
             contact_tel: unique_id, contact_fax: unique_id, contact_email: "#{unique_id}@example.jp",
             contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
-            contact_link_url: "/#{unique_id}/", contact_link_name: unique_id
+            contact_link_url: "/#{unique_id}/", contact_link_name: unique_id,
+            contact_sub_group_ids: [ contact_sub_group1.id, contact_sub_group2.id ]
           )
         end
 
@@ -316,6 +319,7 @@ describe Article::Page::ImportJob, dbscope: :example do
               expect(page.contact_address).to eq source_page.contact_address
               expect(page.contact_link_url).to eq source_page.contact_link_url
               expect(page.contact_link_name).to eq source_page.contact_link_name
+              expect(page.contact_sub_group_ids).to eq source_page.contact_sub_group_ids
             end
           end
         end

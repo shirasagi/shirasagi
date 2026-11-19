@@ -317,6 +317,10 @@ module Cms::PageImportBase
       next unless item.respond_to?(:contact_link_name=)
       import_contact_attribute(row, item, value, :contact_link_name)
     end
+    importer.simple_column :contact_sub_groups do |row, item, head, value|
+      next unless item.respond_to?(:contact_sub_group_ids=)
+      item.contact_sub_group_ids = to_array(value).map { group_name_group_map[_1].try(:id) }.compact
+    end
   end
 
   def define_importer_released(importer)
