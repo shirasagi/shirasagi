@@ -6,10 +6,18 @@ describe Sys::SiteImportJob, dbscope: :example do
   let!(:node) { create :article_node_page, cur_site: source_site, layout: layout }
 
   let!(:now) { Time.zone.now }
-  let!(:page1) { create :article_page, cur_site: source_site, cur_node: node, layout: layout, release_date: now + 1.hour, state: "public" }
-  let!(:page2) { create :article_page, cur_site: source_site, cur_node: node, layout: layout, release_date: now + 1.hour, state: "closed" }
-  let!(:page3) { create :article_page, cur_site: source_site, cur_node: node, layout: layout, close_date: now + 1.hour, state: "public" }
-  let!(:page4) { create :article_page, cur_site: source_site, cur_node: node, layout: layout, close_date: now + 1.hour, state: "closed" }
+  let!(:page1) do
+    create(:article_page, cur_site: source_site, cur_node: node, layout: layout, release_date: now + 1.hour, state: "public")
+  end
+  let!(:page2) do
+    create(:article_page, cur_site: source_site, cur_node: node, layout: layout, release_date: now + 1.hour, state: "closed")
+  end
+  let!(:page3) do
+    create(:article_page, cur_site: source_site, cur_node: node, layout: layout, close_date: now + 1.hour, state: "public")
+  end
+  let!(:page4) do
+    create(:article_page, cur_site: source_site, cur_node: node, layout: layout, close_date: now + 1.hour, state: "closed")
+  end
 
   let(:dest_site) { create :cms_site_unique }
   let(:dest_node) { Article::Node::Page.site(dest_site).where(filename: node.filename).first }
