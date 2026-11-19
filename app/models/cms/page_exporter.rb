@@ -378,20 +378,6 @@ class Cms::PageExporter
   end
 
   def draw_map(drawer)
-    drawer.column :map_points do
-      drawer.body do |item|
-        points = item.try(:map_points)
-        if points.present?
-          points = points.map do |point|
-            [ point[:name], point[:loc].join(","), point[:text], point[:image] ].to_csv.strip
-          end
-          if truncate
-            points = SS::Csv.truncate_overflows(points, "map.overflow_map_point")
-          end
-          points.join("\n")
-        end
-      end
-    end
     drawer.column :map_reference_method, type: :label
     drawer.column :map_reference_column_name
     drawer.column :center_setting, type: :label
@@ -399,6 +385,26 @@ class Cms::PageExporter
     drawer.column :zoom_setting, type: :label
     drawer.column :set_zoom_level
     drawer.column :map_zoom_level
+
+    max_map_marker_size = Map.max_number_of_markers(site)
+    max_map_marker_size.times do |index|
+      drawer.column "map_point_#{index}_name" do
+        drawer.head { "#{Article::Page.t(:map_points)}_#{index + 1}_#{Article::Page.t(:marker_name)}" }
+        drawer.body { |item| item.try(:map_points).try(:[], index).try(:[], :name) }
+      end
+      drawer.column "map_point_#{index}_loc" do
+        drawer.head { "#{Article::Page.t(:map_points)}_#{index + 1}_#{Article::Page.t(:marker_loc)}" }
+        drawer.body { |item| item.try(:map_points).try(:[], index).try(:[], :loc).try(:join, ",") }
+      end
+      drawer.column "map_point_#{index}_text" do
+        drawer.head { "#{Article::Page.t(:map_points)}_#{index + 1}_#{Article::Page.t(:marker_text)}" }
+        drawer.body { |item| item.try(:map_points).try(:[], index).try(:[], :text) }
+      end
+      drawer.column "map_point_#{index}_image" do
+        drawer.head { "#{Article::Page.t(:map_points)}_#{index + 1}_#{Article::Page.t(:marker_image)}" }
+        drawer.body { |item| item.try(:map_points).try(:[], index).try(:[], :image) }
+      end
+    end
   end
 
   def draw_related_pages(drawer)

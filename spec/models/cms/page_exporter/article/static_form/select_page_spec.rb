@@ -9,7 +9,7 @@ describe Cms::PageExporter, dbscope: :example do
   let!(:node) { create :article_node_page, cur_site: site, st_form_ids: [ form.id ] }
 
   describe "#enum_csv" do
-    context "select_page" do
+    context "select_page and map" do
       let!(:column1) do
         create(:cms_column_select_page, cur_site: site, cur_form: form, required: "optional", node_ids: [ node.id ])
       end
@@ -22,7 +22,8 @@ describe Cms::PageExporter, dbscope: :example do
           column_values: [
             column1.value_type.new(
               column: column1, name: column1.name, alignment: column1_alignment, page: column1_page)
-          ]
+          ],
+          map_reference_method: "page", map_reference_column_name: column1.name
         )
       end
 
@@ -41,6 +42,9 @@ describe Cms::PageExporter, dbscope: :example do
             [ form.name, column1.name, column1.value_type.t(:page) ].join("/").tap do |header|
               expect(csv_row[header]).to eq "#{column1_page.name} (#{column1_page.filename})"
             end
+
+            expect(csv_row[Article::Page.t(:map_reference_method)]).to eq page1.label(:map_reference_method)
+            expect(csv_row[Article::Page.t(:map_reference_column_name)]).to eq column1.name
           end
         end
       end
