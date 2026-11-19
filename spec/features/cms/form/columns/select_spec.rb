@@ -36,6 +36,12 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       end
       wait_for_notice I18n.t('ss.notice.saved')
 
+      # 「キャンセル」が動作するかチェック
+      wait_for_cbox_opened { find('.btn-gws-column-item-detail').click }
+      within_dialog do
+        wait_for_cbox_closed { click_on I18n.t("ss.buttons.cancel") }
+      end
+
       page.accept_confirm do
         find('.btn-gws-column-item-delete').click
       end

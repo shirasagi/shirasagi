@@ -5,6 +5,7 @@
 
 <%= hidden_field_tag :ref, params[:ref] if params[:ref] %>
 <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+  <%= hidden_field_tag :_error_frame, turbo_frame, id: nil if try(:turbo_frame) %>
 
 <div class="addon-views">
   <div class="addon-view" id="addon-basic">

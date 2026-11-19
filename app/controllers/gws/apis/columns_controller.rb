@@ -45,6 +45,8 @@ class Gws::Apis::ColumnsController < ApplicationController
 
     result = @item.save
     unless result
+      # 成功した場合は親フレームを更新するが、失敗した場合はダイアログ内のフレームを更新する
+      @turbo_frame = params[:_error_frame].to_s if params.key?(:_error_frame)
       render template: "edit", status: :unprocessable_content
       return
     end

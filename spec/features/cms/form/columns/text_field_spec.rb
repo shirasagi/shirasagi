@@ -4,6 +4,8 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
   let(:site) { cms_site }
   let(:form) { create(:cms_form, cur_site: site, sub_type: 'static') }
   let(:name) { unique_id }
+  let(:name2) { unique_id }
+  let(:name3) { unique_id }
   let(:place_holder) { unique_id }
 
   before { login_cms_user }
@@ -30,19 +32,34 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
 
       wait_for_cbox_opened { find('.btn-gws-column-item-detail').click }
       within_dialog do
+        fill_in 'item[name]', with: name2
         fill_in 'item[place_holder]', with: place_holder
         click_on I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
       Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
-        expect(item.name).to eq name
+        expect(item.name).to eq name2
         expect(item.place_holder).to eq place_holder
       end
+      # ダイアログ内での編集結果が一覧に反映されている
+      expect(page).to have_css(".column-value-header", text: name2)
 
       # 「キャンセル」が動作するかチェック
+      # text input のときだけ特別なチェック
+      # 入力に変更があると、閉じる際に確認ダイアログが表示されるが、その確認ダイアログをキャンセル => OK してみる
       wait_for_cbox_opened { find('.btn-gws-column-item-detail').click }
       within_dialog do
-        wait_for_cbox_closed { click_on I18n.t("ss.buttons.cancel") }
+        fill_in 'item[name]', with: name3
+
+        page.dismiss_confirm(I18n.t("ss.confirm.unload")) do
+          click_on I18n.t("ss.buttons.cancel")
+        end
+
+        wait_for_cbox_closed do
+          page.accept_confirm(I18n.t("ss.confirm.unload")) do
+            click_on I18n.t("ss.buttons.cancel")
+          end
+        end
       end
 
       page.accept_confirm do
