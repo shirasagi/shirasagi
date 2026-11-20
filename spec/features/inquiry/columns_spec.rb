@@ -117,6 +117,14 @@ describe "inquiry_columns", type: :feature, dbscope: :example, js: true do
           expect(column.name).to eq name2
         end
 
+        # 「キャンセル」が動作するかチェック
+        within first('.gws-column-item') do
+          open_dialog "open_in_new"
+        end
+        within_dialog do
+          wait_for_cbox_closed { click_on I18n.t("ss.buttons.cancel") }
+        end
+
         within first('.gws-column-item') do
           page.accept_confirm(I18n.t("ss.confirm.delete")) do
             # find('.btn-gws-column-item-delete').click

@@ -80,6 +80,14 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".italic-1")
       end
 
+      # 「キャンセル」が動作するかチェック
+      within first(".gws-column-item") do
+        open_dialog "open_in_new"
+      end
+      within_dialog do
+        wait_for_cbox_closed { click_on I18n.t("ss.buttons.cancel") }
+      end
+
       #
       # Edit
       #
