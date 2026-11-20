@@ -8,7 +8,10 @@ module Cms::Addon
       field :description, type: String
       field :summary_html, type: String
       field :description_setting, type: String
+
       permit_params :keywords, :description, :summary_html, :description_setting
+
+      validates :description_setting, inclusion: { in: %w(auto manual), allow_blank: true }
 
       before_save :set_keywords, if: ->{ @cur_site && @cur_site.auto_keywords_enabled? }
       before_save :set_description, if: ->{ @cur_site && @cur_site.auto_description_enabled? }
@@ -23,6 +26,10 @@ module Cms::Addon
           export :template_variable_handler_description, as: :description
         end
       end
+    end
+
+    def description_setting_options
+      %w(auto manual).map { [ I18n.t(_1, scope: "cms.options.description_setting"), _1 ] }
     end
 
     def summary

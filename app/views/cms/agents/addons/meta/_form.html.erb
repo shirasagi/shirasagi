@@ -15,11 +15,11 @@
 
   <dt class="depth-2"><%= @model.t :description_setting %><%= @model.tt :description_setting %></dt>
   <dd class="depth-2">
-    <%= f.radio_button :description_setting, "manual", checked: @item.description_setting_manual? %>
-    <%= f.label :description_setting, t("cms.options.description_setting.description_setting_manual"), value: "manual" %>
-
     <%= f.radio_button :description_setting, "auto", checked: @item.description_setting_auto? %>
-    <%= f.label :description_setting, t("cms.options.description_setting.description_setting_auto"), value: "auto" %>
+    <%= f.label :description_setting, t("auto", scope: "cms.options.description_setting"), value: "auto" %>
+
+    <%= f.radio_button :description_setting, "manual", checked: @item.description_setting_manual? %>
+    <%= f.label :description_setting, t("manual", scope: "cms.options.description_setting"), value: "manual" %>
   </dd>
 
   <dt class="depth-2 js-description-body"<%= " hidden".html_safe if @item.description_setting_auto? %>><%= @model.t :description_body %><%= @model.tt :description_body %></dt>

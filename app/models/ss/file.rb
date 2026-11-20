@@ -65,8 +65,16 @@ class SS::File
     end
 
     def each_file(file_ids, &block)
+      return if file_ids.blank?
+
+      file_ids = file_ids.select { _1.numeric? }.map(&:to_i)
+      return if file_ids.blank?
+
+      order_map = file_ids.index_with.with_index { |_id, index| index }
       file_ids.each_slice(20) do |ids|
-        SS::File.in(id: ids).to_a.map(&:becomes_with_model).each(&block)
+        files = SS::File.in(id: ids).to_a.map(&:becomes_with_model)
+        files.sort_by! { order_map[_1.id] || order_map.size }
+        files.each(&block)
       end
     end
 

@@ -2,6 +2,9 @@ module Cms::PageImportBase
   extend ActiveSupport::Concern
   include Cms::CsvImportBase
 
+  OPEN_PARENS = "(（".freeze
+  CLOSE_PARENS = ")）".freeze
+
   included do
     cattr_accessor :model, instance_accessor: false
     self.model = Cms::Page
@@ -11,21 +14,24 @@ module Cms::PageImportBase
   end
 
   module ClassMethods
-    def parse_name_and_filename(name_and_filename)
-      Array(name_and_filename).map do |line|
+    def parse_filename(string_or_array)
+      Array(string_or_array).map do |line|
         next if line.blank?
 
-        if line =~ /(\S+)[\s#{Cms::SyntaxChecker::FULL_WIDTH_SPACE}]+[(（](\S+)[)）]/
-          [ $1, $2 ]
+        line = line.strip
+        next if line.blank?
+
+        if line =~ /\A.*[#{OPEN_PARENS}](\S+)[#{CLOSE_PARENS}]/
+          $1
         else
-          [ nil, line ]
+          line
         end
       end.compact
     end
 
     def find_with_name_filename_pair(name_and_filename, criteria)
       filenames = []
-      parse_name_and_filename(name_and_filename).each do |_name, filename|
+      parse_filename(name_and_filename).each do |filename|
         next if filename.blank?
         filenames << filename
       end
@@ -71,6 +77,8 @@ module Cms::PageImportBase
   def update_row(row)
     item = find_or_initialize!(row)
     raise I18n.t('errors.messages.auth_error') unless allowed_to_import?(item)
+
+    @map_point_imported = false
 
     item.site = site
     item.event_recurrences = nil if item.respond_to?(:event_recurrences=)
@@ -124,6 +132,7 @@ module Cms::PageImportBase
     define_importer_parent_crumb(importer)
     define_importer_event_date(importer)
     define_importer_map(importer)
+    define_importer_facilities(importer)
     define_importer_related_pages(importer)
     define_importer_contact_page(importer)
     define_importer_released(importer)
@@ -156,6 +165,10 @@ module Cms::PageImportBase
 
   def define_importer_meta(importer)
     importer.simple_column :keywords
+    importer.simple_column :description_setting do |row, item, head, value|
+      next unless item.respond_to?(:description_setting=)
+      item.description_setting = from_label(value, item.description_setting_options)
+    end
     importer.simple_column :description
     importer.simple_column :summary_html
   end
@@ -193,15 +206,10 @@ module Cms::PageImportBase
 
   def define_importer_map(importer)
     importer.simple_column :map_points do |row, item, head, value|
-      if item.respond_to?(:map_points=)
-        if value.present?
-          csv_table = ::CSV.parse(value)
-          map_points = csv_table.map do |csv_row|
-            { name: csv_row[0], loc: csv_row[1], text: csv_row[2], image: csv_row[3] }
-          end
+      if item.respond_to?(:map_points=) && value.present?
+        Rails.logger.warn do
+          "古い形式のマーカー設定がCSVに設定されています。現在のバージョンでは無視されます。新しい構造化されたマーカー設定をCSVに設定してください。"
         end
-
-        item.map_points = map_points
       end
     end
     importer.simple_column :map_reference_method do |row, item, head, value|
@@ -226,6 +234,25 @@ module Cms::PageImportBase
     end
     importer.simple_column :set_zoom_level
     importer.simple_column :map_zoom_level
+
+    max_map_marker_size = Map.max_number_of_markers(site)
+    max_map_marker_size.times do |index|
+      "#{Article::Page.t(:map_points)}_#{index + 1}_#{Article::Page.t(:marker_loc)}".tap do |column_name|
+        importer.simple_column "map_point_#{index}_marker_loc".to_sym, name: column_name do |row, item, head, value|
+          next unless item.respond_to?(:map_points=)
+          import_map_point(index, row, item, head, value)
+        end
+      end
+    end
+  end
+
+  def define_importer_facilities(importer)
+    importer.simple_column :facilities do |row, item, head, value|
+      if item.respond_to?(:facility_ids=)
+        nodes = self.class.find_with_name_filename_pair(to_array(value), Facility::Node::Page.site(site))
+        item.facility_ids = nodes.map(&:id)
+      end
+    end
   end
 
   def define_importer_related_pages(importer)
@@ -302,6 +329,10 @@ module Cms::PageImportBase
     importer.simple_column :contact_link_name do |row, item, head, value|
       next unless item.respond_to?(:contact_link_name=)
       import_contact_attribute(row, item, value, :contact_link_name)
+    end
+    importer.simple_column :contact_sub_groups do |row, item, head, value|
+      next unless item.respond_to?(:contact_sub_group_ids=)
+      item.contact_sub_group_ids = to_array(value).map { group_name_group_map[_1].try(:id) }.compact
     end
   end
 
@@ -397,6 +428,34 @@ module Cms::PageImportBase
     recurrences = recurrences ? recurrences.dup : []
     recurrences << recurrence
     item.event_recurrences = recurrences
+  end
+
+  def import_map_point(index, row, item, head, loc)
+    unless @map_point_imported
+      item.map_points = []
+      @map_point_imported = true
+    end
+    return if loc.blank?
+
+    lng, lat = loc.split(",", 2)
+    return if lng.blank? || !lng.numeric?
+    return if lat.blank? || !lat.numeric?
+
+    map_point = { loc: [ lng, lat ] }
+
+    name = row["#{Article::Page.t(:map_points)}_#{index + 1}_#{Article::Page.t(:marker_name)}"].try(:strip).presence
+    text = row["#{Article::Page.t(:map_points)}_#{index + 1}_#{Article::Page.t(:marker_text)}"].try(:strip).presence
+    image = row["#{Article::Page.t(:map_points)}_#{index + 1}_#{Article::Page.t(:marker_image)}"].try(:strip).presence
+
+    map_point[:name] = name if name
+    map_point[:text] = text if text
+    map_point[:image] = image if image
+
+    map_points = item.map_points
+    map_points = map_points ? map_points.to_a.dup : []
+    map_points << map_point
+
+    item.map_points = map_points
   end
 
   def parse_wdays(wdays)

@@ -68,6 +68,12 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
         self.link_url = value
       when self.class.t(:link_label)
         self.link_label = value
+      when self.class.t(:link_target)
+        if value == "_blank" || value == I18n.t("ss.options.link_target._blank")
+          self.link_target = "_blank"
+        else
+          self.link_target = nil # _self
+        end
       end
     end
   end

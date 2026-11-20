@@ -46,7 +46,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(Cms::FileGenTask.all.site(site).count).to eq 1
       task = Cms::FileGenTask.all.site(site).first
       expect(task.job_id).to be_present
+      expect(task.name).to start_with("article_pages_download_")
       expect(task.file_basename).to eq "article_pages"
+      expect(task.file_format).to eq "csv"
+      expect(task.params).to include("encoding" => "UTF-8", "form_id" => "-1", "truncate" => "yes")
       expect(File.size(task.generated_file_path)).to be > 0
 
       expect(SS::Notification.all.count).to eq 1
@@ -109,7 +112,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(Cms::FileGenTask.all.site(site).count).to eq 1
       task = Cms::FileGenTask.all.site(site).first
       expect(task.job_id).to be_present
+      expect(task.name).to start_with("article_pages_download_")
       expect(task.file_basename).to eq "article_pages"
+      expect(task.file_format).to eq "csv"
+      expect(task.params).to include("encoding" => "UTF-8", "form_id" => "-1", "truncate" => "yes")
       expect(File.size(task.generated_file_path)).to be > 0
 
       expect(SS::Notification.all.count).to eq 1
@@ -172,7 +178,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(Cms::FileGenTask.all.site(site).count).to eq 1
       task = Cms::FileGenTask.all.site(site).first
       expect(task.job_id).to be_present
+      expect(task.name).to start_with("article_pages_download_")
       expect(task.file_basename).to eq "article_pages"
+      expect(task.file_format).to eq "csv"
+      expect(task.params).to include("encoding" => "UTF-8", "form_id" => "-1", "truncate" => "yes")
       expect(File.size(task.generated_file_path)).to be > 0
 
       expect(SS::Notification.all.count).to eq 1
@@ -236,7 +245,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(Cms::FileGenTask.all.site(site).count).to eq 1
       task = Cms::FileGenTask.all.site(site).first
       expect(task.job_id).to be_present
+      expect(task.name).to start_with("article_pages_download_")
       expect(task.file_basename).to eq "article_pages"
+      expect(task.file_format).to eq "csv"
+      expect(task.params).to include("encoding" => "Shift_JIS", "form_id" => "-1", "truncate" => "yes")
       expect(File.size(task.generated_file_path)).to be > 0
 
       expect(SS::Notification.all.count).to eq 1
@@ -316,7 +328,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(Cms::FileGenTask.all.site(site).count).to eq 1
         task = Cms::FileGenTask.all.site(site).first
         expect(task.job_id).to be_present
+        expect(task.name).to start_with("article_pages_download_")
         expect(task.file_basename).to eq "article_pages"
+        expect(task.file_format).to eq "csv"
+        expect(task.params).to include("encoding" => "UTF-8", "form_id" => "-1", "truncate" => "yes")
         expect(File.size(task.generated_file_path)).to be > 0
 
         expect(SS::Notification.all.count).to eq 1
@@ -407,7 +422,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(Cms::FileGenTask.all.site(site).count).to eq 1
         task = Cms::FileGenTask.all.site(site).first
         expect(task.job_id).to be_present
+        expect(task.name).to start_with("article_pages_download_")
         expect(task.file_basename).to eq "article_pages"
+        expect(task.file_format).to eq "csv"
+        expect(task.params).to include("encoding" => "UTF-8", "form_id" => "-1", "truncate" => "no")
         expect(File.size(task.generated_file_path)).to be > 0
 
         expect(SS::Notification.all.count).to eq 1

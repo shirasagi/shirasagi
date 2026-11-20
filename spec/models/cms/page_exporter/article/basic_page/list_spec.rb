@@ -1,0 +1,30 @@
+require 'spec_helper'
+
+describe Cms::PageExporter, dbscope: :example do
+  let(:now) { Time.zone.now.change(usec: 0) }
+  let(:today) { Time.zone.today }
+  let!(:site) { cms_site }
+  let!(:user) { cms_user }
+  let!(:node) { create :article_node_page, cur_site: site }
+
+  describe "#enum_csv" do
+    context "list" do
+      let!(:page1) do
+        create(:article_page, cur_site: site, cur_node: node)
+      end
+
+      it do
+        exporter = described_class.new(mode: "article", site: site, criteria: Article::Page.all, form: nil)
+        io = StringIO.new(exporter.enum_csv(encoding: "UTF-8").to_a.join)
+        SS::Csv.open(io) do |csv|
+          csv_table = csv.read
+          expect(csv_table.length).to eq 1
+          # list は出力されない
+          expect(csv_table.headers).not_to include(I18n.t("mongoid.attributes.cms/addon/list/model.conditions"))
+          expect(csv_table.headers).not_to include(I18n.t("all_content.sort"))
+          expect(csv_table.headers).not_to include(I18n.t("mongoid.attributes.cms/addon/list/model.limit"))
+        end
+      end
+    end
+  end
+end
