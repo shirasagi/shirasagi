@@ -754,8 +754,8 @@ ja:
         disabled: 本文に含めない
         include: 本文に含める
       description_setting:
-        description_setting_manual: 手動
-        description_setting_auto: 自動的に本文と連動
+        auto: 自動的に本文と連動
+        manual: 手動
       site_search_type:
         page: ウェブページ
         file: 添付ファイル
@@ -1386,6 +1386,7 @@ ja:
         no_items_display_state: ページ未検出時表示
         substitute_html: 代替HTML
       cms/addon/thumb:
+        thumb: サムネイル画像
         thumb_id: サムネイル画像
       cms/addon/parent_crumb:
         parent_crumb: パンくず
@@ -1648,6 +1649,7 @@ ja:
       cms/column/value/file_upload:
         html_tag: HTMLタグ
         html_additional_attr: HTML追加属性
+        file: ファイル
         file_id: ファイル
         file_name: ファイル名
         file_label: リンクテキスト・代替テキスト
@@ -1655,6 +1657,7 @@ ja:
         text: 動画の内容説明
         link_url: URL
       cms/column/value/multiple_files_upload:
+        files: ファイル
         file_ids: ファイル
         file_labels: リンクテキスト・代替テキスト
         header: 説明文
@@ -1694,10 +1697,13 @@ ja:
         auto_width: 画面幅に合わせる
       cms/column/value/free:
         value: テキスト
+        files: ファイル
+        file_ids: ファイル
       cms/column/value/table:
         value: 表
       cms/column/value/select_page:
         value: 選択肢
+        page: 選択肢
         page_id: 選択肢
       cms/addon/redirect_link:
         redirect_link: リダイレクトURL

@@ -14,8 +14,7 @@
 
   <dt class="depth-2"><%= @model.t :description_setting %></dt>
   <dd class="depth-2">
-    <% setting_key = @item.description_setting_manual? ? "description_setting_manual" : "description_setting_auto" %>
-    <%= t("cms.options.description_setting.#{setting_key}") %>
+    <%= @item.label(:description_setting) || t("auto", scope: "cms.options.description_setting") %>
   </dd>
 
   <dt class="depth-2"><%= @model.t :description_body %></dt>

@@ -71,6 +71,7 @@ ja:
         marker_text: 説明
         marker_loc: 座標
         marker_link: リンク
+        marker_image: 色
         set_center_position: 中心位置
         set_zoom_level: 指定ズームレベル
         map_reference_method: マーカー指定方法
