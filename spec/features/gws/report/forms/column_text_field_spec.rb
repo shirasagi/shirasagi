@@ -86,6 +86,28 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".bold-1")
         expect(page).to have_css(".italic-0")
         expect(page).to have_css(".italic-1")
+        # ダイアログ内での編集結果が一覧に反映されている
+        expect(page).to have_css(".gws-column-item-preview", text: name)
+      end
+
+      # 「キャンセル」が動作するかチェック
+      # text input のときだけ特別なチェック
+      # 入力に変更があると、閉じる際に確認ダイアログが表示されるが、その確認ダイアログをキャンセル => OK してみる
+      within first(".gws-column-item") do
+        open_dialog "open_in_new"
+      end
+      within_dialog do
+        fill_in 'item[name]', with: name2
+
+        page.dismiss_confirm(I18n.t("ss.confirm.unload")) do
+          click_on I18n.t("ss.buttons.cancel")
+        end
+
+        wait_for_cbox_closed do
+          page.accept_confirm(I18n.t("ss.confirm.unload")) do
+            click_on I18n.t("ss.buttons.cancel")
+          end
+        end
       end
 
       #

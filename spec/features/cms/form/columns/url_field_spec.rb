@@ -29,11 +29,17 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
 
       wait_for_cbox_opened { find('.btn-gws-column-item-detail').click }
       within_dialog do
-        find('.save').click
+        click_on I18n.t("ss.buttons.save")
       end
       wait_for_notice I18n.t('ss.notice.saved')
       Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
         expect(item.name).to eq name
+      end
+
+      # 「キャンセル」が動作するかチェック
+      wait_for_cbox_opened { find('.btn-gws-column-item-detail').click }
+      within_dialog do
+        wait_for_cbox_closed { click_on I18n.t("ss.buttons.cancel") }
       end
 
       page.accept_confirm do

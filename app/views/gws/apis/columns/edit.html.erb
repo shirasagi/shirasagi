@@ -5,6 +5,7 @@
 
 <%= hidden_field_tag :ref, params[:ref] if params[:ref] %>
 <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+  <%= hidden_field_tag :_error_frame, turbo_frame, id: nil if try(:turbo_frame) %>
 
 <div class="addon-views">
   <div class="addon-view" id="addon-basic">
@@ -25,7 +26,7 @@
     <% if request.xhr? %>
       <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
     <% elsif request.headers['X-SS-DIALOG'].present? || request.headers['Turbo-Frame'].present? %>
-      <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: "button", data: { action: "close-dialog" } %>
+      <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: "button", data: { action: "ss--dialog-container#closeDialog" } %>
     <% else %>
       <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
     <% end %>
