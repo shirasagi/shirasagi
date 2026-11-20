@@ -16,16 +16,22 @@
       end
     -%>
   <% else -%>
-    <% I18n.available_locales.each do |lang| -%>
-      <%=
-        if value.is_a?(Hash)
-          content = value.try(:[], lang).presence || value.try(:[], I18n.default_locale)
-        elsif lang == I18n.default_locale
-          content = value.to_s
-        end
-        next if content.blank?
-        tag.span content, data: { "show-in" => lang }
-      -%>
-    <% end -%>
+    <% if value.is_a?(Hash) %>
+      <% I18n.available_locales.each do |lang| -%>
+        <%=
+          content = value.try(:[], lang)
+          if content.present?
+            tag.span(content, data: { show_in: lang })
+          else
+            content = value.try(:[], I18n.default_locale)
+            if content.present?
+              tag.span(content, data: { show_in: lang }, lang: I18n.default_locale)
+            end
+          end
+        %>
+      <% end %>
+    <% else %>
+      <%= tag.span(value.to_s, lang: I18n.default_locale) if value.present? %>
+    <% end %>
   <% end -%>
 <% end -%>
