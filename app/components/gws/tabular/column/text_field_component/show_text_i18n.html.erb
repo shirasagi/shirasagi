@@ -31,7 +31,7 @@
         %>
       <% end %>
     <% else %>
-      <%= tag.span(value.to_s, lang: I18n.default_locale) %>
+      <%= tag.span(value.to_s, lang: I18n.default_locale) if value.present? %>
     <% end %>
   <% end -%>
 <% end -%>

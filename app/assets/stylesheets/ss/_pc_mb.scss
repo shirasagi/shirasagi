@@ -24,13 +24,9 @@
   }
 }
 
-html[lang='ja'] {
-  [data-show-in='en'] {
-    display: none;
-  }
-}
-html[lang='en'] {
-  [data-show-in='ja'] {
+// I18n.available_locales を変更したら、以下も変更すること
+@each $lang in (ja, en) {
+  html:lang(#{$lang}) [data-show-in]:not([data-show-in='#{$lang}']) {
     display: none;
   }
 }
