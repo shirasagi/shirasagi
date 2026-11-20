@@ -2,6 +2,9 @@ module Cms::PageImportBase
   extend ActiveSupport::Concern
   include Cms::CsvImportBase
 
+  OPEN_PARENS = "(（".freeze
+  CLOSE_PARENS = ")）".freeze
+
   included do
     cattr_accessor :model, instance_accessor: false
     self.model = Cms::Page
@@ -11,21 +14,24 @@ module Cms::PageImportBase
   end
 
   module ClassMethods
-    def parse_name_and_filename(name_and_filename)
-      Array(name_and_filename).map do |line|
+    def parse_filename(string_or_array)
+      Array(string_or_array).map do |line|
         next if line.blank?
 
-        if line =~ /(\S+)[\s#{Cms::SyntaxChecker::FULL_WIDTH_SPACE}]+[(（](\S+)[)）]/
-          [ $1, $2 ]
+        line = line.strip
+        next if line.blank?
+
+        if line =~ /\A.*[#{OPEN_PARENS}](\S+)[#{CLOSE_PARENS}]/
+          $1
         else
-          [ nil, line ]
+          line
         end
       end.compact
     end
 
     def find_with_name_filename_pair(name_and_filename, criteria)
       filenames = []
-      parse_name_and_filename(name_and_filename).each do |_name, filename|
+      parse_filename(name_and_filename).each do |filename|
         next if filename.blank?
         filenames << filename
       end
@@ -199,6 +205,13 @@ module Cms::PageImportBase
   end
 
   def define_importer_map(importer)
+    importer.simple_column :map_points do |row, item, head, value|
+      if item.respond_to?(:map_points=) && value.present?
+        Rails.logger.warn do
+          "古い形式のマーカー設定がCSVに設定されています。現在のバージョンでは無視されます。新しい構造化されたマーカー設定をCSVに設定してください。"
+        end
+      end
+    end
     importer.simple_column :map_reference_method do |row, item, head, value|
       if item.respond_to?(:map_reference_method=)
         map_reference_method = from_label(value, item.map_reference_method_options)

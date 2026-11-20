@@ -222,7 +222,9 @@ describe Article::Page::ImportJob, dbscope: :example do
       context "facilities section fields is given" do
         let!(:facility_node) { create :facility_node_node, cur_site: site }
         let!(:facility_page1) { create :facility_node_page, cur_site: site, cur_node: facility_node }
-        let!(:facility_page2) { create :facility_node_page, cur_site: site, cur_node: facility_node }
+        let!(:facility_page2) do
+          create :facility_node_page, cur_site: site, cur_node: facility_node, name: "#{unique_id} (#{unique_id})"
+        end
 
         let!(:source_page) do
           Article::Page.create!(
