@@ -136,8 +136,8 @@ fi
 # asdf プラグインと言語のインストール
 echo "Installing asdf plugins and languages..."
 asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
-asdf install ruby 3.3.9
-asdf global ruby 3.3.9
+asdf install ruby 3.4.12
+asdf global ruby 3.4.12
 
 if ! command -v ruby >/dev/null; then
   echo 'Rubyのインストールに失敗しました'
@@ -145,8 +145,8 @@ if ! command -v ruby >/dev/null; then
 fi
 
 asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-asdf install nodejs 24.8.0
-asdf global nodejs 24.8.0
+asdf install nodejs 24.17.0
+asdf global nodejs 24.17.0
 
 if ! command -v node >/dev/null; then
   echo 'Node.js のインストールに失敗しました'
@@ -622,8 +622,6 @@ EOF
 # 性能調整手順（コメント解除で調整）がそのまま使えるようにする。
 sudo cp -n "${SS_DIR}/bin/puma.service" /etc/systemd/system/puma.service
 sudo sed -i "s/^User=.*/User=${SS_USER}/" /etc/systemd/system/puma.service
-# 公式サンプルの ExecStop シグナル名の誤字 TERN を TERM に修正（systemctl stop を有効にする）
-sudo sed -i "s/kill -TERN /kill -TERM /" /etc/systemd/system/puma.service
 sudo chown root: /etc/systemd/system/puma.service
 sudo chmod 644 /etc/systemd/system/puma.service
 sudo systemctl daemon-reload
