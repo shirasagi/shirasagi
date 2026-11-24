@@ -16,10 +16,10 @@ class Opendata::UrlResource
 
   permit_params :name, :text, :license_id, :original_url, :crawl_update
 
-  before_validation :validate_original_url, if: -> { original_url.present? }
   after_validation :destroy_download_temp_file, if: -> { @download_temp_file }
 
-  validates :original_url, presence: true
+  validates :original_url, presence: true, url: true
+  validate :validate_original_url, if: -> { original_url.present? }
   validates :original_updated, presence: true
   validates :crawl_state, presence: true
   validates :crawl_update, presence: true
@@ -110,6 +110,8 @@ class Opendata::UrlResource
   end
 
   def validate_original_url
+    return if errors[:original_url].present?
+
     begin
       uri = ::URI.parse(original_url)
     rescue => e

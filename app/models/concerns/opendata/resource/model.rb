@@ -20,6 +20,7 @@ module Opendata::Resource::Model
     belongs_to_file :tsv
 
     validates :name, presence: true
+    validates :source_url, url: { allow_blank: true }
     validates :license_id, presence: true
 
     scope :and_public, -> { where state: "public" }

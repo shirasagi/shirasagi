@@ -2,6 +2,8 @@ module Opendata::Addon::Graph
   extend SS::Addon
   extend ActiveSupport::Concern
 
+  AVAILABLE_PREVIEW_GRAPH_TYPES = I18n.t("opendata.graph_types").keys.map(&:to_s)
+
   included do
     field :preview_graph_state, type: String, default: "disabled"
     field :preview_graph_types, type: Array, default: []
@@ -9,7 +11,8 @@ module Opendata::Addon::Graph
     permit_params :preview_graph_state
     permit_params preview_graph_types: []
 
-    validate :validate_preview_graph_types, if: ->{ preview_graph_types.present? }
+    validates :preview_graph_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
+    validates :preview_graph_types, inclusion: { in: AVAILABLE_PREVIEW_GRAPH_TYPES, allow_blank: true }
   end
 
   def preview_graph_state_options
@@ -24,18 +27,12 @@ module Opendata::Addon::Graph
     return nil unless preview_graph_enabled?
 
     case type
-    when "bar"
-      ::Opendata::Graph::Bar.new(type, self)
     when "line"
       ::Opendata::Graph::Bar.new(type, self)
     when "pie"
       ::Opendata::Graph::Pie.new(type, self)
+    else # "bar"
+      ::Opendata::Graph::Bar.new(type, self)
     end
-  end
-
-  private
-
-  def validate_preview_graph_types
-    self.preview_graph_types = preview_graph_types.select { |type| I18n.t("opendata.graph_types")[type.to_sym] }
   end
 end
