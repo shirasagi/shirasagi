@@ -55,7 +55,7 @@ class Opendata::UrlResource
     elsif self.crawl_update == "auto"
       do_crawl_auto(last_modified)
     end
-  rescue Timeout::Error
+  rescue Timeout::Error, Faraday::TimeoutError
     puts I18n.t("opendata.errors.messages.invalid_timeout")
   rescue => e
     puts "Error: #{e}"
@@ -142,7 +142,7 @@ class Opendata::UrlResource
         end
 
         self.crawl_state = "same"
-      rescue Timeout::Error => e
+      rescue Timeout::Error, Faraday::TimeoutError => e
         logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
         errors.add :base, I18n.t("opendata.errors.messages.invalid_timeout")
       rescue => e

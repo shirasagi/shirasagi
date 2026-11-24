@@ -11,6 +11,7 @@ module Opendata::Addon::Graph
     permit_params :preview_graph_state
     permit_params preview_graph_types: []
 
+    before_validation :normalize_preview_graph_types
     validates :preview_graph_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
     validates :preview_graph_types, inclusion: { in: AVAILABLE_PREVIEW_GRAPH_TYPES, allow_blank: true }
   end
@@ -27,12 +28,19 @@ module Opendata::Addon::Graph
     return nil unless preview_graph_enabled?
 
     case type
+    when "bar"
+      ::Opendata::Graph::Bar.new(type, self)
     when "line"
       ::Opendata::Graph::Bar.new(type, self)
     when "pie"
       ::Opendata::Graph::Pie.new(type, self)
-    else # "bar"
-      ::Opendata::Graph::Bar.new(type, self)
     end
+  end
+
+  private
+
+  def normalize_preview_graph_types
+    return if preview_graph_types.blank?
+    self.preview_graph_types = preview_graph_types.select(&:present?).uniq
   end
 end

@@ -207,7 +207,7 @@ describe Opendata::UrlResource, dbscope: :example do
     end
   end
 
-  describe "when content-encoding is given" do
+  describe "when content-encoding 'gzip' is given" do
     let(:url) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
     let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
     subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
@@ -238,6 +238,36 @@ describe Opendata::UrlResource, dbscope: :example do
     end
   end
 
+  describe "when content-encoding 'deflate' is given" do
+    let(:url) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      body = Zlib::Deflate.deflate(::File.binread(csv_path))
+      headers = { "Last-Modified" => Time.zone.now.httpdate, "Content-Encoding" => "deflate" }
+      stub_request(:get, url).to_return(status: 200, body: body, headers: headers)
+
+      subject.license_id = license.id
+      subject.original_url = url
+      subject.crawl_update = "none"
+      subject.save!
+    end
+
+    it do
+      expect(subject.original_updated.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
+      expect(subject.filename).to eq "shift_jis.csv"
+      expect(subject.crawl_state).to eq "same"
+
+      csv = subject.parse_tsv
+      expect(csv).not_to be_nil
+      expect(csv.length).to eq 3
+      expect(csv[0]).to eq %w(ヘッダー 値)
+      expect(csv[1]).to eq %w(品川 483901)
+      expect(csv[2]).to eq %w(新宿 43901)
+    end
+  end
+
   describe "when content-disposition is given" do
     let(:url) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
     let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
@@ -247,7 +277,8 @@ describe Opendata::UrlResource, dbscope: :example do
     before do
       headers = {
         "Last-Modified" => Time.zone.now.httpdate,
-        "Content-Disposition" => %(attachment; filename="#{filename}"; size=1') }
+        "Content-Disposition" => %(attachment; filename="#{filename}"; size=1')
+      }
       stub_request(:get, url).to_return(status: 200, body: ::File.binread(csv_path), headers: headers)
 
       subject.license_id = license.id
