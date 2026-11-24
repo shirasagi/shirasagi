@@ -7,11 +7,24 @@ describe "opendata_crawl", type: :feature, dbscope: :example do
   let(:dataset) { create(:opendata_dataset, cur_node: node) }
   let(:index_path) { opendata_crawls_path site, node }
   let(:license) { create(:opendata_license, cur_site: site) }
-  let(:url) { "http://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+  let(:url) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
   let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
 
-  before { WebMock.reset! }
-  after { WebMock.reset! }
+  before do
+    @save_ssrf_resolver = Opendata.ssrf_resolver
+    Opendata.ssrf_resolver = ->(_hostname) { [ "10.11.102.8" ] }
+
+    @net_connect_allowed = WebMock.net_connect_allowed?
+    WebMock.disable_net_connect!(allow_localhost: true)
+    WebMock.reset!
+  end
+
+  after do
+    WebMock.reset!
+    WebMock.allow_net_connect! if @net_connect_allowed
+
+    Opendata.ssrf_resolver = @save_ssrf_resolver
+  end
 
   context "with auth seatch updated and deleted" do
     before { login_cms_user }

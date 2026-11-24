@@ -207,6 +207,35 @@ describe Opendata::UrlResource, dbscope: :example do
     end
   end
 
+  # https から http へのリダイレクトを防御する
+  describe "when url returns unsafe redirect" do
+    let(:url1) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:url2) { "http://#{unique_domain}/#{unique_id}/shift_jis-2.csv" }
+    let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis-2.csv" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      stub_request(:get, url1).
+        to_return(status: 302, body: "", headers: { "Location" => url2 })
+      stub_request(:get, url2).
+        to_return(status: 200, body: ::File.binread(csv_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
+    end
+
+    it do
+      subject.license_id = license.id
+      subject.original_url = url1
+      subject.crawl_update = "none"
+      expect(subject).to be_invalid
+
+      expect(subject.errors[:original_url]).to have(1).items
+      expect(subject.errors[:original_url]).to include(I18n.t("errors.messages.invalid"))
+      expect(subject.original_updated).to be_blank
+      expect(subject.filename).to eq subject.name
+      expect(subject.crawl_state).to eq "same"
+      expect(subject.file_id).to be_blank
+    end
+  end
+
   describe "when content-encoding 'gzip' is given" do
     let(:url) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
     let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
@@ -290,6 +319,198 @@ describe Opendata::UrlResource, dbscope: :example do
     it do
       expect(subject.original_updated.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
       expect(subject.filename).to eq filename
+      expect(subject.crawl_state).to eq "same"
+
+      csv = subject.parse_tsv
+      expect(csv).not_to be_nil
+      expect(csv.length).to eq 3
+      expect(csv[0]).to eq %w(ヘッダー 値)
+      expect(csv[1]).to eq %w(品川 483901)
+      expect(csv[2]).to eq %w(新宿 43901)
+    end
+  end
+
+  describe "when SSRF url is given" do
+    let(:url) { "http://10.224.174.6/status" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    it do
+      subject.license_id = license.id
+      subject.original_url = url
+      subject.crawl_update = "none"
+      expect(subject).to be_invalid
+
+      expect(subject.errors[:original_url]).to have(1).items
+      expect(subject.errors[:original_url]).to include(I18n.t("errors.messages.invalid"))
+      expect(subject.original_updated).to be_blank
+      expect(subject.filename).to eq subject.name
+      expect(subject.crawl_state).to eq "same"
+      expect(subject.file_id).to be_blank
+    end
+  end
+
+  describe "when internal ip address is given but it allows" do
+    let(:url) { "http://10.224.174.6/status" }
+    let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      @save_ssrf_allow_ip_addresses = Opendata.ssrf_allow_ip_addresses?
+      Opendata.ssrf_allow_ip_addresses = true
+
+      @save_ssrf_allow_list = Opendata.ssrf_allow_list
+      Opendata.ssrf_allow_list = %w(10.224.174.6)
+
+      stub_request(:get, url).to_return(status: 200, body: ::File.binread(csv_path), headers: {})
+    end
+
+    after do
+      Opendata.ssrf_allow_ip_addresses = @save_ssrf_allow_ip_addresses
+      Opendata.ssrf_allow_list = @save_ssrf_allow_list
+    end
+
+    it do
+      subject.license_id = license.id
+      subject.original_url = url
+      subject.crawl_update = "none"
+      subject.save!
+
+      expect(subject.original_updated.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
+      expect(subject.filename).to eq "status"
+      expect(subject.crawl_state).to eq "same"
+
+      csv = subject.parse_tsv
+      expect(csv).not_to be_nil
+      expect(csv.length).to eq 3
+      expect(csv[0]).to eq %w(ヘッダー 値)
+      expect(csv[1]).to eq %w(品川 483901)
+      expect(csv[2]).to eq %w(新宿 43901)
+    end
+  end
+
+  describe "when internal ip address is given but SSRF protection is disabled" do
+    let(:url) { "http://10.224.174.6/status" }
+    let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      @save_ssrf_protection_enabled = Opendata.ssrf_protection_enabled?
+      Opendata.ssrf_protection_enabled = false
+
+      stub_request(:get, url).to_return(status: 200, body: ::File.binread(csv_path), headers: {})
+    end
+
+    after do
+      Opendata.ssrf_protection_enabled = @save_ssrf_protection_enabled
+    end
+
+    it do
+      subject.license_id = license.id
+      subject.original_url = url
+      subject.crawl_update = "none"
+      subject.save!
+
+      expect(subject.original_updated.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
+      expect(subject.filename).to eq "status"
+      expect(subject.crawl_state).to eq "same"
+
+      csv = subject.parse_tsv
+      expect(csv).not_to be_nil
+      expect(csv.length).to eq 3
+      expect(csv[0]).to eq %w(ヘッダー 値)
+      expect(csv[1]).to eq %w(品川 483901)
+      expect(csv[2]).to eq %w(新宿 43901)
+    end
+  end
+
+  describe "when url returns SSRF redirect" do
+    let(:url1) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:url2) { "http://10.224.174.6/status" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      stub_request(:get, url1).
+        to_return(status: 302, body: "", headers: { "Location" => url2 })
+    end
+
+    it do
+      subject.license_id = license.id
+      subject.original_url = url1
+      subject.crawl_update = "none"
+      expect(subject).to be_invalid
+
+      expect(subject.errors[:original_url]).to have(1).items
+      expect(subject.errors[:original_url]).to include(I18n.t("errors.messages.invalid"))
+      expect(subject.original_updated).to be_blank
+      expect(subject.filename).to eq subject.name
+      expect(subject.crawl_state).to eq "same"
+      expect(subject.file_id).to be_blank
+    end
+  end
+
+  describe "when url returns SSRF redirect and ssrf_allow_ip_addresses is true" do
+    let(:url1) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:url2) { "http://10.224.174.6/status" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      @save_ssrf_allow_ip_addresses = Opendata.ssrf_allow_ip_addresses?
+      Opendata.ssrf_allow_ip_addresses = true
+
+      @save_ssrf_allow_list = Opendata.ssrf_allow_list
+      Opendata.ssrf_allow_list = %w(10.224.174.6)
+
+      stub_request(:get, url1).
+        to_return(status: 302, body: "", headers: { "Location" => url2 })
+    end
+
+    after do
+      Opendata.ssrf_allow_ip_addresses = @save_ssrf_allow_ip_addresses
+      Opendata.ssrf_allow_list = @save_ssrf_allow_list
+    end
+
+    it do
+      subject.license_id = license.id
+      subject.original_url = url1
+      subject.crawl_update = "none"
+      expect(subject).to be_invalid
+
+      expect(subject.errors[:original_url]).to have(1).items
+      expect(subject.errors[:original_url]).to include(I18n.t("errors.messages.invalid"))
+      expect(subject.original_updated).to be_blank
+      expect(subject.filename).to eq subject.name
+      expect(subject.crawl_state).to eq "same"
+      expect(subject.file_id).to be_blank
+    end
+  end
+
+  describe "when url returns SSRF redirect but SSRF protection is disabled" do
+    let(:url1) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:url2) { "https://10.224.174.6/status" }
+    let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      @save_ssrf_protection_enabled = Opendata.ssrf_protection_enabled?
+      Opendata.ssrf_protection_enabled = false
+
+      stub_request(:get, url1).
+        to_return(status: 302, body: "", headers: { "Location" => url2 })
+      stub_request(:get, url2).to_return(status: 200, body: ::File.binread(csv_path), headers: {})
+    end
+
+    after do
+      Opendata.ssrf_protection_enabled = @save_ssrf_protection_enabled
+    end
+
+    it do
+      subject.license_id = license.id
+      subject.original_url = url1
+      subject.crawl_update = "none"
+      subject.save!
+
+      expect(subject.original_updated.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
+      expect(subject.filename).to eq "status"
       expect(subject.crawl_state).to eq "same"
 
       csv = subject.parse_tsv

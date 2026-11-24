@@ -11,12 +11,17 @@ describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
   let(:csv_path) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv").to_s }
   let(:name) { "name-#{unique_id}" }
   let(:filename) { "file-#{unique_id}.csv" }
-  let(:original_url) { "http://#{unique_domain}/#{filename}" }
+  let(:original_url) { "https://#{unique_domain}/#{filename}" }
   let(:text) { "text-#{unique_id}" }
   let(:text2) { "text-#{unique_id}" }
 
   context "basic crud" do
     before do
+      @save_ssrf_resolver = Opendata.ssrf_resolver
+      Opendata.ssrf_resolver = ->(_hostname) { [ "10.11.102.8" ] }
+
+      @net_connect_allowed = WebMock.net_connect_allowed?
+      WebMock.disable_net_connect!(allow_localhost: true)
       WebMock.reset!
 
       headers = { "Content-Type" => "text/csv", "Content-Disposition" => "attachment; filename=\"#{filename}\"" }
@@ -26,7 +31,12 @@ describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
       login_cms_user
     end
 
-    after { WebMock.reset! }
+    after do
+      WebMock.reset!
+      WebMock.allow_net_connect! if @net_connect_allowed
+
+      Opendata.ssrf_resolver = @save_ssrf_resolver
+    end
 
     it do
       #

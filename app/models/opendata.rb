@@ -4,7 +4,7 @@ module Opendata
   module_function
 
   REDIRECT_STATUS_CODES = Cms::PublicFilter::REDIRECT_STATUS_CODES
-  DEFAULT_HEAD_REQUEST_TIMEOUT = 30
+  DEFAULT_REQUEST_TIMEOUT = 30
   DEFAULT_MAX_DOWNLOAD_SIZE = 10 * 1_024 * 1_024
   DEFAULT_MAX_REDIRECTION = 3
 
@@ -12,14 +12,14 @@ module Opendata
 
   mattr_accessor :ssrf_resolver, instance_accessor: false
 
-  def head_request_timeout
-    return @head_request_timeout if instance_variable_defined?(:@head_request_timeout)
+  def request_timeout
+    return @request_timeout if instance_variable_defined?(:@request_timeout)
 
-    head_request_timeout = SS.config.opendata.head_request_timeout
-    if head_request_timeout.numeric?
-      @head_request_timeout = head_request_timeout.to_i
+    request_timeout = SS.config.opendata.request_timeout
+    if request_timeout.numeric?
+      @request_timeout = request_timeout.to_i
     end
-    @head_request_timeout ||= DEFAULT_HEAD_REQUEST_TIMEOUT
+    @request_timeout ||= DEFAULT_REQUEST_TIMEOUT
   end
 
   def max_download_size
@@ -42,9 +42,47 @@ module Opendata
     @max_redirection ||= DEFAULT_MAX_REDIRECTION
   end
 
+  def ssrf_protection_enabled?
+    return @ssrf_protection_enabled if instance_variable_defined?(:@ssrf_protection_enabled)
+
+    if SS.config.opendata.respond_to?(:ssrf_protection_enabled)
+      @ssrf_protection_enabled = SS.config.opendata.ssrf_protection_enabled != false
+    else
+      @ssrf_protection_enabled = true
+    end
+  end
+
+  if Rails.env.test?
+    def ssrf_protection_enabled=(value)
+      @ssrf_protection_enabled = value
+    end
+  end
+
+  def ssrf_allow_ip_addresses?
+    return @ssrf_allow_ip_addresses if instance_variable_defined?(:@ssrf_allow_ip_addresses)
+
+    if SS.config.opendata.respond_to?(:ssrf_allow_ip_addresses)
+      @ssrf_allow_ip_addresses = SS.config.opendata.ssrf_allow_ip_addresses == true
+    else
+      @ssrf_allow_ip_addresses = false
+    end
+  end
+
+  if Rails.env.test?
+    def ssrf_allow_ip_addresses=(value)
+      @ssrf_allow_ip_addresses = value
+    end
+  end
+
   def ssrf_allow_list
     return @ssrf_allow_list if instance_variable_defined?(:@ssrf_allow_list)
     @ssrf_allow_list = Array(SS.config.opendata.ssrf_allow_list).flatten.select(&:present?).uniq.freeze
+  end
+
+  if Rails.env.test?
+    def ssrf_allow_list=(value)
+      @ssrf_allow_list = value
+    end
   end
 
   def ssrf_deny_list
@@ -56,20 +94,17 @@ module Opendata
     url = url.to_str
     url = Addressable::URI.parse(url) unless url.is_a?(Addressable::URI)
     redirection ||= Cms::LinkChecker::Redirection.new
-    timeout ||= Opendata.head_request_timeout
+    timeout ||= Opendata.request_timeout
 
     Timeout.timeout(timeout) do
       http_client = new_http_client(url, timeout)
 
       temp_file = Tempfile.open('temp')
       temp_file.binmode
-      total_size = 0
 
       resp = http_client.get do |req|
         req.options.on_data = proc do |chunk, overall_received_bytes|
-          raise SS::NotFoundError, "#{url}: file size is too large" if total_size + overall_received_bytes > max_download_size
-
-          total_size += overall_received_bytes
+          raise SS::NotFoundError, "#{url}: file size is too large" if overall_received_bytes > max_download_size
           temp_file.write chunk
         end
       end
@@ -116,13 +151,18 @@ module Opendata
     faraday_options = { url: url, request: { timeout: timeout } }
     faraday_options[:proxy] = proxy_options if proxy_options.present?
     faraday_options[:ssl] = ssl_options if ssl_options.present?
-    ssrf_filter_options = {}
-    ssrf_filter_options[:allowlist] = Opendata.ssrf_allow_list if Opendata.ssrf_allow_list.present?
-    ssrf_filter_options[:denylist] = Opendata.ssrf_deny_list if Opendata.ssrf_deny_list.present?
-    ssrf_filter_options[:resolver] = Opendata.ssrf_resolver if Opendata.ssrf_resolver.present?
     http_client = Faraday.new(faraday_options) do |builder|
       builder.request :url_encoded
-      builder.request :ssrf_filter, **ssrf_filter_options
+
+      if Opendata.ssrf_protection_enabled?
+        ssrf_filter_options = {}
+        ssrf_filter_options[:allow_ip_addresses] = true if Opendata.ssrf_allow_ip_addresses?
+        ssrf_filter_options[:allowlist] = Opendata.ssrf_allow_list if Opendata.ssrf_allow_list.present?
+        ssrf_filter_options[:denylist] = Opendata.ssrf_deny_list if Opendata.ssrf_deny_list.present?
+        ssrf_filter_options[:resolver] = Opendata.ssrf_resolver if Opendata.ssrf_resolver.present?
+        builder.request :ssrf_filter, **ssrf_filter_options
+      end
+
       builder.response :logger, Rails.logger
       builder.adapter Faraday.default_adapter
     end
@@ -141,37 +181,81 @@ module Opendata
 
     case content_encoding.strip.downcase
     when "gzip"
-      temp_file2 = Tempfile.open('temp')
-      temp_file2.binmode
-
-      Zlib::GzipReader.wrap(temp_file) do |source|
-        IO.copy_stream(source, temp_file2)
-      end
-
-      temp_file.close(true)
-      temp_file2
+      inflate_gzip(temp_file)
     when "deflate"
-      inflater = Zlib::Inflate.new
-      temp_file2 = Tempfile.open('temp')
-      temp_file2.binmode
+      inflate_deflate(temp_file)
+    else
+      raise SS::NotFoundError, "#{content_encoding} not supported"
+    end
+  end
 
+  def inflate_gzip(temp_file)
+    temp_file2 = Tempfile.open('temp')
+    temp_file2.binmode
+    total_size = 0
+
+    begin
+      Zlib::GzipReader.wrap(temp_file) do |source|
+        loop do
+          chunk = source.read(DEFLATE_CHUNK_SIZE)
+          break unless chunk
+
+          raise SS::NotFoundError, "file size is too large" if total_size + chunk.length > max_download_size
+
+          temp_file2.write(chunk)
+          total_size += chunk.length
+        end
+      end
+    rescue
+      # 圧縮データが壊れている場合、展開中に例外が発生する
+      # SS::NotFoundError 時の処理と合わせて、失敗時の処理を記述する
+      temp_file.rewind rescue nil
+      temp_file2.close(true) rescue nil
+      raise
+    end
+
+    temp_file.close(true)
+
+    temp_file2.rewind
+    temp_file2
+  end
+
+  def inflate_deflate(temp_file)
+    inflater = Zlib::Inflate.new
+    temp_file2 = Tempfile.open('temp')
+    temp_file2.binmode
+    total_size = 0
+
+    begin
       loop do
         chunk = temp_file.read(DEFLATE_CHUNK_SIZE)
         break unless chunk
 
         out = inflater.inflate(chunk)
+        raise SS::NotFoundError, "file size is too large" if total_size + out.length > max_download_size
+
         temp_file2.write(out)
+        total_size += out.length
       end
 
       out = inflater.finish
-      temp_file2.write(out)
+      raise SS::NotFoundError, "file size is too large" if total_size + out.length > max_download_size
 
+      temp_file2.write(out)
+    rescue
+      # 圧縮データが壊れている場合、展開中に例外が発生する
+      # SS::NotFoundError 時の処理と合わせて、失敗時の処理を記述する
+      temp_file.rewind rescue nil
+      temp_file2.close(true) rescue nil
       inflater.close
-      temp_file.close(true)
-      temp_file2
-    else
-      raise SS::NotFoundError, "#{content_encoding} not supported"
+      raise
     end
+
+    inflater.close
+    temp_file.close(true)
+
+    temp_file2.rewind
+    temp_file2
   end
 
   def extract_filename(content_disposition)

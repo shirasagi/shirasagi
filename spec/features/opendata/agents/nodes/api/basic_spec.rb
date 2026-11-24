@@ -26,7 +26,7 @@ describe "opendata_agents_nodes_api", type: :feature, dbscope: :example do
                               area_ids: [ node_area.id ], tags: %w(TEST_2))
   end
 
-  let(:dataset_resource_url) { "http://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+  let(:dataset_resource_url) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
   let(:dataset_resource_file_path) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
   let(:dataset_resource) { page_dataset1.resources.new(attributes_for(:opendata_resource)) }
   let(:dataset_url_resource) { page_dataset1.url_resources.new(attributes_for(:opendata_url_resource)) }
@@ -34,7 +34,13 @@ describe "opendata_agents_nodes_api", type: :feature, dbscope: :example do
   let(:license) { create(:opendata_license, cur_site: cms_site) }
 
   before do
+    @save_ssrf_resolver = Opendata.ssrf_resolver
+    Opendata.ssrf_resolver = ->(_hostname) { [ "10.11.102.8" ] }
+
+    @net_connect_allowed = WebMock.net_connect_allowed?
+    WebMock.disable_net_connect!(allow_localhost: true)
     WebMock.reset!
+
     body = ::File.binread(dataset_resource_file_path)
     stub_request(:get, dataset_resource_url).
       to_return(status: 200, body: body, headers: { "Last-Modified" => Time.zone.now.httpdate })
@@ -53,7 +59,12 @@ describe "opendata_agents_nodes_api", type: :feature, dbscope: :example do
     dataset_url_resource.save!
   end
 
-  after { WebMock.reset! }
+  after do
+    WebMock.reset!
+    WebMock.allow_net_connect! if @net_connect_allowed
+
+    Opendata.ssrf_resolver = @save_ssrf_resolver
+  end
 
   context "api" do
 

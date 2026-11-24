@@ -2,9 +2,12 @@ require 'spec_helper'
 
 describe "opendata_agents_nodes_url_resource", type: :feature, dbscope: :example do
   let(:site) { cms_site }
-  let!(:original_url) { unique_url }
+  let!(:original_url) { "https://#{unique_domain}/#{unique_id}/" }
 
   before do
+    @save_ssrf_resolver = Opendata.ssrf_resolver
+    Opendata.ssrf_resolver = ->(_hostname) { [ "10.11.102.8" ] }
+
     @net_connect_allowed = WebMock.net_connect_allowed?
     WebMock.disable_net_connect!
     WebMock.reset!
@@ -17,6 +20,8 @@ describe "opendata_agents_nodes_url_resource", type: :feature, dbscope: :example
   after do
     WebMock.reset!
     WebMock.allow_net_connect! if @net_connect_allowed
+
+    Opendata.ssrf_resolver = @save_ssrf_resolver
   end
 
   describe "#download" do

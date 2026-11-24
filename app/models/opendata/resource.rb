@@ -27,7 +27,6 @@ class Opendata::Resource
 
   validates :in_file, presence: true, if: ->{ file_id.blank? && source_url.blank? }
   validates :format, presence: true
-  validates :source_url, url: { allow_blank: true }
   validate :encode_source_url
 
   after_save :save_dataset
