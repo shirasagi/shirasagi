@@ -65,6 +65,8 @@ test:
   <<: *production
   fuseki:
     disable: true
+  ssrf_allow_list:
+    - '10.11.102.0/24'
 
 development:
   <<: *production
