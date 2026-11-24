@@ -1,3 +1,5 @@
+#frozen_string_literal: true
+
 require 'docker'
 
 module SS::LdapSupport
@@ -117,13 +119,22 @@ module SS::LdapSupport
     database_password = nil
     Timeout.timeout(60) do
       loop do
-        logs = container.logs(stdout: true)
-        if logs.include?("Running /container/services/openldap/process.sh")
-          config_password = $1 if logs.match(/Generated config root password:\s+(\S+)/)
-          database_password = $1 if logs.match(/Generated database root password:\s+(\S+)/)
+        logs = container.logs(stdout: true, stderr: true)
+        if logs.include?("slapd starting")
+          config_password = $1 if logs =~ /Generated config root password:\s+(\S+)/
+          database_password = $1 if logs =~ /Generated database root password:\s+(\S+)/
           break
         end
 
+        sleep 1
+      end
+
+      loop do
+        Ldap::Connection.connect(
+          url: "ldap://localhost:#{ldap_port}/", base_dn: "dc=example,dc=jp", auth_method: "simple",
+         username: "cn=admin,dc=example,dc=jp", password: database_password)
+        break
+      rescue
         sleep 1
       end
     end
