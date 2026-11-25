@@ -16,12 +16,14 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
   let(:sender_email) { "#{unique_id}@example.jp" }
 
   before do
+    @save_config = SS.config.replace_value_at(:workflow, :enable_user_email_from, true)
     site.sender_email = sender_email
     site.save!
     ActionMailer::Base.deliveries = []
   end
 
   after do
+    SS.config.replace_value_at(:workflow, :enable_user_email_from, @save_config)
     ActionMailer::Base.deliveries = []
   end
 
@@ -84,7 +86,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         expect(Sys::MailLog.count).to eq 2
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.from.first).to eq sender_email
+          expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq(user1.email).or(eq(user2.email))
           expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
@@ -94,7 +96,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
         end
         ActionMailer::Base.deliveries.second.tap do |mail|
-          expect(mail.from.first).to eq sender_email
+          expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq(user1.email).or(eq(user2.email))
           expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
@@ -202,7 +204,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         expect(Sys::MailLog.count).to eq 3
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
         ActionMailer::Base.deliveries.last.tap do |mail|
-          expect(mail.from.first).to eq sender_email
+          expect(mail.from.first).to eq user2.email
           expect(mail.to.first).to eq cms_user.email
           expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
@@ -271,7 +273,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         expect(Sys::MailLog.count).to eq 2
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.from.first).to eq sender_email
+          expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq(user1.email).or(eq(user2.email))
           expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
@@ -281,7 +283,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
         end
         ActionMailer::Base.deliveries.second.tap do |mail|
-          expect(mail.from.first).to eq sender_email
+          expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq(user1.email).or(eq(user2.email))
           expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
@@ -340,7 +342,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         expect(Sys::MailLog.count).to eq 3
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
         ActionMailer::Base.deliveries.last.tap do |mail|
-          expect(mail.from.first).to eq sender_email
+          expect(mail.from.first).to eq user1.email
           expect(mail.to.first).to eq cms_user.email
           expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.remand')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
@@ -511,7 +513,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
 
         expect(Sys::MailLog.count).to eq 3
         ActionMailer::Base.deliveries.last.tap do |mail|
-          expect(mail.from.first).to eq sender_email
+          expect(mail.from.first).to eq user2.email
           expect(mail.to.first).to eq cms_user.email
           expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.remand')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
