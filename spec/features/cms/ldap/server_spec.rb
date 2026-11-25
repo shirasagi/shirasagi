@@ -51,31 +51,31 @@ describe "ldap_server", type: :feature, dbscope: :example do
       site.ldap_base_dn = "dc=example,dc=jp"
       site.ldap_auth_method = "simple"
       site.ldap_user_dn = "cn=admin,dc=example,dc=jp"
-      site.ldap_user_password = SS::Crypto.encrypt("admin")
+      site.ldap_user_password = SS::Crypto.encrypt(SS::LdapSupport.docker_database_password)
       site.save!
     end
 
     context "with auth" do
       it "#index" do
-        login_user(user, pass: "admin", login_path: cms_login_path(site: site), to: index_path)
+        login_user(user, pass: SS::LdapSupport.docker_database_password, login_path: cms_login_path(site: site), to: index_path)
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
       end
 
       it "#index with dn" do
-        login_user(user, pass: "admin", login_path: cms_login_path(site: site), to: index2_path)
+        login_user(user, pass: SS::LdapSupport.docker_database_password, login_path: cms_login_path(site: site), to: index2_path)
         expect(status_code).to eq 200
         expect(current_path).to eq index2_path
       end
 
       it "#group" do
-        login_user(user, pass: "admin", login_path: cms_login_path(site: site), to: group_path)
+        login_user(user, pass: SS::LdapSupport.docker_database_password, login_path: cms_login_path(site: site), to: group_path)
         expect(status_code).to eq 200
         expect(current_path).to eq group_path
       end
 
       it "#user" do
-        login_user(user, pass: "admin", login_path: cms_login_path(site: site), to: user_path)
+        login_user(user, pass: SS::LdapSupport.docker_database_password, login_path: cms_login_path(site: site), to: user_path)
         expect(status_code).to eq 200
         expect(current_path).to eq user_path
       end
