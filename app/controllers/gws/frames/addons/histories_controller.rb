@@ -29,17 +29,12 @@ class Gws::Frames::Addons::HistoriesController < ApplicationController
     class_name = params[:model_class].to_s
     raise '404' unless class_name.to_s.start_with?('Gws::')
 
-    if Rails.env.development?
-      model_class = params[:model_class].to_s.classify.constantize rescue nil
-    else
-      model_class = Mongoid.models.find { |c| c.name == class_name }
-    end
-    raise '404' unless model_class
+    model_class = class_name.safe_constantize
+    raise '404' unless model_class.is_a?(Class)
     raise '404' unless model_class.include?(Gws::Addon::History)
 
-    @item = model_class.where(site_id: @cur_site.id).find(params[:model_id]) rescue nil
+    @item = model_class.site(@cur_site).find(params[:model_id]) rescue nil
     raise '404' unless @item
-    raise '404' unless @item.site == @cur_site
   end
 
   public
