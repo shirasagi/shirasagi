@@ -5,7 +5,7 @@ production: &production
   # see cms or gws site setting.
   disable_my_group: false
 
-  enable_user_email_from: false
+  enable_user_email_from: true
 
 test:
   <<: *production
