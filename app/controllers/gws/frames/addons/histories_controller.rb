@@ -29,9 +29,9 @@ class Gws::Frames::Addons::HistoriesController < ApplicationController
     class_name = params[:model_class].to_s
     raise '404' unless class_name.to_s.start_with?('Gws::')
 
-    model_class = class_name.safe_constantize
-    raise '404' unless model_class.is_a?(Class)
-    raise '404' unless model_class.include?(Gws::Addon::History)
+    model_class = SS.find_loaded_model(class_name)
+    return unless model_class
+    return unless model_class.include?(Gws::Addon::History)
 
     @item = model_class.site(@cur_site).find(params[:model_id]) rescue nil
     raise '404' unless @item
