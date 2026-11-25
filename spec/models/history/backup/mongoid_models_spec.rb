@@ -18,6 +18,9 @@ describe History::Backup, type: :model, dbscope: :example do
     it do
       I18n.t("mongoid.models").keys.map(&:to_s).each do |model_name|
         expect { model_name.camelize.constantize }.to_not raise_error, "#{model_name} が未定義です。翻訳だけが残っています。"
+
+        model = model_name.camelize.constantize
+        expect(model.include?(Mongoid::Document)).to be_truthy, "#{model_name} は Mongoid::Document ではありません。"
       end
     end
   end

@@ -876,6 +876,9 @@ ja:
       start: miChecker による検証を開始します。
       success: miChecker による検証が完了しました。
       failed: miChecker による検証が失敗しました。
+    generation_report:
+      history: 書き出し性能履歴
+      aggregation: 書き出し性能履歴の集計結果
 
   cms/check_links:
     run: 実行
@@ -1183,8 +1186,6 @@ ja:
       cms/check_links/error/base: エラー情報
       cms/api_token: 連携用APIトークン
       cms/generation_report/title: 書き出し性能レポート
-      cms/generation_report/history: 書き出し性能履歴
-      cms/generation_report/aggregation: 書き出し性能履歴の集計結果
       cms/source_cleaner_template: ソースクリーニング
       cms/line/statistic: 統計情報
     errors:

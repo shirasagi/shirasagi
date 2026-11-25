@@ -94,7 +94,7 @@ describe Cms::GenerationReport::TitlesController, type: :feature, dbscope: :exam
             expect(page).to have_content(history1.total_db.round(3))
           end
 
-          click_on I18n.t("mongoid.models.cms/generation_report/aggregation")
+          click_on I18n.t("cms.generation_report.aggregation")
           within "[data-id='#{aggregation1.id}']" do
             expect(page).to have_content(aggregation1.db.round(3))
           end

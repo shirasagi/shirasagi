@@ -1,5 +1,5 @@
 <nav class="mod-navi">
-  <h2><%= t "mongoid.models.gws/user_setting" %></h2>
+  <h2><%= t "gws.user_setting" %></h2>
 
   <h3><%= link_to t('sns.profile'), gws_user_profile_path %></h3>
 
@@ -8,7 +8,7 @@
   <% end %>
 
   <% if @cur_site.menu_presence_visible? && Gws.module_usable?(:presence, @cur_site, @cur_user) %>
-    <h3><%= link_to @cur_site.menu_presence_label || t('mongoid.models.gws/presence'), gws_presence_user_setting_path %></h3>
+    <h3><%= link_to @cur_site.menu_presence_label || t('modules.gws/presence'), gws_presence_user_setting_path %></h3>
   <% end %>
 
   <% if @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_memo_notice_user_setting) %>
