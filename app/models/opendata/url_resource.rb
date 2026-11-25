@@ -108,7 +108,7 @@ class Opendata::UrlResource
       return
     end
 
-    if uri.path == '/'
+    if uri.path.blank? || uri.path == '/'
       errors.add :original_url, :invalid
       return
     end

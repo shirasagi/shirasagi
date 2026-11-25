@@ -12,6 +12,17 @@ module Opendata
 
   mattr_accessor :ssrf_resolver, instance_accessor: false
 
+  class RawQuery < Faraday::Middleware
+    def initialize(app, query:)
+      super(app)
+      @query = query
+    end
+
+    def on_request(env)
+      env[:url].query = @query
+    end
+  end
+
   def request_timeout
     return @request_timeout if instance_variable_defined?(:@request_timeout)
 
@@ -90,9 +101,11 @@ module Opendata
     @ssrf_deny_list = Array(SS.config.opendata.ssrf_deny_list).flatten.select(&:present?).uniq.freeze
   end
 
-  def download_url!(url, redirection: nil, timeout: nil)
+  def download_url!(url, original_url: nil, redirection: nil, timeout: nil)
     url = url.to_str
     url = Addressable::URI.parse(url) unless url.is_a?(Addressable::URI)
+
+    original_url ||= url.dup
     redirection ||= Cms::LinkChecker::Redirection.new
     timeout ||= Opendata.request_timeout
 
@@ -117,7 +130,8 @@ module Opendata
         redirect_to = Addressable::URI.join(url, redirect_to)
         raise SS::NotFoundError, "#{url}: unsafe redirect" unless safe_redirect?(url, redirect_to)
 
-        return download_url!(redirect_to, redirection: redirection.increment, timeout: timeout)
+        temp_file.close(true)
+        return download_url!(redirect_to, original_url: original_url, redirection: redirection.increment, timeout: timeout)
       end
 
       raise SS::NotFoundError, "#{url}: failed to download" unless resp.success?
@@ -126,7 +140,7 @@ module Opendata
       temp_file = inflate_if_necessary(temp_file, resp.headers['content-encoding'])
 
       filename = Opendata.extract_filename(resp.headers['content-disposition'])
-      filename ||= File.basename(url.path)
+      filename ||= File.basename(original_url.path)
 
       last_modified = resp.headers['last-modified']
       if last_modified
@@ -146,12 +160,17 @@ module Opendata
   end
 
   def new_http_client(url, timeout)
+    raw_query = url.query
+    base_url = url.dup
+    base_url.query = nil
+
     proxy_options = SS::ProxySetting.instance.faraday_proxy_options
     ssl_options = SS::ProxySetting.instance.faraday_ssl_options
-    faraday_options = { url: url, request: { timeout: timeout } }
+    faraday_options = { url: base_url, request: { timeout: timeout } }
     faraday_options[:proxy] = proxy_options if proxy_options.present?
     faraday_options[:ssl] = ssl_options if ssl_options.present?
     http_client = Faraday.new(faraday_options) do |builder|
+      builder.use RawQuery, query: raw_query # 必ず先頭に置くこと
       builder.request :url_encoded
 
       if Opendata.ssrf_protection_enabled?
@@ -240,6 +259,7 @@ module Opendata
 
       out = inflater.finish
       raise SS::NotFoundError, "file size is too large" if total_size + out.length > max_download_size
+      raise SS::NotFoundError, "file has extra data" if inflater.total_in != temp_file.length
 
       temp_file2.write(out)
     rescue

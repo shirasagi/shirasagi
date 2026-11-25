@@ -195,7 +195,7 @@ describe Opendata::UrlResource, dbscope: :example do
 
     it do
       expect(subject.original_updated.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
-      expect(subject.filename).to eq "shift_jis-2.csv" # リダイレクト先のファイル名を差す
+      expect(subject.filename).to eq "shift_jis.csv"
       expect(subject.crawl_state).to eq "same"
 
       csv = subject.parse_tsv
@@ -486,7 +486,7 @@ describe Opendata::UrlResource, dbscope: :example do
 
   describe "when url returns SSRF redirect but SSRF protection is disabled" do
     let(:url1) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
-    let(:url2) { "https://10.224.174.6/status" }
+    let(:url2) { "https://10.224.174.6/" }
     let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
     subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
 
@@ -510,7 +510,44 @@ describe Opendata::UrlResource, dbscope: :example do
       subject.save!
 
       expect(subject.original_updated.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
-      expect(subject.filename).to eq "status"
+      expect(subject.filename).to eq "shift_jis.csv"
+      expect(subject.crawl_state).to eq "same"
+
+      csv = subject.parse_tsv
+      expect(csv).not_to be_nil
+      expect(csv.length).to eq 3
+      expect(csv[0]).to eq %w(ヘッダー 値)
+      expect(csv[1]).to eq %w(品川 483901)
+      expect(csv[2]).to eq %w(新宿 43901)
+    end
+  end
+
+  describe "when query parameters contain duplicated keys and cause some errors on converting them to hash" do
+    let(:domain) { unique_domain }
+    let(:base_url) { "https://#{domain}/#{unique_id}/shift_jis.csv" }
+    let(:url) { "#{base_url}?id=1&id=2&a=1&a[b]=2" }
+    let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      @save_query_values_notation = WebMock::Config.instance.query_values_notation
+      WebMock::Config.instance.query_values_notation = :flat_array
+
+      stub_request(:get, url).to_return(status: 200, body: ::File.binread(csv_path), headers: {})
+    end
+
+    after do
+      WebMock::Config.instance.query_values_notation = @save_query_values_notation
+    end
+
+    it do
+      subject.license_id = license.id
+      subject.original_url = url
+      subject.crawl_update = "none"
+      subject.save!
+
+      expect(subject.original_updated.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
+      expect(subject.filename).to eq "shift_jis.csv"
       expect(subject.crawl_state).to eq "same"
 
       csv = subject.parse_tsv
@@ -582,6 +619,21 @@ describe Opendata::UrlResource, dbscope: :example do
       before do
         subject.license_id = license.id
         subject.original_url = "https://#{unique_domain}/"
+        subject.crawl_update = "none"
+        subject.original_updated = nil
+      end
+
+      it do
+        expect { subject.save! }.to raise_error Mongoid::Errors::Validations
+      end
+    end
+
+    context "when uri.path is empty" do
+      subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+      before do
+        subject.license_id = license.id
+        subject.original_url = "https://#{unique_domain}"
         subject.crawl_update = "none"
         subject.original_updated = nil
       end
