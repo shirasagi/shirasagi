@@ -116,13 +116,7 @@ module Opendata
       Timeout.timeout(timeout) do
         http_client = new_http_client(url, timeout)
 
-        resp = http_client.get do |req|
-          req.options.on_data = proc do |chunk, overall_received_bytes|
-            raise SS::NotFoundError, "#{url}: file size is too large" if overall_received_bytes > max_download_size
-            temp_file.write chunk
-          end
-        end
-
+        resp = Opendata.streaming_download(http_client, to: temp_file)
         if REDIRECT_STATUS_CODES.include?(resp.status)
           redirect_to = resp.headers['Location']
           raise SS::NotFoundError, "#{url}: got redirect response but location is not found" if redirect_to.blank?
@@ -143,12 +137,8 @@ module Opendata
         filename = Opendata.extract_filename(resp.headers['content-disposition'])
         filename ||= File.basename(original_url.path)
 
-        last_modified = resp.headers['last-modified']
-        if last_modified
-          last_modified = last_modified.in_time_zone
-        else
-          last_modified = Time.zone.now
-        end
+        last_modified = Opendata.extract_last_modified(resp.headers['last-modified'])
+        last_modified ||= Time.zone.now
 
         temp_file = ActionDispatch::Http::UploadedFile.new(
           tempfile: temp_file, filename: filename, type: SS::MimeType::DEFAULT_MIME_TYPE)
@@ -190,6 +180,15 @@ module Opendata
     http_client.headers[:user_agent] = http_client.headers[:user_agent].to_s + " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
     http_client.headers[:accept_encoding] = "deflate,gzip"
     http_client
+  end
+
+  def streaming_download(http_client, to:)
+    http_client.get do |req|
+      req.options.on_data = proc do |chunk, overall_received_bytes|
+        raise SS::NotFoundError, "#{url}: file size is too large" if overall_received_bytes > max_download_size
+        to.write chunk
+      end
+    end
   end
 
   def safe_redirect?(from_url, to_url)
@@ -297,5 +296,10 @@ module Opendata
     filename = filename.tr("\\", "/").gsub(/[[:cntrl:]]/, "")
     filename = ::File.basename(filename)
     filename unless [ "", ".", "..", "/" ].include?(filename)
+  end
+
+  def extract_last_modified(last_modified)
+    return if last_modified.blank?
+    last_modified.in_time_zone rescue nil
   end
 end
