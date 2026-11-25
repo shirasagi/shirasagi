@@ -20,7 +20,7 @@ class History::Cms::Frames::BackupsController < ApplicationController
       raise SS::NotFoundError if setting.ref_class.blank? || setting.ref_id.blank?
       raise SS::NotFoundError unless t(setting.ref_class.underscore, scope: "mongoid.models", default: nil)
 
-      model = setting.ref_class.constantize
+      model = setting.ref_class.safe_constantize
       criteria = model.all
       criteria = criteria.site(@cur_site) if criteria.respond_to?(:site)
       criteria.find(setting.ref_id)
