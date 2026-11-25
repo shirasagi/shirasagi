@@ -14,7 +14,7 @@ describe "gws_ldap_diagnostic_search", type: :feature, dbscope: :example, ldap: 
 
   context "with default scope" do
     let(:user_dn) { "cn=admin,dc=example,dc=jp" }
-    let(:user_password) { "admin" }
+    let(:user_password) { SS::LdapSupport.docker_database_password }
     let(:base_dn) { "dc=example,dc=jp" }
 
     it do

@@ -6,7 +6,7 @@ describe Ldap::Group, ldap: true do
   let(:base_dn) { "dc=example,dc=jp" }
   let(:auth_method) { "simple" }
   let(:username) { "cn=admin,dc=example,dc=jp" }
-  let(:password) { SS::Crypto.encrypt("admin") }
+  let(:password) { SS::LdapSupport.docker_database_password }
 
   describe "#find" do
     context "existing dn is given" do

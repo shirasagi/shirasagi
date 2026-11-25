@@ -1,3 +1,5 @@
+#frozen_string_literal: true
+
 require 'docker'
 
 module SS::LdapSupport
@@ -47,6 +49,22 @@ module SS::LdapSupport
     @docker_ldaps_port = value
   end
 
+  def docker_config_password
+    @docker_config_password
+  end
+
+  def docker_config_password=(value)
+    @docker_config_password = value
+  end
+
+  def docker_database_password
+    @docker_database_password
+  end
+
+  def docker_database_password=(value)
+    @docker_database_password = value
+  end
+
   def init
     if SS::LdapSupport.ldap_test_disabled?
       RSpec.configuration.filter_run_excluding(ldap: true)
@@ -87,30 +105,53 @@ module SS::LdapSupport
     ldaps_port = rand(21_500..21_999)
     container = Docker::Container.create(
       'Image' => image_id,
-      'ExposedPorts' => { '389/tcp' => {}, '636/tcp' => {} },
-      'Env' => %w(LDAP_ORGANISATION=shirasagi LDAP_DOMAIN=example.jp),
+      'ExposedPorts' => { '3890/tcp' => {}, '6360/tcp' => {} },
+      'Env' => %w(OPENLDAP_BOOTSTRAP_ORGANIZATION=shirasagi OPENLDAP_BOOTSTRAP_SUFFIX=dc=example,dc=jp),
       'HostConfig' => {
         'PortBindings' => {
-          '389/tcp' => [{ 'HostPort' => ldap_port.to_s }],
-          '636/tcp' => [{ 'HostPort' => ldaps_port.to_s }]
+          '3890/tcp' => [{ 'HostPort' => ldap_port.to_s }],
+          '6360/tcp' => [{ 'HostPort' => ldaps_port.to_s }]
         }
       }
     )
     container.start
+    config_password = nil
+    database_password = nil
     Timeout.timeout(60) do
       loop do
-        break if container.logs(stdout: true).include?("First start is done")
+        logs = container.logs(stdout: true, stderr: true)
+        if logs.include?("slapd starting")
+          config_password = $1 if logs =~ /Generated config root password:\s+(\S+)/
+          database_password = $1 if logs =~ /Generated database root password:\s+(\S+)/
+          break
+        end
 
-        sleep 0.1
+        sleep 1
+      end
+
+      loop do
+        Ldap::Connection.connect(
+          url: "ldap://localhost:#{ldap_port}/", base_dn: "dc=example,dc=jp", auth_method: "simple",
+         username: "cn=admin,dc=example,dc=jp", password: database_password)
+        break
+      rescue
+        sleep 1
       end
     end
 
     ldif = ::File.read(Rails.root.join("spec/fixtures/ldap/shirasagi.ldif"))
     ldif.gsub!("pass", ss_pass)
     container.store_file("/shirasagi.ldif", ldif)
-    _stdout, _stderr, exit_code = container.exec(%w(ldapadd -D cn=admin,dc=example,dc=jp -w admin -f /shirasagi.ldif))
+
+    ldap_add_commands = [
+      "ldapadd", "-H", "ldap://:3890", "-D", "cn=admin,dc=example,dc=jp",
+      "-w", database_password, "-f", "/shirasagi.ldif"
+    ]
+    stdout, stderr, exit_code = container.exec(ldap_add_commands, user: 'root')
     if exit_code != 0
       puts "[Error] failed to execute 'ldapadd'"
+      puts stdout.join if stdout
+      puts stderr.join if stderr
       container.stop
       container.delete(force: true)
       return
@@ -119,8 +160,13 @@ module SS::LdapSupport
     SS::LdapSupport.docker_container = container
     SS::LdapSupport.docker_ldap_port = ldap_port
     SS::LdapSupport.docker_ldaps_port = ldaps_port
+    SS::LdapSupport.docker_config_password = config_password
+    SS::LdapSupport.docker_database_password = database_password
 
     ::Ldap.url = "ldap://localhost:#{ldap_port}/"
+    ::Ldap.auth_method = :simple
+    ::Ldap.admin_user = "cn=admin,dc=example,dc=jp"
+    ::Ldap.admin_password = database_password
 
     puts "image '#{image_id}' successfully launched as container '#{container.id[0, 12]}' listening on #{ldap_port}"
   end
