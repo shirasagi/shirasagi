@@ -2,9 +2,12 @@
   return unless @item.class.show_history
   addon ||= local_assigns.fetch(:addon, {})
   addon[:display_body] = "hide"
+
+  setting = Gws::HistoryFrameSetting.new(user_id: @cur_user.id,
+    model_class: @item.class.to_s, model_id: @item.id)
 %>
 
-<turbo-frame src="<%= gws_frames_addons_histories_path(model_class: @item.class.to_s, model_id: @item.id) %>"
+<turbo-frame src="<%= gws_frames_addons_histories_path(setting: setting.to_signed_jwt) %>"
   id="gws-addon-history-frame" loading="lazy">
   <%= loading %>
 </turbo-frame>

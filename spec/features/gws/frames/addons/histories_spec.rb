@@ -4,8 +4,12 @@ describe "gws_frames_addons_histories", type: :feature, dbscope: :example do
   let!(:site) { gws_site }
   let(:user) { gws_user }
 
-  def visit_histories(model_class, model_id)
-    visit gws_frames_addons_histories_path(site: site, model_class: model_class, model_id: model_id)
+  def signed_setting(model_class, model_id, user_id: user.id)
+    Gws::HistoryFrameSetting.new(user_id: user_id, model_class: model_class, model_id: model_id).to_signed_jwt
+  end
+
+  def visit_histories(model_class, model_id, user_id: user.id)
+    visit gws_frames_addons_histories_path(site: site, setting: signed_setting(model_class, model_id, user_id: user_id))
   end
 
   def expect_histories(item)
@@ -16,6 +20,11 @@ describe "gws_frames_addons_histories", type: :feature, dbscope: :example do
 
   def expect_not_found(model_class, model_id)
     visit_histories(model_class, model_id)
+    expect(page).to have_http_status(:not_found)
+  end
+
+  def expect_not_found_with_setting(setting)
+    visit gws_frames_addons_histories_path(site: site, setting: setting)
     expect(page).to have_http_status(:not_found)
   end
 
@@ -88,6 +97,39 @@ describe "gws_frames_addons_histories", type: :feature, dbscope: :example do
       expect_not_found("Gws::History", user.id)
       # Gws ではない
       expect_not_found("Cms::User", user.id)
+    end
+  end
+
+  context "with invalid setting token" do
+    before { login_gws_user }
+
+    it do
+      valid = signed_setting("Gws::User", user.id)
+      header, payload, signature = valid.split(".")
+
+      # 署名が壊れている
+      expect_not_found_with_setting("#{header}.#{payload}.#{signature.reverse}")
+      # 別の署名鍵で署名されている
+      forged = JSON::JWT.new(user_id: user.id, model_class: "Gws::User", model_id: user.id).sign("other-secret").to_s
+      expect_not_found_with_setting(forged)
+      # payload を改ざん（署名は元のまま）
+      tampered_payload = Base64.urlsafe_encode64(
+        { user_id: user.id, model_class: "Gws::Group", model_id: user.groups.first.id }.to_json, padding: false)
+      expect_not_found_with_setting("#{header}.#{tampered_payload}.#{signature}")
+      # JWT として解釈できない
+      expect_not_found_with_setting("a.b.c")
+    end
+  end
+
+  context "with other user's setting token" do
+    let!(:other_user) { create(:gws_user, group_ids: user.group_ids) }
+
+    before { login_gws_user }
+
+    it do
+      # 他のユーザーに発行されたトークンでは閲覧できない
+      visit_histories("Gws::User", user.id, user_id: other_user.id)
+      expect(page).to have_http_status(:forbidden)
     end
   end
 end

@@ -268,32 +268,6 @@ module SS
     cur_user.root_groups.select { |group| group.gws_use? }
   end
 
-  # safe_constantize の代替（rails の constantize に問題が無くなればそちらを利用した方が良い）
-  def find_loaded_model(name)
-    loaded_model_finder = ->(name) do
-      Mongoid.models.each do |model|
-        return model if model.name == name
-
-        descendant = model.descendants.find { |c| c.name == name }
-        return descendant if descendant
-      end
-      nil
-    end
-
-    model = loaded_model_finder.call(name)
-    return model if model
-
-    # development 等では未ロードのクラスがあるため、一度だけ eager load して再検索する
-    if !Rails.application.config.eager_load
-      Rails.application.eager_load!
-
-      model = loaded_model_finder.call(name)
-      return model if model
-    end
-
-    nil
-  end
-
   def facebook_sdk_js_url(version:, app_id: nil)
     params = { version: version }
     params[:appId] = app_id if app_id

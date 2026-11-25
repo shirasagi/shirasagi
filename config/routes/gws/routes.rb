@@ -138,7 +138,7 @@ Rails.application.routes.draw do
         resource :contrast, only: %i[show update]
       end
       namespace :addons do
-        resources :histories, only: [:index], path: 'histories/:model_class/:model_id'
+        resources :histories, only: [:index], path: 'histories/:setting', setting: /[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/
       end
     end
   end
