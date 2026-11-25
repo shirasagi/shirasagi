@@ -56,10 +56,41 @@ production: &production
   history:
     save_days: 14
 
+  #
+  # resource crawling
+  #
+
+  # タイムアウト秒数
+  # request_timeout: 30
+
+  # 最大ダウンロードサイズ（単位: バイト）
+  # max_download_size: 10485760
+
+  # 最大リダイレクト回数
+  # max_redirection: 3
+
+  # SSRF防御の有効
+  # プロキシ環境など自身でDNS解決ができない場合は false へ変更
+  # falseへ変更する際、合わせてプロキシ側での内部宛て遮断などSSRFへの防御を組み込んでください
+  # ssrf_protection_enabled: true
+
+  # 庁内など IP アドレス指定によるクローリングを有効にする場合 true に設定してください。
+  # ssrf_allow_ip_addresses: false
+
+  # SSRF許可リスト
+  # 庁内など IP アドレス指定によるクローリングを有効にする場合、ssrf_allow_list への追加も必要です。
+  # ssrf_allow_ip_addresses を true へ変更し、ssrf_allow_list へ IP アドレスを追加してください。
+  # ssrf_allow_list: []
+
+  # SSRF拒否リスト
+  # ssrf_deny_list: []
+
 test:
   <<: *production
   fuseki:
     disable: true
+  ssrf_allow_list:
+    - '10.11.102.0/24'
 
 development:
   <<: *production

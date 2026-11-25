@@ -6,12 +6,26 @@ describe Opendata::UrlResource, dbscope: :example do
   let(:node) { create(:opendata_node_dataset) }
   let(:dataset) { create(:opendata_dataset, cur_node: node) }
   let(:license) { create(:opendata_license, cur_site: site) }
+  let(:ip_address) { "10.11.102.8" }
 
-  before { WebMock.reset! }
-  after { WebMock.reset! }
+  before do
+    @save_ssrf_resolver = Opendata.ssrf_resolver
+    Opendata.ssrf_resolver = ->(_hostname) { [ ip_address ] }
+
+    @net_connect_allowed = WebMock.net_connect_allowed?
+    WebMock.disable_net_connect!(allow_localhost: true)
+    WebMock.reset!
+  end
+
+  after do
+    WebMock.reset!
+    WebMock.allow_net_connect! if @net_connect_allowed
+
+    Opendata.ssrf_resolver = @save_ssrf_resolver
+  end
 
   context "check attributes with typical url resource" do
-    let(:url) { "http://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:url) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
     let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
     subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
 
@@ -60,7 +74,7 @@ describe Opendata::UrlResource, dbscope: :example do
   end
 
   context "when last_modified is not given" do
-    let(:url) { "http://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:url) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
     let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
     subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
 
@@ -86,7 +100,7 @@ describe Opendata::UrlResource, dbscope: :example do
 
   describe "#parse_tsv" do
     context "when shift_jis csv is given" do
-      let(:url) { "http://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+      let(:url) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
       let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
       subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
 
@@ -111,7 +125,7 @@ describe Opendata::UrlResource, dbscope: :example do
     end
 
     context "when euc-jp csv is given" do
-      let(:url) { "http://#{unique_domain}/#{unique_id}/euc-jp.csv" }
+      let(:url) { "https://#{unique_domain}/#{unique_id}/euc-jp.csv" }
       let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/euc-jp.csv" }
       subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
 
@@ -136,7 +150,7 @@ describe Opendata::UrlResource, dbscope: :example do
     end
 
     context "when utf-8 csv is given" do
-      let(:url) { "http://#{unique_domain}/#{unique_id}/utf-8.csv" }
+      let(:url) { "https://#{unique_domain}/#{unique_id}/utf-8.csv" }
       let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/utf-8.csv" }
       subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
 
@@ -161,8 +175,392 @@ describe Opendata::UrlResource, dbscope: :example do
     end
   end
 
+  describe "when url returns redirect" do
+    let(:url1) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:url2) { "https://#{unique_domain}/#{unique_id}/shift_jis-2.csv" }
+    let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis-2.csv" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      stub_request(:get, url1).
+        to_return(status: 302, body: "", headers: { "Location" => url2 })
+      stub_request(:get, url2).
+        to_return(status: 200, body: ::File.binread(csv_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
+
+      subject.license_id = license.id
+      subject.original_url = url1
+      subject.crawl_update = "none"
+      subject.save!
+    end
+
+    it do
+      expect(subject.original_updated.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
+      expect(subject.filename).to eq "shift_jis.csv"
+      expect(subject.crawl_state).to eq "same"
+
+      csv = subject.parse_tsv
+      expect(csv).not_to be_nil
+      expect(csv.length).to eq 3
+      expect(csv[0]).to eq %w(値域 人口)
+      expect(csv[1]).to eq %w(銀座 3523)
+      expect(csv[2]).to eq %w(六本木 12166)
+    end
+  end
+
+  # https から http へのリダイレクトを防御する
+  describe "when url returns unsafe redirect" do
+    let(:url1) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:url2) { "http://#{unique_domain}/#{unique_id}/shift_jis-2.csv" }
+    let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis-2.csv" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      stub_request(:get, url1).
+        to_return(status: 302, body: "", headers: { "Location" => url2 })
+      stub_request(:get, url2).
+        to_return(status: 200, body: ::File.binread(csv_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
+    end
+
+    it do
+      subject.license_id = license.id
+      subject.original_url = url1
+      subject.crawl_update = "none"
+      expect(subject).to be_invalid
+
+      expect(subject.errors[:original_url]).to have(1).items
+      expect(subject.errors[:original_url]).to include(I18n.t("errors.messages.invalid"))
+      expect(subject.original_updated).to be_blank
+      expect(subject.filename).to eq subject.name
+      expect(subject.crawl_state).to eq "same"
+      expect(subject.file_id).to be_blank
+    end
+  end
+
+  describe "when content-encoding 'gzip' is given" do
+    let(:url) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      body = StringIO.new
+      Zlib::GzipWriter.wrap(body) { _1.write(::File.binread(csv_path)) }
+      headers = { "Last-Modified" => Time.zone.now.httpdate, "Content-Encoding" => "gzip" }
+      stub_request(:get, url).to_return(status: 200, body: body.string, headers: headers)
+
+      subject.license_id = license.id
+      subject.original_url = url
+      subject.crawl_update = "none"
+      subject.save!
+    end
+
+    it do
+      expect(subject.original_updated.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
+      expect(subject.filename).to eq "shift_jis.csv"
+      expect(subject.crawl_state).to eq "same"
+
+      csv = subject.parse_tsv
+      expect(csv).not_to be_nil
+      expect(csv.length).to eq 3
+      expect(csv[0]).to eq %w(ヘッダー 値)
+      expect(csv[1]).to eq %w(品川 483901)
+      expect(csv[2]).to eq %w(新宿 43901)
+    end
+  end
+
+  describe "when content-encoding 'deflate' is given" do
+    let(:url) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      body = Zlib::Deflate.deflate(::File.binread(csv_path))
+      headers = { "Last-Modified" => Time.zone.now.httpdate, "Content-Encoding" => "deflate" }
+      stub_request(:get, url).to_return(status: 200, body: body, headers: headers)
+
+      subject.license_id = license.id
+      subject.original_url = url
+      subject.crawl_update = "none"
+      subject.save!
+    end
+
+    it do
+      expect(subject.original_updated.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
+      expect(subject.filename).to eq "shift_jis.csv"
+      expect(subject.crawl_state).to eq "same"
+
+      csv = subject.parse_tsv
+      expect(csv).not_to be_nil
+      expect(csv.length).to eq 3
+      expect(csv[0]).to eq %w(ヘッダー 値)
+      expect(csv[1]).to eq %w(品川 483901)
+      expect(csv[2]).to eq %w(新宿 43901)
+    end
+  end
+
+  describe "when content-disposition is given" do
+    let(:url) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+    let(:filename) { "#{unique_id}.csv" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      headers = {
+        "Last-Modified" => Time.zone.now.httpdate,
+        "Content-Disposition" => %(attachment; filename="#{filename}"; size=1')
+      }
+      stub_request(:get, url).to_return(status: 200, body: ::File.binread(csv_path), headers: headers)
+
+      subject.license_id = license.id
+      subject.original_url = url
+      subject.crawl_update = "none"
+      subject.save!
+    end
+
+    it do
+      expect(subject.original_updated.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
+      expect(subject.filename).to eq filename
+      expect(subject.crawl_state).to eq "same"
+
+      csv = subject.parse_tsv
+      expect(csv).not_to be_nil
+      expect(csv.length).to eq 3
+      expect(csv[0]).to eq %w(ヘッダー 値)
+      expect(csv[1]).to eq %w(品川 483901)
+      expect(csv[2]).to eq %w(新宿 43901)
+    end
+  end
+
+  describe "when SSRF url is given" do
+    let(:url) { "http://10.224.174.6/status" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    it do
+      subject.license_id = license.id
+      subject.original_url = url
+      subject.crawl_update = "none"
+      expect(subject).to be_invalid
+
+      expect(subject.errors[:original_url]).to have(1).items
+      expect(subject.errors[:original_url]).to include(I18n.t("errors.messages.invalid"))
+      expect(subject.original_updated).to be_blank
+      expect(subject.filename).to eq subject.name
+      expect(subject.crawl_state).to eq "same"
+      expect(subject.file_id).to be_blank
+    end
+  end
+
+  describe "when internal ip address is given but it allows" do
+    let(:url) { "http://10.224.174.6/status" }
+    let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      @save_ssrf_allow_ip_addresses = Opendata.ssrf_allow_ip_addresses?
+      Opendata.ssrf_allow_ip_addresses = true
+
+      @save_ssrf_allow_list = Opendata.ssrf_allow_list
+      Opendata.ssrf_allow_list = %w(10.224.174.6)
+
+      stub_request(:get, url).to_return(status: 200, body: ::File.binread(csv_path), headers: {})
+    end
+
+    after do
+      Opendata.ssrf_allow_ip_addresses = @save_ssrf_allow_ip_addresses
+      Opendata.ssrf_allow_list = @save_ssrf_allow_list
+    end
+
+    it do
+      subject.license_id = license.id
+      subject.original_url = url
+      subject.crawl_update = "none"
+      subject.save!
+
+      expect(subject.original_updated.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
+      expect(subject.filename).to eq "status"
+      expect(subject.crawl_state).to eq "same"
+
+      csv = subject.parse_tsv
+      expect(csv).not_to be_nil
+      expect(csv.length).to eq 3
+      expect(csv[0]).to eq %w(ヘッダー 値)
+      expect(csv[1]).to eq %w(品川 483901)
+      expect(csv[2]).to eq %w(新宿 43901)
+    end
+  end
+
+  describe "when internal ip address is given but SSRF protection is disabled" do
+    let(:url) { "http://10.224.174.6/status" }
+    let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      @save_ssrf_protection_enabled = Opendata.ssrf_protection_enabled?
+      Opendata.ssrf_protection_enabled = false
+
+      stub_request(:get, url).to_return(status: 200, body: ::File.binread(csv_path), headers: {})
+    end
+
+    after do
+      Opendata.ssrf_protection_enabled = @save_ssrf_protection_enabled
+    end
+
+    it do
+      subject.license_id = license.id
+      subject.original_url = url
+      subject.crawl_update = "none"
+      subject.save!
+
+      expect(subject.original_updated.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
+      expect(subject.filename).to eq "status"
+      expect(subject.crawl_state).to eq "same"
+
+      csv = subject.parse_tsv
+      expect(csv).not_to be_nil
+      expect(csv.length).to eq 3
+      expect(csv[0]).to eq %w(ヘッダー 値)
+      expect(csv[1]).to eq %w(品川 483901)
+      expect(csv[2]).to eq %w(新宿 43901)
+    end
+  end
+
+  describe "when url returns SSRF redirect" do
+    let(:url1) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:url2) { "http://10.224.174.6/status" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      stub_request(:get, url1).
+        to_return(status: 302, body: "", headers: { "Location" => url2 })
+    end
+
+    it do
+      subject.license_id = license.id
+      subject.original_url = url1
+      subject.crawl_update = "none"
+      expect(subject).to be_invalid
+
+      expect(subject.errors[:original_url]).to have(1).items
+      expect(subject.errors[:original_url]).to include(I18n.t("errors.messages.invalid"))
+      expect(subject.original_updated).to be_blank
+      expect(subject.filename).to eq subject.name
+      expect(subject.crawl_state).to eq "same"
+      expect(subject.file_id).to be_blank
+    end
+  end
+
+  describe "when url returns SSRF redirect and ssrf_allow_ip_addresses is true" do
+    let(:url1) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:url2) { "http://10.224.174.6/status" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      @save_ssrf_allow_ip_addresses = Opendata.ssrf_allow_ip_addresses?
+      Opendata.ssrf_allow_ip_addresses = true
+
+      @save_ssrf_allow_list = Opendata.ssrf_allow_list
+      Opendata.ssrf_allow_list = %w(10.224.174.6)
+
+      stub_request(:get, url1).
+        to_return(status: 302, body: "", headers: { "Location" => url2 })
+    end
+
+    after do
+      Opendata.ssrf_allow_ip_addresses = @save_ssrf_allow_ip_addresses
+      Opendata.ssrf_allow_list = @save_ssrf_allow_list
+    end
+
+    it do
+      subject.license_id = license.id
+      subject.original_url = url1
+      subject.crawl_update = "none"
+      expect(subject).to be_invalid
+
+      expect(subject.errors[:original_url]).to have(1).items
+      expect(subject.errors[:original_url]).to include(I18n.t("errors.messages.invalid"))
+      expect(subject.original_updated).to be_blank
+      expect(subject.filename).to eq subject.name
+      expect(subject.crawl_state).to eq "same"
+      expect(subject.file_id).to be_blank
+    end
+  end
+
+  describe "when url returns SSRF redirect but SSRF protection is disabled" do
+    let(:url1) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:url2) { "https://10.224.174.6/" }
+    let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      @save_ssrf_protection_enabled = Opendata.ssrf_protection_enabled?
+      Opendata.ssrf_protection_enabled = false
+
+      stub_request(:get, url1).
+        to_return(status: 302, body: "", headers: { "Location" => url2 })
+      stub_request(:get, url2).to_return(status: 200, body: ::File.binread(csv_path), headers: {})
+    end
+
+    after do
+      Opendata.ssrf_protection_enabled = @save_ssrf_protection_enabled
+    end
+
+    it do
+      subject.license_id = license.id
+      subject.original_url = url1
+      subject.crawl_update = "none"
+      subject.save!
+
+      expect(subject.original_updated.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
+      expect(subject.filename).to eq "shift_jis.csv"
+      expect(subject.crawl_state).to eq "same"
+
+      csv = subject.parse_tsv
+      expect(csv).not_to be_nil
+      expect(csv.length).to eq 3
+      expect(csv[0]).to eq %w(ヘッダー 値)
+      expect(csv[1]).to eq %w(品川 483901)
+      expect(csv[2]).to eq %w(新宿 43901)
+    end
+  end
+
+  describe "when query parameters contain duplicated keys and cause some errors on converting them to hash" do
+    let(:domain) { unique_domain }
+    let(:base_url) { "https://#{domain}/#{unique_id}/shift_jis.csv" }
+    let(:url) { "#{base_url}?id=1&id=2&a=1&a[b]=2" }
+    let(:csv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+    before do
+      @save_query_values_notation = WebMock::Config.instance.query_values_notation
+      WebMock::Config.instance.query_values_notation = :flat_array
+
+      stub_request(:get, url).to_return(status: 200, body: ::File.binread(csv_path), headers: {})
+    end
+
+    after do
+      WebMock::Config.instance.query_values_notation = @save_query_values_notation
+    end
+
+    it do
+      subject.license_id = license.id
+      subject.original_url = url
+      subject.crawl_update = "none"
+      subject.save!
+
+      expect(subject.original_updated.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
+      expect(subject.filename).to eq "shift_jis.csv"
+      expect(subject.crawl_state).to eq "same"
+
+      csv = subject.parse_tsv
+      expect(csv).not_to be_nil
+      expect(csv.length).to eq 3
+      expect(csv[0]).to eq %w(ヘッダー 値)
+      expect(csv[1]).to eq %w(品川 483901)
+      expect(csv[2]).to eq %w(新宿 43901)
+    end
+  end
+
   describe "#do_crawl" do
-    let(:url) { "http://#{unique_domain}/#{unique_id}/shift_jis.csv" }
+    let(:url) { "https://#{unique_domain}/#{unique_id}/shift_jis.csv" }
     let(:csv_path1) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
     let(:csv_path2) { "#{Rails.root}/spec/fixtures/opendata/shift_jis-2.csv" }
     let(:now) { Time.zone.now.beginning_of_minute }
@@ -220,7 +618,22 @@ describe Opendata::UrlResource, dbscope: :example do
 
       before do
         subject.license_id = license.id
-        subject.original_url = "http://#{unique_domain}/"
+        subject.original_url = "https://#{unique_domain}/"
+        subject.crawl_update = "none"
+        subject.original_updated = nil
+      end
+
+      it do
+        expect { subject.save! }.to raise_error Mongoid::Errors::Validations
+      end
+    end
+
+    context "when uri.path is empty" do
+      subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
+
+      before do
+        subject.license_id = license.id
+        subject.original_url = "https://#{unique_domain}"
         subject.crawl_update = "none"
         subject.original_updated = nil
       end
@@ -231,7 +644,7 @@ describe Opendata::UrlResource, dbscope: :example do
     end
 
     context "when uri.path is invalid" do
-      let(:url) { "http://#{unique_domain}/#{unique_id}/notfound.csv" }
+      let(:url) { "https://#{unique_domain}/#{unique_id}/notfound.csv" }
       subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
 
       before do
@@ -268,7 +681,7 @@ describe Opendata::UrlResource, dbscope: :example do
   end
 
   context "ttl file", fuseki: true do
-    let(:url) { "http://#{unique_domain}/#{unique_id}/test-1.ttl" }
+    let(:url) { "https://#{unique_domain}/#{unique_id}/test-1.ttl" }
     let(:ttl_path) { "#{Rails.root}/spec/fixtures/opendata/test-1.ttl" }
 
     before do

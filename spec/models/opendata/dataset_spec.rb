@@ -99,6 +99,17 @@ describe Opendata::Dataset, dbscope: :example do
       end
     end
 
+    before do
+      @net_connect_allowed = WebMock.net_connect_allowed?
+      WebMock.disable_net_connect!(allow_localhost: true)
+      WebMock.reset!
+    end
+
+    after do
+      WebMock.reset!
+      WebMock.allow_net_connect! if @net_connect_allowed
+    end
+
     let!(:site) { cms_site }
     let!(:user) { cms_user }
     let(:license) { create(:opendata_license, cur_site: site) }
@@ -170,7 +181,7 @@ describe Opendata::Dataset, dbscope: :example do
       expect_copy_fields.each { |k, v| expect(subject.send(k)).to eq(v) }
     end
 
-    describe "related file resouces copy" do
+    describe "related file resources copy" do
       subject do
         dataset = org_dataset.new_clone
         dataset.save
@@ -212,7 +223,7 @@ describe Opendata::Dataset, dbscope: :example do
       end
     end
 
-    describe "related url resoruces copy" do
+    describe "related url resources copy" do
       subject do
         dataset = org_dataset.new_clone
         dataset.save
@@ -228,7 +239,7 @@ describe Opendata::Dataset, dbscope: :example do
           license_id: license.id,
           in_file: upload_file(file, "application/json"),
           filename: "test.json",
-          original_url: "http://test@example.jp/test.json",
+          original_url: "http://test.example.jp/test.json",
           original_updated: Time.zone.yesterday,
           crawl_state: "same",
           crawl_update: "none",
