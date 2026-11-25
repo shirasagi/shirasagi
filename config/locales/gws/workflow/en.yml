@@ -89,8 +89,6 @@ en:
       gws/workflow/route: Approval route
       gws/workflow/file: Application
       gws/workflow/form: Application form
-      gws/workflow/category: Workflow type
-      gws/workflow/column: Input items
     attributes:
       gws/workflow/file:
         name: Title
@@ -104,9 +102,6 @@ en:
         memo: Remarks
       gws/addon/workflow/column_setting:
         columns: Input settings
-      gws/workflow/column:
-        name: Item name
-        order: Order
       gws/addon/workflow/group_setting:
         workflow_new_days: Display period for new items
         workflow_my_group: Display own group
@@ -128,12 +123,6 @@ en:
       memo:
         - Enter remarks.
         - "Remarks are not shown elsewhere, so enter notes for administrative purposes."
-    gws/workflow/column:
-      name:
-        - Enter an item.
-      order:
-        - Enter the order.
-        - "The lower the number, the higher the position."
     gws/addon/workflow/group_setting:
       workflow_new_days:
         - Enter the display period for new items.

@@ -139,7 +139,6 @@ ja:
   mongoid:
     models:
       event/page: イベントページ
-      event/search: イベント検索ページ
       event/node/page: イベントリスト
       event/node/search: イベント検索
       event/part/calendar: カレンダー

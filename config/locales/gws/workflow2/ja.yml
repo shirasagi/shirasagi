@@ -228,7 +228,6 @@ ja:
     models:
       gws/workflow2/route: 承認ルート設定
       gws/workflow2/file: 申請データ
-      gws/workflow2/column: 入力項目
       gws/workflow2/form/base: 申請フォーム
       gws/workflow2/form/application: 申請フォーム
       gws/workflow2/form/external: 外部申請リンク
@@ -278,9 +277,6 @@ ja:
         url: URL
       gws/addon/workflow2/column_setting:
         columns: 入力設定
-      gws/workflow2/column:
-        name: 項目名
-        order: 並び順
       gws/addon/workflow2/group_setting:
         workflow_new_days: 新着表示期間
         workflow_my_group: 自所属の表示
@@ -356,12 +352,6 @@ ja:
     gws/workflow2/form/external:
       url:
         - リダイレクト先のURLを入力します。
-    gws/workflow2/column:
-      name:
-        - 項目を入力します。
-      order:
-        - 並び順を入力します。
-        - 数字が小さいほど上位に表示されます。
     gws/addon/workflow2/group_setting:
       workflow_new_days:
         - 新着表示期間を入力します。

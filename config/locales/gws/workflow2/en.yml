@@ -228,7 +228,6 @@ en:
     models:
       gws/workflow2/route: Approval route setting
       gws/workflow2/file: Application Data
-      gws/workflow2/column: Input items
       gws/workflow2/form/base: Application form
       gws/workflow2/form/application: Application form
       gws/workflow2/form/external: External application link
@@ -278,9 +277,6 @@ en:
         url: URL
       gws/addon/workflow2/column_setting:
         columns: Input settings
-      gws/workflow2/column:
-        name: Item name
-        order: Order
       gws/addon/workflow2/group_setting:
         workflow_new_days: Display period for new items
         workflow_my_group: Display own group
@@ -356,12 +352,6 @@ en:
     gws/workflow2/form/external:
       url:
         - Enter the url to redirect to.
-    gws/workflow2/column:
-      name:
-        - Enter an item.
-      order:
-        - Enter the order.
-        - "The lower the number, the higher the position."
     gws/addon/workflow2/group_setting:
       workflow_new_days:
         - Enter the display period for new items.

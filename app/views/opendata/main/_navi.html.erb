@@ -7,7 +7,7 @@
     </ul>
     <h3><%= link_to t("mongoid.models.opendata/dataset_group"), opendata_dataset_groups_path, class: "icon-node" %></h3>
     <h3><%= link_to t("mongoid.models.opendata/license"), opendata_licenses_path, class: "icon-node" %></h3>
-    <h3><%= link_to t("mongoid.models.opendata/crawl"), opendata_crawls_path, class: "icon-node" %></h3>
+    <h3><%= link_to t("opendata.crawl"), opendata_crawls_path, class: "icon-node" %></h3>
   <% elsif @cur_node.route == "opendata/app" %>
     <h3><%= link_to t("mongoid.models.opendata/app"), opendata_apps_path, class: "icon-node" %></h3>
     <ul class="narrow-page">

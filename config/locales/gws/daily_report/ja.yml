@@ -68,7 +68,6 @@ ja:
     models:
       gws/daily_report/report: 業務日報
       gws/daily_report/form: 業務カテゴリー
-      gws/daily_report/column: 入力項目
       gws/daily_report/comment: コメント
     attributes:
       gws/daily_report/report:
@@ -87,9 +86,6 @@ ja:
         dest_year: 作成先年度
       gws/addon/daily_report/column_setting:
         columns: カテゴリー設定
-      gws/daily_report/column:
-        name: 項目名
-        order: 並び順
       gws/addon/daily_report/group_setting:
         daily_report_new_days: 新着表示期間
       gws/addon/daily_report/custom_form:
@@ -124,12 +120,6 @@ ja:
         - 作成元となる年度を入力します。
       dest_year:
         - 作成する年度を入力します。
-    gws/daily_report/column:
-      name:
-        - 項目を入力します。
-      order:
-        - 並び順を入力します。
-        - 数字が小さいほど上位に表示されます。
     gws/addon/daily_report/group_setting:
       daily_report_new_days:
         - 新着表示期間を入力します。

@@ -68,7 +68,6 @@ en:
     models:
       gws/daily_report/report: Business daily report
       gws/daily_report/form: Work category
-      gws/daily_report/column: Input items
       gws/daily_report/comment: Comment
     attributes:
       gws/daily_report/report:
@@ -87,9 +86,6 @@ en:
         dest_year: Destination year
       gws/addon/daily_report/column_setting:
         columns: Category settings
-      gws/daily_report/column:
-        name: Item name
-        order: Order
       gws/addon/daily_report/group_setting:
         daily_report_new_days: Display period for new items
       gws/addon/daily_report/custom_form:
@@ -124,12 +120,6 @@ en:
         - Enter the year from which to create.
       dest_year:
         - Enter the year to create.
-    gws/daily_report/column:
-      name:
-        - Enter an item.
-      order:
-        - Enter the order.
-        - "The lower the number, the higher the position."
     gws/addon/daily_report/group_setting:
       daily_report_new_days:
         - Enter the display period for new items.

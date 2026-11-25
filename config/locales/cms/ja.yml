@@ -1146,7 +1146,6 @@ ja:
       cms/part/form_search: 定型フォーム絞込検索
       cms/layout: レイアウト
       cms/body_layout: レイアウト
-      cms/workflow/route: 承認経路
       cms/role: ロール
       cms/editor_template: テンプレート
       cms/theme_template: Theme切り替え
@@ -1181,7 +1180,6 @@ ja:
       cms/column/table: 表
       cms/column/select_page: ページ選択
       cms/michecker/result: miChecker結果
-      cms/michecker_task: miCheckerタスク
       cms/check_links/error/base: エラー情報
       cms/api_token: 連携用APIトークン
       cms/generation_report/title: 書き出し性能レポート

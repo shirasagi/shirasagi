@@ -78,6 +78,8 @@ ja:
       notify_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
       start_message: "エクスポート処理を開始しました。"
       export_message: "登録されている全データセットをエクスポートします。\nエクスポートを押下すると、エクスポート処理が完了次第、実行したユーザー宛に通知が送られ、データをダウンロードできます。"
+    export_datasets: エクスポート
+    import_datasets: インポート
     notify_update_plan:
       subject: 更新予定のデータセット
     reports:
@@ -174,6 +176,7 @@ ja:
     crawl_update_name:
       none: 手動
       auto: 自動
+    crawl: クローリング
 
     confirm:
       build_csv2rdf: "RDF 変換処理を開始します。よろしいですか？"
@@ -607,7 +610,6 @@ ja:
       opendata/license: ライセンス
       opendata/dataset_group: データセットグループ
       opendata/dataset: データセット
-      opendata/crawl: クローリング
       opendata/app: アプリ
       opendata/idea: アイデア
       opendata/idea_comment: コメント
@@ -615,9 +617,6 @@ ja:
       opendata/member_notice: 会員通知
       opendata/resource: リソース
       opendata/url_resource: クローリング
-      opendata/export_datasets: エクスポート
-      opendata/import_datasets: インポート
-      opendata/dataset_importer: インポート
       opendata/resource_download_history: リソースダンロード履歴
       opendata/resource_download_report: リソースダンロード数集計結果
       opendata/node/category: 分野
@@ -1021,7 +1020,6 @@ ja:
   activemodel:
     models:
       opendata/dataset_download_report: ダウンロードレポート
-      opendata/dataset_importer: インポート
       opendata/dataset_preview_report: プレビューレポート
       opendata/dataset_access_report: アクセスレポート
     attributes:
@@ -1033,8 +1031,6 @@ ja:
         day: 日
         month: 月
         year: 年
-      opendata/dataset_importer:
-        in_file: ファイル
       opendata/dataset_preview_report:
         period: 期間
         type: 単位

@@ -194,10 +194,8 @@ ja:
 
   mongoid:
     models:
-      gws/category: 汎用カテゴリー
       gws/group: グループ
       gws/custom_group: カスタムグループ
-      gws/custom_group_member: カスタムグループメンバー
       gws/user: ユーザー
       gws/user_title: 役職
       gws/user_occupation: 職種

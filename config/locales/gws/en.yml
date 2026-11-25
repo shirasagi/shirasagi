@@ -194,10 +194,8 @@ en:
 
   mongoid:
     models:
-      gws/category: Generic categories
       gws/group: Group
       gws/custom_group: Custom groups
-      gws/custom_group_member: Custom group members
       gws/user: User
       gws/user_title: Job title
       gws/user_occupation: Occupation
