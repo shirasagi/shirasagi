@@ -109,50 +109,52 @@ module Opendata
     redirection ||= Cms::LinkChecker::Redirection.new
     timeout ||= Opendata.request_timeout
 
-    Timeout.timeout(timeout) do
-      http_client = new_http_client(url, timeout)
-
+    begin
       temp_file = Tempfile.open('temp')
       temp_file.binmode
 
-      resp = http_client.get do |req|
-        req.options.on_data = proc do |chunk, overall_received_bytes|
-          raise SS::NotFoundError, "#{url}: file size is too large" if overall_received_bytes > max_download_size
-          temp_file.write chunk
+      Timeout.timeout(timeout) do
+        http_client = new_http_client(url, timeout)
+
+        resp = http_client.get do |req|
+          req.options.on_data = proc do |chunk, overall_received_bytes|
+            raise SS::NotFoundError, "#{url}: file size is too large" if overall_received_bytes > max_download_size
+            temp_file.write chunk
+          end
         end
+
+        if REDIRECT_STATUS_CODES.include?(resp.status)
+          redirect_to = resp.headers['Location']
+          raise SS::NotFoundError, "#{url}: got redirect response but location is not found" if redirect_to.blank?
+          raise SS::NotFoundError, "#{url}: too many redirections" if redirection.count >= Opendata.max_redirection
+
+          redirect_to = Addressable::URI.join(url, redirect_to)
+          raise SS::NotFoundError, "#{url}: unsafe redirect" unless safe_redirect?(url, redirect_to)
+
+          temp_file.close(true)
+          return download_url!(redirect_to, original_url: original_url, redirection: redirection.increment, timeout: timeout)
+        end
+
+        raise SS::NotFoundError, "#{url}: failed to download" unless resp.success?
+
+        temp_file.rewind
+        temp_file = inflate_if_necessary(temp_file, resp.headers['content-encoding'])
+
+        filename = Opendata.extract_filename(resp.headers['content-disposition'])
+        filename ||= File.basename(original_url.path)
+
+        last_modified = resp.headers['last-modified']
+        if last_modified
+          last_modified = last_modified.in_time_zone
+        else
+          last_modified = Time.zone.now
+        end
+
+        temp_file = ActionDispatch::Http::UploadedFile.new(
+          tempfile: temp_file, filename: filename, type: SS::MimeType::DEFAULT_MIME_TYPE)
+
+        [ temp_file, last_modified ]
       end
-
-      if REDIRECT_STATUS_CODES.include?(resp.status)
-        redirect_to = resp.headers['Location']
-        raise SS::NotFoundError, "#{url}: got redirect response but location is not found" if redirect_to.blank?
-        raise SS::NotFoundError, "#{url}: too many redirections" if redirection.count >= Opendata.max_redirection
-
-        redirect_to = Addressable::URI.join(url, redirect_to)
-        raise SS::NotFoundError, "#{url}: unsafe redirect" unless safe_redirect?(url, redirect_to)
-
-        temp_file.close(true)
-        return download_url!(redirect_to, original_url: original_url, redirection: redirection.increment, timeout: timeout)
-      end
-
-      raise SS::NotFoundError, "#{url}: failed to download" unless resp.success?
-
-      temp_file.rewind
-      temp_file = inflate_if_necessary(temp_file, resp.headers['content-encoding'])
-
-      filename = Opendata.extract_filename(resp.headers['content-disposition'])
-      filename ||= File.basename(original_url.path)
-
-      last_modified = resp.headers['last-modified']
-      if last_modified
-        last_modified = last_modified.in_time_zone
-      else
-        last_modified = Time.zone.now
-      end
-
-      temp_file = ActionDispatch::Http::UploadedFile.new(
-        tempfile: temp_file, filename: filename, type: SS::MimeType::DEFAULT_MIME_TYPE)
-
-      [ temp_file, last_modified ]
     rescue
       temp_file.close(true) if temp_file
       raise
