@@ -9,6 +9,7 @@ module Opendata::Addon::Graph
     permit_params :preview_graph_state
     permit_params preview_graph_types: []
 
+    validates :preview_graph_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
     validate :validate_preview_graph_types, if: ->{ preview_graph_types.present? }
   end
 

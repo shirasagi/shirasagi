@@ -862,6 +862,7 @@ DEPENDENCIES
   net-ldap
   net-pop
   net-smtp
+  nkf
   non-stupid-digest-assets
   oauth2
   oj

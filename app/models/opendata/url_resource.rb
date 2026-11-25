@@ -16,10 +16,10 @@ class Opendata::UrlResource
 
   permit_params :name, :text, :license_id, :original_url, :crawl_update
 
-  before_validation :validate_original_url, if: -> { original_url.present? }
   after_validation :destroy_download_temp_file, if: -> { @download_temp_file }
 
-  validates :original_url, presence: true
+  validates :original_url, presence: true, url: true
+  validate :validate_original_url, if: -> { original_url.present? }
   validates :original_updated, presence: true
   validates :crawl_state, presence: true
   validates :crawl_update, presence: true
@@ -42,31 +42,20 @@ class Opendata::UrlResource
     ]
   end
 
-  def do_crawl(time_out: 30)
-    require 'net/http'
-    require "open-uri"
-
+  def do_crawl(time_out: nil)
     puts self.original_url
 
-    last_modified = Timeout.timeout(time_out) do
-      url = ::URI.parse(self.original_url) rescue nil
-      break nil if url.blank?
+    url = ::URI.parse(self.original_url) rescue nil
+    return if url.blank?
 
-      url.open(proxy: true) { |url_file| url_file.last_modified }
-    end
-
-    if last_modified.blank?
-      last_modified = Time.zone.now
-    else
-      last_modified = last_modified.in_time_zone
-    end
-
+    temp_file, last_modified = Opendata.download_url!(url, timeout: time_out)
+    temp_file.close(true) if temp_file
     if self.crawl_update == "none"
       do_crawl_none(last_modified)
     elsif self.crawl_update == "auto"
       do_crawl_auto(last_modified)
     end
-  rescue Timeout::Error
+  rescue Timeout::Error, Faraday::TimeoutError, Faraday::ConnectionFailed
     puts I18n.t("opendata.errors.messages.invalid_timeout")
   rescue => e
     puts "Error: #{e}"
@@ -110,6 +99,8 @@ class Opendata::UrlResource
   end
 
   def validate_original_url
+    return if errors[:original_url].present?
+
     begin
       uri = ::URI.parse(original_url)
     rescue => e
@@ -117,7 +108,7 @@ class Opendata::UrlResource
       return
     end
 
-    if uri.path == '/'
+    if uri.path.blank? || uri.path == '/'
       errors.add :original_url, :invalid
       return
     end
@@ -130,69 +121,33 @@ class Opendata::UrlResource
       self.crawl_state = "same"
     else
       # download file from original_url
-
       begin
-        Tempfile.open('temp') do |temp_file|
-          last_modified = download_to(temp_file)
-          break if last_modified.blank?
+        temp_file, last_modified = Opendata.download_url!(uri)
 
-          self.original_updated = last_modified
-          self.filename = ::File.basename(uri.path) if self.filename.blank?
+        self.original_updated = last_modified
+        self.filename = temp_file.original_filename
 
-          @download_temp_file = SS::File.new
-          @download_temp_file.in_file = ActionDispatch::Http::UploadedFile.new(tempfile: temp_file,
-            filename: self.filename,
-            type: SS::MimeType::DEFAULT_MIME_TYPE)
-          @download_temp_file.site_id = dataset.site_id
-          @download_temp_file.model = self.class.to_s.underscore
+        @download_temp_file = SS::File.new
+        @download_temp_file.in_file = temp_file
+        @download_temp_file.site_id = dataset.site_id
+        @download_temp_file.model = self.class.to_s.underscore
 
-          @download_temp_file.content_type = self.format = self.filename.sub(/.*\./, "").upcase
-          @download_temp_file.filename = self.filename
-          @download_temp_file.owner_item = dataset
+        @download_temp_file.content_type = self.format = self.filename.sub(/.*\./, "").upcase
+        @download_temp_file.filename = self.filename
+        @download_temp_file.owner_item = dataset
 
-          if @download_temp_file.save
-            self.file.destroy if file
-            self.file_id = @download_temp_file.id
-          end
-
-          self.crawl_state = "same"
+        if @download_temp_file.save
+          self.file.destroy if file
+          self.file_id = @download_temp_file.id
         end
-      rescue Timeout::Error => e
+
+        self.crawl_state = "same"
+      rescue Timeout::Error, Faraday::TimeoutError => e
         logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
         errors.add :base, I18n.t("opendata.errors.messages.invalid_timeout")
       rescue => e
         logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
         errors.add :original_url, :invalid
-      end
-    end
-  end
-
-  def download_to(temp_file, time_out: 30)
-    require 'net/http'
-    require "open-uri"
-    require "resolv-replace"
-    require 'timeout'
-    require 'nkf'
-
-    url = ::URI.parse(original_url) rescue nil
-    return if url.blank?
-
-    temp_file.binmode
-    Timeout.timeout(time_out) do
-      url.open(proxy: true) do |data|
-        data.binmode
-        temp_file.write(data.read)
-        temp_file.rewind
-
-        content_disposition = data.meta['content-disposition']
-        content_disposition = "Content-Disposition: attachment; filename= " if content_disposition.blank?
-        self.filename = NKF.nkf "-w", content_disposition.match(/filename=("?)(.+)\1/)[2].to_s
-
-        if data.meta["last-modified"].blank?
-          break Time.zone.now
-        else
-          break data.meta["last-modified"].in_time_zone
-        end
       end
     end
   end
