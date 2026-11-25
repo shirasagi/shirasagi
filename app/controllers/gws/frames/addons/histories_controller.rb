@@ -41,7 +41,7 @@ class Gws::Frames::Addons::HistoriesController < ApplicationController
 
   def index
     begin
-      @items = @item.histories.page(params[:page]).per(10)
+      @items = @item.histories.site(@cur_site).page(params[:page]).per(10)
     rescue
       raise '404'
     end
