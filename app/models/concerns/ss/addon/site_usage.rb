@@ -29,6 +29,8 @@ module SS::Addon::SiteUsage
     self.usage_user_count = users.count
 
     self.usage_calculated_at = now
-    self.save!
+    self.without_record_timestamps do
+      self.save(validate: false)
+    end
   end
 end
