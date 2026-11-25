@@ -5,10 +5,12 @@ describe Workflow::ReminderJob, dbscope: :example do
   let(:sender_email) { "#{unique_id}@example.jp" }
 
   before do
+    @save_config = SS.config.replace_value_at(:workflow, :enable_user_email_from, true)
     ActionMailer::Base.deliveries = []
   end
 
   after do
+    SS.config.replace_value_at(:workflow, :enable_user_email_from, @save_config)
     ActionMailer::Base.deliveries = []
   end
 
@@ -160,7 +162,7 @@ describe Workflow::ReminderJob, dbscope: :example do
 
           expect(ActionMailer::Base.deliveries.length).to eq 1
           ActionMailer::Base.deliveries.first.tap do |mail|
-            expect(mail.from.first).to eq sender_email
+            expect(mail.from.first).to eq user1.email
             expect(mail.to.first).to eq user2.email
             expect(mail_subject(mail)).to eq I18n.t("workflow.notice.remind.subject", page_name: page1.name, site_name: site.name)
             expect(mail.body.multipart?).to be_falsey
@@ -270,7 +272,7 @@ describe Workflow::ReminderJob, dbscope: :example do
 
           expect(ActionMailer::Base.deliveries.length).to eq 1
           ActionMailer::Base.deliveries.first.tap do |mail|
-            expect(mail.from.first).to eq sender_email
+            expect(mail.from.first).to eq user1.email
             expect(mail.to.first).to eq user2.email
             expect(mail_subject(mail)).to eq I18n.t("workflow.notice.remind.subject", page_name: page1.name, site_name: site.name)
             expect(mail.body.multipart?).to be_falsey
@@ -346,7 +348,7 @@ describe Workflow::ReminderJob, dbscope: :example do
 
           expect(ActionMailer::Base.deliveries.length).to eq 1
           ActionMailer::Base.deliveries.first.tap do |mail|
-            expect(mail.from.first).to eq sender_email
+            expect(mail.from.first).to eq user1.email
             expect(mail.to.first).to eq user3.email
             expect(mail_subject(mail)).to eq I18n.t("workflow.notice.remind.subject", page_name: page1.name, site_name: site.name)
             expect(mail.body.multipart?).to be_falsey
