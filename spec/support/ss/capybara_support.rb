@@ -136,8 +136,9 @@ module ClearStorageWithoutWildcardOrigin
   end
 
   def reset!
-    # reset! は about:blank へ遷移するので、その前に現在のオリジンを記録する
-    remember_origin(current_url_for_reset) if @browser
+    # reset! はウィンドウを閉じて about:blank へ遷移するので、その前に各ウィンドウの
+    # ナビゲーション履歴からオリジンを記録する（リンクのクリックやリダイレクトで訪れたオリジンも含む）
+    remember_origins_from_windows if @browser
     super
   ensure
     @visited_origins = nil
@@ -156,8 +157,12 @@ module ClearStorageWithoutWildcardOrigin
     nil
   end
 
-  def current_url_for_reset
-    current_url
+  def remember_origins_from_windows
+    window_handles.each do |handle|
+      switch_to_window(handle)
+      history = execute_cdp("Page.getNavigationHistory")
+      Array(history&.dig("entries")).each { |entry| remember_origin(entry["url"]) }
+    end
   rescue StandardError
     # アラートが表示されている場合などは取得できない。その場合は visit で記録したオリジンだけを使う
     nil
