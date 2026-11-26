@@ -118,3 +118,19 @@ module SS::CapybaraSupport
 end
 
 RSpec.configuration.extend(SS::CapybaraSupport::Hooks)
+
+module ClearStorageWithoutWildcardOrigin
+  private
+
+  def execute_cdp(cmd, params = {})
+    return super unless cmd == "Storage.clearDataForOrigin" && params[:origin] == "*"
+
+    types = params[:storageTypes].to_s.split(",")
+    super("Network.clearBrowserCookies") if types.delete("cookies")
+
+    origin = Capybara.current_session.server&.base_url
+    super(cmd, params.merge(origin: origin, storageTypes: types.join(","))) if origin && types.any?
+  end
+end
+
+Capybara::Selenium::Driver::ChromeDriver.prepend(ClearStorageWithoutWildcardOrigin)
