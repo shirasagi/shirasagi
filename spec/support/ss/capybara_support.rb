@@ -118,3 +118,68 @@ module SS::CapybaraSupport
 end
 
 RSpec.configuration.extend(SS::CapybaraSupport::Hooks)
+
+# Chrome 158 以降、CDP の Storage.clearDataForOrigin に origin: '*' を渡すとエラーになる。
+# Capybara 3.40.0 の ChromeDriver / EdgeDriver は reset! のたびに origin: '*' で呼び出すため、
+# ドライバーごとに訪れたオリジンを記録しておき、オリジンを 1 つずつ指定して削除する。
+#
+# 本現象は capybara のリポジトリで報告されているが、
+# capybara は2年以上更新がなく、この問題も修正されそうにないので、モンキーパッチをあてる。
+# https://github.com/teamcapybara/capybara/issues/2865
+#
+# このモンキーパッチは、上記のリンクに含まれる修正案を Claude Code にレビューさせると不十分という判定。
+# 原案を Claude Code に修正させたものとなる。
+module ClearStorageWithoutWildcardOrigin
+  def visit(path)
+    remember_origin(path)
+    super
+  end
+
+  def reset!
+    # reset! はウィンドウを閉じて about:blank へ遷移するので、その前に各ウィンドウの
+    # ナビゲーション履歴からオリジンを記録する（リンクのクリックやリダイレクトで訪れたオリジンも含む）
+    remember_origins_from_windows if @browser
+    super
+    @visited_origins = nil
+  end
+
+  private
+
+  def visited_origins
+    @visited_origins ||= Set.new
+  end
+
+  def remember_origin(url)
+    uri = URI.parse(url.to_s)
+    visited_origins << uri.origin if uri.is_a?(URI::HTTP) && uri.host.present?
+  rescue URI::InvalidURIError
+    nil
+  end
+
+  def remember_origins_from_windows
+    window_handles.each do |handle|
+      switch_to_window(handle)
+      history = execute_cdp("Page.getNavigationHistory")
+      Array(history&.dig("entries")).each { |entry| remember_origin(entry["url"]) }
+    end
+  rescue StandardError
+    # アラートが表示されている場合などは取得できない。その場合は visit で記録したオリジンだけを使う
+    nil
+  end
+
+  def execute_cdp(cmd, params = {})
+    return super unless cmd == "Storage.clearDataForOrigin" && params[:origin] == "*"
+
+    types = params[:storageTypes].to_s.split(",")
+    super("Network.clearBrowserCookies") if types.delete("cookies")
+    return if types.empty?
+
+    storage_types = types.join(",")
+    visited_origins.each do |origin|
+      super(cmd, params.merge(origin: origin, storageTypes: storage_types))
+    end
+  end
+end
+
+Capybara::Selenium::Driver::ChromeDriver.prepend(ClearStorageWithoutWildcardOrigin)
+Capybara::Selenium::Driver::EdgeDriver.prepend(ClearStorageWithoutWildcardOrigin)
