@@ -264,7 +264,7 @@ describe "gws_frames_addons_histories", type: :feature, dbscope: :example do
           { user_id: user.id, model_class: "Gws::Group", model_id: user.groups.first.id }.to_json,
           padding: false)
         header, payload, signature = valid_setting.split(".")
-        "#{header}.#{payload}.#{signature.reverse}"
+        "#{header}.#{tampered_payload}.#{signature}"
       end
 
       it do
