@@ -140,7 +140,6 @@ module ClearStorageWithoutWildcardOrigin
     # ナビゲーション履歴からオリジンを記録する（リンクのクリックやリダイレクトで訪れたオリジンも含む）
     remember_origins_from_windows if @browser
     super
-  ensure
     @visited_origins = nil
   end
 
