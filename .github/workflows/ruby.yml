@@ -9,7 +9,7 @@ name: Ruby-3.4
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [ master, main, '**-rc' ]
   pull_request:
     types: [ opened, synchronize, reopened ]
 
