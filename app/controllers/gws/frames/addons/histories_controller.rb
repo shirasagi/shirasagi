@@ -11,13 +11,13 @@ class Gws::Frames::Addons::HistoriesController < ApplicationController
 
   def setting
     @setting ||= Gws::HistoryFrameSetting.decode(params[:setting].to_s)
-  rescue JSON::JWT::Exception, JSON::ParserError, ArgumentError => e
+  rescue => e
     Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
     raise SS::NotFoundError
   end
 
   def check_setting_user
-    raise '403' if setting.user_id != @cur_user.id
+    raise SS::ForbiddenError if setting.user_id != @cur_user.id
   end
 
   def set_crumbs
@@ -38,14 +38,14 @@ class Gws::Frames::Addons::HistoriesController < ApplicationController
     return @item if @item
 
     class_name = setting.model_class
-    raise '404' unless class_name.to_s.start_with?('Gws::')
+    raise SS::NotFoundError unless class_name.to_s.start_with?('Gws::')
 
     model_class = class_name.safe_constantize
     return unless model_class
     return unless model_class.include?(Gws::Addon::History)
 
     @item = model_class.site(@cur_site).find(setting.model_id) rescue nil
-    raise '404' unless @item
+    raise SS::NotFoundError unless @item
   end
 
   public
@@ -54,7 +54,7 @@ class Gws::Frames::Addons::HistoriesController < ApplicationController
     begin
       @items = @item.histories.site(@cur_site).page(params[:page]).per(10)
     rescue
-      raise '404'
+      raise SS::NotFoundError
     end
   end
 end
