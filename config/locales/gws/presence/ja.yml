@@ -28,8 +28,6 @@ ja:
     manage_custom_group_gws_user_presences: 在席状況の管理（所属カスタムグループ）
 
   mongoid:
-    models:
-      gws/presence: 在席管理
     attributes:
       gws/user_presence:
         state: ステータス

@@ -28,8 +28,6 @@ en:
     manage_custom_group_gws_user_presences: Manage presence status (affiliated custom group)
 
   mongoid:
-    models:
-      gws/presence: Presence management
     attributes:
       gws/user_presence:
         state: Status

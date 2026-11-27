@@ -13,7 +13,7 @@ describe "gws_presence_user_settings", type: :feature, dbscope: :example do
       visit path
 
       within first('#navi') do
-        expect(page).to have_text I18n.t("mongoid.models.gws/user_setting")
+        expect(page).to have_text I18n.t("gws.user_setting")
         within first('h3.current') do
           expect(page).to have_link I18n.t("modules.gws/presence")
           click_on I18n.t("modules.gws/presence")
@@ -33,7 +33,7 @@ describe "gws_presence_user_settings", type: :feature, dbscope: :example do
       wait_for_notice I18n.t("ss.notice.saved")
 
       within first('#navi') do
-        expect(page).to have_text I18n.t("mongoid.models.gws/user_setting")
+        expect(page).to have_text I18n.t("gws.user_setting")
         within first('h3.current') do
           expect(page).to have_link I18n.t("modules.gws/presence")
         end

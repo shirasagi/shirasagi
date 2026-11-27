@@ -5,7 +5,7 @@ en:
     portal: Portal
     site_config: Settings
     site_info: Organization information
-    user_setting: Portal settings
+    user_setting: User settings
     organization_addresses: Organization address book
     question_management: Question management
     default_contrast: Default contrast
@@ -194,19 +194,15 @@ en:
 
   mongoid:
     models:
-      gws/category: Generic categories
       gws/group: Group
       gws/custom_group: Custom groups
-      gws/custom_group_member: Custom group members
       gws/user: User
       gws/user_title: Job title
       gws/user_occupation: Occupation
       gws/role: Permissions/Roles
       gws/link: Links
-      gws/share: Shared files
       gws/history: Operation history
       gws/history_archive_file: Archive
-      gws/user_setting: User settings
       gws/user_form: Extensions
       gws/user_form_data: Extended data
       gws/contrast: Contrast

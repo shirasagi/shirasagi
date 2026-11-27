@@ -748,9 +748,6 @@ ja:
 
   mongoid:
     models:
-      session: セッション
-      simple_captcha/simple_captcha_data: 画像認証
-      ss/site: サイト
       ss/user: ユーザー
       ss/user_title: 役職
       ss/user_occupation: 職種
@@ -759,11 +756,9 @@ ja:
       ss/file: ファイル
       ss/temp_file: 一時ファイル
       ss/user_file: ユーザーファイル
-      ss/group_file: グループファイル
       ss/task: タスク
       ss/max_file_size: 最大ファイルサイズ
       ss/image_resize: 画像リサイズ
-      ss/thumb_file: サムネイルファイル
       ss/migration: DBマイグレーション
       ss/access_token: アクセストークン
       ss/notification: 通知
@@ -1050,12 +1045,6 @@ ja:
         prefecture_kana: 都道府県名（カナ）
         city: 市区町村名（漢字）
         city_kana: 市区町村名（カナ）
-      ss/thumb_file:
-        original_id: 元画像ID
-        image_size: 画像サイズ
-        image_size_name: 画像サイズ名
-        thumb_width: 幅
-        thumb_height: 高さ
       ss/model/job_log:
         job_id: ジョブID
         hostname: ホスト名

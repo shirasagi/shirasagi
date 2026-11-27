@@ -18,7 +18,7 @@ class Gws::Share::Management::FilesController < ApplicationController
 
   def set_crumbs
     set_folder
-    @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path(category: params[:category])]
+    @crumbs << [@cur_site.menu_share_label || t("modules.gws/share"), gws_share_files_path(category: params[:category])]
     @crumbs << [t('ss.navi.trash'), gws_share_management_files_path(category: params[:category])]
     if @folder.present?
       folder_hierarchy_count = @folder.name.split("/").count - 1

@@ -196,7 +196,6 @@ ja:
       gws/memo/signature: 署名
       gws/memo/template: 定型文
       gws/memo/forward: メール転送
-      gws/memo/group_setting: メッセージ設定
       gws/memo/list: リスト
       gws/memo/category: カテゴリー
     errors:

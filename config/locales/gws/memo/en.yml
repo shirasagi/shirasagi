@@ -196,7 +196,6 @@ en:
       gws/memo/signature: Signature
       gws/memo/template: Template
       gws/memo/forward: Forward e-mail
-      gws/memo/group_setting: Message settings
       gws/memo/list: List
       gws/memo/category: Category
     errors:

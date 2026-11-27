@@ -8,7 +8,7 @@ module Gws::Addon::System::MenuSetting
     define_menu_setting('portal', 'modules.gws/portal')
     define_menu_setting('notice', 'modules.gws/notice')
     define_menu_setting('reminder', 'mongoid.models.gws/reminder')
-    define_menu_setting('presence', 'mongoid.models.gws/presence')
+    define_menu_setting('presence', 'modules.gws/presence')
     define_menu_setting('schedule', 'modules.gws/schedule')
     define_menu_setting('todo', 'modules.gws/schedule/todo')
     define_menu_setting('affair', 'modules.gws/affair')

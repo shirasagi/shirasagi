@@ -147,7 +147,6 @@ ja:
     models:
       gws/facility/item: 設備
       gws/facility/category: カテゴリー
-      gws/facility/custom_field: 追加入力
     attributes:
       gws/facility/item:
         name: 設備名
@@ -178,9 +177,6 @@ ja:
         reservable_members_hash: 予約可能ユーザー(ハッシュ)
       gws/addon/facility/column_setting:
         columns: 追加入力
-      gws/facility/custom_field:
-        name: 名前
-        order: 並び順
       gws/addon/facility/default_member_setting:
         default_member_ids: 初期設定の参加者
 
@@ -221,12 +217,6 @@ ja:
         - カテゴリー名を入力します。
       order:
         - 並び順を入力します。
-        - 数字が小さいほど上位に表示されます。
-    gws/facility/custom_field:
-      name:
-        - 項目の名称を入力します。
-      order:
-        - 質問項目の並び順を指定します。
         - 数字が小さいほど上位に表示されます。
     gws/addon/facility/default_member_setting:
       default_member_ids:

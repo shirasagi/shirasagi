@@ -5,7 +5,7 @@ ja:
     portal: ポータル
     site_config: 設定
     site_info: 組織情報
-    user_setting: ポータル設定
+    user_setting: ユーザー設定
     organization_addresses: 組織アドレス帳
     question_management: 質問管理
     default_contrast: 既定のコントラスト
@@ -194,19 +194,15 @@ ja:
 
   mongoid:
     models:
-      gws/category: 汎用カテゴリー
       gws/group: グループ
       gws/custom_group: カスタムグループ
-      gws/custom_group_member: カスタムグループメンバー
       gws/user: ユーザー
       gws/user_title: 役職
       gws/user_occupation: 職種
       gws/role: 権限/ロール
       gws/link: リンク集
-      gws/share: 共有ファイル
       gws/history: 操作履歴
       gws/history_archive_file: アーカイブ
-      gws/user_setting: ユーザー設定
       gws/user_form: 拡張情報
       gws/user_form_data: 拡張データ
       gws/contrast: コントラスト

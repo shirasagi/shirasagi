@@ -748,9 +748,6 @@ en:
 
   mongoid:
     models:
-      session: Session
-      simple_captcha/simple_captcha_data: Image authentication
-      ss/site: Site
       ss/user: User
       ss/user_title: Job title
       ss/user_occupation: Occupation
@@ -759,11 +756,9 @@ en:
       ss/file: File
       ss/temp_file: Temporary file
       ss/user_file: User file
-      ss/group_file: Group file
       ss/task: Task
       ss/max_file_size: Maximum file size
       ss/image_resize: Resize image
-      ss/thumb_file: Thumbnail file
       ss/migration: DB migration
       ss/access_token: Access token
       ss/notification: Notification
@@ -1050,12 +1045,6 @@ en:
         prefecture_kana: Prefecture (Kana)
         city: Municipality (Kanji)
         city_kana: Municipality (Kana)
-      ss/thumb_file:
-        original_id: Original image ID
-        image_size: Image size
-        image_size_name: Image size name
-        thumb_width: Width
-        thumb_height: Height
       ss/model/job_log:
         job_id: Job ID
         hostname: Host name

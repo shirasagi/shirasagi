@@ -147,7 +147,6 @@ en:
     models:
       gws/facility/item: Facilities
       gws/facility/category: Category
-      gws/facility/custom_field: Additional input
     attributes:
       gws/facility/item:
         name: Facility name
@@ -178,9 +177,6 @@ en:
         reservable_members_hash: Reservable users (hash)
       gws/addon/facility/column_setting:
         columns: Additional input
-      gws/facility/custom_field:
-        name: Name
-        order: Order
       gws/addon/facility/default_member_setting:
         default_member_ids: Default users
 
@@ -221,12 +217,6 @@ en:
         - Enter a category name.
       order:
         - Enter the order.
-        - "The lower the number, the higher the position."
-    gws/facility/custom_field:
-      name:
-        - Enter a name for the item.
-      order:
-        - Specify the question order.
         - "The lower the number, the higher the position."
     gws/addon/facility/default_member_setting:
       default_member_ids:

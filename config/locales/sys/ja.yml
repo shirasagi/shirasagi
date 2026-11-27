@@ -123,7 +123,6 @@ ja:
     models:
       sys/setting: システム設定
       sys/site: サイト
-      sys/user: ユーザー
       sys/role: ロール
       sys/site_copy_task: サイト複製タスク
       sys/notice: システムのお知らせ
