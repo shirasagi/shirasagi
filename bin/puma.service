@@ -18,7 +18,7 @@ Type=simple
 TimeoutSec=300
 
 ExecStart=/bin/bash -lc 'exec bundle exec rails s'
-ExecStop=/usr/bin/kill -TERN $MAINPID
+ExecStop=/usr/bin/kill -TERM $MAINPID
 ExecReload=/usr/bin/kill -USR2 $MAINPID
 
 [Install]
