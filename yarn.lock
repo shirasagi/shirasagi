@@ -1636,10 +1636,10 @@ jquery-datetimepicker@^2.5.21:
     jquery-mousewheel ">= 3.1.13"
     php-date-formatter "^1.3.4"
 
-jquery-form@^4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/jquery-form/-/jquery-form-4.3.0.tgz#7d3961c314a1f2d15298f4af1d3943f54f4149c6"
-  integrity sha512-q3uaVCEWdLOYUCI6dpNdwf/7cJFOsUgdpq6r0taxtGQ5NJSkOzofyWm4jpOuJ5YxdmL1FI5QR+q+HB63HHLGnQ==
+jquery-form@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/jquery-form/-/jquery-form-4.6.0.tgz#689d9cd5b0b9a3a0740e7ec808edeacc10cfb895"
+  integrity sha512-7PDvzMrUAid1RwF5C6vWoSaqaKAVglbta2KeHgmPImlmjw0PQZQMTyDAbnW5BJVcLnHiqRSHhRng13ClaetezQ==
   dependencies:
     jquery ">=1.7.2"
 

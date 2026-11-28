@@ -4,7 +4,7 @@
 //= require jquery-ujs
 //= require jquery-ui/dist/jquery-ui.js
 //= require js-cookie/dist/js.cookie.js
-//= require jquery-form/src/jquery.form.js
+//= require jquery-form/dist/jquery.form.js
 //= require jquery-datetimepicker/build/jquery.datetimepicker.full.js
 //= require jquery.multi-select
 //= require @claviska/jquery-minicolors/jquery.minicolors.js
